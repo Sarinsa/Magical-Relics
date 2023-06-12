@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT Lisence"
+
+[[mods]]
+modId="magical_relics"
+version="${file.jarVersion}"
+displayName="Magical Relics"
+logoFile="logo.png"
+credits="Draco18s and Tmtravlr (former authors)"
+authors="Sarinsa"
+
+description='''
+Adds a variety of unique artifacts with special abilities, and new dungeons
+'''
+[[dependencies.magical_relics]]
+    modId="forge"
+    mandatory=true
+    versionRange="[43,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.magical_relics]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.2]"
+    ordering="NONE"
+    side="BOTH"
