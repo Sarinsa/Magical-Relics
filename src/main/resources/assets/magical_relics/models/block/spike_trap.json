@@ -1,0 +1,6 @@
+{
+  "parent": "magical_relics:block/template_spike_trap",
+  "textures": {
+    "spikes": "magical_relics:block/spike_trap"
+  }
+}

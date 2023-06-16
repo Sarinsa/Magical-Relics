@@ -1,0 +1,6 @@
+{
+  "block.magical_relics.spike_trap": "Spike Trap",
+
+  "death.attack.magical_relics.spikes": "%1$s was impaled on a spike trap",
+  "death.attack.magical_relics.spikes.player": "%1$s got impaled on a spike trap whilst trying to escape %2$s"
+}
