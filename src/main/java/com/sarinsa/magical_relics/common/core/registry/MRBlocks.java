@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.core.registry;
 
+import com.sarinsa.magical_relics.common.block.AntiBuilderBlock;
 import com.sarinsa.magical_relics.common.block.DisplayPedestalBlock;
 import com.sarinsa.magical_relics.common.block.IllusionaryBlock;
 import com.sarinsa.magical_relics.common.block.SpikeTrapBlock;
@@ -22,6 +23,7 @@ public class MRBlocks {
     public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", CreativeModeTab.TAB_BUILDING_BLOCKS, SpikeTrapBlock::new);
     public static final RegistryObject<IllusionaryBlock> ILLUSIONARY_BLOCK = register("illusionary_block", CreativeModeTab.TAB_BUILDING_BLOCKS, IllusionaryBlock::new);
     public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", CreativeModeTab.TAB_DECORATIONS, DisplayPedestalBlock::new);
+    public static final RegistryObject<AntiBuilderBlock> ANTI_BUILDER = register("anti_builder", CreativeModeTab.TAB_DECORATIONS, AntiBuilderBlock::new);
 
 
 

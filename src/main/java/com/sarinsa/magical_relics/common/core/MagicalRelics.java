@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.core;
 
+import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +22,7 @@ public class MagicalRelics {
 
         MRBlocks.BLOCKS.register(modBus);
         MRItems.ITEMS.register(modBus);
+        MRBlockEntities.BLOCK_ENTITIES.register(modBus);
     }
 
 

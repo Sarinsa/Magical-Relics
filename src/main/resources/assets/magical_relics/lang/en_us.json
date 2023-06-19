@@ -1,6 +1,9 @@
 {
   "block.magical_relics.spike_trap": "Spike Trap",
+  "block.magical_relics.anti_builder": "Alteration Negator",
 
   "death.attack.magical_relics.spikes": "%1$s was impaled on a spike trap",
-  "death.attack.magical_relics.spikes.player": "%1$s got impaled on a spike trap whilst trying to escape %2$s"
+  "death.attack.magical_relics.spikes.player": "%1$s got impaled on a spike trap whilst trying to escape %2$s",
+
+  "magical_relics.anti_builder.blocked_message": "A powerful spell protects this land"
 }
