@@ -22,6 +22,9 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+// TODO - Save bounding box to NBT
+//      - Make sure we cancel item use event in case of block items
+//      - Make creative mode GUI to specify effective area size
 public class AntiBuilderBlockEntity extends BlockEntity {
 
     private AABB effectiveArea = null;

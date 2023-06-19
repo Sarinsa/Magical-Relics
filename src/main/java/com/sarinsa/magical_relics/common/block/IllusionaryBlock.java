@@ -10,6 +10,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
 
+// TODO - Consider making the illusionary block into a crumbling block
+//        instead that breaks when stepped on
 public class IllusionaryBlock extends Block implements EntityBlock {
 
     public IllusionaryBlock() {
@@ -21,7 +23,7 @@ public class IllusionaryBlock extends Block implements EntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return null;
     }
 }
