@@ -12,9 +12,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityMobGriefingEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -80,6 +83,21 @@ public class AntiBuilderBlockEntity extends BlockEntity {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onExplodeEvent(ExplosionEvent.Detonate event) {
+        Vec3 pos = event.getExplosion().getPosition();
+
+        if (effectiveArea.contains(pos.x(), pos.y(), pos.z())) {
+            event.getAffectedBlocks().clear();
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onMobGrief(EntityMobGriefingEvent event) {
+        checkAndCancel(event, event.getEntity().blockPosition());
+    }
+
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerUse(LivingEntityUseItemEvent event) {
         Item item = event.getItem().getItem();
 
@@ -106,13 +124,13 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onFluidPlaceBlock(BlockEvent.FluidPlaceBlockEvent event) {
-        checkAndCancel(event);
+        checkAndCancel(event, event.getPos());
     }
 
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPortalSpawn(BlockEvent.PortalSpawnEvent event) {
-        checkAndCancel(event);
+        checkAndCancel(event, event.getPos());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -121,12 +139,12 @@ public class AntiBuilderBlockEntity extends BlockEntity {
     }
 
 
-    private void checkAndCancel(BlockEvent event) {
-        BlockPos pos = event.getPos();
-
+    private boolean checkAndCancel(Event event, BlockPos pos) {
         if (effectiveArea.contains(pos.getX(), pos.getY(), pos.getZ())) {
             event.setCanceled(true);
+            return true;
         }
+        return false;
     }
 
     private void checkAndCancelPlayer(Event event, BlockPos pos, Player player) {
