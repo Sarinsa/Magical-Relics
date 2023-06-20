@@ -13,7 +13,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,8 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
 
-// TODO - Save bounding box to NBT
-//      - Make creative mode GUI to specify effective area size
+// TODO - Make creative mode GUI to specify effective area size
 public class AntiBuilderBlockEntity extends BlockEntity {
 
     private AABB effectiveArea = null;
@@ -143,7 +141,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (effectiveArea == null || event.getLevel() != level)
+        if (event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level)
             return;
 
         Item item = event.getItemStack().getItem();
@@ -161,7 +159,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-        if (effectiveArea == null || event.getLevel() != level)
+        if (event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level)
             return;
 
         BlockState blockState = event.getLevel().getBlockState(event.getPos());

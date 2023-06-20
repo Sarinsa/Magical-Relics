@@ -3,6 +3,7 @@ package com.sarinsa.magical_relics.common.core;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
+import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -19,6 +20,8 @@ public class MagicalRelics {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modBus.addListener(this::onCommonSetup);
+
+        MRDamageSources.init();
 
         MRBlocks.BLOCKS.register(modBus);
         MRItems.ITEMS.register(modBus);

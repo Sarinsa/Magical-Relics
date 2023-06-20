@@ -1,4 +1,4 @@
-package com.sarinsa.magical_relics.common.damagesource;
+package com.sarinsa.magical_relics.common.util;
 
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.world.damagesource.DamageSource;

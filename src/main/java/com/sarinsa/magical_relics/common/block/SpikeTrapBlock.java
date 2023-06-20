@@ -1,6 +1,6 @@
 package com.sarinsa.magical_relics.common.block;
 
-import com.sarinsa.magical_relics.common.damagesource.MRDamageSources;
+import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
