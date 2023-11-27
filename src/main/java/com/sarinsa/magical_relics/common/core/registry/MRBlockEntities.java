@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.common.core.registry;
 
 import com.sarinsa.magical_relics.common.blockentity.AntiBuilderBlockEntity;
+import com.sarinsa.magical_relics.common.blockentity.ArrowTrapBlockEntity;
 import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -24,7 +25,8 @@ public class MRBlockEntities {
     public static final RegistryObject<BlockEntityType<DisplayPedestalBlockEntity>> DISPLAY_PEDESTAL =
             register("display_pedestal", () -> BlockEntityType.Builder.of(DisplayPedestalBlockEntity::new, MRBlocks.DISPLAY_PEDESTAL.get()));
 
-
+    public static final RegistryObject<BlockEntityType<ArrowTrapBlockEntity>> ARROW_TRAP =
+            register("arrow_trap", () -> BlockEntityType.Builder.of(ArrowTrapBlockEntity::new, MRBlocks.ARROW_TRAP.get()));
 
 
     private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register(String name, Supplier<BlockEntityType.Builder<T>> builder) {

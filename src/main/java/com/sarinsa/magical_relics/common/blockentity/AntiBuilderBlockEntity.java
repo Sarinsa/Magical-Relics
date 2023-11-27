@@ -139,6 +139,14 @@ public class AntiBuilderBlockEntity extends BlockEntity {
     }
 
 
+
+
+    //-----------------------------------------------------------------------------------------------------------------
+    //
+    //                                              EVENT STUFF
+    //
+    //-----------------------------------------------------------------------------------------------------------------
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         if (event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level)

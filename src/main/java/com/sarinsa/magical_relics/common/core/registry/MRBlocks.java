@@ -1,18 +1,21 @@
 package com.sarinsa.magical_relics.common.core.registry;
 
-import com.sarinsa.magical_relics.common.block.AntiBuilderBlock;
-import com.sarinsa.magical_relics.common.block.DisplayPedestalBlock;
-import com.sarinsa.magical_relics.common.block.IllusionaryBlock;
-import com.sarinsa.magical_relics.common.block.SpikeTrapBlock;
+import com.sarinsa.magical_relics.common.block.*;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class MRBlocks {
@@ -20,12 +23,35 @@ public class MRBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MagicalRelics.MODID);
 
 
+    public static final Map<RegistryObject<WallPressurePlateBlock>, Block> WALL_PRESSURE_PLATES = new HashMap<>();
+
+
     public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", CreativeModeTab.TAB_BUILDING_BLOCKS, SpikeTrapBlock::new);
+    public static final RegistryObject<ArrowTrapBlock> ARROW_TRAP = register("arrow_trap", CreativeModeTab.TAB_REDSTONE, ArrowTrapBlock::new);
     public static final RegistryObject<IllusionaryBlock> ILLUSIONARY_BLOCK = register("illusionary_block", CreativeModeTab.TAB_BUILDING_BLOCKS, IllusionaryBlock::new);
     public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", CreativeModeTab.TAB_DECORATIONS, DisplayPedestalBlock::new);
     public static final RegistryObject<AntiBuilderBlock> ANTI_BUILDER = register("anti_builder", CreativeModeTab.TAB_DECORATIONS, AntiBuilderBlock::new);
 
+    public static final RegistryObject<WallPressurePlateBlock> COBBLE_WALL_PRESSURE_PLATE = wallPressurePlate("cobblestone_wall_pressure_plate", Blocks.COBBLESTONE);
+    public static final RegistryObject<WallPressurePlateBlock> STONE_WALL_PRESSURE_PLATE = wallPressurePlate("stone_wall_pressure_plate", Blocks.STONE);
+    public static final RegistryObject<WallPressurePlateBlock> OBSIDIAN_WALL_PRESSURE_PLATE = wallPressurePlate("obsidian_wall_pressure_plate", Blocks.OBSIDIAN);
+    public static final RegistryObject<WallPressurePlateBlock> OAK_WALL_PRESSURE_PLATE = wallPressurePlate("oak_wall_pressure_plate", Blocks.OAK_PLANKS);
+    public static final RegistryObject<WallPressurePlateBlock> BIRCH_WALL_PRESSURE_PLATE = wallPressurePlate("birch_wall_pressure_plate", Blocks.BIRCH_PLANKS);
+    public static final RegistryObject<WallPressurePlateBlock> SPRUCE_WALL_PRESSURE_PLATE = wallPressurePlate("spruce_wall_pressure_plate", Blocks.SPRUCE_PLANKS);
+    public static final RegistryObject<WallPressurePlateBlock> JUNGLE_WALL_PRESSURE_PLATE = wallPressurePlate("jungle_wall_pressure_plate", Blocks.JUNGLE_PLANKS);
+    public static final RegistryObject<WallPressurePlateBlock> ACACIA_WALL_PRESSURE_PLATE = wallPressurePlate("acacia_wall_pressure_plate", Blocks.ACACIA_PLANKS);
+    public static final RegistryObject<WallPressurePlateBlock> DARK_OAK_WALL_PRESSURE_PLATE = wallPressurePlate("dark_oak_wall_pressure_plate", Blocks.DARK_OAK_PLANKS);
+    public static final RegistryObject<WallPressurePlateBlock> MANGROVE_WALL_PRESSURE_PLATE = wallPressurePlate("mangrove_wall_pressure_plate", Blocks.MANGROVE_PLANKS);
+    public static final RegistryObject<WallPressurePlateBlock> WARPED_WALL_PRESSURE_PLATE = wallPressurePlate("warped_wall_pressure_plate", Blocks.WARPED_PLANKS);
+    public static final RegistryObject<WallPressurePlateBlock> CRIMSON_WALL_PRESSURE_PLATE = wallPressurePlate("crimson_wall_pressure_plate", Blocks.CRIMSON_PLANKS);
 
+
+    private static RegistryObject<WallPressurePlateBlock> wallPressurePlate(String name, Block parent) {
+        RegistryObject<WallPressurePlateBlock> regObj = BLOCKS.register(name, () -> new WallPressurePlateBlock(BlockBehaviour.Properties.copy(parent)));
+        MRItems.ITEMS.register(name, () -> new BlockItem(regObj.get(), new Item.Properties().tab(CreativeModeTab.TAB_REDSTONE)));
+        WALL_PRESSURE_PLATES.put(regObj, parent);
+        return regObj;
+    }
 
     private static <T extends Block> RegistryObject<T> registerNoItem(String name, Supplier<T> block) {
         return BLOCKS.register(name, block);
