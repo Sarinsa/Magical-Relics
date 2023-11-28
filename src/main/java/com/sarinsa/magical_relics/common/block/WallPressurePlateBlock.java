@@ -38,15 +38,15 @@ public class WallPressurePlateBlock extends PressurePlateBlock {
 
     // South, west, north, east
     private static final VoxelShape[] pressedShapes = {
-            Block.box(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 1.0D),
-            Block.box(15.0D, 1.0D, 1.0D, 16.0D, 15.0D, 15.0D),
-            Block.box(1.0D, 1.0D, 15.0D, 15.0D, 15.0D, 16.0D),
-            Block.box(0.0D, 1.0D, 1.0D, 1.0D, 15.0D, 15.0D)
+            Block.box(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 0.5D),
+            Block.box(15.5D, 1.0D, 1.0D, 16.0D, 15.0D, 15.0D),
+            Block.box(1.0D, 1.0D, 15.5D, 15.0D, 15.0D, 16.0D),
+            Block.box(0.0D, 1.0D, 1.0D, 0.5D, 15.0D, 15.0D)
     };
 
     private static final AABB[] touchShapes = {
             new AABB(0.1D, 0.1D, 0.0D, 0.9375D, 0.9375D, 0.1D),
-            new AABB(15.0D, 0.1D, 0.1D, 1.0D, 0.9375D, 0.9375D),
+            new AABB(0.9375D, 0.1D, 0.1D, 1.0D, 0.9375D, 0.9375D),
             new AABB(0.1D, 0.1D, 0.9375D, 0.9375D, 0.9375D, 1.0D),
             new AABB(0.0D, 0.1D, 0.1D, 0.1D, 0.9375D, 0.9375D)
     };
@@ -81,11 +81,6 @@ public class WallPressurePlateBlock extends PressurePlateBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         Direction direction = state.getValue(FACING);
-
-        if (state.getValue(POWERED) && direction == Direction.EAST) {
-            return Block.box(0.0D, 1.0D, 1.0D, 1.0D, 15.0F, 15.0D);
-        }
-
         return getSignalForState(state) > 0 ? pressedShapes[direction.get2DDataValue()] : shapes[direction.get2DDataValue()];
     }
 
