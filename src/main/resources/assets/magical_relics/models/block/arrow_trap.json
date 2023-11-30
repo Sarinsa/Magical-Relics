@@ -1,0 +1,6 @@
+{
+  "parent": "magical_relics:block/single_layer_invisible",
+  "textures": {
+    "texture": "magical_relics:block/arrow_trap_overlay"
+  }
+}

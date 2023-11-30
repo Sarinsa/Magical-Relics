@@ -3,6 +3,7 @@
   "block.magical_relics.anti_builder": "Alteration Negator",
   "block.magical_relics.cobblestone_wall_pressure_plate": "Cobblestone Wall Pressure Plate",
   "block.magical_relics.stone_wall_pressure_plate": "Stone Wall Pressure Plate",
+  "block.magical_relics.stone_bricks_wall_pressure_plate": "Stone Bricks Wall Pressure Plate",
   "block.magical_relics.obsidian_wall_pressure_plate": "Obsidian Wall Pressure Plate",
   "block.magical_relics.oak_wall_pressure_plate": "Oak Wall Pressure Plate",
   "block.magical_relics.birch_wall_pressure_plate": "Birch Wall Pressure Plate",
@@ -14,6 +15,11 @@
   "block.magical_relics.warped_wall_pressure_plate": "Warped Wall Pressure Plate",
   "block.magical_relics.crimson_wall_pressure_plate": "Crimson Wall Pressure Plate",
 
+  "block.magical_relics.crumbling_cobblestone": "Crumbling Cobblestone",
+  "block.magical_relics.crumbling_mossy_cobblestone": "Crumbling Mossy Cobblestone",
+  "block.magical_relics.crumbling_stone": "Crumbling Stone",
+  "block.magical_relics.crumbling_stone_bricks": "Crumbling Stone Bricks",
+  "block.magical_relics.crumbling_mossy_stone_bricks": "Crumbling Mossy Stone Bricks",
 
   "death.attack.magical_relics.spikes": "%1$s was impaled on a spike trap",
   "death.attack.magical_relics.spikes.player": "%1$s got impaled on a spike trap whilst trying to escape %2$s",

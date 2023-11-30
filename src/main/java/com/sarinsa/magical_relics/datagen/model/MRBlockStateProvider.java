@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.datagen.model;
 
+import com.sarinsa.magical_relics.common.block.CrumblingBlock;
 import com.sarinsa.magical_relics.common.block.WallPressurePlateBlock;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
@@ -7,16 +8,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class MRBlockStateProvider extends BlockStateProvider {
 
@@ -27,6 +27,7 @@ public class MRBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         MRBlocks.WALL_PRESSURE_PLATES.forEach(this::wallPressurePlate);
+        MRBlocks.CRUMBLING_BLOCKS.forEach(this::crumblingBlock);
     }
 
     /**
@@ -47,6 +48,32 @@ public class MRBlockStateProvider extends BlockStateProvider {
                     .build();
         });
         itemModels().withExistingParent(name(regObj.get()), resLoc("block/" + name(regObj.get())));
+    }
+
+    private void crumblingBlock(RegistryObject<CrumblingBlock> regObj, Block textureBlock) {
+        ModelFile crumbleModel = models().withExistingParent(name(regObj.get()) + "_crumbling", resLoc("block/layer_cube"))
+                .texture("texture", blockTexture(textureBlock))
+                .texture("crumble", mcLoc("block/destroy_stage_4"))
+                .renderType("cutout");
+        ModelFile baseModel = models().withExistingParent(name(regObj.get()), mcLoc("block/cube_all"))
+                .texture("all", blockTexture(textureBlock));
+
+
+        getVariantBuilder(regObj.get()).forAllStates((state) -> {
+            boolean crumbling = state.getValue(CrumblingBlock.CRUMBLING);
+
+            if (crumbling) {
+                return ConfiguredModel.builder()
+                        .modelFile(crumbleModel)
+                        .build();
+            }
+            else {
+                return ConfiguredModel.builder()
+                        .modelFile(baseModel)
+                        .build();
+            }
+        });
+        simpleBlockItem(regObj.get(), baseModel);
     }
 
     protected String name(Block block) {

@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.client;
 
+import com.sarinsa.magical_relics.client.renderer.block.CamoTrapRenderer;
 import com.sarinsa.magical_relics.client.renderer.block.DisplayPedestalRenderer;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
@@ -20,5 +21,6 @@ public class ClientRegister {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(MRBlockEntities.DISPLAY_PEDESTAL.get(), DisplayPedestalRenderer::new);
+        event.registerBlockEntityRenderer(MRBlockEntities.ARROW_TRAP.get(), CamoTrapRenderer::new);
     }
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -42,6 +43,11 @@ public class SpikeTrapBlock extends Block {
         if (entity instanceof LivingEntity livingEntity) {
             entity.hurt(MRDamageSources.SPIKES, 2.0F);
         }
+    }
+
+    @Override
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathType) {
+        return false;
     }
 
     @Override

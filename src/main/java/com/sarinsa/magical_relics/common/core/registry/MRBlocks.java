@@ -12,9 +12,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -24,16 +22,24 @@ public class MRBlocks {
 
 
     public static final Map<RegistryObject<WallPressurePlateBlock>, Block> WALL_PRESSURE_PLATES = new HashMap<>();
+    public static final Map<RegistryObject<CrumblingBlock>, Block> CRUMBLING_BLOCKS = new HashMap<>();
 
 
     public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", CreativeModeTab.TAB_BUILDING_BLOCKS, SpikeTrapBlock::new);
     public static final RegistryObject<ArrowTrapBlock> ARROW_TRAP = register("arrow_trap", CreativeModeTab.TAB_REDSTONE, ArrowTrapBlock::new);
-    public static final RegistryObject<IllusionaryBlock> ILLUSIONARY_BLOCK = register("illusionary_block", CreativeModeTab.TAB_BUILDING_BLOCKS, IllusionaryBlock::new);
     public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", CreativeModeTab.TAB_DECORATIONS, DisplayPedestalBlock::new);
     public static final RegistryObject<AntiBuilderBlock> ANTI_BUILDER = register("anti_builder", CreativeModeTab.TAB_DECORATIONS, AntiBuilderBlock::new);
 
+    public static final RegistryObject<CrumblingBlock> CRUMBLING_COBBLESTONE = crumblingBlock("crumbling_cobblestone", Blocks.COBBLESTONE);
+    public static final RegistryObject<CrumblingBlock> CRUMBLING_MOSSY_COBBLESTONE = crumblingBlock("crumbling_mossy_cobblestone", Blocks.MOSSY_COBBLESTONE);
+    public static final RegistryObject<CrumblingBlock> CRUMBLING_STONE = crumblingBlock("crumbling_stone", Blocks.STONE);
+    public static final RegistryObject<CrumblingBlock> CRUMBLING_STONE_BRICKS = crumblingBlock("crumbling_stone_bricks", Blocks.STONE_BRICKS);
+    public static final RegistryObject<CrumblingBlock> CRUMBLING_MOSSY_STONE_BRICKS = crumblingBlock("crumbling_mossy_stone_bricks", Blocks.MOSSY_STONE_BRICKS);
+
+
     public static final RegistryObject<WallPressurePlateBlock> COBBLE_WALL_PRESSURE_PLATE = wallPressurePlate("cobblestone_wall_pressure_plate", Blocks.COBBLESTONE);
     public static final RegistryObject<WallPressurePlateBlock> STONE_WALL_PRESSURE_PLATE = wallPressurePlate("stone_wall_pressure_plate", Blocks.STONE);
+    public static final RegistryObject<WallPressurePlateBlock> STONE_BRICKS_WALL_PRESSURE_PLATE = wallPressurePlate("stone_bricks_wall_pressure_plate", Blocks.STONE_BRICKS);
     public static final RegistryObject<WallPressurePlateBlock> OBSIDIAN_WALL_PRESSURE_PLATE = wallPressurePlate("obsidian_wall_pressure_plate", Blocks.OBSIDIAN);
     public static final RegistryObject<WallPressurePlateBlock> OAK_WALL_PRESSURE_PLATE = wallPressurePlate("oak_wall_pressure_plate", Blocks.OAK_PLANKS);
     public static final RegistryObject<WallPressurePlateBlock> BIRCH_WALL_PRESSURE_PLATE = wallPressurePlate("birch_wall_pressure_plate", Blocks.BIRCH_PLANKS);
@@ -50,6 +56,13 @@ public class MRBlocks {
         RegistryObject<WallPressurePlateBlock> regObj = BLOCKS.register(name, () -> new WallPressurePlateBlock(BlockBehaviour.Properties.copy(parent)));
         MRItems.ITEMS.register(name, () -> new BlockItem(regObj.get(), new Item.Properties().tab(CreativeModeTab.TAB_REDSTONE)));
         WALL_PRESSURE_PLATES.put(regObj, parent);
+        return regObj;
+    }
+
+    private static RegistryObject<CrumblingBlock> crumblingBlock(String name, Block parent) {
+        RegistryObject<CrumblingBlock> regObj = BLOCKS.register(name, () -> new CrumblingBlock(BlockBehaviour.Properties.copy(parent)));
+        MRItems.ITEMS.register(name, () -> new BlockItem(regObj.get(), new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS)));
+        CRUMBLING_BLOCKS.put(regObj, parent);
         return regObj;
     }
 

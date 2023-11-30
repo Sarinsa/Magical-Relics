@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "magical_relics:block/arrow_trap",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "magical_relics:block/arrow_trap"
+    },
+    "facing=south": {
+      "model": "magical_relics:block/arrow_trap",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "magical_relics:block/arrow_trap",
+      "y": 270
+    }
+  }
+}
