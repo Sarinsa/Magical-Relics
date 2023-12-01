@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.core;
 
+import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
@@ -28,6 +29,7 @@ public class MagicalRelics {
         MRBlocks.BLOCKS.register(modBus);
         MRItems.ITEMS.register(modBus);
         MRBlockEntities.BLOCK_ENTITIES.register(modBus);
+        MRArtifactAbilities.ARTIFACT_ABILITIES.register(modBus);
     }
 
 
