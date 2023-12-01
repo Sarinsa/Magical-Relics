@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "magical_relics:block/display_pedestal",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "magical_relics:block/display_pedestal"
+    },
+    "facing=south": {
+      "model": "magical_relics:block/display_pedestal",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "magical_relics:block/display_pedestal",
+      "y": 270
+    }
+  }
+}

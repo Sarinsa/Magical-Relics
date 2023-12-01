@@ -38,10 +38,7 @@ public abstract class BaseCamoBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
-
-        if (camoState != null) {
-            compoundTag.putString("CamoState", ForgeRegistries.BLOCKS.getKey(camoState.getBlock()).toString());
-        }
+        writeUpdateData(compoundTag);
     }
 
     @Override

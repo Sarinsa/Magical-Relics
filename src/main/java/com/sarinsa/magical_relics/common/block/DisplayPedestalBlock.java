@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.common.block;
 
 import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
+import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.client.renderer.blockentity.CampfireRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,11 +15,20 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class DisplayPedestalBlock extends Block implements EntityBlock {
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+
+    private static final VoxelShape shape = Shapes.or(Shapes.or(
+            Block.box(3.0F, 0.0F, 3.0F, 13.0F, 2.0F, 13.0F),
+            Block.box(5.0F, 2.0F, 5.0F, 11.0F, 10.0F, 11.0F),
+            Block.box(3.0F, 10.0F, 3.0F, 13.0F, 16.0F, 13.0F)));
+
 
     public DisplayPedestalBlock() {
         super(BlockBehaviour.Properties.of(Material.GLASS)
@@ -28,23 +38,22 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return shape;
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new DisplayPedestalBlockEntity(pos, state);
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
-
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext useContext) {
         return defaultBlockState().setValue(FACING, useContext.getHorizontalDirection());
     }
-
 
     @Override
     @SuppressWarnings("deprecation")

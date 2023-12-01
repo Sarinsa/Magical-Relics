@@ -6,6 +6,8 @@ import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
+import net.minecraftforge.common.ForgeI18n;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -27,6 +29,8 @@ public class MRBlockEntities {
 
     public static final RegistryObject<BlockEntityType<ArrowTrapBlockEntity>> ARROW_TRAP =
             register("arrow_trap", () -> BlockEntityType.Builder.of(ArrowTrapBlockEntity::new, MRBlocks.ARROW_TRAP.get()));
+
+
 
 
     private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register(String name, Supplier<BlockEntityType.Builder<T>> builder) {
