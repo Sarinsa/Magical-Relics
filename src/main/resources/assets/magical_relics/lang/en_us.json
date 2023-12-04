@@ -1,4 +1,12 @@
 {
+  "item.magical_relics.raw_manaessence": "Raw Manaessence",
+  "item.magical_relics.wood_manaessence": "Wooden Manaessence",
+  "item.magical_relics.leather_manaessence": "Leathery Manaessence",
+  "item.magical_relics.stone_manaessence": "Craggy Manaessence",
+  "item.magical_relics.iron_manaessence": "Ferrous Manaessence",
+  "item.magical_relics.gold_manaessence": "Gilded Manaessence",
+  "item.magical_relics.diamond_manaessence": "Jeweled Manaessence",
+
   "block.magical_relics.spike_trap": "Spike Trap",
   "block.magical_relics.anti_builder": "Alteration Negator",
   "block.magical_relics.display_pedestal": "Display Pedestal",
