@@ -1,10 +1,10 @@
 package com.sarinsa.magical_relics.common.core.registry;
 
+import com.sarinsa.magical_relics.common.artifact.BakerAbility;
 import com.sarinsa.magical_relics.common.artifact.BaseArtifactAbility;
-import com.sarinsa.magical_relics.common.artifact.EmptyArtifactAbility;
+import com.sarinsa.magical_relics.common.artifact.EmptyAbility;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -21,7 +21,9 @@ public class MRArtifactAbilities {
 
 
 
-    public static RegistryObject<BaseArtifactAbility> EMPTY = register("empty", EmptyArtifactAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> EMPTY = register("empty", EmptyAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> BAKER = register("baker", BakerAbility::new);
+
 
 
     private static RegistryObject<BaseArtifactAbility> register(String name, Supplier<BaseArtifactAbility> supplier) {

@@ -1,8 +1,11 @@
 package com.sarinsa.magical_relics.common.block;
 
 import com.sarinsa.magical_relics.common.blockentity.ArrowTrapBlockEntity;
+import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.tag.MRBlockTags;
+import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -13,6 +16,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -62,6 +66,11 @@ public class ArrowTrapBlock extends HorizontalDirectionalBlock implements Entity
                     }
                     return InteractionResult.CONSUME;
                 }
+            }
+            // TODO - remove this, used for testing
+            else if (handStack.getItem() == Items.WOODEN_PICKAXE) {
+                ArtifactUtils.tryApplyAbility(handStack, MRArtifactAbilities.BAKER.get());
+                return InteractionResult.CONSUME;
             }
         }
         return InteractionResult.PASS;

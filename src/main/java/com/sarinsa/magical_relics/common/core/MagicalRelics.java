@@ -4,8 +4,10 @@ import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
+import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -23,6 +25,8 @@ public class MagicalRelics {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modBus.addListener(this::onCommonSetup);
+
+        MinecraftForge.EVENT_BUS.register(new MREventListener());
 
         MRDamageSources.init();
 

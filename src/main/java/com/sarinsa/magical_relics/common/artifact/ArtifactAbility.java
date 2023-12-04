@@ -1,5 +1,11 @@
 package com.sarinsa.magical_relics.common.artifact;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+
 /**
  * The skeleton of an artifact ability.
  */
@@ -18,14 +24,14 @@ public interface ArtifactAbility {
      * <br><br>
      * @return True if durability should be decreased on the used artifact
      */
-    boolean onClickBlock();
+    boolean onClickBlock(Level level, BlockPos pos, BlockState state, Direction face, Player player);
 
     /**
      * Called when the player sneaks and right-clicks on a block with an artifact
      * <br><br>
      * @return True if durability should be decreased on the used artifact
      */
-    boolean onSneakClickBlock();
+    boolean onSneakClickBlock(Level level, BlockPos pos, BlockState state, Player player);
 
     /**
      * Called per tick when the player is sneaking with an artifact in their hand
