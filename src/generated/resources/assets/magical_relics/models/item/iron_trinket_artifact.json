@@ -1,0 +1,62 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "magical_relics:item/trinket1",
+      "predicate": {
+        "magical_relics:trinket_variant": 1.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket2",
+      "predicate": {
+        "magical_relics:trinket_variant": 2.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket3",
+      "predicate": {
+        "magical_relics:trinket_variant": 3.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket4",
+      "predicate": {
+        "magical_relics:trinket_variant": 4.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket5",
+      "predicate": {
+        "magical_relics:trinket_variant": 5.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket6",
+      "predicate": {
+        "magical_relics:trinket_variant": 6.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket7",
+      "predicate": {
+        "magical_relics:trinket_variant": 7.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket8",
+      "predicate": {
+        "magical_relics:trinket_variant": 8.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket9",
+      "predicate": {
+        "magical_relics:trinket_variant": 9.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "magical_relics:item/trinket/trinket1"
+  }
+}

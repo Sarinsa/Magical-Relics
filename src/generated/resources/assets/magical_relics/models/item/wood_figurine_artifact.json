@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "magical_relics:item/figurine1",
+      "predicate": {
+        "magical_relics:figurine_variant": 1.0
+      }
+    },
+    {
+      "model": "magical_relics:item/figurine2",
+      "predicate": {
+        "magical_relics:figurine_variant": 2.0
+      }
+    },
+    {
+      "model": "magical_relics:item/figurine3",
+      "predicate": {
+        "magical_relics:figurine_variant": 3.0
+      }
+    },
+    {
+      "model": "magical_relics:item/figurine4",
+      "predicate": {
+        "magical_relics:figurine_variant": 4.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "magical_relics:item/figurine/figurine1"
+  }
+}

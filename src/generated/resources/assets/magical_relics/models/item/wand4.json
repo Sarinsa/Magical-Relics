@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "magical_relics:item/wand/wand4",
+    "layer1": "magical_relics:item/wand/wand4_overlay"
+  }
+}

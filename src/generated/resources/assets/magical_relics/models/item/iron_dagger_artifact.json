@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "magical_relics:item/dagger1",
+      "predicate": {
+        "magical_relics:dagger_variant": 1.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger2",
+      "predicate": {
+        "magical_relics:dagger_variant": 2.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger3",
+      "predicate": {
+        "magical_relics:dagger_variant": 3.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger4",
+      "predicate": {
+        "magical_relics:dagger_variant": 4.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger5",
+      "predicate": {
+        "magical_relics:dagger_variant": 5.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "magical_relics:item/dagger/dagger1"
+  }
+}

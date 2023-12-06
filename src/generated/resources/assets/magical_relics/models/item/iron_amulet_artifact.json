@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "magical_relics:item/amulet1",
+      "predicate": {
+        "magical_relics:amulet_variant": 1.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet2",
+      "predicate": {
+        "magical_relics:amulet_variant": 2.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet3",
+      "predicate": {
+        "magical_relics:amulet_variant": 3.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet4",
+      "predicate": {
+        "magical_relics:amulet_variant": 4.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet5",
+      "predicate": {
+        "magical_relics:amulet_variant": 5.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet6",
+      "predicate": {
+        "magical_relics:amulet_variant": 6.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "magical_relics:item/amulet/amulet1"
+  }
+}

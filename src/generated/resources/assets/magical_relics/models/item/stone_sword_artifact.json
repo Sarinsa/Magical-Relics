@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "magical_relics:item/sword1",
+      "predicate": {
+        "magical_relics:sword_variant": 1.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword2",
+      "predicate": {
+        "magical_relics:sword_variant": 2.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword3",
+      "predicate": {
+        "magical_relics:sword_variant": 3.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword4",
+      "predicate": {
+        "magical_relics:sword_variant": 4.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword5",
+      "predicate": {
+        "magical_relics:sword_variant": 5.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword6",
+      "predicate": {
+        "magical_relics:sword_variant": 6.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "magical_relics:item/sword/sword1"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "magical_relics:item/sword/sword5",
+    "layer1": "magical_relics:item/sword/sword5_overlay"
+  }
+}

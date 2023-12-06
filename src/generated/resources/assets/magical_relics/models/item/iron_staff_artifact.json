@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "magical_relics:item/staff1",
+      "predicate": {
+        "magical_relics:staff_variant": 1.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff2",
+      "predicate": {
+        "magical_relics:staff_variant": 2.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff3",
+      "predicate": {
+        "magical_relics:staff_variant": 3.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff4",
+      "predicate": {
+        "magical_relics:staff_variant": 4.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff5",
+      "predicate": {
+        "magical_relics:staff_variant": 5.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "magical_relics:item/staff/staff1"
+  }
+}

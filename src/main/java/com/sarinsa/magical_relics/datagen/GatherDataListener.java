@@ -2,6 +2,8 @@ package com.sarinsa.magical_relics.datagen;
 
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.datagen.model.MRBlockStateProvider;
+import com.sarinsa.magical_relics.datagen.model.MRItemModelProvider;
+import com.sarinsa.magical_relics.datagen.recipe.MRRecipeProvider;
 import com.sarinsa.magical_relics.datagen.tag.MRBlockTagProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -17,12 +19,10 @@ public class GatherDataListener {
         DataGenerator generator = event.getGenerator();
         ExistingFileHelper fileHelper = event.getExistingFileHelper();
 
-        if (event.includeClient()) {
-            generator.addProvider(true, new MRBlockStateProvider(generator, fileHelper));
-        }
+        generator.addProvider(event.includeClient(), new MRBlockStateProvider(generator, fileHelper));
+        generator.addProvider(event.includeClient(), new MRItemModelProvider(generator, fileHelper));
 
-        if (event.includeServer()) {
-            generator.addProvider(true, new MRBlockTagProvider(generator, fileHelper));
-        }
+        generator.addProvider(event.includeServer(), new MRBlockTagProvider(generator, fileHelper));
+        generator.addProvider(event.includeServer(), new MRRecipeProvider(generator));
     }
 }
