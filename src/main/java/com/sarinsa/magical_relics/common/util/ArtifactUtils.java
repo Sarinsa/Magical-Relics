@@ -3,35 +3,78 @@ package com.sarinsa.magical_relics.common.util;
 import com.sarinsa.magical_relics.common.artifact.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
+import com.sarinsa.magical_relics.common.core.registry.MRItems;
+import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class ArtifactUtils {
 
-    private static final String ABILITY_KEY = "MRArtifactAbilities";
+    public static final String MOD_DATA_KEY = "MagicalRelicsData";
+    public static final String ABILITY_KEY = "MRArtifactAbilities";
+    public static final String VARIANT_KEY = "MRArtifactVariant";
+    public static final String ITEM_COLOR = "MRItemColor";
+
+    /** Possible overlay colors for artifact items. */
+    private static final int[] ARTIFACT_COLORS = {
+            0x00B6FF,
+            0x1466FF,
+            0x6647FF,
+            0xC23FFF,
+            0xFF00A5,
+            0xFF0010,
+            0xFF5F0F,
+            0xFF9D00,
+            0xFFE500,
+            0x2FBC00,
+            0x00BA6F,
+            0x37B7AA,
+            0x915E35,
+            0xC4746F,
+            0xC170BC,
+            0x84BF4E,
+            0x6B75BC,
+            0xD8D8D8
+    };
 
 
     public static ItemStack generateRandomArtifact(RandomSource random) {
-        ItemStack artifactStack = new ItemStack(Items.WOODEN_PICKAXE);
+        ArtifactSet<List<RegistryObject<Item>>> artifactSet = MRItems.ALL_ARTIFACTS.get(random.nextInt(MRItems.ALL_ARTIFACTS.size()));
+        Item artifactItem = artifactSet.getDataStructure().get(random.nextInt(artifactSet.getDataStructure().size())).get();
+        ItemStack artifactStack = new ItemStack(artifactItem);
 
-        tryApplyAbility(artifactStack, MRArtifactAbilities.BAKER.get());
+        CompoundTag tag = artifactStack.getOrCreateTag();
+        CompoundTag modDataTag = new CompoundTag();
+
+        modDataTag.putInt(VARIANT_KEY, random.nextInt(artifactSet.getVariations()));
+        modDataTag.putInt(ITEM_COLOR, ARTIFACT_COLORS[random.nextInt(ARTIFACT_COLORS.length)]);
+        tag.put(MOD_DATA_KEY, modDataTag);
+
+        tryApplyAbilities(artifactStack, MRArtifactAbilities.BAKER.get());
 
         return artifactStack;
+    }
+
+    public static int getVariant(ItemStack itemStack) {
+        CompoundTag stackTag = itemStack.getOrCreateTag();
+
+        if (!stackTag.contains(MOD_DATA_KEY) || !stackTag.getCompound(MOD_DATA_KEY).contains(VARIANT_KEY, Tag.TAG_INT))
+            return 1;
+
+        return stackTag.getCompound(MOD_DATA_KEY).getInt(VARIANT_KEY);
     }
 
     /**
@@ -39,46 +82,42 @@ public class ArtifactUtils {
      * <br><br>
      * @param itemStack The ItemStack to put the ability on.
      * @param toApply The artifact ability instance to apply to the ItemStack.
-     * <br><br>
-     * @return True if the ability was applied successfully, false if not.
      */
-    public static boolean tryApplyAbility(ItemStack itemStack, BaseArtifactAbility toApply) {
-        Map<Enchantment, Integer> enchantments = itemStack.getAllEnchantments();
-
-        // Check for incompatible enchantments
-        if (!toApply.incompatibleEnchantments().isEmpty()) {
-            for (Supplier<Enchantment> illegalEnchantments : toApply.incompatibleEnchantments()) {
-                if (enchantments.containsKey(illegalEnchantments.get()))
-                    return false;
-            }
-        }
+    public static void tryApplyAbilities(ItemStack itemStack, BaseArtifactAbility... toApply) {
         List<BaseArtifactAbility> allAbilities = getAllAbilities(itemStack);
 
-        // Abort if the item already has the ability
-        if (allAbilities.contains(toApply)) return false;
+        CompoundTag stackTag = itemStack.getOrCreateTag();
 
-        // Check if the item already has an ability with a non-stackable trigger type
-        for (BaseArtifactAbility ability : allAbilities) {
-            if (ability.getTriggerType() == toApply.getTriggerType() && !toApply.getTriggerType().canStack())
-                return false;
+        if (!stackTag.contains(MOD_DATA_KEY, Tag.TAG_COMPOUND))
+            stackTag.put(MOD_DATA_KEY, new CompoundTag());
+
+        CompoundTag modDataTag = stackTag.getCompound(MOD_DATA_KEY);
+
+        if (!modDataTag.contains(ABILITY_KEY, Tag.TAG_LIST))
+            modDataTag.put(ABILITY_KEY, new ListTag());
+
+
+        for (BaseArtifactAbility nextToApply : toApply) {
+            // Abort if the item already has the ability
+            if (allAbilities.contains(nextToApply)) continue;
+
+            // Check if the item already has an ability with a non-stackable trigger type
+            for (BaseArtifactAbility ability : allAbilities) {
+                if (ability.getTriggerType() == nextToApply.getTriggerType() && !nextToApply.getTriggerType().canStack())
+                    return;
+            }
+            ResourceLocation abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey(nextToApply);
+
+            // Make sure the ability actually exists in the registry before applying
+            if (abilityId == null) {
+                MagicalRelics.LOG.warn("Attempted applying an ability with no ID to an artifact");
+                MagicalRelics.LOG.warn("Problematic ability: " + nextToApply);
+                continue;
+            }
+
+            // Success, probably
+            modDataTag.getCompound(MOD_DATA_KEY).getList(ABILITY_KEY, Tag.TAG_STRING).add(StringTag.valueOf(abilityId.toString()));
         }
-        CompoundTag compoundTag = itemStack.getOrCreateTag();
-
-        if (!compoundTag.contains(ABILITY_KEY, Tag.TAG_LIST))
-            compoundTag.put(ABILITY_KEY, new ListTag());
-
-        ResourceLocation abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey(toApply);
-
-        // Make sure the ability actually exists in the registry before applying
-        if (abilityId == null) {
-            MagicalRelics.LOG.warn("Attempted applying an ability with no ID to an artifact");
-            MagicalRelics.LOG.warn("Problematic ability: " + toApply);
-            return false;
-        }
-
-        // Success, probably
-        compoundTag.getList(ABILITY_KEY, Tag.TAG_STRING).add(StringTag.valueOf(abilityId.toString()));
-        return true;
     }
 
     @Nullable
@@ -97,11 +136,11 @@ public class ArtifactUtils {
     @Nonnull
     public static List<BaseArtifactAbility> getAllAbilities(ItemStack itemStack) {
         List<BaseArtifactAbility> abilities = new ArrayList<>();
-        CompoundTag compoundTag = itemStack.getOrCreateTag();
+        CompoundTag stackTag = itemStack.getOrCreateTag();
 
-        if (!compoundTag.contains(ABILITY_KEY, Tag.TAG_LIST)) return abilities;
+        if (!stackTag.contains(MOD_DATA_KEY) || !stackTag.getCompound(MOD_DATA_KEY).contains(ABILITY_KEY)) return abilities;
 
-        ListTag abilitiesTag = compoundTag.getList(ABILITY_KEY, ListTag.TAG_STRING);
+        ListTag abilitiesTag = stackTag.getCompound(MOD_DATA_KEY).getList(ABILITY_KEY, ListTag.TAG_STRING);
 
         for (int i = 0; i < abilitiesTag.size(); i++) {
             ResourceLocation abilityId = ResourceLocation.tryParse(abilitiesTag.getString(i));
@@ -111,5 +150,21 @@ public class ArtifactUtils {
             }
         }
         return abilities;
+    }
+
+    @Nonnull
+    public static List<Component> getDescriptions(ItemStack itemStack) {
+        List<BaseArtifactAbility> abilities = ArtifactUtils.getAllAbilities(itemStack);
+        List<Component> components = new ArrayList<>();
+
+        if (!abilities.isEmpty()) {
+            for (BaseArtifactAbility ability : abilities) {
+                Component description = ability.getAbilityDescription();
+
+                if (description != null)
+                    components.add(description);
+            }
+        }
+        return components;
     }
 }

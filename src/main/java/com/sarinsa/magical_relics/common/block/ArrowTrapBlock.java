@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import org.apache.maven.artifact.Artifact;
 import org.jetbrains.annotations.Nullable;
 
 public class ArrowTrapBlock extends HorizontalDirectionalBlock implements EntityBlock {
@@ -69,7 +70,7 @@ public class ArrowTrapBlock extends HorizontalDirectionalBlock implements Entity
             }
             // TODO - remove this, used for testing
             else if (handStack.getItem() == Items.WOODEN_PICKAXE) {
-                ArtifactUtils.tryApplyAbility(handStack, MRArtifactAbilities.BAKER.get());
+                player.setItemInHand(hand, ArtifactUtils.generateRandomArtifact(level.random));
                 return InteractionResult.CONSUME;
             }
         }

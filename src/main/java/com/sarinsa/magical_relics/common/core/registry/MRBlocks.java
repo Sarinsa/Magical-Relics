@@ -25,6 +25,8 @@ public class MRBlocks {
     public static final Map<RegistryObject<CrumblingBlock>, Block> CRUMBLING_BLOCKS = new HashMap<>();
 
 
+
+    public static final RegistryObject<QuicksandBlock> QUICKSAND = register("quicksand", CreativeModeTab.TAB_BUILDING_BLOCKS, QuicksandBlock::new);
     public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", CreativeModeTab.TAB_BUILDING_BLOCKS, SpikeTrapBlock::new);
     public static final RegistryObject<ArrowTrapBlock> ARROW_TRAP = register("arrow_trap", CreativeModeTab.TAB_REDSTONE, ArrowTrapBlock::new);
     public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", CreativeModeTab.TAB_DECORATIONS, DisplayPedestalBlock::new);
@@ -35,7 +37,6 @@ public class MRBlocks {
     public static final RegistryObject<CrumblingBlock> CRUMBLING_STONE = crumblingBlock("crumbling_stone", Blocks.STONE);
     public static final RegistryObject<CrumblingBlock> CRUMBLING_STONE_BRICKS = crumblingBlock("crumbling_stone_bricks", Blocks.STONE_BRICKS);
     public static final RegistryObject<CrumblingBlock> CRUMBLING_MOSSY_STONE_BRICKS = crumblingBlock("crumbling_mossy_stone_bricks", Blocks.MOSSY_STONE_BRICKS);
-
 
     public static final RegistryObject<WallPressurePlateBlock> COBBLE_WALL_PRESSURE_PLATE = wallPressurePlate("cobblestone_wall_pressure_plate", Blocks.COBBLESTONE);
     public static final RegistryObject<WallPressurePlateBlock> STONE_WALL_PRESSURE_PLATE = wallPressurePlate("stone_wall_pressure_plate", Blocks.STONE);
@@ -50,6 +51,8 @@ public class MRBlocks {
     public static final RegistryObject<WallPressurePlateBlock> MANGROVE_WALL_PRESSURE_PLATE = wallPressurePlate("mangrove_wall_pressure_plate", Blocks.MANGROVE_PLANKS);
     public static final RegistryObject<WallPressurePlateBlock> WARPED_WALL_PRESSURE_PLATE = wallPressurePlate("warped_wall_pressure_plate", Blocks.WARPED_PLANKS);
     public static final RegistryObject<WallPressurePlateBlock> CRIMSON_WALL_PRESSURE_PLATE = wallPressurePlate("crimson_wall_pressure_plate", Blocks.CRIMSON_PLANKS);
+
+
 
 
     private static RegistryObject<WallPressurePlateBlock> wallPressurePlate(String name, Block parent) {

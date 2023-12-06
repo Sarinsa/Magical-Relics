@@ -13,18 +13,4 @@ import java.util.List;
 
 public class ClientEventListener {
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onRenderItemTooltip(RenderTooltipEvent.GatherComponents event) {
-        ItemStack itemStack = event.getItemStack();
-        List<BaseArtifactAbility> abilities = ArtifactUtils.getAllAbilities(itemStack);
-
-        if (!abilities.isEmpty()) {
-            for (BaseArtifactAbility ability : abilities) {
-                Component description = ability.getAbilityDescription();
-
-                if (description != null)
-                    event.getTooltipElements().add(Either.left(description));
-            }
-        }
-    }
 }
