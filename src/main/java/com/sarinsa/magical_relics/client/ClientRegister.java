@@ -42,7 +42,7 @@ public class ClientRegister {
     @SubscribeEvent
     public static void onItemColors(RegisterColorHandlersEvent.Item event) {
         for (ArtifactSet<List<RegistryObject<Item>>> artifactSet : MRItems.ALL_ARTIFACTS) {
-            for (RegistryObject<Item> regObj : artifactSet.getDataStructure()) {
+            for (RegistryObject<Item> regObj : artifactSet.dataStructure()) {
                 event.register((itemStack, index) -> {
                     if (index > 0) {
                         CompoundTag stackTag = itemStack.getOrCreateTag();

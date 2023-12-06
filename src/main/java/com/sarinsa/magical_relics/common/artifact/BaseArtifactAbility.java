@@ -18,11 +18,6 @@ import java.util.function.Supplier;
 
 public abstract class BaseArtifactAbility implements ArtifactAbility {
 
-    private static final ImmutableList<Supplier<Enchantment>> DEFAULT_DISABLED = ImmutableList.of(
-            () -> Enchantments.MENDING,
-            () -> Enchantments.UNBREAKING
-    );
-
     private final Component description;
 
 
@@ -45,14 +40,6 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
      */
     public Component getAbilityDescription() {
         return description;
-    }
-
-    /**
-     * @return An array of enchantments that cannot be applied to
-     * an artifact item with this ability.
-     */
-    public ImmutableList<Supplier<Enchantment>> incompatibleEnchantments() {
-        return DEFAULT_DISABLED;
     }
 
     @Override

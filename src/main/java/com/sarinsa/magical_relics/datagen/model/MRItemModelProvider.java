@@ -34,15 +34,15 @@ public class MRItemModelProvider extends ItemModelProvider {
     }
 
     public void artifactSet(ArtifactSet<List<RegistryObject<Item>>> artifactSet) {
-        for (RegistryObject<Item> regObj : artifactSet.getDataStructure()) {
+        for (RegistryObject<Item> regObj : artifactSet.dataStructure()) {
             ResourceLocation itemId = regObj.getId();
-            String artifactType = artifactSet.getType();
+            String artifactType = artifactSet.type();
 
             ItemModelBuilder builder = getBuilder(itemId.toString())
                     .parent(new ModelFile.UncheckedModelFile("item/generated"))
                     .texture("layer0", modArtifactTexture(artifactType, artifactType + "1"));
 
-            for (int i = 1; i < artifactSet.getVariations(); i++) {
+            for (int i = 1; i < artifactSet.variants(); i++) {
                 ItemModelBuilder subModelBuilder = getBuilder(MagicalRelics.MODID + ":" + artifactType + i)
                         .parent(new ModelFile.UncheckedModelFile("item/generated"))
                         .texture("layer0", modArtifactTexture(artifactType, artifactType + i))

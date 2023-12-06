@@ -53,13 +53,13 @@ public class ArtifactUtils {
 
     public static ItemStack generateRandomArtifact(RandomSource random) {
         ArtifactSet<List<RegistryObject<Item>>> artifactSet = MRItems.ALL_ARTIFACTS.get(random.nextInt(MRItems.ALL_ARTIFACTS.size()));
-        Item artifactItem = artifactSet.getDataStructure().get(random.nextInt(artifactSet.getDataStructure().size())).get();
+        Item artifactItem = artifactSet.dataStructure().get(random.nextInt(artifactSet.dataStructure().size())).get();
         ItemStack artifactStack = new ItemStack(artifactItem);
 
         CompoundTag tag = artifactStack.getOrCreateTag();
         CompoundTag modDataTag = new CompoundTag();
 
-        modDataTag.putInt(VARIANT_KEY, random.nextInt(artifactSet.getVariations()));
+        modDataTag.putInt(VARIANT_KEY, random.nextInt(artifactSet.variants()));
         modDataTag.putInt(ITEM_COLOR, ARTIFACT_COLORS[random.nextInt(ARTIFACT_COLORS.length)]);
         tag.put(MOD_DATA_KEY, modDataTag);
 

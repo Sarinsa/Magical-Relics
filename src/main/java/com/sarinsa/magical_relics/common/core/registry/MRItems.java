@@ -50,11 +50,11 @@ public class MRItems {
     private static ArtifactSet<List<RegistryObject<Item>>> artifactSet(String name, int variations) {
         ArtifactSet<List<RegistryObject<Item>>> artifactSet = new ArtifactSet<>(name, variations, new ArrayList<>());
 
-        artifactSet.getDataStructure().add(ITEMS.register("wood_" + name + "_artifact", () -> new ArtifactItem(Tiers.WOOD)));
-        artifactSet.getDataStructure().add(ITEMS.register("stone_" + name + "_artifact", () -> new ArtifactItem(Tiers.STONE)));
-        artifactSet.getDataStructure().add(ITEMS.register("iron_" + name + "_artifact", () -> new ArtifactItem(Tiers.IRON)));
-        artifactSet.getDataStructure().add(ITEMS.register("gold_" + name + "_artifact", () -> new ArtifactItem(Tiers.GOLD)));
-        artifactSet.getDataStructure().add(ITEMS.register("diamond_" + name + "_artifact", () -> new ArtifactItem(Tiers.DIAMOND)));
+        artifactSet.dataStructure().add(ITEMS.register("wood_" + name + "_artifact", () -> new ArtifactItem(Tiers.WOOD)));
+        artifactSet.dataStructure().add(ITEMS.register("stone_" + name + "_artifact", () -> new ArtifactItem(Tiers.STONE)));
+        artifactSet.dataStructure().add(ITEMS.register("iron_" + name + "_artifact", () -> new ArtifactItem(Tiers.IRON)));
+        artifactSet.dataStructure().add(ITEMS.register("gold_" + name + "_artifact", () -> new ArtifactItem(Tiers.GOLD)));
+        artifactSet.dataStructure().add(ITEMS.register("diamond_" + name + "_artifact", () -> new ArtifactItem(Tiers.DIAMOND)));
 
         ALL_ARTIFACTS.add(artifactSet);
         return artifactSet;
