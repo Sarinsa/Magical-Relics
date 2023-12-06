@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "layers=1": {
+      "model": "magical_relics:block/quicksand_layer1"
+    },
+    "layers=2": {
+      "model": "magical_relics:block/quicksand_layer2"
+    },
+    "layers=3": {
+      "model": "magical_relics:block/quicksand_layer3"
+    },
+    "layers=4": {
+      "model": "magical_relics:block/quicksand_layer4"
+    },
+    "layers=5": {
+      "model": "magical_relics:block/quicksand_layer5"
+    },
+    "layers=6": {
+      "model": "magical_relics:block/quicksand_layer6"
+    },
+    "layers=7": {
+      "model": "magical_relics:block/quicksand_layer7"
+    },
+    "layers=8": {
+      "model": "magical_relics:block/quicksand_layer8"
+    }
+  }
+}

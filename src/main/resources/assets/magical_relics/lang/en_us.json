@@ -7,6 +7,7 @@
   "item.magical_relics.gold_manaessence": "Gilded Manaessence",
   "item.magical_relics.diamond_manaessence": "Jeweled Manaessence",
 
+  "block.magical_relics.quicksand": "Quicksand",
   "block.magical_relics.spike_trap": "Spike Trap",
   "block.magical_relics.anti_builder": "Alteration Negator",
   "block.magical_relics.display_pedestal": "Display Pedestal",
@@ -23,7 +24,6 @@
   "block.magical_relics.mangrove_wall_pressure_plate": "Mangrove Wall Pressure Plate",
   "block.magical_relics.warped_wall_pressure_plate": "Warped Wall Pressure Plate",
   "block.magical_relics.crimson_wall_pressure_plate": "Crimson Wall Pressure Plate",
-
   "block.magical_relics.crumbling_cobblestone": "Crumbling Cobblestone",
   "block.magical_relics.crumbling_mossy_cobblestone": "Crumbling Mossy Cobblestone",
   "block.magical_relics.crumbling_stone": "Crumbling Stone",
@@ -33,5 +33,7 @@
   "death.attack.magical_relics.spikes": "%1$s was impaled on a spike trap",
   "death.attack.magical_relics.spikes.player": "%1$s got impaled on a spike trap whilst trying to escape %2$s",
 
-  "magical_relics.anti_builder.blocked_message": "A powerful spell protects this land"
+  "magical_relics.anti_builder.blocked_message": "A powerful spell protects this land",
+
+  "magical_relics.artifact_ability.magical_relics.baker.description": "Conjures cakes on solid surfaces when right-clicking"
 }
