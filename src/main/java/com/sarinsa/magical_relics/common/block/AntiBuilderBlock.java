@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,7 +21,7 @@ public class AntiBuilderBlock extends Block implements EntityBlock {
 
     public AntiBuilderBlock() {
         super(BlockBehaviour.Properties.of(Material.STONE)
-                .strength(1.0F, 1000.0F)
+                .strength(1.0F, 3600000.0F)
                 .sound(SoundType.STONE)
                 .destroyTime(0.5F)
                 .lightLevel((state) -> 8)

@@ -2,6 +2,8 @@ package com.sarinsa.magical_relics.common.artifact;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -69,4 +71,16 @@ public interface ArtifactAbility {
      * the player's hand for this to run.
      */
     void tickPassiveEffect();
+
+    /**
+     * @return An array of translation key Strings representing the possible
+     *         item name prefixes this ability grants.
+     */
+    String[] getPrefixes();
+
+    /**
+     * @return An array of translation key Strings representing the possible
+     *         item name suffixes this ability grants.
+     */
+    String[] getSuffixes();
 }

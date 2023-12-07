@@ -13,7 +13,7 @@ import java.util.List;
 public class ArtifactItem extends TieredItem {
 
     public ArtifactItem(Tier tier) {
-        super(tier, new Properties().stacksTo(1).tab(CreativeModeTab.TAB_MISC));
+        super(tier, new Properties().rarity(Rarity.UNCOMMON).stacksTo(1).tab(CreativeModeTab.TAB_MISC));
     }
 
     @Override
@@ -38,5 +38,15 @@ public class ArtifactItem extends TieredItem {
             return false;
 
         return super.isBookEnchantable(stack, book);
+    }
+
+    @Override
+    public Component getName(ItemStack itemStack) {
+        Component alteredName = ArtifactUtils.getItemName(itemStack);
+
+        if (alteredName == null)
+            return super.getName(itemStack);
+
+        return alteredName;
     }
 }

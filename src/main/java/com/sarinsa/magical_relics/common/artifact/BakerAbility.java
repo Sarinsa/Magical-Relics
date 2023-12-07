@@ -3,6 +3,7 @@ package com.sarinsa.magical_relics.common.artifact;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -14,13 +15,21 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BakerAbility extends BaseArtifactAbility {
 
+    private static final String[] PREFIXES = {
+            createPrefix("baker", "bakers"),
+            createPrefix("baker", "confectioners")
+    };
+
+    private static final String[] SUFFIXES = {
+            createSuffix("baker", "baking"),
+            createSuffix("baker", "frosting"),
+            createSuffix("baker", "tastiness"),
+            createSuffix("baker", "delight"),
+    };
+
+
     public BakerAbility() {
         super("baker");
-    }
-
-    @Override
-    public TriggerType getTriggerType() {
-        return TriggerType.MAIN_HAND;
     }
 
     @Override
@@ -47,5 +56,20 @@ public class BakerAbility extends BaseArtifactAbility {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public String[] getPrefixes() {
+        return PREFIXES;
+    }
+
+    @Override
+    public String[] getSuffixes() {
+        return SUFFIXES;
+    }
+
+    @Override
+    public TriggerType getTriggerType() {
+        return TriggerType.MAIN_HAND;
     }
 }

@@ -2,6 +2,9 @@ package com.sarinsa.magical_relics.common.artifact;
 
 public class EmptyAbility extends BaseArtifactAbility {
 
+    private static final String[] NO_PREFIXES = {};
+    private static final String[] NO_SUFFIXES = {};
+
     public EmptyAbility() {
         super("empty");
     }
@@ -9,5 +12,15 @@ public class EmptyAbility extends BaseArtifactAbility {
     @Override
     public TriggerType getTriggerType() {
         return TriggerType.INVENTORY;
+    }
+
+    @Override
+    public String[] getPrefixes() {
+        return NO_PREFIXES;
+    }
+
+    @Override
+    public String[] getSuffixes() {
+        return NO_SUFFIXES;
     }
 }

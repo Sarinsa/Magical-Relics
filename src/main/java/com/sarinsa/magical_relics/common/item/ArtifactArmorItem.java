@@ -3,10 +3,7 @@ package com.sarinsa.magical_relics.common.item;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -17,7 +14,7 @@ import java.util.List;
 public class ArtifactArmorItem extends ArmorItem {
 
     public ArtifactArmorItem(ArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, Properties properties) {
-        super(armorMaterial, equipmentSlot, properties);
+        super(armorMaterial, equipmentSlot, properties.rarity(Rarity.UNCOMMON));
     }
 
     @Override
@@ -42,5 +39,15 @@ public class ArtifactArmorItem extends ArmorItem {
             return false;
 
         return super.isBookEnchantable(stack, book);
+    }
+
+    @Override
+    public Component getName(ItemStack itemStack) {
+        Component alteredName = ArtifactUtils.getItemName(itemStack);
+
+        if (alteredName == null)
+            return super.getName(itemStack);
+
+        return alteredName;
     }
 }

@@ -47,8 +47,8 @@ public class ClientRegister {
                     if (index > 0) {
                         CompoundTag stackTag = itemStack.getOrCreateTag();
 
-                        if (stackTag.contains(ArtifactUtils.MOD_DATA_KEY, Tag.TAG_COMPOUND) && stackTag.getCompound(ArtifactUtils.MOD_DATA_KEY).contains(ArtifactUtils.ITEM_COLOR)) {
-                            return stackTag.getCompound(ArtifactUtils.MOD_DATA_KEY).getInt(ArtifactUtils.ITEM_COLOR);
+                        if (stackTag.contains(ArtifactUtils.MOD_DATA_KEY, Tag.TAG_COMPOUND) && stackTag.getCompound(ArtifactUtils.MOD_DATA_KEY).contains(ArtifactUtils.ITEM_COLOR_KEY)) {
+                            return stackTag.getCompound(ArtifactUtils.MOD_DATA_KEY).getInt(ArtifactUtils.ITEM_COLOR_KEY);
                         }
                     }
                     return -1;

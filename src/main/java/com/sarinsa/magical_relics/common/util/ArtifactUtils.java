@@ -28,7 +28,9 @@ public class ArtifactUtils {
     public static final String MOD_DATA_KEY = "MagicalRelicsData";
     public static final String ABILITY_KEY = "MRArtifactAbilities";
     public static final String VARIANT_KEY = "MRArtifactVariant";
-    public static final String ITEM_COLOR = "MRItemColor";
+    public static final String ITEM_COLOR_KEY = "MRItemColor";
+    public static final String PREFIX_KEY = "MRNamePrefix";
+    public static final String SUFFIX_KEY = "MRNameSuffix";
 
     /** Possible overlay colors for artifact items. */
     private static final int[] ARTIFACT_COLORS = {
@@ -55,12 +57,45 @@ public class ArtifactUtils {
         CompoundTag modDataTag = new CompoundTag();
 
         modDataTag.putInt(VARIANT_KEY, random.nextInt(artifactSet.variants()));
-        modDataTag.putInt(ITEM_COLOR, ARTIFACT_COLORS[random.nextInt(ARTIFACT_COLORS.length)]);
+        modDataTag.putInt(ITEM_COLOR_KEY, ARTIFACT_COLORS[random.nextInt(ARTIFACT_COLORS.length)]);
+        modDataTag.putString(PREFIX_KEY, "");
+        modDataTag.putString(SUFFIX_KEY, "");
         tag.put(MOD_DATA_KEY, modDataTag);
 
-        tryApplyAbilities(artifactStack, MRArtifactAbilities.BAKER.get(), MRArtifactAbilities.CASHOUT.get());
+        BaseArtifactAbility[] appliedAbilities = tryApplyAbilities(artifactStack, MRArtifactAbilities.BAKER.get(), MRArtifactAbilities.CASHOUT.get());
 
+        if (appliedAbilities.length > 0) {
+            modDataTag.putString(PREFIX_KEY, appliedAbilities[0].getPrefixes()[random.nextInt(appliedAbilities[0].getPrefixes().length)]);
+
+            if (appliedAbilities.length > 1) {
+                modDataTag.putString(SUFFIX_KEY, appliedAbilities[1].getSuffixes()[random.nextInt(appliedAbilities[1].getSuffixes().length)]);
+            }
+            else {
+                modDataTag.putString(SUFFIX_KEY, appliedAbilities[0].getSuffixes()[random.nextInt(appliedAbilities[0].getSuffixes().length)]);
+            }
+        }
         return artifactStack;
+    }
+
+    /**
+     * @return The altered display name for the given artifact item.
+     */
+    @Nullable
+    public static Component getItemName(ItemStack itemStack) {
+        CompoundTag stackTag = itemStack.getOrCreateTag();
+
+        if (stackTag.contains(MOD_DATA_KEY, Tag.TAG_COMPOUND)) {
+            CompoundTag modDataTag = stackTag.getCompound(MOD_DATA_KEY);
+
+            if (modDataTag.contains(PREFIX_KEY, Tag.TAG_STRING) && modDataTag.contains(SUFFIX_KEY, Tag.TAG_STRING)) {
+                return Component.literal(
+                        Component.translatable(modDataTag.getString(PREFIX_KEY)).getString() + " "
+                                + Component.translatable(itemStack.getItem().getDescriptionId(itemStack)).getString() + " "
+                                + Component.translatable(modDataTag.getString(SUFFIX_KEY)).getString()
+                );
+            }
+        }
+        return null;
     }
 
     public static int getVariant(ItemStack itemStack) {
@@ -72,16 +107,18 @@ public class ArtifactUtils {
         return stackTag.getCompound(MOD_DATA_KEY).getInt(VARIANT_KEY);
     }
 
-    // TODO - fix this shit, it doesn't work LOL
     /**
      * Attempts to apply the given artifact ability to an ItemStack.
      * <br><br>
      * @param itemStack The ItemStack to put the ability on.
      * @param toApply The artifact ability instance to apply to the ItemStack.
+     * <br><br>
+     * @return An array containing the abilities that were successfully applied.
      */
-    public static void tryApplyAbilities(ItemStack itemStack, BaseArtifactAbility... toApply) {
+    public static BaseArtifactAbility[] tryApplyAbilities(ItemStack itemStack, BaseArtifactAbility... toApply) {
         List<BaseArtifactAbility> allAbilities = getAllAbilities(itemStack);
 
+        // Make sure necessary NBT tags exist on the ItemStack
         CompoundTag stackTag = itemStack.getOrCreateTag();
 
         if (!stackTag.contains(MOD_DATA_KEY, Tag.TAG_COMPOUND))
@@ -92,16 +129,20 @@ public class ArtifactUtils {
         if (!modDataTag.contains(ABILITY_KEY, Tag.TAG_LIST))
             modDataTag.put(ABILITY_KEY, new ListTag());
 
+        List<BaseArtifactAbility> successfullyApplied = new ArrayList<>();
 
         for (BaseArtifactAbility nextToApply : toApply) {
-            // Abort if the item already has the ability
+            // Skip if the item already has the ability
             if (allAbilities.contains(nextToApply)) continue;
 
             // Check if the item already has an ability with a non-stackable trigger type
+            boolean goToNext = false;
             for (BaseArtifactAbility ability : allAbilities) {
                 if (ability.getTriggerType() == nextToApply.getTriggerType() && !nextToApply.getTriggerType().canStack())
-                    return;
+                    goToNext = true;
             }
+            if (goToNext) continue;
+
             ResourceLocation abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey(nextToApply);
 
             // Make sure the ability actually exists in the registry before applying
@@ -113,8 +154,9 @@ public class ArtifactUtils {
 
             // Success, probably
             modDataTag.getList(ABILITY_KEY, Tag.TAG_STRING).add(StringTag.valueOf(abilityId.toString()));
+            successfullyApplied.add(nextToApply);
         }
-        System.out.println(modDataTag);
+        return successfullyApplied.toArray(new BaseArtifactAbility[0]);
     }
 
     /**
