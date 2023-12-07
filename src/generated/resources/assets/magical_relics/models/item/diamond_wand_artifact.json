@@ -36,6 +36,12 @@
       "predicate": {
         "magical_relics:wand_variant": 6.0
       }
+    },
+    {
+      "model": "magical_relics:item/wand7",
+      "predicate": {
+        "magical_relics:wand_variant": 7.0
+      }
     }
   ],
   "textures": {

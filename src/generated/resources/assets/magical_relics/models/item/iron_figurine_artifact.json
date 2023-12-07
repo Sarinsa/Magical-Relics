@@ -24,6 +24,12 @@
       "predicate": {
         "magical_relics:figurine_variant": 4.0
       }
+    },
+    {
+      "model": "magical_relics:item/figurine5",
+      "predicate": {
+        "magical_relics:figurine_variant": 5.0
+      }
     }
   ],
   "textures": {

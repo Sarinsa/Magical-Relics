@@ -30,6 +30,12 @@
       "predicate": {
         "magical_relics:belt_variant": 5.0
       }
+    },
+    {
+      "model": "magical_relics:item/belt6",
+      "predicate": {
+        "magical_relics:belt_variant": 6.0
+      }
     }
   ],
   "textures": {

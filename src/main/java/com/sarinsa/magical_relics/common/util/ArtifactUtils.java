@@ -71,6 +71,7 @@ public class ArtifactUtils {
         return stackTag.getCompound(MOD_DATA_KEY).getInt(VARIANT_KEY);
     }
 
+    // TODO - fix this shit, it doesn't work LOL
     /**
      * Attempts to apply the given artifact ability to an ItemStack.
      * <br><br>

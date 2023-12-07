@@ -22,18 +22,10 @@ public class MRItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        artifactSet(MRItems.AMULETS);
-        artifactSet(MRItems.BELTS);
-        artifactSet(MRItems.DAGGERS);
-        artifactSet(MRItems.SWORDS);
-        artifactSet(MRItems.FIGURINES);
-        artifactSet(MRItems.RINGS);
-        artifactSet(MRItems.TRINKETS);
-        artifactSet(MRItems.WANDS);
-        artifactSet(MRItems.STAFFS);
+        MRItems.ALL_ARTIFACTS.forEach(this::artifactSet);
     }
 
-    public void artifactSet(ArtifactSet<List<RegistryObject<Item>>> artifactSet) {
+    private void artifactSet(ArtifactSet<List<RegistryObject<Item>>> artifactSet) {
         for (RegistryObject<Item> regObj : artifactSet.dataStructure()) {
             ResourceLocation itemId = regObj.getId();
             String artifactType = artifactSet.type();
@@ -42,7 +34,10 @@ public class MRItemModelProvider extends ItemModelProvider {
                     .parent(new ModelFile.UncheckedModelFile("item/generated"))
                     .texture("layer0", modArtifactTexture(artifactType, artifactType + "1"));
 
-            for (int i = 1; i < artifactSet.variants(); i++) {
+            for (int i = 1; i < artifactSet.variants() + 1; ++i) {
+                System.out.println(artifactType);
+                System.out.println(i);
+                System.out.println("--------------------------------------");
                 ItemModelBuilder subModelBuilder = getBuilder(MagicalRelics.MODID + ":" + artifactType + i)
                         .parent(new ModelFile.UncheckedModelFile("item/generated"))
                         .texture("layer0", modArtifactTexture(artifactType, artifactType + i))

@@ -54,6 +54,12 @@
       "predicate": {
         "magical_relics:trinket_variant": 9.0
       }
+    },
+    {
+      "model": "magical_relics:item/trinket10",
+      "predicate": {
+        "magical_relics:trinket_variant": 10.0
+      }
     }
   ],
   "textures": {

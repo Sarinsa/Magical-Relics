@@ -30,6 +30,12 @@
       "predicate": {
         "magical_relics:dagger_variant": 5.0
       }
+    },
+    {
+      "model": "magical_relics:item/dagger6",
+      "predicate": {
+        "magical_relics:dagger_variant": 6.0
+      }
     }
   ],
   "textures": {

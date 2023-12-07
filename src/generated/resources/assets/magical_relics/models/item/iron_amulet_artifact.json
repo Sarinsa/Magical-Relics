@@ -36,6 +36,12 @@
       "predicate": {
         "magical_relics:amulet_variant": 6.0
       }
+    },
+    {
+      "model": "magical_relics:item/amulet7",
+      "predicate": {
+        "magical_relics:amulet_variant": 7.0
+      }
     }
   ],
   "textures": {

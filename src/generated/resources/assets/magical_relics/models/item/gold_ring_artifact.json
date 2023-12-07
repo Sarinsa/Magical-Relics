@@ -42,6 +42,12 @@
       "predicate": {
         "magical_relics:ring_variant": 7.0
       }
+    },
+    {
+      "model": "magical_relics:item/ring8",
+      "predicate": {
+        "magical_relics:ring_variant": 8.0
+      }
     }
   ],
   "textures": {

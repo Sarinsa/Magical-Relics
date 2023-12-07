@@ -30,6 +30,12 @@
       "predicate": {
         "magical_relics:staff_variant": 5.0
       }
+    },
+    {
+      "model": "magical_relics:item/staff6",
+      "predicate": {
+        "magical_relics:staff_variant": 6.0
+      }
     }
   ],
   "textures": {
