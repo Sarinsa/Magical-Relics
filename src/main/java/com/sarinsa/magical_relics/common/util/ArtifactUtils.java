@@ -23,6 +23,7 @@ import java.util.List;
 
 public class ArtifactUtils {
 
+    /** NBT keys for mod data storage. */
     public static final String MOD_DATA_KEY = "MagicalRelicsData";
     public static final String ABILITY_KEY = "MRArtifactAbilities";
     public static final String VARIANT_KEY = "MRArtifactVariant";
@@ -30,27 +31,20 @@ public class ArtifactUtils {
 
     /** Possible overlay colors for artifact items. */
     private static final int[] ARTIFACT_COLORS = {
-            0x00B6FF,
-            0x1466FF,
-            0x6647FF,
-            0xC23FFF,
-            0xFF00A5,
-            0xFF0010,
-            0xFF5F0F,
-            0xFF9D00,
-            0xFFE500,
-            0x2FBC00,
-            0x00BA6F,
-            0x37B7AA,
-            0x915E35,
-            0xC4746F,
-            0xC170BC,
-            0x84BF4E,
-            0x6B75BC,
-            0xD8D8D8
+            0x00B6FF, 0x1466FF, 0x6647FF,
+            0xC23FFF, 0xFF00A5, 0xFF0010,
+            0xFF5F0F, 0xFF9D00, 0xFFE500,
+            0x2FBC00, 0x00BA6F, 0x37B7AA,
+            0x915E35, 0xC4746F, 0xC170BC,
+            0x84BF4E, 0x6B75BC, 0xD8D8D8
     };
 
 
+    /**
+     * Generates an artifact with randomized abilities, type and overlay color. Neat!
+     * <br><br>
+     * @return The randomly generated artifact ItemStack.
+     */
     public static ItemStack generateRandomArtifact(RandomSource random) {
         ArtifactSet<List<RegistryObject<Item>>> artifactSet = MRItems.ALL_ARTIFACTS.get(random.nextInt(MRItems.ALL_ARTIFACTS.size()));
         Item artifactItem = artifactSet.dataStructure().get(random.nextInt(artifactSet.dataStructure().size())).get();
@@ -120,6 +114,9 @@ public class ArtifactUtils {
         }
     }
 
+    /**
+     * @return The first artifact ability on an ItemStack, if any, with the given TriggerType.
+     */
     @Nullable
     public static BaseArtifactAbility getFirstAbility(BaseArtifactAbility.TriggerType type, ItemStack itemStack) {
         List<BaseArtifactAbility> abilities = getAllAbilities(itemStack);
@@ -133,6 +130,10 @@ public class ArtifactUtils {
         return null;
     }
 
+    /**
+     * @return A List of all artifact abilities the given ItemStack has. Will never
+     *         return null, but will return an empty List if no abilities are found.
+     */
     @Nonnull
     public static List<BaseArtifactAbility> getAllAbilities(ItemStack itemStack) {
         List<BaseArtifactAbility> abilities = new ArrayList<>();
@@ -152,6 +153,12 @@ public class ArtifactUtils {
         return abilities;
     }
 
+    /**
+     * @return A List containing all the artifact ability descriptions from
+     *         the artifact abilities the given ItemStack has.
+     *         <br><br>
+     *         Primarily used for item tooltip.
+     */
     @Nonnull
     public static List<Component> getDescriptions(ItemStack itemStack) {
         List<BaseArtifactAbility> abilities = ArtifactUtils.getAllAbilities(itemStack);
