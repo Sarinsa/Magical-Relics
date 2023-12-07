@@ -3,10 +3,16 @@ package com.sarinsa.magical_relics.common.event;
 import com.sarinsa.magical_relics.common.artifact.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.item.ItemEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,6 +36,20 @@ public class MREventListener {
         if (ability != null) {
             if (ability.onClickBlock(level, pos, level.getBlockState(pos), event.getFace(), player) && heldItem.isDamageableItem()) {
                 heldItem.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(event.getHand()));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerDropItem(ItemTossEvent event) {
+        ItemEntity tossedItem = event.getEntity();
+        Level level = event.getEntity().level;
+        Player player = event.getPlayer();
+        BaseArtifactAbility ability = ArtifactUtils.getFirstAbility(BaseArtifactAbility.TriggerType.DROPPED, tossedItem.getItem());
+
+        if (ability != null && tossedItem.isAlive()) {
+            if (ability.onDropped(level, tossedItem, player) && tossedItem.getItem().isDamageableItem()) {
+                event.getEntity().discard();
             }
         }
     }

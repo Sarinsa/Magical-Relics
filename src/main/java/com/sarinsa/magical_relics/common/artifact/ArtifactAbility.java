@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.artifact;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,6 +47,14 @@ public interface ArtifactAbility {
      * @return True if durability should be decreased on the used artifact
      */
     boolean onDamageMob();
+
+    /**
+     * Called when the player throws an artifact with this ability out
+     * of their inventory.
+     * <br><br>
+     * @return True if the ItemEntity should be removed/despawned.
+     */
+    boolean onDropped(Level level, ItemEntity itemEntity, Player player);
 
     /**
      * Called when the player takes damage. Artifacts do not need to be in

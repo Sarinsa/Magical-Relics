@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -59,6 +60,11 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
 
     @Override
     public boolean onSneak() {
+        return false;
+    }
+
+    @Override
+    public boolean onDropped(Level level, ItemEntity itemEntity, Player player) {
         return false;
     }
 

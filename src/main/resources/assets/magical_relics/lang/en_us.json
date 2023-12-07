@@ -35,5 +35,6 @@
 
   "magical_relics.anti_builder.blocked_message": "A powerful spell protects this land",
 
-  "magical_relics.artifact_ability.magical_relics.baker.description": "Conjures cakes on solid surfaces when right-clicking"
+  "magical_relics.artifact_ability.magical_relics.baker.description": "Conjures cakes on solid surfaces when right-clicking",
+  "magical_relics.artifact_ability.magical_relics.cashout.description": "Converts to treasure when dropped"
 }
