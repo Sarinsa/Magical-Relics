@@ -69,7 +69,7 @@ public class ArrowTrapBlock extends HorizontalDirectionalBlock implements Entity
                 }
             }
             // TODO - remove this, used for testing
-            else if (handStack.getItem() == Items.WOODEN_PICKAXE) {
+            else if (!level.isClientSide && handStack.getItem() == Items.WOODEN_PICKAXE) {
                 player.setItemInHand(hand, ArtifactUtils.generateRandomArtifact(level.random));
                 return InteractionResult.CONSUME;
             }

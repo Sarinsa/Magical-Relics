@@ -15,6 +15,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.RegistryObject;
+import org.apache.commons.compress.utils.Lists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,7 +58,7 @@ public class ArtifactUtils {
         modDataTag.putInt(ITEM_COLOR, ARTIFACT_COLORS[random.nextInt(ARTIFACT_COLORS.length)]);
         tag.put(MOD_DATA_KEY, modDataTag);
 
-        tryApplyAbilities(artifactStack, MRArtifactAbilities.BAKER.get());
+        tryApplyAbilities(artifactStack, MRArtifactAbilities.BAKER.get(), MRArtifactAbilities.CASHOUT.get());
 
         return artifactStack;
     }
@@ -111,8 +112,9 @@ public class ArtifactUtils {
             }
 
             // Success, probably
-            modDataTag.getCompound(MOD_DATA_KEY).getList(ABILITY_KEY, Tag.TAG_STRING).add(StringTag.valueOf(abilityId.toString()));
+            modDataTag.getList(ABILITY_KEY, Tag.TAG_STRING).add(StringTag.valueOf(abilityId.toString()));
         }
+        System.out.println(modDataTag);
     }
 
     /**
