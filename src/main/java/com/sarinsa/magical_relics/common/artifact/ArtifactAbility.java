@@ -1,13 +1,14 @@
 package com.sarinsa.magical_relics.common.artifact;
 
+import com.sarinsa.magical_relics.common.artifact.misc.AttributeBoost;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The skeleton of an artifact ability.
@@ -28,20 +29,6 @@ public interface ArtifactAbility {
      * @return True if durability should be decreased on the used artifact
      */
     boolean onClickBlock(Level level, BlockPos pos, BlockState state, Direction face, Player player);
-
-    /**
-     * Called when the player sneaks and right-clicks on a block with an artifact
-     * <br><br>
-     * @return True if durability should be decreased on the used artifact
-     */
-    boolean onSneakClickBlock(Level level, BlockPos pos, BlockState state, Player player);
-
-    /**
-     * Called per tick when the player is sneaking with an artifact in their hand
-     * <br><br>
-     * @return True if durability should be decreased on the used artifact
-     */
-    boolean onSneak();
 
     /**
      * Called when the player deals damage to a mob with an artifact
@@ -67,10 +54,25 @@ public interface ArtifactAbility {
     boolean onUserDamaged();
 
     /**
+     * Called when the player is holding an artifact with this ability in their hand,
+     * <br><br>
+     * @return True if durability should be decreased on the used artifact
+     */
+    boolean onHeld(Level level, Player player, ItemStack heldArtifact);
+
+    /**
      * Called each tick, server-side. Artifacts do not need to be in
      * the player's hand for this to run.
      */
     void tickPassiveEffect();
+
+    /**
+     * @return An AttributeBoost instance containing an AttributeModifier and a double.
+     *         The double will act as a random range between 0 and X
+     *         for the modifier value that is applied to an artifact.
+     */
+    @Nullable
+    AttributeBoost getAttributeWithBoost();
 
     /**
      * @return An array of translation key Strings representing the possible

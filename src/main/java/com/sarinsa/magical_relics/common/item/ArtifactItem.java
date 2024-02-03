@@ -1,12 +1,17 @@
 package com.sarinsa.magical_relics.common.item;
 
+import com.google.common.collect.Multimap;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Attr;
 
 import java.util.List;
 
@@ -30,6 +35,16 @@ public class ArtifactItem extends TieredItem {
             return false;
 
         return super.canApplyAtEnchantingTable(stack, enchantment);
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack);
+
+        if (artifactModifiers != null && slot == EquipmentSlot.MAINHAND)
+            return artifactModifiers;
+
+        return super.getAttributeModifiers(slot, stack);
     }
 
     @Override

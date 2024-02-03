@@ -1,9 +1,6 @@
 package com.sarinsa.magical_relics.common.core.registry;
 
-import com.sarinsa.magical_relics.common.artifact.BakerAbility;
-import com.sarinsa.magical_relics.common.artifact.BaseArtifactAbility;
-import com.sarinsa.magical_relics.common.artifact.CashoutAbility;
-import com.sarinsa.magical_relics.common.artifact.EmptyAbility;
+import com.sarinsa.magical_relics.common.artifact.*;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.DeferredRegister;
@@ -25,6 +22,9 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> EMPTY = register("empty", EmptyAbility::new);
     public static final RegistryObject<BaseArtifactAbility> BAKER = register("baker", BakerAbility::new);
     public static final RegistryObject<BaseArtifactAbility> CASHOUT = register("cashout", CashoutAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> HEALTH_BOOST = register("health_boost", HealthBoostAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> SPEED_BOOST = register("speed_boost", SpeedAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> AIR_SNEAK = register("air_sneak", AirSneakAbility::new);
 
 
 

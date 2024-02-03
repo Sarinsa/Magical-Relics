@@ -5,9 +5,11 @@ import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -26,9 +28,10 @@ public class MRBlocks {
 
 
 
+    public static final RegistryObject<Block> SOLID_AIR = registerNoItem("solid_air", () -> new SolidAirBlock(BlockBehaviour.Properties.of(Material.AIR).noLootTable().air().noOcclusion()));
     public static final RegistryObject<QuicksandBlock> QUICKSAND = register("quicksand", CreativeModeTab.TAB_BUILDING_BLOCKS, QuicksandBlock::new);
     public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", CreativeModeTab.TAB_BUILDING_BLOCKS, SpikeTrapBlock::new);
-    public static final RegistryObject<ArrowTrapBlock> ARROW_TRAP = register("arrow_trap", CreativeModeTab.TAB_REDSTONE, ArrowTrapBlock::new);
+    public static final RegistryObject<ArrowTrapBlock> CAMO_DISPENSER = register("camo_dispenser", CreativeModeTab.TAB_REDSTONE, ArrowTrapBlock::new);
     public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", CreativeModeTab.TAB_DECORATIONS, DisplayPedestalBlock::new);
     public static final RegistryObject<AntiBuilderBlock> ANTI_BUILDER = register("anti_builder", CreativeModeTab.TAB_DECORATIONS, AntiBuilderBlock::new);
 

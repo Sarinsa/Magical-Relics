@@ -29,7 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
 
-// TODO - Make creative mode GUI to specify effective area size
+// TODO - Make effective area customizable
 public class AntiBuilderBlockEntity extends BlockEntity {
 
     private AABB effectiveArea = null;

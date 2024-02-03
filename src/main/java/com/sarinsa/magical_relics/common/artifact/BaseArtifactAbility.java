@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.artifact;
 
+import com.sarinsa.magical_relics.common.artifact.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,10 +27,12 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
         this.description = Component.translatable(MagicalRelics.MODID + ".artifact_ability." + modid + "." + abilityName + ".description");
     }
 
+    /** Helper method for creating artifact prefixes. */
     protected static String createPrefix(String abilityName, String prefix) {
         return MagicalRelics.MODID + ".artifact_ability." + MagicalRelics.MODID + "." + abilityName + ".prefix." + prefix;
     }
 
+    /** Helper method for creating artifact suffixes. */
     protected static String createSuffix(String abilityName, String suffix) {
         return MagicalRelics.MODID + ".artifact_ability." + MagicalRelics.MODID + "." + abilityName + ".suffix." + suffix;
     }
@@ -59,12 +62,7 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
     }
 
     @Override
-    public boolean onSneakClickBlock(Level level, BlockPos pos, BlockState state, Player player) {
-        return false;
-    }
-
-    @Override
-    public boolean onSneak() {
+    public boolean onHeld(Level level, Player player, ItemStack heldArtifact) {
         return false;
     }
 
@@ -89,6 +87,11 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
     }
 
     @Override
+    public AttributeBoost getAttributeWithBoost() {
+        return null;
+    }
+
+    @Override
     public String toString() {
         return "Description=[" + description.getString() + "], " +
                 "TriggerType=[" + getTriggerType().name() + "]";
@@ -96,19 +99,15 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
 
 
     /**
-     * Represents the type of trigger that activates an artifact ability, actively or passively.
+     * Represents the type of trigger that activates an artifact ability.
      */
     public enum TriggerType {
-        /** Main hand only. */
-        MAIN_HAND(false),
+        RIGHT_CLICK(false),
+        HELD(false),
         /** Activates when dropped on the ground. */
         DROPPED(false),
-        /** Only active when equipped as armor. */
         ARMOR(true),
-        /** Active if held, or in hotbar. */
-        HOTBAR(true),
-        /** Active always, regardless of inventory slot. */
-        INVENTORY(true);
+        PASSIVE(true);
 
         TriggerType(boolean canStack) {
             this.canStack = canStack;

@@ -1,5 +1,9 @@
 package com.sarinsa.magical_relics.common.util;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.sarinsa.magical_relics.common.artifact.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.artifact.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
@@ -12,14 +16,19 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.apache.commons.compress.utils.Lists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ArtifactUtils {
@@ -29,6 +38,7 @@ public class ArtifactUtils {
     public static final String ABILITY_KEY = "MRArtifactAbilities";
     public static final String VARIANT_KEY = "MRArtifactVariant";
     public static final String ITEM_COLOR_KEY = "MRItemColor";
+    public static final String ATTRIBUTE_MODS_KEY = "MRAttributeModifiers";
     public static final String PREFIX_KEY = "MRNamePrefix";
     public static final String SUFFIX_KEY = "MRNameSuffix";
 
@@ -62,7 +72,18 @@ public class ArtifactUtils {
         modDataTag.putString(SUFFIX_KEY, "");
         tag.put(MOD_DATA_KEY, modDataTag);
 
-        BaseArtifactAbility[] appliedAbilities = tryApplyAbilities(artifactStack, MRArtifactAbilities.BAKER.get(), MRArtifactAbilities.CASHOUT.get());
+        List<BaseArtifactAbility> allAbilities = Lists.newArrayList(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues());
+        // Make sure we don't try to apply the empty ability
+        allAbilities.remove(MRArtifactAbilities.EMPTY.get());
+        Collections.shuffle(allAbilities);
+
+        final int maxAbilities = random.nextInt(2) + 1;
+        BaseArtifactAbility[] abilitiesToApply = new BaseArtifactAbility[maxAbilities];
+
+        for (int i = 0; i < maxAbilities; i++)
+            abilitiesToApply[i] = allAbilities.get(i);
+
+        BaseArtifactAbility[] appliedAbilities = tryApplyAbilities(artifactStack, random, abilitiesToApply);
 
         if (appliedAbilities.length > 0) {
             modDataTag.putString(PREFIX_KEY, appliedAbilities[0].getPrefixes()[random.nextInt(appliedAbilities[0].getPrefixes().length)]);
@@ -98,10 +119,32 @@ public class ArtifactUtils {
         return null;
     }
 
+
+    public static Multimap<Attribute, AttributeModifier> getAttributeMods(ItemStack itemStack) {
+        CompoundTag stackTag = itemStack.getOrCreateTag();
+
+        if (stackTag.contains(MOD_DATA_KEY, Tag.TAG_COMPOUND) && stackTag.getCompound(MOD_DATA_KEY).contains(ATTRIBUTE_MODS_KEY, Tag.TAG_LIST)) {
+            ListTag attributeModsTag = stackTag.getCompound(MOD_DATA_KEY).getList(ATTRIBUTE_MODS_KEY, Tag.TAG_COMPOUND);
+            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+
+            for (int i = 0; i < attributeModsTag.size(); i++) {
+                CompoundTag attributeTag = attributeModsTag.getCompound(i);
+
+                Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.tryParse(attributeTag.getString("AttributeId")));
+                AttributeModifier modifier = AttributeModifier.load(attributeTag.getCompound("AttributeMod"));
+
+                if (attribute != null && modifier != null)
+                    builder.put(attribute, modifier);
+            }
+            return builder.build();
+        }
+        return null;
+    }
+
     public static int getVariant(ItemStack itemStack) {
         CompoundTag stackTag = itemStack.getOrCreateTag();
 
-        if (!stackTag.contains(MOD_DATA_KEY) || !stackTag.getCompound(MOD_DATA_KEY).contains(VARIANT_KEY, Tag.TAG_INT))
+        if (!stackTag.contains(MOD_DATA_KEY, Tag.TAG_COMPOUND) || !stackTag.getCompound(MOD_DATA_KEY).contains(VARIANT_KEY, Tag.TAG_INT))
             return 1;
 
         return stackTag.getCompound(MOD_DATA_KEY).getInt(VARIANT_KEY);
@@ -115,7 +158,7 @@ public class ArtifactUtils {
      * <br><br>
      * @return An array containing the abilities that were successfully applied.
      */
-    public static BaseArtifactAbility[] tryApplyAbilities(ItemStack itemStack, BaseArtifactAbility... toApply) {
+    public static BaseArtifactAbility[] tryApplyAbilities(ItemStack itemStack, RandomSource random, BaseArtifactAbility... toApply) {
         List<BaseArtifactAbility> allAbilities = getAllAbilities(itemStack);
 
         // Make sure necessary NBT tags exist on the ItemStack
@@ -128,6 +171,9 @@ public class ArtifactUtils {
 
         if (!modDataTag.contains(ABILITY_KEY, Tag.TAG_LIST))
             modDataTag.put(ABILITY_KEY, new ListTag());
+
+        if (!modDataTag.contains(ATTRIBUTE_MODS_KEY, Tag.TAG_LIST))
+            modDataTag.put(ATTRIBUTE_MODS_KEY, new ListTag());
 
         List<BaseArtifactAbility> successfullyApplied = new ArrayList<>();
 
@@ -155,6 +201,24 @@ public class ArtifactUtils {
             // Success, probably
             modDataTag.getList(ABILITY_KEY, Tag.TAG_STRING).add(StringTag.valueOf(abilityId.toString()));
             successfullyApplied.add(nextToApply);
+
+            // Save any attribute ability attribute modifiers to NBT
+            AttributeBoost boost = nextToApply.getAttributeWithBoost();
+
+            if (boost != null) {
+                String attributeId = ForgeRegistries.ATTRIBUTES.getKey(boost.attribute().get()).toString();
+                CompoundTag attributeMod = new CompoundTag();
+
+                attributeMod.putString("AttributeId", attributeId);
+                attributeMod.put("AttributeMod", new AttributeModifier(
+                        boost.modifierUUID(),
+                        boost.name(),
+                        boost.valueProvider().getRangedValue(boost.min(), boost.max(), random),
+                        boost.operation()
+                ).save());
+
+                modDataTag.getList(ATTRIBUTE_MODS_KEY, Tag.TAG_COMPOUND).add(attributeMod);
+            }
         }
         return successfullyApplied.toArray(new BaseArtifactAbility[0]);
     }
@@ -173,6 +237,14 @@ public class ArtifactUtils {
                 return ability;
         }
         return null;
+    }
+
+    public static boolean hasAbility(ItemStack itemStack, BaseArtifactAbility ability) {
+        List<BaseArtifactAbility> abilities = getAllAbilities(itemStack);
+
+        if (abilities.isEmpty()) return false;
+
+        return abilities.contains(ability);
     }
 
     /**

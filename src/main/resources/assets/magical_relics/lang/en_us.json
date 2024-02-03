@@ -54,6 +54,7 @@
 
   "block.magical_relics.quicksand": "Quicksand",
   "block.magical_relics.spike_trap": "Spike Trap",
+  "block.magical_relics.camo_dispenser": "Camo Dispenser",
   "block.magical_relics.anti_builder": "Alteration Negator",
   "block.magical_relics.display_pedestal": "Display Pedestal",
   "block.magical_relics.cobblestone_wall_pressure_plate": "Cobblestone Wall Pressure Plate",
@@ -82,6 +83,9 @@
 
   "magical_relics.artifact_ability.magical_relics.baker.description": "Conjures cakes on solid surfaces when right-clicking",
   "magical_relics.artifact_ability.magical_relics.cashout.description": "Converts to treasure when dropped",
+  "magical_relics.artifact_ability.magical_relics.health_boost.description": "Passively boosts max health",
+  "magical_relics.artifact_ability.magical_relics.speed_boost.description": "Boosts speed when held",
+  "magical_relics.artifact_ability.magical_relics.air_sneak.description": "Allows standing on air when sneaking",
 
 
   "magical_relics.artifact_ability.magical_relics.baker.prefix.bakers": "Baker's",
@@ -96,5 +100,24 @@
   "magical_relics.artifact_ability.magical_relics.cashout.suffix.wealth": "of Wealth",
   "magical_relics.artifact_ability.magical_relics.cashout.suffix.riches": "of Riches",
   "magical_relics.artifact_ability.magical_relics.cashout.suffix.money": "of Money",
-  "magical_relics.artifact_ability.magical_relics.cashout.suffix.treasure": "of Treasure"
+  "magical_relics.artifact_ability.magical_relics.cashout.suffix.treasure": "of Treasure",
+
+  "magical_relics.artifact_ability.magical_relics.health_boost.prefix.hardy": "Hardy",
+  "magical_relics.artifact_ability.magical_relics.health_boost.prefix.bulky": "Bulky",
+  "magical_relics.artifact_ability.magical_relics.health_boost.prefix.sturdy": "Sturdy",
+  "magical_relics.artifact_ability.magical_relics.health_boost.suffix.toughness": "of Toughness",
+  "magical_relics.artifact_ability.magical_relics.health_boost.suffix.vitality": "of Vitality",
+  "magical_relics.artifact_ability.magical_relics.health_boost.suffix.health": "of Health",
+
+  "magical_relics.artifact_ability.magical_relics.air_sneak.prefix.floaty": "Floaty",
+  "magical_relics.artifact_ability.magical_relics.air_sneak.prefix.light": "Light",
+  "magical_relics.artifact_ability.magical_relics.air_sneak.prefix.airy": "Airy",
+  "magical_relics.artifact_ability.magical_relics.air_sneak.suffix.hermes": "of Hermes",
+  "magical_relics.artifact_ability.magical_relics.air_sneak.suffix.flight": "of Flight",
+
+  "magical_relics.artifact_ability.magical_relics.speed_boost.prefix.fast": "Fast",
+  "magical_relics.artifact_ability.magical_relics.speed_boost.prefix.quick": "Quick",
+  "magical_relics.artifact_ability.magical_relics.speed_boost.suffix.swiftness": "of Swiftness",
+  "magical_relics.artifact_ability.magical_relics.speed_boost.suffix.mobility": "of Mobility",
+  "magical_relics.artifact_ability.magical_relics.speed_boost.suffix.speed": "of Speed"
 }

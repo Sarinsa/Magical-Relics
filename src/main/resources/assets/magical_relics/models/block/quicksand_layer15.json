@@ -1,0 +1,6 @@
+{
+  "parent": "magical_relics:block/template/height_15_block",
+  "textures": {
+    "texture": "magical_relics:block/quicksand"
+  }
+}

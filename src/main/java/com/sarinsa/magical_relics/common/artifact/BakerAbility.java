@@ -70,6 +70,6 @@ public class BakerAbility extends BaseArtifactAbility {
 
     @Override
     public TriggerType getTriggerType() {
-        return TriggerType.MAIN_HAND;
+        return TriggerType.RIGHT_CLICK;
     }
 }

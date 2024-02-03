@@ -1,13 +1,11 @@
 package com.sarinsa.magical_relics.common.core.registry;
 
 import com.sarinsa.magical_relics.common.blockentity.AntiBuilderBlockEntity;
-import com.sarinsa.magical_relics.common.blockentity.ArrowTrapBlockEntity;
+import com.sarinsa.magical_relics.common.blockentity.CamoDispenserBlockEntity;
 import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
-import net.minecraftforge.common.ForgeI18n;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -27,8 +25,8 @@ public class MRBlockEntities {
     public static final RegistryObject<BlockEntityType<DisplayPedestalBlockEntity>> DISPLAY_PEDESTAL =
             register("display_pedestal", () -> BlockEntityType.Builder.of(DisplayPedestalBlockEntity::new, MRBlocks.DISPLAY_PEDESTAL.get()));
 
-    public static final RegistryObject<BlockEntityType<ArrowTrapBlockEntity>> ARROW_TRAP =
-            register("arrow_trap", () -> BlockEntityType.Builder.of(ArrowTrapBlockEntity::new, MRBlocks.ARROW_TRAP.get()));
+    public static final RegistryObject<BlockEntityType<CamoDispenserBlockEntity>> CAMO_DISPENSER =
+            register("camo_dispenser", () -> BlockEntityType.Builder.of(CamoDispenserBlockEntity::new, MRBlocks.CAMO_DISPENSER.get()));
 
 
 

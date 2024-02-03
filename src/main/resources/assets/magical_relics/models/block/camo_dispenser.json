@@ -1,0 +1,6 @@
+{
+  "parent": "magical_relics:block/template/single_layer_invisible",
+  "textures": {
+    "texture": "magical_relics:block/camo_dispenser_overlay"
+  }
+}

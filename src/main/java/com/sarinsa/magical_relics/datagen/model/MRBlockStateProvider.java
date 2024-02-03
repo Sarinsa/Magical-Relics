@@ -38,8 +38,8 @@ public class MRBlockStateProvider extends BlockStateProvider {
         getVariantBuilder(regObj.get()).forAllStates((state) -> {
             boolean powered = state.getValue(WallPressurePlateBlock.POWERED);
             Direction direction = state.getValue(WallPressurePlateBlock.FACING);
-            ResourceLocation parentModel = resLoc("block/wall_pressure_plate");
-            ResourceLocation parentModelActive = resLoc("block/wall_pressure_plate_active");
+            ResourceLocation parentModel = resLoc("block/template/wall_pressure_plate");
+            ResourceLocation parentModelActive = resLoc("block/template/wall_pressure_plate_active");
 
             return ConfiguredModel.builder()
                     .modelFile(models().withExistingParent(powered ? name(regObj.get()) + "_active" : name(regObj.get()), powered ? parentModelActive : parentModel)
@@ -51,7 +51,7 @@ public class MRBlockStateProvider extends BlockStateProvider {
     }
 
     private void crumblingBlock(RegistryObject<CrumblingBlock> regObj, Block textureBlock) {
-        ModelFile crumbleModel = models().withExistingParent(name(regObj.get()) + "_crumbling", resLoc("block/layer_cube"))
+        ModelFile crumbleModel = models().withExistingParent(name(regObj.get()) + "_crumbling", resLoc("block/template/layer_cube"))
                 .texture("texture", blockTexture(textureBlock))
                 .texture("crumble", mcLoc("block/destroy_stage_4"))
                 .renderType("cutout");

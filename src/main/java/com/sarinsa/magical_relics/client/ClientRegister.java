@@ -36,7 +36,7 @@ public class ClientRegister {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(MRBlockEntities.DISPLAY_PEDESTAL.get(), DisplayPedestalRenderer::new);
-        event.registerBlockEntityRenderer(MRBlockEntities.ARROW_TRAP.get(), CamoTrapRenderer::new);
+        event.registerBlockEntityRenderer(MRBlockEntities.CAMO_DISPENSER.get(), CamoTrapRenderer::new);
     }
 
     @SubscribeEvent

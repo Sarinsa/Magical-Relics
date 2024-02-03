@@ -23,6 +23,30 @@
     },
     "layers=8": {
       "model": "magical_relics:block/quicksand_layer8"
+    },
+    "layers=9": {
+      "model": "magical_relics:block/quicksand_layer9"
+    },
+    "layers=10": {
+      "model": "magical_relics:block/quicksand_layer10"
+    },
+    "layers=11": {
+      "model": "magical_relics:block/quicksand_layer11"
+    },
+    "layers=12": {
+      "model": "magical_relics:block/quicksand_layer12"
+    },
+    "layers=13": {
+      "model": "magical_relics:block/quicksand_layer13"
+    },
+    "layers=14": {
+      "model": "magical_relics:block/quicksand_layer14"
+    },
+    "layers=15": {
+      "model": "magical_relics:block/quicksand_layer15"
+    },
+    "layers=16": {
+      "model": "magical_relics:block/quicksand"
     }
   }
 }

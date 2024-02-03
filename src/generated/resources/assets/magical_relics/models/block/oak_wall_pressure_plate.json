@@ -1,5 +1,5 @@
 {
-  "parent": "magical_relics:block/wall_pressure_plate",
+  "parent": "magical_relics:block/template/wall_pressure_plate",
   "textures": {
     "texture": "minecraft:block/oak_planks"
   }
