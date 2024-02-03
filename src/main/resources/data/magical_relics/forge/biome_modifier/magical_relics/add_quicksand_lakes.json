@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#magical_relics:can_have_quicksand_lakes",
+  "features": "magical_relics:quicksand_lake_surface",
+  "step": "lakes"
+}

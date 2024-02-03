@@ -1,10 +1,8 @@
 package com.sarinsa.magical_relics.common.core;
 
-import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
-import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
-import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
-import com.sarinsa.magical_relics.common.core.registry.MRItems;
+import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.event.MREventListener;
+import com.sarinsa.magical_relics.common.tag.MRBlockTags;
 import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,11 +27,14 @@ public class MagicalRelics {
         MinecraftForge.EVENT_BUS.register(new MREventListener());
 
         MRDamageSources.init();
+        MRBlockTags.init();
 
         MRBlocks.BLOCKS.register(modBus);
         MRItems.ITEMS.register(modBus);
         MRBlockEntities.BLOCK_ENTITIES.register(modBus);
         MRArtifactAbilities.ARTIFACT_ABILITIES.register(modBus);
+        MRConfiguredFeatures.CF_REGISTRY.register(modBus);
+        MRConfiguredFeatures.P_REGISTRY.register(modBus);
     }
 
 

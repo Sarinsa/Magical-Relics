@@ -19,6 +19,8 @@ public final class MRBlockTags {
         return BlockTags.create(new ResourceLocation("forge", name));
     }
 
-    public static void init() {}
+    public static void init() {
+        MRBiomeTags.init();
+    }
     private MRBlockTags() {}
 }
