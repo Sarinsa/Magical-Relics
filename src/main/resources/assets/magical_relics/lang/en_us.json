@@ -1,4 +1,5 @@
 {
+  "item.magical_relics.quicksand_bucket": "Bucket of Quicksand",
   "item.magical_relics.raw_manaessence": "Raw Manaessence",
   "item.magical_relics.wood_manaessence": "Wooden Manaessence",
   "item.magical_relics.leather_manaessence": "Leathery Manaessence",
@@ -86,6 +87,7 @@
   "magical_relics.artifact_ability.magical_relics.health_boost.description": "Passively boosts max health",
   "magical_relics.artifact_ability.magical_relics.speed_boost.description": "Boosts speed when held",
   "magical_relics.artifact_ability.magical_relics.air_sneak.description": "Allows standing on air when sneaking",
+  "magical_relics.artifact_ability.magical_relics.night_vision.description": "Grants temporary Night Vision when used",
 
 
   "magical_relics.artifact_ability.magical_relics.baker.prefix.bakers": "Baker's",
@@ -119,5 +121,10 @@
   "magical_relics.artifact_ability.magical_relics.speed_boost.prefix.quick": "Quick",
   "magical_relics.artifact_ability.magical_relics.speed_boost.suffix.swiftness": "of Swiftness",
   "magical_relics.artifact_ability.magical_relics.speed_boost.suffix.mobility": "of Mobility",
-  "magical_relics.artifact_ability.magical_relics.speed_boost.suffix.speed": "of Speed"
+  "magical_relics.artifact_ability.magical_relics.speed_boost.suffix.speed": "of Speed",
+
+  "magical_relics.artifact_ability.magical_relics.night_vision.prefix.sensing": "Sensing",
+  "magical_relics.artifact_ability.magical_relics.night_vision.prefix.sighted": "Sighted",
+  "magical_relics.artifact_ability.magical_relics.night_vision.suffix.seeing": "of Seeing",
+  "magical_relics.artifact_ability.magical_relics.night_vision.suffix.night_vision": "of Night Vision"
 }

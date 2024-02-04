@@ -3,6 +3,7 @@ package com.sarinsa.magical_relics.common.block;
 import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;

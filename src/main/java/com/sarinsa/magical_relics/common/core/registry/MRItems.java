@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
 import com.sarinsa.magical_relics.common.item.ArtifactArmorItem;
 import com.sarinsa.magical_relics.common.item.ArtifactArmorMaterials;
 import com.sarinsa.magical_relics.common.item.ArtifactItem;
+import com.sarinsa.magical_relics.common.item.BlockBucketItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
@@ -20,6 +21,9 @@ public class MRItems {
 
     public static final List<ArtifactSet<List<RegistryObject<Item>>>> ALL_ARTIFACTS = new ArrayList<>();
 
+
+
+    public static final RegistryObject<Item> QUICKSAND_BUCKET = register("quicksand_bucket", () -> new BlockBucketItem(MRBlocks.QUICKSAND, new Item.Properties().stacksTo(1).tab(CreativeModeTab.TAB_MISC)));
 
     public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> LEATHER_ARTIFACT_ARMOR = artifactArmorSet("leather", ArtifactArmorMaterials.LEATHER);
     public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> IRON_ARTIFACT_ARMOR = artifactArmorSet("iron", ArtifactArmorMaterials.IRON);
