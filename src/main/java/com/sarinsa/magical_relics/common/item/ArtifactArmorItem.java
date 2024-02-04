@@ -43,7 +43,7 @@ public class ArtifactArmorItem extends ArmorItem {
 
     @Override
     public Component getName(ItemStack itemStack) {
-        Component alteredName = ArtifactUtils.getItemName(itemStack);
+        Component alteredName = ArtifactUtils.getItemDisplayName(itemStack);
 
         if (alteredName == null)
             return super.getName(itemStack);

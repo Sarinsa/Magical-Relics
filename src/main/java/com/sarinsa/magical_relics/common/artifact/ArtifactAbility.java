@@ -21,7 +21,7 @@ public interface ArtifactAbility {
      * <br><br>
      * @return True if durability should be decreased on the used artifact
      */
-    boolean onUse();
+    boolean onUse(Level level, Player player, ItemStack itemStack);
 
     /**
      * Called when the player right-clicks on a block with an artifact

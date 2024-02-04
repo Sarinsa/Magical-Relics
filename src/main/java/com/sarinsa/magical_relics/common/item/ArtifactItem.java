@@ -55,9 +55,18 @@ public class ArtifactItem extends TieredItem {
         return super.isBookEnchantable(stack, book);
     }
 
+    /**
+     * Overriding this so the equip/use animation does not constantly play
+     * when dealing with artifact ability cooldown ticks changing NBT.
+     */
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return oldStack.getItem() == newStack.getItem();
+    }
+
     @Override
     public Component getName(ItemStack itemStack) {
-        Component alteredName = ArtifactUtils.getItemName(itemStack);
+        Component alteredName = ArtifactUtils.getItemDisplayName(itemStack);
 
         if (alteredName == null)
             return super.getName(itemStack);

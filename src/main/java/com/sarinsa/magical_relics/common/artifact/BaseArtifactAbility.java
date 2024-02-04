@@ -52,7 +52,7 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
     }
 
     @Override
-    public boolean onUse() {
+    public boolean onUse(Level level, Player player, ItemStack itemStack) {
         return false;
     }
 
@@ -103,6 +103,7 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
      */
     public enum TriggerType {
         RIGHT_CLICK(false),
+        USE(true),
         HELD(false),
         /** Activates when dropped on the ground. */
         DROPPED(false),

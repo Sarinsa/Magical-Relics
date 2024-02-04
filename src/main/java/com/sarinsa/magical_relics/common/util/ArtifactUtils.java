@@ -3,8 +3,8 @@ package com.sarinsa.magical_relics.common.util;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.sarinsa.magical_relics.common.artifact.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.artifact.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.artifact.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
@@ -18,16 +18,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,6 +38,7 @@ public class ArtifactUtils {
     public static final String VARIANT_KEY = "MRArtifactVariant";
     public static final String ITEM_COLOR_KEY = "MRItemColor";
     public static final String ATTRIBUTE_MODS_KEY = "MRAttributeModifiers";
+    public static final String ABILITY_COOLDOWNS_KEY = "MRAbilityCooldowns";
     public static final String PREFIX_KEY = "MRNamePrefix";
     public static final String SUFFIX_KEY = "MRNameSuffix";
 
@@ -68,6 +68,7 @@ public class ArtifactUtils {
 
         modDataTag.putInt(VARIANT_KEY, random.nextInt(artifactSet.variants()));
         modDataTag.putInt(ITEM_COLOR_KEY, ARTIFACT_COLORS[random.nextInt(ARTIFACT_COLORS.length)]);
+        modDataTag.put(ABILITY_COOLDOWNS_KEY, new CompoundTag());
         modDataTag.putString(PREFIX_KEY, "");
         modDataTag.putString(SUFFIX_KEY, "");
         tag.put(MOD_DATA_KEY, modDataTag);
@@ -102,7 +103,7 @@ public class ArtifactUtils {
      * @return The altered display name for the given artifact item.
      */
     @Nullable
-    public static Component getItemName(ItemStack itemStack) {
+    public static Component getItemDisplayName(ItemStack itemStack) {
         CompoundTag stackTag = itemStack.getOrCreateTag();
 
         if (stackTag.contains(MOD_DATA_KEY, Tag.TAG_COMPOUND)) {
@@ -290,5 +291,43 @@ public class ArtifactUtils {
             }
         }
         return components;
+    }
+
+    public static void writeAbilityCooldown(ItemStack itemStack, BaseArtifactAbility ability, int cooldown) {
+        CompoundTag modData = itemStack.getOrCreateTag().getCompound(MOD_DATA_KEY);
+
+        if (modData.contains(ABILITY_COOLDOWNS_KEY, Tag.TAG_COMPOUND)) {
+            CompoundTag cooldownsTag = modData.getCompound(ABILITY_COOLDOWNS_KEY);
+            String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey(ability).toString();
+
+            if (!cooldownsTag.contains(abilityId)) {
+                cooldownsTag.putInt(abilityId, cooldown);
+            }
+        }
+    }
+
+    public static boolean isAbilityOnCooldown(ItemStack itemStack, BaseArtifactAbility ability) {
+        CompoundTag cooldownData = itemStack.getOrCreateTag().getCompound(MOD_DATA_KEY).getCompound(ABILITY_COOLDOWNS_KEY);
+        String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey(ability).toString();
+
+        return cooldownData.contains(abilityId);
+    }
+
+    /**
+     * Decrements all ability cooldowns on the ItemStack by the given number.
+     */
+    public static void tickAbilityCooldowns(Player player, int decrement) {
+        for (ItemStack itemStack : player.getInventory().items) {
+            CompoundTag cooldownData = itemStack.getOrCreateTag().getCompound(MOD_DATA_KEY).getCompound(ABILITY_COOLDOWNS_KEY);
+
+            for (String key : cooldownData.getAllKeys()) {
+                cooldownData.putInt(key, cooldownData.getInt(key) - decrement);
+            }
+
+            for (String key : cooldownData.getAllKeys()) {
+                if (cooldownData.getInt(key) <= 0)
+                    cooldownData.remove(key);
+            }
+        }
     }
 }

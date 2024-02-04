@@ -25,6 +25,7 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> HEALTH_BOOST = register("health_boost", HealthBoostAbility::new);
     public static final RegistryObject<BaseArtifactAbility> SPEED_BOOST = register("speed_boost", SpeedAbility::new);
     public static final RegistryObject<BaseArtifactAbility> AIR_SNEAK = register("air_sneak", AirSneakAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> NIGHT_VISION = register("night_vision", NightVisionAbility::new);
 
 
 
