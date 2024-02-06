@@ -27,13 +27,13 @@ public class MRBlocks {
     public static final Map<RegistryObject<CrumblingBlock>, Block> CRUMBLING_BLOCKS = new HashMap<>();
 
 
-
     public static final RegistryObject<Block> SOLID_AIR = registerNoItem("solid_air", () -> new SolidAirBlock(BlockBehaviour.Properties.of(Material.AIR).noLootTable().air().noOcclusion()));
-    public static final RegistryObject<QuicksandBlock> QUICKSAND = register("quicksand", MRItems.MRCreativeTab.MOD_TAB, QuicksandBlock::new);
+    public static final RegistryObject<TripWireBlock> THICK_TRIPWIRE = register("thick_tripwire", MRItems.MRCreativeTab.MOD_TAB, () -> new ThickTripwireBlock(MRBlocks.CAMO_TRIPWIRE_HOOK.get(), BlockBehaviour.Properties.copy(Blocks.TRIPWIRE)));
+
     public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", MRItems.MRCreativeTab.MOD_TAB, SpikeTrapBlock::new);
+    public static final RegistryObject<QuicksandBlock> QUICKSAND = register("quicksand", MRItems.MRCreativeTab.MOD_TAB, QuicksandBlock::new);
     public static final RegistryObject<CamoDispenserBlock> CAMO_DISPENSER = register("camo_dispenser", MRItems.MRCreativeTab.MOD_TAB, CamoDispenserBlock::new);
     public static final RegistryObject<CamoTripwireHookBlock> CAMO_TRIPWIRE_HOOK = register("camo_tripwire_hook", MRItems.MRCreativeTab.MOD_TAB, CamoTripwireHookBlock::new);
-    public static final RegistryObject<TripWireBlock> THICK_TRIPWIRE = register("thick_tripwire", MRItems.MRCreativeTab.MOD_TAB, () -> new ThickTripwireBlock(CAMO_TRIPWIRE_HOOK.get(), BlockBehaviour.Properties.copy(Blocks.TRIPWIRE)));
     public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", MRItems.MRCreativeTab.MOD_TAB, DisplayPedestalBlock::new);
     public static final RegistryObject<AntiBuilderBlock> ANTI_BUILDER = register("anti_builder", MRItems.MRCreativeTab.MOD_TAB, AntiBuilderBlock::new);
 

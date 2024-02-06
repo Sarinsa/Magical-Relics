@@ -24,7 +24,7 @@ public class MRItems {
 
     public static class MRCreativeTab extends CreativeModeTab {
 
-        public static final CreativeModeTab MOD_TAB = new MRCreativeTab("blocks", () -> new ItemStack(MRBlocks.DISPLAY_PEDESTAL.get()));
+        public static final CreativeModeTab MOD_TAB = new MRCreativeTab("all", () -> new ItemStack(MRBlocks.DISPLAY_PEDESTAL.get()));
 
 
         private MRCreativeTab(String label, Supplier<ItemStack> itemIcon) {
@@ -40,7 +40,7 @@ public class MRItems {
     }
 
 
-    public static final RegistryObject<Item> QUICKSAND_BUCKET = register("quicksand_bucket", () -> new BlockBucketItem(MRBlocks.QUICKSAND, new Item.Properties().stacksTo(1).tab(CreativeModeTab.TAB_MISC)));
+    public static final RegistryObject<Item> QUICKSAND_BUCKET = register("quicksand_bucket", () -> new BlockBucketItem(MRBlocks.QUICKSAND, new Item.Properties().stacksTo(1).tab(MRCreativeTab.MOD_TAB)));
 
     public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> LEATHER_ARTIFACT_ARMOR = artifactArmorSet("leather", ArtifactArmorMaterials.LEATHER);
     public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> IRON_ARTIFACT_ARMOR = artifactArmorSet("iron", ArtifactArmorMaterials.IRON);
