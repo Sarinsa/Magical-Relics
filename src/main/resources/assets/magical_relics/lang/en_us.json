@@ -53,9 +53,11 @@
   "item.magical_relics.gold_figurine_artifact": "Gold Figurine",
   "item.magical_relics.diamond_figurine_artifact": "Diamond Figurine",
 
+  "block.magical_relics.thick_tripwire": "Thick Thread",
   "block.magical_relics.quicksand": "Quicksand",
   "block.magical_relics.spike_trap": "Spike Trap",
   "block.magical_relics.camo_dispenser": "Camo Dispenser",
+  "block.magical_relics.camo_tripwire_hook": "Camo Tripwire Hook",
   "block.magical_relics.anti_builder": "Alteration Negator",
   "block.magical_relics.display_pedestal": "Display Pedestal",
   "block.magical_relics.cobblestone_wall_pressure_plate": "Cobblestone Wall Pressure Plate",

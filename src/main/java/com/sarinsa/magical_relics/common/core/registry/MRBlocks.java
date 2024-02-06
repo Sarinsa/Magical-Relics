@@ -5,9 +5,9 @@ import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.TripWireBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
@@ -29,11 +29,13 @@ public class MRBlocks {
 
 
     public static final RegistryObject<Block> SOLID_AIR = registerNoItem("solid_air", () -> new SolidAirBlock(BlockBehaviour.Properties.of(Material.AIR).noLootTable().air().noOcclusion()));
-    public static final RegistryObject<QuicksandBlock> QUICKSAND = register("quicksand", CreativeModeTab.TAB_BUILDING_BLOCKS, QuicksandBlock::new);
-    public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", CreativeModeTab.TAB_BUILDING_BLOCKS, SpikeTrapBlock::new);
-    public static final RegistryObject<ArrowTrapBlock> CAMO_DISPENSER = register("camo_dispenser", CreativeModeTab.TAB_REDSTONE, ArrowTrapBlock::new);
-    public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", CreativeModeTab.TAB_DECORATIONS, DisplayPedestalBlock::new);
-    public static final RegistryObject<AntiBuilderBlock> ANTI_BUILDER = register("anti_builder", CreativeModeTab.TAB_DECORATIONS, AntiBuilderBlock::new);
+    public static final RegistryObject<QuicksandBlock> QUICKSAND = register("quicksand", MRItems.MRCreativeTab.MOD_TAB, QuicksandBlock::new);
+    public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", MRItems.MRCreativeTab.MOD_TAB, SpikeTrapBlock::new);
+    public static final RegistryObject<CamoDispenserBlock> CAMO_DISPENSER = register("camo_dispenser", MRItems.MRCreativeTab.MOD_TAB, CamoDispenserBlock::new);
+    public static final RegistryObject<CamoTripwireHookBlock> CAMO_TRIPWIRE_HOOK = register("camo_tripwire_hook", MRItems.MRCreativeTab.MOD_TAB, CamoTripwireHookBlock::new);
+    public static final RegistryObject<TripWireBlock> THICK_TRIPWIRE = register("thick_tripwire", MRItems.MRCreativeTab.MOD_TAB, () -> new ThickTripwireBlock(CAMO_TRIPWIRE_HOOK.get(), BlockBehaviour.Properties.copy(Blocks.TRIPWIRE)));
+    public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", MRItems.MRCreativeTab.MOD_TAB, DisplayPedestalBlock::new);
+    public static final RegistryObject<AntiBuilderBlock> ANTI_BUILDER = register("anti_builder", MRItems.MRCreativeTab.MOD_TAB, AntiBuilderBlock::new);
 
     public static final RegistryObject<CrumblingBlock> CRUMBLING_COBBLESTONE = crumblingBlock("crumbling_cobblestone", Blocks.COBBLESTONE);
     public static final RegistryObject<CrumblingBlock> CRUMBLING_MOSSY_COBBLESTONE = crumblingBlock("crumbling_mossy_cobblestone", Blocks.MOSSY_COBBLESTONE);
@@ -60,14 +62,14 @@ public class MRBlocks {
 
     private static RegistryObject<WallPressurePlateBlock> wallPressurePlate(String name, Block parent) {
         RegistryObject<WallPressurePlateBlock> regObj = BLOCKS.register(name, () -> new WallPressurePlateBlock(BlockBehaviour.Properties.copy(parent)));
-        MRItems.ITEMS.register(name, () -> new BlockItem(regObj.get(), new Item.Properties().tab(CreativeModeTab.TAB_REDSTONE)));
+        MRItems.ITEMS.register(name, () -> new BlockItem(regObj.get(), new Item.Properties().tab(MRItems.MRCreativeTab.MOD_TAB)));
         WALL_PRESSURE_PLATES.put(regObj, parent);
         return regObj;
     }
 
     private static RegistryObject<CrumblingBlock> crumblingBlock(String name, Block parent) {
         RegistryObject<CrumblingBlock> regObj = BLOCKS.register(name, () -> new CrumblingBlock(BlockBehaviour.Properties.copy(parent)));
-        MRItems.ITEMS.register(name, () -> new BlockItem(regObj.get(), new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS)));
+        MRItems.ITEMS.register(name, () -> new BlockItem(regObj.get(), new Item.Properties().tab(MRItems.MRCreativeTab.MOD_TAB)));
         CRUMBLING_BLOCKS.put(regObj, parent);
         return regObj;
     }

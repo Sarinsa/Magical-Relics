@@ -20,7 +20,7 @@ public interface CamoBlockEntity {
     @Nullable
     default BlockState readCamoState(CompoundTag compoundTag) {
         if (compoundTag.contains("CamoState", Tag.TAG_STRING)) {
-            BlockState state = Blocks.COBBLESTONE.defaultBlockState();
+            BlockState state = Blocks.STONE_BRICKS.defaultBlockState();
             ResourceLocation blockId = ResourceLocation.tryParse(compoundTag.getString("CamoState"));
 
             if (blockId != null && ForgeRegistries.BLOCKS.containsKey(blockId))

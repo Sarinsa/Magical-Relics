@@ -18,7 +18,7 @@ import java.util.List;
 public class ArtifactItem extends TieredItem {
 
     public ArtifactItem(Tier tier) {
-        super(tier, new Properties().rarity(Rarity.UNCOMMON).stacksTo(1).tab(CreativeModeTab.TAB_MISC));
+        super(tier, new Properties().rarity(Rarity.UNCOMMON).stacksTo(1));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ArtifactItem extends TieredItem {
      */
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return oldStack.getItem() == newStack.getItem();
+        return oldStack.getItem() != newStack.getItem();
     }
 
     @Override

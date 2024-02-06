@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.core.registry;
 
 import com.sarinsa.magical_relics.common.blockentity.AntiBuilderBlockEntity;
 import com.sarinsa.magical_relics.common.blockentity.CamoDispenserBlockEntity;
+import com.sarinsa.magical_relics.common.blockentity.CamoTripwireBlockEntity;
 import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,7 +29,8 @@ public class MRBlockEntities {
     public static final RegistryObject<BlockEntityType<CamoDispenserBlockEntity>> CAMO_DISPENSER =
             register("camo_dispenser", () -> BlockEntityType.Builder.of(CamoDispenserBlockEntity::new, MRBlocks.CAMO_DISPENSER.get()));
 
-
+    public static final RegistryObject<BlockEntityType<CamoTripwireBlockEntity>> CAMO_TRIPWIRE_HOOK =
+            register("camo_tripwire_hook", () -> BlockEntityType.Builder.of(CamoTripwireBlockEntity::new, MRBlocks.CAMO_TRIPWIRE_HOOK.get()));
 
 
     private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register(String name, Supplier<BlockEntityType.Builder<T>> builder) {

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "minecraft:block/stone_bricks",
+    "east": "minecraft:block/stone_bricks",
+    "north": "magical_relics:block/camo_dispenser_cover",
+    "particle": "minecraft:block/stone_bricks",
+    "south": "minecraft:block/stone_bricks",
+    "up": "minecraft:block/stone_bricks",
+    "west": "minecraft:block/stone_bricks"
+  }
+}

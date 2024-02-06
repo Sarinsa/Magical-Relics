@@ -4,14 +4,18 @@ import com.sarinsa.magical_relics.client.renderer.block.CamoTrapRenderer;
 import com.sarinsa.magical_relics.client.renderer.block.DisplayPedestalRenderer;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
+import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -30,6 +34,8 @@ public class ClientRegister {
     public static void onClientSetup(FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(new ClientEventListener());
 
+        ItemBlockRenderTypes.setRenderLayer(MRBlocks.THICK_TRIPWIRE.get(), RenderType.tripwire());
+
         ItemModelProps.register();
     }
 
@@ -37,6 +43,7 @@ public class ClientRegister {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(MRBlockEntities.DISPLAY_PEDESTAL.get(), DisplayPedestalRenderer::new);
         event.registerBlockEntityRenderer(MRBlockEntities.CAMO_DISPENSER.get(), CamoTrapRenderer::new);
+        event.registerBlockEntityRenderer(MRBlockEntities.CAMO_TRIPWIRE_HOOK.get(), CamoTrapRenderer::new);
     }
 
     @SubscribeEvent

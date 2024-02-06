@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "magical_relics:block/camo_tripwire_hook",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "magical_relics:block/camo_tripwire_hook"
+    },
+    "facing=south": {
+      "model": "magical_relics:block/camo_tripwire_hook",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "magical_relics:block/camo_tripwire_hook",
+      "y": 270
+    }
+  }
+}

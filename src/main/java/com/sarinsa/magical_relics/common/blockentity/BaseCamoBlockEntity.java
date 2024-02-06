@@ -17,7 +17,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 
-public abstract class BaseCamoBlockEntity extends BlockEntity {
+public abstract class BaseCamoBlockEntity extends BlockEntity implements CamoBlockEntity {
 
     private BlockState camoState;
 
@@ -38,7 +38,7 @@ public abstract class BaseCamoBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
-        writeUpdateData(compoundTag);
+        writeUpdateData(compoundTag, camoState);
     }
 
     @Override
@@ -47,29 +47,10 @@ public abstract class BaseCamoBlockEntity extends BlockEntity {
         readCamoState(compoundTag);
     }
 
-    private void readCamoState(CompoundTag compoundTag) {
-        if (compoundTag.contains("CamoState", Tag.TAG_STRING)) {
-            BlockState state = Blocks.COBBLESTONE.defaultBlockState();
-            ResourceLocation blockId = ResourceLocation.tryParse(compoundTag.getString("CamoState"));
-
-            if (blockId != null && ForgeRegistries.BLOCKS.containsKey(blockId))
-                state = ForgeRegistries.BLOCKS.getValue(blockId).defaultBlockState();
-
-            camoState = state;
-        }
-    }
-
-    private void writeUpdateData(CompoundTag compoundTag) {
-        if (camoState != null) {
-            compoundTag.putString("CamoState", ForgeRegistries.BLOCKS.getKey(camoState.getBlock()).toString());
-        }
-    }
-
-
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag compoundTag = new CompoundTag();
-        writeUpdateData(compoundTag);
+        writeUpdateData(compoundTag, camoState);
         return compoundTag;
     }
 
