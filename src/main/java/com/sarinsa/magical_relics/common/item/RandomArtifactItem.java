@@ -22,8 +22,7 @@ public class RandomArtifactItem extends Item {
 
             ItemStack randomArtifact = ArtifactUtils.generateRandomArtifact(level.random);
             player.getInventory().add(randomArtifact);
-            return InteractionResultHolder.success(player.getItemInHand(hand));
         }
-        return InteractionResultHolder.consume(player.getItemInHand(hand));
+        return InteractionResultHolder.success(player.getItemInHand(hand));
     }
 }
