@@ -48,6 +48,7 @@ public class ClientRegister {
 
     @SubscribeEvent
     public static void onItemColors(RegisterColorHandlersEvent.Item event) {
+        // All artifact items (including armor)
         for (ArtifactSet<List<RegistryObject<Item>>> artifactSet : MRItems.ALL_ARTIFACTS) {
             for (RegistryObject<Item> regObj : artifactSet.dataStructure()) {
                 event.register((itemStack, index) -> {

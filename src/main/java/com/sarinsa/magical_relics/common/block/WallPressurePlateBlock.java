@@ -74,6 +74,7 @@ public class WallPressurePlateBlock extends PressurePlateBlock {
     @Override
     protected void updateNeighbours(Level level, BlockPos pos) {
         level.updateNeighborsAt(pos, this);
+        level.updateNeighborsAt(pos.relative(level.getBlockState(pos).getValue(FACING).getOpposite()), this);
     }
 
     @Override
@@ -94,6 +95,11 @@ public class WallPressurePlateBlock extends PressurePlateBlock {
         Direction facing = state.getValue(FACING);
         BlockPos behindPos = pos.relative(facing.getOpposite());
         return level.getBlockState(behindPos).isFaceSturdy(level, behindPos, facing);
+    }
+
+    @Override
+    public int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return (direction != Direction.UP && direction != Direction.DOWN) ? getSignalForState(state) : 0;
     }
 
     @Override
