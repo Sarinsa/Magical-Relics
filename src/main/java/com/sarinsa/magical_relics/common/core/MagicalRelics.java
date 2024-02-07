@@ -26,8 +26,6 @@ public class MagicalRelics {
     //
     // - Rebuild the old wizard towers with a slight makeover and make them generate
     //
-    // - Fix wall pressure plates: doesn't emit redstone signal to the correct neighbor blocks
-    //
 
 
     // REMINDERS
