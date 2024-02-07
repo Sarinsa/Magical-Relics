@@ -1,27 +1,19 @@
 package com.sarinsa.magical_relics.common.block;
 
-import com.sarinsa.magical_relics.common.blockentity.BaseCamoBlockEntity;
 import com.sarinsa.magical_relics.common.blockentity.CamoDispenserBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
-import com.sarinsa.magical_relics.common.tag.MRBlockTags;
-import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -41,6 +33,7 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TRIGGERED, false));
     }
 
+
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         return getLightEmission(level, pos, super.getLightEmission(state, level, pos));
@@ -48,7 +41,7 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return use(level, pos, player, hand, (player1, menuProvider) -> {
+        return use(level, pos, player, hand, null, (player1, menuProvider) -> {
             player.openMenu(menuProvider);
             player.awardStat(Stats.INSPECT_DISPENSER);
         });
