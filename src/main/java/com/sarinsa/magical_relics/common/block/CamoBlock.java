@@ -34,10 +34,11 @@ public interface CamoBlock {
     /**
      * Hook used by blocks that have camo block entities. Handles camo picking.
      * <p></p>
-     * @param consumer Optional consumer used to open the block entity's inventory if it has one.
+     * @param containerOpener Optional consumer used to open the block entity's inventory if it has one.
+     * @param postStateLogic Optional consumer to make block state changes if a camo has been applied.
      */
     @SuppressWarnings("ConstantConditions")
-    default InteractionResult use(Level level, BlockPos pos, Player player, InteractionHand hand, @Nullable BiConsumer<Player, MenuProvider> consumer) {
+    default InteractionResult use(Level level, BlockPos pos, Player player, InteractionHand hand, @Nullable BiConsumer<Level, BlockPos> postStateLogic, @Nullable BiConsumer<Player, MenuProvider> containerOpener) {
         if (level.getExistingBlockEntity(pos) instanceof CamoBlockEntity camoBlockEntity) {
             ItemStack handStack = player.getItemInHand(hand);
 
@@ -51,12 +52,15 @@ public interface CamoBlock {
                 if (camoState == null) return InteractionResult.PASS;
 
                 if (camoState.isSolidRender(level, pos) && !(camoState.getBlock() instanceof CamoBlock)) {
-                    // Makes placing blocks around the trap easier
+                    // Makes placing blocks around the camo block easier
                     if (camoBlockEntity.getCamoState() != null && camoBlockEntity.getCamoState() == camoState) return InteractionResult.PASS;
-
                     camoBlockEntity.setCamoState(camoState);
+
                     // Force light update in case the camo state is a light source
                     level.getLightEngine().checkBlock(pos);
+
+                    if (postStateLogic != null)
+                        postStateLogic.accept(level, pos);
 
                     if (level instanceof ServerLevel serverLevel) {
                         serverLevel.playSound(null, pos, block.defaultBlockState().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.5F, 1.0F);
@@ -65,8 +69,8 @@ public interface CamoBlock {
                 }
             }
             else {
-                if (consumer != null)
-                    consumer.accept(player, (MenuProvider) camoBlockEntity);
+                if (containerOpener != null)
+                    containerOpener.accept(player, (MenuProvider) camoBlockEntity);
             }
         }
         return InteractionResult.PASS;

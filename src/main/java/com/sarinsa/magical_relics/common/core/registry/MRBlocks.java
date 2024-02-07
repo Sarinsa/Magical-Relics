@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TripWireBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -27,6 +28,7 @@ public class MRBlocks {
     public static final Map<RegistryObject<CrumblingBlock>, Block> CRUMBLING_BLOCKS = new HashMap<>();
 
 
+
     public static final RegistryObject<Block> SOLID_AIR = registerNoItem("solid_air", () -> new SolidAirBlock(BlockBehaviour.Properties.of(Material.AIR).noLootTable().air().noOcclusion()));
 
     public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", MRItems.MRCreativeTab.MOD_TAB, SpikeTrapBlock::new);
@@ -34,6 +36,7 @@ public class MRBlocks {
     public static final RegistryObject<CamoDispenserBlock> CAMO_DISPENSER = register("camo_dispenser", MRItems.MRCreativeTab.MOD_TAB, CamoDispenserBlock::new);
     public static final RegistryObject<CamoTripwireHookBlock> CAMO_TRIPWIRE_HOOK = register("camo_tripwire_hook", MRItems.MRCreativeTab.MOD_TAB, CamoTripwireHookBlock::new);
     public static final RegistryObject<TripWireBlock> THICK_TRIPWIRE = registerNoItem("thick_tripwire", () -> new ThickTripwireBlock(CAMO_TRIPWIRE_HOOK.get(), BlockBehaviour.Properties.copy(Blocks.TRIPWIRE)));
+    public static final RegistryObject<IllusionaryBlock> ILLUSIONARY_BLOCK = register("illusionary_block", MRItems.MRCreativeTab.MOD_TAB, () -> new IllusionaryBlock(BlockBehaviour.Properties.of(Material.BARRIER).noOcclusion().isViewBlocking((state, level, pos) -> false)));
     public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", MRItems.MRCreativeTab.MOD_TAB, DisplayPedestalBlock::new);
     public static final RegistryObject<AntiBuilderBlock> ANTI_BUILDER = register("anti_builder", MRItems.MRCreativeTab.MOD_TAB, AntiBuilderBlock::new);
 

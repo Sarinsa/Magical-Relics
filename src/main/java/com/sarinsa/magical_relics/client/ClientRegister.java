@@ -44,6 +44,7 @@ public class ClientRegister {
         event.registerBlockEntityRenderer(MRBlockEntities.DISPLAY_PEDESTAL.get(), DisplayPedestalRenderer::new);
         event.registerBlockEntityRenderer(MRBlockEntities.CAMO_DISPENSER.get(), CamoTrapRenderer::new);
         event.registerBlockEntityRenderer(MRBlockEntities.CAMO_TRIPWIRE_HOOK.get(), CamoTrapRenderer::new);
+        event.registerBlockEntityRenderer(MRBlockEntities.ILLUSIONARY_BLOCK.get(), CamoTrapRenderer::new);
     }
 
     @SubscribeEvent

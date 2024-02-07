@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "has_camo=false": {
+      "model": "magical_relics:block/illusionary_block"
+    },
+    "has_camo=true": {
+      "model": "magical_relics:block/invisible"
+    }
+  }
+}
