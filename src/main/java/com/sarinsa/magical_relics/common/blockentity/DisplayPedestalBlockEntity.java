@@ -17,9 +17,6 @@ import javax.annotation.Nonnull;
 
 public class DisplayPedestalBlockEntity extends BlockEntity {
 
-    //private static final Component DEFAULT_NAME = Component.translatable("container." + MagicalRelics.MODID + ".display_pedestal");
-    //private NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
-
     private ItemStack artifact;
 
     public DisplayPedestalBlockEntity(BlockPos pos, BlockState state) {
@@ -103,33 +100,4 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
     public boolean onlyOpCanSetNbt() {
         return true;
     }
-
-    /*
-    @Override
-    protected NonNullList<ItemStack> getItems() {
-        return inventory;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> items) {
-        this.inventory = items;
-    }
-
-    @Override
-    protected Component getDefaultName() {
-        return DEFAULT_NAME;
-    }
-
-    @Override
-    protected AbstractContainerMenu createMenu(int id, Inventory inventory) {
-        return new DisplayPedestalMenu(id, inventory, this);
-    }
-
-
-    @Override
-    public int getContainerSize() {
-        return 0;
-    }
-
-     */
 }
