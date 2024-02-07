@@ -17,18 +17,7 @@ public class MRBlockTagProvider extends BlockTagsProvider {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void addTags() {
-        tag(MRBlockTags.CAMO_BLOCKS).addTags(
-                BlockTags.STONE_BRICKS,
-                BlockTags.BASE_STONE_OVERWORLD,
-                BlockTags.BASE_STONE_NETHER,
-                BlockTags.PLANKS,
-                Tags.Blocks.COBBLESTONE,
-                Tags.Blocks.STONE,
-                Tags.Blocks.END_STONES,
-                Tags.Blocks.OBSIDIAN,
-                Tags.Blocks.SAND
-        );
+
     }
 }

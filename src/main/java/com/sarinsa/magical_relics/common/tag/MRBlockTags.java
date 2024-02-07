@@ -8,9 +8,6 @@ import net.minecraft.world.level.block.Block;
 
 public final class MRBlockTags {
 
-    public static final TagKey<Block> CAMO_BLOCKS = modTag("camo_blocks");
-
-
     private static TagKey<Block> modTag(String name) {
         return BlockTags.create(MagicalRelics.resLoc(name));
     }
