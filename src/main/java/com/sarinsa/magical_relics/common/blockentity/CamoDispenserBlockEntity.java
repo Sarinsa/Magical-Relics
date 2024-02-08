@@ -61,6 +61,7 @@ public class CamoDispenserBlockEntity extends DispenserBlockEntity implements Ca
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         if (pkt != null)
             super.onDataPacket(net, pkt);

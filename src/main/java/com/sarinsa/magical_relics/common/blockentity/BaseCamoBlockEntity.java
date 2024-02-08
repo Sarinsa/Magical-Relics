@@ -26,25 +26,27 @@ public abstract class BaseCamoBlockEntity extends BlockEntity implements CamoBlo
     }
 
 
+    @Override
     @Nullable
     public BlockState getCamoState() {
         return camoState;
     }
 
-    public void setCamoState(BlockState state) {
+    @Override
+    public void setCamoState(@Nullable BlockState state) {
         camoState = state;
     }
 
     @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
-        writeUpdateData(compoundTag, camoState);
+        writeUpdateData(compoundTag, getCamoState());
     }
 
     @Override
     public void load(CompoundTag compoundTag) {
         super.load(compoundTag);
-        readCamoState(compoundTag);
+        setCamoState(readCamoState(compoundTag));
     }
 
     @Override
@@ -64,17 +66,20 @@ public abstract class BaseCamoBlockEntity extends BlockEntity implements CamoBlo
         super.handleUpdateTag(tag);
     }
 
+
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        if(level.isClientSide) {
+        if (pkt != null)
             super.onDataPacket(net, pkt);
 
+        if(level.isClientSide) {
             CompoundTag compoundTag = pkt.getTag();
 
             if (compoundTag == null)
                 return;
 
-            readCamoState(compoundTag);
+            setCamoState(readCamoState(compoundTag));
         }
     }
 
