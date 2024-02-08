@@ -9,11 +9,13 @@ import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -31,6 +34,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class ArtifactUtils {
+
+    public static final Rarity MAGICAL = Rarity.create(MagicalRelics.resLoc("magical").toString(), ChatFormatting.GREEN);
 
     /** NBT keys for mod data storage. */
     public static final String MOD_DATA_KEY = "MagicalRelicsData";
@@ -284,16 +289,18 @@ public class ArtifactUtils {
 
         if (!abilities.isEmpty()) {
             for (BaseArtifactAbility ability : abilities) {
-                Component description = ability.getAbilityDescription();
+                MutableComponent description = ability.getAbilityDescription();
 
-                if (description != null)
+                if (description != null) {
+                    description.setStyle(ability.getRarity().getStyleModifier().apply(description.getStyle()));
                     components.add(description);
+                }
             }
         }
         return components;
     }
 
-    public static void writeAbilityCooldown(ItemStack itemStack, BaseArtifactAbility ability, int cooldown) {
+    public static void setAbilityCooldown(ItemStack itemStack, BaseArtifactAbility ability, int cooldown) {
         CompoundTag modData = itemStack.getOrCreateTag().getCompound(MOD_DATA_KEY);
 
         if (modData.contains(ABILITY_COOLDOWNS_KEY, Tag.TAG_COMPOUND)) {

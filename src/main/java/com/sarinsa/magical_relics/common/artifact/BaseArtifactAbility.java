@@ -5,9 +5,11 @@ import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,7 +18,7 @@ import java.util.List;
 
 public abstract class BaseArtifactAbility implements ArtifactAbility {
 
-    private final Component description;
+    private final MutableComponent description;
 
 
     public BaseArtifactAbility(String abilityName) {
@@ -47,7 +49,7 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
      * @return A description of what this artifact ability does. Appended to
      * {@link net.minecraft.world.item.Item#appendHoverText(ItemStack, Level, List, TooltipFlag)}
      */
-    public Component getAbilityDescription() {
+    public MutableComponent getAbilityDescription() {
         return description;
     }
 
@@ -84,6 +86,14 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
     @Override
     public void tickPassiveEffect() {
 
+    }
+
+    /**
+     * Primarily used for the ability's description text color when
+     * rendering it in item tooltip.
+     */
+    public Rarity getRarity() {
+        return Rarity.COMMON;
     }
 
     @Override

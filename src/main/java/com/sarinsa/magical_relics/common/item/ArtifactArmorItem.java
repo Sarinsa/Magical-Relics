@@ -14,7 +14,7 @@ import java.util.List;
 public class ArtifactArmorItem extends ArmorItem {
 
     public ArtifactArmorItem(ArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, Properties properties) {
-        super(armorMaterial, equipmentSlot, properties.rarity(Rarity.UNCOMMON));
+        super(armorMaterial, equipmentSlot, properties.rarity(ArtifactUtils.MAGICAL));
     }
 
     @Override

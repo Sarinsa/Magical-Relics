@@ -6,6 +6,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 
 public class NightVisionAbility extends BaseArtifactAbility {
@@ -32,10 +33,15 @@ public class NightVisionAbility extends BaseArtifactAbility {
         if (!ArtifactUtils.isAbilityOnCooldown(itemStack, this)) {
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, EFFECT_DURATION));
 
-            ArtifactUtils.writeAbilityCooldown(itemStack, this, EFFECT_DURATION);
+            ArtifactUtils.setAbilityCooldown(itemStack, this, EFFECT_DURATION);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
     }
 
     @Override

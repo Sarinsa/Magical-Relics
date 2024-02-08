@@ -18,7 +18,7 @@ import java.util.List;
 public class ArtifactItem extends TieredItem {
 
     public ArtifactItem(Tier tier) {
-        super(tier, new Properties().rarity(Rarity.UNCOMMON).stacksTo(1));
+        super(tier, new Properties().rarity(ArtifactUtils.MAGICAL).stacksTo(1));
     }
 
     @Override
@@ -26,6 +26,8 @@ public class ArtifactItem extends TieredItem {
         super.appendHoverText(itemStack, level, components, flag);
 
         List<Component> descriptions = ArtifactUtils.getDescriptions(itemStack);
+        // Get a little space between name and description to break things up a bit
+        components.add(Component.literal(""));
         components.addAll(descriptions);
     }
 
