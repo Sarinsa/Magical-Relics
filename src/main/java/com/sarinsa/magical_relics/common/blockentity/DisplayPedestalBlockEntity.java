@@ -17,6 +17,10 @@ import javax.annotation.Nonnull;
 
 public class DisplayPedestalBlockEntity extends BlockEntity {
 
+    private static final String GENERATE_KEY = "GenerateArtifact";
+    private static final String ITEM_KEY = "ArtifactItem";
+
+
     private ItemStack artifact;
 
     public DisplayPedestalBlockEntity(BlockPos pos, BlockState state) {
@@ -36,7 +40,7 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
         writeUpdateData(compoundTag);
-        compoundTag.remove("GenerateArtifact");
+        compoundTag.remove(GENERATE_KEY);
     }
 
     @Override
@@ -44,16 +48,16 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
         super.load(compoundTag);
         readArtifactItem(compoundTag);
 
-        if (compoundTag.contains("GenerateArtifact", Tag.TAG_BYTE)) {
-            if (compoundTag.getBoolean("GenerateArtifact") && level != null && !level.isClientSide) {
+        if (compoundTag.contains(GENERATE_KEY, Tag.TAG_BYTE)) {
+            if (compoundTag.getBoolean(GENERATE_KEY) && level != null && !level.isClientSide) {
                 setArtifact(ArtifactUtils.generateRandomArtifact(level.random));
             }
         }
     }
 
     private void readArtifactItem(CompoundTag compoundTag) {
-        if (compoundTag.contains("ArtifactItem", Tag.TAG_COMPOUND)) {
-            artifact = ItemStack.of(compoundTag.getCompound("ArtifactItem"));
+        if (compoundTag.contains(ITEM_KEY, Tag.TAG_COMPOUND)) {
+            artifact = ItemStack.of(compoundTag.getCompound(ITEM_KEY));
         }
     }
 
@@ -61,7 +65,7 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
         if (!getArtifact().isEmpty()) {
             CompoundTag itemTag = new CompoundTag();
             getArtifact().save(itemTag);
-            compoundTag.put("ArtifactItem", itemTag);
+            compoundTag.put(ITEM_KEY, itemTag);
         }
     }
 

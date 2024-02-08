@@ -98,11 +98,15 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-
+    maven {
+        url "https://nexus.resourcefulbees.com/repository/maven-public/"
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+
+    runtimeOnly fg.deobf("com.telepathicgrunt:StructureVoidToggle-Forge:4.2.3+1.19.2")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }

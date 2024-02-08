@@ -25,7 +25,7 @@ public class HealthBoostAbility extends BaseArtifactAbility {
             "MRHealthBoost",
             UUID.fromString("e3182201-176b-4f62-837d-694251c8f97d"),
             AttributeModifier.Operation.ADDITION,
-            (random) -> 2.0D + random.nextInt(6)
+            (random) -> 1.0D + random.nextInt(3)
     );
 
 
