@@ -7,7 +7,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
-// TODO - make this thing work consistently lol
 public class AirSneakAbility extends BaseArtifactAbility {
 
     private static final String[] PREFIXES = {
@@ -22,22 +21,23 @@ public class AirSneakAbility extends BaseArtifactAbility {
     };
 
 
+
     public AirSneakAbility() {
         super("air_sneak");
     }
 
     @Override
     public boolean onHeld(Level level, Player player, ItemStack heldArtifact) {
-        BlockPos belowPos = player.blockPosition().below();
+        BlockPos belowPos = player.blockPosition().below().immutable();
 
         if (!level.isClientSide) {
             if (player.isShiftKeyDown()) {
                 if (level.getBlockState(belowPos).isAir() && !level.getBlockState(belowPos).is(MRBlocks.SOLID_AIR.get())) {
                     level.setBlock(belowPos, MRBlocks.SOLID_AIR.get().defaultBlockState(), Block.UPDATE_ALL);
-                    System.out.println("setting solid air");
-                    level.scheduleTick(belowPos, MRBlocks.SOLID_AIR.get(), 40);
+                    level.scheduleTick(belowPos, MRBlocks.SOLID_AIR.get(), 20);
                 }
-            } else {
+            }
+            else {
                 if (level.getBlockState(belowPos).is(MRBlocks.SOLID_AIR.get()))
                     level.removeBlock(belowPos, false);
             }

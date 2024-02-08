@@ -69,8 +69,8 @@ public interface CamoBlock {
                     if (level instanceof ServerLevel serverLevel) {
                         serverLevel.playSound(null, pos, block.defaultBlockState().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.5F, 1.0F);
                     }
+                    return InteractionResult.SUCCESS;
                 }
-                return InteractionResult.SUCCESS;
             }
             else {
                 if (containerOpener != null)

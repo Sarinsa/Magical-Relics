@@ -29,7 +29,7 @@ public class MRBlocks {
 
 
 
-    public static final RegistryObject<Block> SOLID_AIR = registerNoItem("solid_air", () -> new SolidAirBlock(BlockBehaviour.Properties.of(Material.AIR).noLootTable().air().noOcclusion()));
+    public static final RegistryObject<Block> SOLID_AIR = registerNoItem("solid_air", () -> new SolidAirBlock(BlockBehaviour.Properties.of(Material.AIR).noLootTable().noOcclusion()));
 
     public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", MRItems.MRCreativeTab.MOD_TAB, SpikeTrapBlock::new);
     public static final RegistryObject<QuicksandBlock> QUICKSAND = register("quicksand", MRItems.MRCreativeTab.MOD_TAB, QuicksandBlock::new);

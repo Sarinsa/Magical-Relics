@@ -214,7 +214,7 @@ public class ArtifactUtils {
                 attributeMod.put("AttributeMod", new AttributeModifier(
                         boost.modifierUUID(),
                         boost.name(),
-                        boost.valueProvider().getRangedValue(boost.min(), boost.max(), random),
+                        boost.valueProvider().getRangedValue(random),
                         boost.operation()
                 ).save());
 
