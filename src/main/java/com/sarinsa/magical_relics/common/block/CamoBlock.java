@@ -52,12 +52,16 @@ public interface CamoBlock {
                 if (camoState == null) return InteractionResult.PASS;
 
                 if (camoState.isSolidRender(level, pos) && !(camoState.getBlock() instanceof CamoBlock)) {
+                    BlockState oldCamoState = camoBlockEntity.getCamoState();
+
                     // Makes placing blocks around the camo block easier
-                    if (camoBlockEntity.getCamoState() != null && camoBlockEntity.getCamoState() == camoState) return InteractionResult.PASS;
+                    if (camoBlockEntity.getCamoState() != null && camoBlockEntity.getCamoState() == camoState)
+                        return InteractionResult.PASS;
                     camoBlockEntity.setCamoState(camoState);
 
                     // Force light update in case the camo state is a light source
-                    level.getLightEngine().checkBlock(pos);
+                    if (oldCamoState == null || camoState.getLightEmission(level, pos) != oldCamoState.getLightEmission(level, pos))
+                        level.getLightEngine().checkBlock(pos);
 
                     if (postStateLogic != null)
                         postStateLogic.accept(level, pos);
@@ -65,8 +69,8 @@ public interface CamoBlock {
                     if (level instanceof ServerLevel serverLevel) {
                         serverLevel.playSound(null, pos, block.defaultBlockState().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.5F, 1.0F);
                     }
-                    return InteractionResult.SUCCESS;
                 }
+                return InteractionResult.SUCCESS;
             }
             else {
                 if (containerOpener != null)
