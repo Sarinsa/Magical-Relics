@@ -38,9 +38,9 @@ public class BakerAbility extends BaseArtifactAbility {
             return false;
 
         BlockPos toPlacePos = pos.relative(face);
-        BlockState toPlaceState = level.getBlockState(toPlacePos);
+        BlockState currentStateAt = level.getBlockState(toPlacePos);
 
-        if (toPlaceState.isAir() && Blocks.CAKE.canSurvive(toPlaceState, level, toPlacePos)) {
+        if (currentStateAt.isAir() && Blocks.CAKE.defaultBlockState().canSurvive(level, toPlacePos)) {
             level.setBlock(toPlacePos, Blocks.CAKE.defaultBlockState(), Block.UPDATE_ALL);
 
             if (!level.isClientSide) {
@@ -70,6 +70,6 @@ public class BakerAbility extends BaseArtifactAbility {
 
     @Override
     public TriggerType getTriggerType() {
-        return TriggerType.RIGHT_CLICK;
+        return TriggerType.RIGHT_CLICK_BLOCK;
     }
 }

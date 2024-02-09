@@ -42,43 +42,6 @@ public class MREventListener {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        ItemStack heldItem = event.getItemStack();
-        Level level = event.getLevel();
-        BlockPos pos = event.getPos();
-        BlockState clickedState = level.getBlockState(pos);
-        Player player = event.getEntity();
-        BaseArtifactAbility ability = ArtifactUtils.getFirstAbility(BaseArtifactAbility.TriggerType.RIGHT_CLICK, heldItem);
-
-        // Help prevent stupid things from happening
-        // when holding a potentially dangerous artifact
-        // when trying to interact with a block entity.
-        // It do be sad when your chest full of diamonds
-        // go bye bye and turns into cake.
-        if (clickedState.hasBlockEntity()) return;
-
-        if (ability != null) {
-            if (ability.onClickBlock(level, pos, level.getBlockState(pos), event.getFace(), player) && heldItem.isDamageableItem()) {
-                heldItem.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(event.getHand()));
-            }
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onPlayerUseItem(PlayerInteractEvent.RightClickItem event) {
-        ItemStack heldItem = event.getItemStack();
-        Level level = event.getLevel();
-        Player player = event.getEntity();
-        BaseArtifactAbility ability = ArtifactUtils.getFirstAbility(BaseArtifactAbility.TriggerType.USE, heldItem);
-
-        if (ability != null) {
-            if (ability.onUse(level, player, heldItem) && heldItem.isDamageableItem()) {
-                heldItem.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(event.getHand()));
-            }
-        }
-    }
-
     @SubscribeEvent
     public void onPlayerDropItem(ItemTossEvent event) {
         ItemEntity tossedItem = event.getEntity();
@@ -87,7 +50,7 @@ public class MREventListener {
         BaseArtifactAbility ability = ArtifactUtils.getFirstAbility(BaseArtifactAbility.TriggerType.DROPPED, tossedItem.getItem());
 
         if (ability != null) {
-            if (ability.onDropped(level, tossedItem, player) && tossedItem.getItem().isDamageableItem()) {
+            if (ability.onDropped(level, tossedItem, player)) {
                 event.setCanceled(true);
             }
         }

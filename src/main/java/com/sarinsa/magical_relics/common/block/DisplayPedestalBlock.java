@@ -101,7 +101,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
 
     @Override
     public boolean isSignalSource(BlockState state) {
-        return state.getValue(POWERED);
+        return true;
     }
 
     @Override

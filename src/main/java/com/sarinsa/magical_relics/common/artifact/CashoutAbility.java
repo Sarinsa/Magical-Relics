@@ -55,7 +55,9 @@ public class CashoutAbility extends BaseArtifactAbility {
             for (ItemStack itemStack : loot) {
                 Block.popResource(serverLevel, itemEntity.blockPosition(), itemStack);
             }
+            return true;
         }
+        // Returning false for client since it gets left out
         return true;
     }
 

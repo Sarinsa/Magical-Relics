@@ -112,7 +112,7 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
      * Represents the type of trigger that activates an artifact ability.
      */
     public enum TriggerType {
-        RIGHT_CLICK(false),
+        RIGHT_CLICK_BLOCK(false),
         USE(true),
         HELD(false),
         /** Activates when dropped on the ground. */
