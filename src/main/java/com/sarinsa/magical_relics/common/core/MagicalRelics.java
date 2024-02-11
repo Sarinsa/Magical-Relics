@@ -22,19 +22,11 @@ public class MagicalRelics {
     //
     // - Make a lock function and key for the Display Pedestal, preventing looting unless a key is found first
     //
-    // - Rebuild the old wizard towers with a slight makeover and make them generate
-    //
-
-
-    // REMINDERS
+    // - Improve cleanup of solid air blocks placed by air sneak ability
     //
     // - Look around for a way to allow attribute mods on ItemStacks to be applied
     //   regardless of what equipment slot the item is in
     //
-    // - Consider monitoring player health and removing extra hearts when a health boost
-    //   artifact is unequipped
-    //
-
 
 
     public static final String MODID = "magical_relics";

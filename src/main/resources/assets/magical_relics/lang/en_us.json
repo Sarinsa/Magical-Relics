@@ -91,9 +91,14 @@
   "magical_relics.artifact_ability.magical_relics.baker.description": "Conjures cakes on solid surfaces when right-clicking",
   "magical_relics.artifact_ability.magical_relics.cashout.description": "Converts to treasure when dropped",
   "magical_relics.artifact_ability.magical_relics.health_boost.description": "Passively boosts max health",
-  "magical_relics.artifact_ability.magical_relics.speed_boost.description": "Boosts speed when held",
+  "magical_relics.artifact_ability.magical_relics.speed_boost.description.armor_tick": "Boosts speed when equipped",
+  "magical_relics.artifact_ability.magical_relics.speed_boost.description.held": "Boosts speed when held",
   "magical_relics.artifact_ability.magical_relics.air_sneak.description": "Allows standing on air when sneaking",
-  "magical_relics.artifact_ability.magical_relics.night_vision.description": "Grants temporary Night Vision when used",
+  "magical_relics.artifact_ability.magical_relics.night_vision.description.inventory_tick": "Grants Night Vision",
+  "magical_relics.artifact_ability.magical_relics.night_vision.description.armor_tick": "Grants Night Vision when equipped",
+  "magical_relics.artifact_ability.magical_relics.night_vision.description.use": "Grants temporary Night Vision when used",
+  "magical_relics.artifact_ability.magical_relics.adrenaline.description": "Applies several potion effects after taking damage from an enemy",
+  "magical_relics.artifact_ability.magical_relics.jukebox.description": "Plays the record %1$s when used",
 
 
   "magical_relics.artifact_ability.magical_relics.baker.prefix.bakers": "Baker's",
@@ -132,5 +137,18 @@
   "magical_relics.artifact_ability.magical_relics.night_vision.prefix.sensing": "Sensing",
   "magical_relics.artifact_ability.magical_relics.night_vision.prefix.sighted": "Sighted",
   "magical_relics.artifact_ability.magical_relics.night_vision.suffix.seeing": "of Seeing",
-  "magical_relics.artifact_ability.magical_relics.night_vision.suffix.night_vision": "of Night Vision"
+  "magical_relics.artifact_ability.magical_relics.night_vision.suffix.night_vision": "of Night Vision",
+
+  "magical_relics.artifact_ability.magical_relics.adrenaline.prefix.brawling": "Brawling",
+  "magical_relics.artifact_ability.magical_relics.adrenaline.prefix.skirmish": "Skirmish",
+  "magical_relics.artifact_ability.magical_relics.adrenaline.suffix.rage": "of Rage",
+  "magical_relics.artifact_ability.magical_relics.adrenaline.suffix.fury": "of Fury",
+
+  "magical_relics.artifact_ability.magical_relics.jukebox.prefix.musical": "Musical",
+  "magical_relics.artifact_ability.magical_relics.jukebox.prefix.harmonious": "Harmonious",
+  "magical_relics.artifact_ability.magical_relics.jukebox.prefix.plonking": "Plonking",
+  "magical_relics.artifact_ability.magical_relics.jukebox.suffix.tunes": "of Tunes",
+  "magical_relics.artifact_ability.magical_relics.jukebox.suffix.songs": "of Songs",
+  "magical_relics.artifact_ability.magical_relics.jukebox.suffix.notes": "of Notes"
+
 }

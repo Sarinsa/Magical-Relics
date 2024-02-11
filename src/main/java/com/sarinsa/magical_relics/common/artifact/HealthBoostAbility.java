@@ -1,9 +1,20 @@
 package com.sarinsa.magical_relics.common.artifact;
 
+import com.google.common.collect.ImmutableList;
+import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.artifact.misc.AttributeBoost;
+import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.UUID;
 
 public class HealthBoostAbility extends BaseArtifactAbility {
@@ -20,6 +31,10 @@ public class HealthBoostAbility extends BaseArtifactAbility {
             createSuffix("health_boost", "health")
     };
 
+    private static final List<ArtifactCategory> TYPES = ImmutableList.of(
+            ArtifactCategory.AMULET, ArtifactCategory.TRINKET, ArtifactCategory.FIGURINE, ArtifactCategory.RING, ArtifactCategory.WAND, ArtifactCategory.BELT, ArtifactCategory.CHESTPLATE, ArtifactCategory.LEGGINGS
+    );
+
     private static final AttributeBoost HEALTH_BOOST = new AttributeBoost(
             () -> Attributes.MAX_HEALTH,
             "MRHealthBoost",
@@ -31,8 +46,8 @@ public class HealthBoostAbility extends BaseArtifactAbility {
 
 
     public HealthBoostAbility() {
-        super("health_boost");
     }
+
 
     @Override
     public AttributeBoost getAttributeWithBoost() {
@@ -50,7 +65,17 @@ public class HealthBoostAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public TriggerType getTriggerType() {
-        return TriggerType.PASSIVE;
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+        return isArmor ? TriggerType.ARMOR_TICK : TriggerType.INVENTORY_TICK;
+    }
+
+    @Override
+    public List<ArtifactCategory> getCompatibleTypes() {
+        return TYPES;
+    }
+
+    @Override
+    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.health_boost.description");
     }
 }

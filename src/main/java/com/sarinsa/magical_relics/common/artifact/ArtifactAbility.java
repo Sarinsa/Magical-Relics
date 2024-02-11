@@ -3,6 +3,9 @@ package com.sarinsa.magical_relics.common.artifact;
 import com.sarinsa.magical_relics.common.artifact.misc.AttributeBoost;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +31,7 @@ public interface ArtifactAbility {
      * <br><br>
      * @return True if durability should be decreased on the used artifact
      */
-    boolean onClickBlock(Level level, BlockPos pos, BlockState state, Direction face, Player player);
+    boolean onClickBlock(Level level, ItemStack itemStack, BlockPos pos, BlockState state, Direction face, Player player);
 
     /**
      * Called when the player deals damage to a mob with an artifact
@@ -51,7 +54,7 @@ public interface ArtifactAbility {
      * <br><br>
      * @return True if durability should be decreased on the used artifact
      */
-    boolean onUserDamaged();
+    boolean onUserDamaged(Level level, Player player, @javax.annotation.Nullable LivingEntity attacker, DamageSource damageSource, ItemStack artifact);
 
     /**
      * Called when the player is holding an artifact with this ability in their hand,
@@ -64,7 +67,10 @@ public interface ArtifactAbility {
      * Called each tick, server-side. Artifacts do not need to be in
      * the player's hand for this to run.
      */
-    void tickPassiveEffect();
+    void onInventoryTick(ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem);
+
+    void onArmorTick(ItemStack stack, Level level, Player player);
+
 
     /**
      * @return An AttributeBoost instance containing an AttributeModifier and a double.

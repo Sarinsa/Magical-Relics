@@ -1,11 +1,22 @@
 package com.sarinsa.magical_relics.common.artifact;
 
+import com.google.common.collect.ImmutableList;
+import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
 
 public class AirSneakAbility extends BaseArtifactAbility {
 
@@ -20,11 +31,14 @@ public class AirSneakAbility extends BaseArtifactAbility {
             createSuffix("air_sneak", "flight")
     };
 
+    private static final List<ArtifactCategory> TYPES = ImmutableList.of(
+            ArtifactCategory.AMULET, ArtifactCategory.TRINKET, ArtifactCategory.FIGURINE, ArtifactCategory.STAFF, ArtifactCategory.RING, ArtifactCategory.WAND, ArtifactCategory.BOOTS
+    );
 
 
     public AirSneakAbility() {
-        super("air_sneak");
     }
+
 
     @Override
     public boolean onHeld(Level level, Player player, ItemStack heldArtifact) {
@@ -46,6 +60,11 @@ public class AirSneakAbility extends BaseArtifactAbility {
     }
 
     @Override
+    public void onArmorTick(ItemStack stack, Level level, Player player) {
+        onHeld(level, player, stack);
+    }
+
+    @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
@@ -56,7 +75,17 @@ public class AirSneakAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public TriggerType getTriggerType() {
-        return TriggerType.HELD;
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+        return isArmor ? TriggerType.ARMOR_TICK : TriggerType.HELD;
+    }
+
+    @Override
+    public List<ArtifactCategory> getCompatibleTypes() {
+        return TYPES;
+    }
+
+    @Override
+    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.air_sneak.description");
     }
 }

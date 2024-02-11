@@ -1,8 +1,11 @@
 package com.sarinsa.magical_relics.common.item;
 
+import com.sarinsa.magical_relics.common.artifact.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -11,18 +14,33 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ArtifactArmorItem extends ArmorItem {
+public class ArtifactArmorItem extends ArmorItem implements ItemArtifact {
 
-    public ArtifactArmorItem(ArmorMaterial armorMaterial, EquipmentSlot equipmentSlot, Properties properties) {
+    private final ArtifactCategory type;
+
+    public ArtifactArmorItem(ArmorMaterial armorMaterial, ArtifactCategory type, EquipmentSlot equipmentSlot, Properties properties) {
         super(armorMaterial, equipmentSlot, properties.rarity(ArtifactUtils.MAGICAL));
+        this.type = type;
+    }
+
+    @Override
+    public ArtifactCategory getType() {
+        return type;
     }
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
         super.appendHoverText(itemStack, level, components, flag);
 
-        List<Component> descriptions = ArtifactUtils.getDescriptions(itemStack);
-        components.addAll(descriptions);
+        ArtifactUtils.addDescriptionsToTooltip(itemStack, level, components, flag);
+    }
+
+    @Override
+    public void onArmorTick(ItemStack stack, Level level, Player player) {
+        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.ARMOR_TICK, stack);
+
+        if (ability != null)
+            ability.onArmorTick(stack, level, player);
     }
 
     @Override

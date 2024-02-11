@@ -1,15 +1,17 @@
 package com.sarinsa.magical_relics.common.artifact.misc;
 
 public enum ArtifactCategory {
-
     TRINKET,
-    WAND,
-    STAFF,
-    RING,
-    BELT,
     SWORD,
     DAGGER,
-    FIGURINE,
+    STAFF,
+    WAND,
     AMULET,
-    UNIVERSAL
+    BELT,
+    RING,
+    FIGURINE,
+    HELMET,
+    CHESTPLATE,
+    LEGGINGS,
+    BOOTS
 }

@@ -13,9 +13,8 @@ import java.util.function.Supplier;
 public class MRArtifactAbilities {
 
     public static final DeferredRegister<BaseArtifactAbility> ARTIFACT_ABILITIES = DeferredRegister.create(new ResourceLocation(MagicalRelics.MODID, "artifact_abilities"), MagicalRelics.MODID);
-    public static final Supplier<IForgeRegistry<BaseArtifactAbility>> ARTIFACT_ABILITY_REGISTRY = ARTIFACT_ABILITIES.makeRegistry(() -> {
-        return (new RegistryBuilder<BaseArtifactAbility>()).setDefaultKey(MagicalRelics.resLoc("empty"));
-    });
+    public static final Supplier<IForgeRegistry<BaseArtifactAbility>> ARTIFACT_ABILITY_REGISTRY = ARTIFACT_ABILITIES.makeRegistry(()
+            -> (new RegistryBuilder<BaseArtifactAbility>()).setDefaultKey(MagicalRelics.resLoc("empty")));
 
 
 
@@ -26,6 +25,8 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> SPEED_BOOST = register("speed_boost", SpeedAbility::new);
     public static final RegistryObject<BaseArtifactAbility> AIR_SNEAK = register("air_sneak", AirSneakAbility::new);
     public static final RegistryObject<BaseArtifactAbility> NIGHT_VISION = register("night_vision", NightVisionAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> ADRENALINE = register("adrenaline", AdrenalineAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> JUKEBOX = register("jukebox", JukeboxAbility::new);
 
 
 

@@ -47,7 +47,7 @@ public class MREventListener {
         ItemEntity tossedItem = event.getEntity();
         Level level = event.getEntity().level;
         Player player = event.getPlayer();
-        BaseArtifactAbility ability = ArtifactUtils.getFirstAbility(BaseArtifactAbility.TriggerType.DROPPED, tossedItem.getItem());
+        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.DROPPED, tossedItem.getItem());
 
         if (ability != null) {
             if (ability.onDropped(level, tossedItem, player)) {
@@ -61,7 +61,7 @@ public class MREventListener {
         Player player = event.player;
         ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         Level level = player.getLevel();
-        BaseArtifactAbility ability = ArtifactUtils.getFirstAbility(BaseArtifactAbility.TriggerType.HELD, heldItem);
+        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.HELD, heldItem);
 
         if (ability != null) {
             if (ability.onHeld(level, player, heldItem)) {
