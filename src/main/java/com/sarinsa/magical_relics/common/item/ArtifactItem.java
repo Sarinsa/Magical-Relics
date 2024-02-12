@@ -52,7 +52,6 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
 
         if (ability != null) {
             if (ability.onUse(level, player, heldItem)) {
-                heldItem.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(hand));
                 return InteractionResultHolder.success(heldItem);
             }
         }
@@ -76,10 +75,8 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
         if (clickedState.hasBlockEntity()) return InteractionResult.PASS;
 
         if (ability != null) {
-            if (ability.onClickBlock(level, heldItem, pos, level.getBlockState(pos), context.getClickedFace(), player)) {
-                heldItem.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(context.getHand()));
+            if (ability.onClickBlock(level, heldItem, pos, level.getBlockState(pos), context.getClickedFace(), player))
                 return InteractionResult.SUCCESS;
-            }
         }
         return InteractionResult.FAIL;
     }

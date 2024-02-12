@@ -62,6 +62,8 @@ public class BakerAbility extends BaseArtifactAbility {
             level.setBlock(toPlacePos, Blocks.CAKE.defaultBlockState(), Block.UPDATE_ALL);
             ArtifactUtils.setAbilityCooldown(itemStack, this, 20);
 
+            itemStack.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
+
             if (!level.isClientSide) {
                 level.playSound(null, toPlacePos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.7F, 1.0F);
                 double x = toPlacePos.getX() + 0.5D;

@@ -4,12 +4,15 @@ import com.sarinsa.magical_relics.common.artifact.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MREventListener {
@@ -60,8 +63,28 @@ public class MREventListener {
         BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.HELD, heldItem);
 
         if (ability != null) {
-            if (ability.onHeld(level, player, heldItem)) {
-                heldItem.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+            ability.onHeld(level, player, heldItem);
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingDamaged(LivingDamageEvent event) {
+        if (event.getSource().getDirectEntity() instanceof Player player) {
+            for (EquipmentSlot slot : EquipmentSlot.values()) {
+                ItemStack artifact = player.getItemBySlot(slot);
+                BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.USER_ATTACKING, artifact);
+
+                if (ability != null)
+                    ability.onDamageMob(artifact, player, event.getEntity());
+            }
+        }
+        else if (event.getEntity() instanceof Player player) {
+            for (EquipmentSlot slot : EquipmentSlot.values()) {
+                ItemStack artifact = player.getItemBySlot(slot);
+                BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.USER_DAMAGED, artifact);
+
+                if (ability != null)
+                    ability.onUserDamaged(player.level, player, event.getSource(), artifact);
             }
         }
     }

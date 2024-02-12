@@ -56,6 +56,7 @@
   "item.magical_relics.gold_figurine_artifact": "Gold Figurine",
   "item.magical_relics.diamond_figurine_artifact": "Diamond Figurine",
 
+
   "block.magical_relics.thick_tripwire": "Thick Thread",
   "block.magical_relics.quicksand": "Quicksand",
   "block.magical_relics.spike_trap": "Spike Trap",
@@ -83,22 +84,35 @@
   "block.magical_relics.crumbling_stone_bricks": "Crumbling Stone Bricks",
   "block.magical_relics.crumbling_mossy_stone_bricks": "Crumbling Mossy Stone Bricks",
 
+
   "death.attack.magical_relics.spikes": "%1$s was impaled on a spike trap",
   "death.attack.magical_relics.spikes.player": "%1$s got impaled on a spike trap whilst trying to escape %2$s",
 
+
   "magical_relics.anti_builder.blocked_message": "A powerful spell protects this land",
+
 
   "magical_relics.artifact_ability.magical_relics.baker.description": "Conjures cakes on solid surfaces when right-clicking",
   "magical_relics.artifact_ability.magical_relics.cashout.description": "Converts to treasure when dropped",
   "magical_relics.artifact_ability.magical_relics.health_boost.description": "Passively boosts max health",
-  "magical_relics.artifact_ability.magical_relics.speed_boost.description.armor_tick": "Boosts speed when equipped",
+  "magical_relics.artifact_ability.magical_relics.speed_boost.description.armor_tick": "Boosts speed while equipped",
   "magical_relics.artifact_ability.magical_relics.speed_boost.description.held": "Boosts speed when held",
   "magical_relics.artifact_ability.magical_relics.air_sneak.description": "Allows standing on air when sneaking",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.inventory_tick": "Grants Night Vision",
-  "magical_relics.artifact_ability.magical_relics.night_vision.description.armor_tick": "Grants Night Vision when equipped",
+  "magical_relics.artifact_ability.magical_relics.night_vision.description.armor_tick": "Grants Night Vision while equipped",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.use": "Grants temporary Night Vision for %1$s minutes when used",
-  "magical_relics.artifact_ability.magical_relics.adrenaline.description": "Applies several potion effects after taking damage from an enemy",
+  "magical_relics.artifact_ability.magical_relics.adrenaline.description": "Applies several potion effects after an enemy hurts you",
   "magical_relics.artifact_ability.magical_relics.jukebox.description": "Plays the record %1$s when used",
+  "magical_relics.artifact_ability.magical_relics.water_breathing.description.use": "Grants Water Breathing for %1$s minutes when used",
+  "magical_relics.artifact_ability.magical_relics.water_breathing.description.held": "Grants Water Breathing when held",
+  "magical_relics.artifact_ability.magical_relics.water_breathing.description.user_damaged": "Grants Water Breathing for %1$s seconds when drowning",
+  "magical_relics.artifact_ability.magical_relics.water_breathing.description.armor_tick": "Grants Water Breathing while equipped",
+  "magical_relics.artifact_ability.magical_relics.water_breathing.description.user_attacking": "Grants Water Breathing for %1$s seconds when dealing damage",
+  "magical_relics.artifact_ability.magical_relics.obscurity.description.use": "Cloaks the user and grants Invisibility for %1$s seconds when used",
+  "magical_relics.artifact_ability.magical_relics.obscurity.description.user_damaged": "Cloaks the user and grants Invisibility for %1$s seconds when you get hurt",
+  "magical_relics.artifact_ability.magical_relics.obscurity.description.user_attacking": "Cloaks the user and grants Invisibility for %1$s seconds when dealing damage",
+  "magical_relics.artifact_ability.magical_relics.sailor.description": "Increased paddling speed while equipped",
+
 
 
   "magical_relics.artifact_ability.magical_relics.baker.prefix.bakers": "Baker's",
@@ -149,6 +163,21 @@
   "magical_relics.artifact_ability.magical_relics.jukebox.prefix.plonking": "Plonking",
   "magical_relics.artifact_ability.magical_relics.jukebox.suffix.tunes": "of Tunes",
   "magical_relics.artifact_ability.magical_relics.jukebox.suffix.songs": "of Songs",
-  "magical_relics.artifact_ability.magical_relics.jukebox.suffix.notes": "of Notes"
+  "magical_relics.artifact_ability.magical_relics.jukebox.suffix.notes": "of Notes",
 
+  "magical_relics.artifact_ability.magical_relics.water_breathing.prefix.aerated": "Aerated",
+  "magical_relics.artifact_ability.magical_relics.water_breathing.prefix.breathy": "Breathy",
+  "magical_relics.artifact_ability.magical_relics.water_breathing.prefix.oxygenated": "Oxygenated",
+  "magical_relics.artifact_ability.magical_relics.water_breathing.suffix.breathing": "of Breathing",
+  "magical_relics.artifact_ability.magical_relics.water_breathing.suffix.fresh_air": "of Fresh Air",
+
+  "magical_relics.artifact_ability.magical_relics.obscurity.prefix.obscure": "Obscure",
+  "magical_relics.artifact_ability.magical_relics.obscurity.prefix.hidden": "Hidden",
+  "magical_relics.artifact_ability.magical_relics.obscurity.suffix.obscurity": "of Obscurity",
+  "magical_relics.artifact_ability.magical_relics.obscurity.suffix.cloaking": "of Cloaking",
+
+  "magical_relics.artifact_ability.magical_relics.sailor.prefix.sailors": "Sailor's",
+  "magical_relics.artifact_ability.magical_relics.sailor.prefix.paddling": "Paddling",
+  "magical_relics.artifact_ability.magical_relics.sailor.suffix.rowing": "of Rowing",
+  "magical_relics.artifact_ability.magical_relics.sailor.suffix.boating": "of Boating"
 }

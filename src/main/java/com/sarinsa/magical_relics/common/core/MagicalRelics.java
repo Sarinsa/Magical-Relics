@@ -19,14 +19,15 @@ public class MagicalRelics {
 
     // TODO LIST
     //
+    // - Add thick fog to ObscurityAbility (maybe also de-aggro all aggroed mobs?)
+    //
     // - Make separate models for Thick Tripwire (consider a slightly different THICCER texture as well?)
     //
     // - Make a lock function and key for the Display Pedestal, preventing looting unless a key is found first
     //
     // - Improve cleanup of solid air blocks placed by air sneak ability
     //
-    // - Look around for a way to allow attribute mods on ItemStacks to be applied
-    //   regardless of what equipment slot the item is in
+    // - Curios integration
     //
 
 

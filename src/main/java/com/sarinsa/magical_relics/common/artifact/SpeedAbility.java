@@ -40,6 +40,8 @@ public class SpeedAbility extends BaseArtifactAbility {
             ArtifactCategory.STAFF,
             ArtifactCategory.BELT,
             ArtifactCategory.BOOTS,
+            ArtifactCategory.DAGGER,
+            ArtifactCategory.SWORD,
             ArtifactCategory.LEGGINGS
     );
 

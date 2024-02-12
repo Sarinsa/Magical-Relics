@@ -75,13 +75,12 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
     }
 
     @Override
-    public boolean onClickBlock(Level level, ItemStack itemStack, BlockPos pos, BlockState state, Direction face, Player player) {
+    public boolean onClickBlock(Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player) {
         return false;
     }
 
     @Override
-    public boolean onHeld(Level level, Player player, ItemStack heldArtifact) {
-        return false;
+    public void onHeld(Level level, Player player, ItemStack artifact) {
     }
 
     @Override
@@ -90,22 +89,22 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
     }
 
     @Override
-    public boolean onDamageMob() {
-        return false;
-    }
-
-    @Override
-    public boolean onUserDamaged(Level level, Player player, @Nullable LivingEntity attacker, DamageSource damageSource, ItemStack artifact) {
-        return false;
-    }
-
-    @Override
-    public void onInventoryTick(ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem) {
+    public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
 
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level level, Player player) {
+    public void onUserDamaged(Level level, Player player, DamageSource damageSource, ItemStack artifact) {
+
+    }
+
+    @Override
+    public void onInventoryTick(ItemStack artifact, Level level, Entity entity, int slot, boolean isSelectedItem) {
+
+    }
+
+    @Override
+    public void onArmorTick(ItemStack artifact, Level level, Player player) {
 
     }
 

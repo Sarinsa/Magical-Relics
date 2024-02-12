@@ -27,7 +27,9 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> NIGHT_VISION = register("night_vision", NightVisionAbility::new);
     public static final RegistryObject<BaseArtifactAbility> ADRENALINE = register("adrenaline", AdrenalineAbility::new);
     public static final RegistryObject<BaseArtifactAbility> JUKEBOX = register("jukebox", JukeboxAbility::new);
-
+    public static final RegistryObject<BaseArtifactAbility> WATER_BREATHING = register("water_breathing", WaterBreathingAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> OBSCURITY = register("obscurity", ObscurityAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> SAILOR = register("sailor", SailorAbility::new);
 
 
     private static RegistryObject<BaseArtifactAbility> register(String name, Supplier<BaseArtifactAbility> supplier) {

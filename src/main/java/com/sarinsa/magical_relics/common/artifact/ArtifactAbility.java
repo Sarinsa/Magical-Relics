@@ -22,23 +22,21 @@ public interface ArtifactAbility {
     /**
      * Called when the player uses the artifact in their hand (right click)
      * <br><br>
-     * @return True if durability should be decreased on the used artifact
+     * @return True if the ability activated successfully
      */
     boolean onUse(Level level, Player player, ItemStack itemStack);
 
     /**
      * Called when the player right-clicks on a block with an artifact
      * <br><br>
-     * @return True if durability should be decreased on the used artifact
+     * @return True if the ability activated successfully
      */
     boolean onClickBlock(Level level, ItemStack itemStack, BlockPos pos, BlockState state, Direction face, Player player);
 
     /**
      * Called when the player deals damage to a mob with an artifact
-     * <br><br>
-     * @return True if durability should be decreased on the used artifact
      */
-    boolean onDamageMob();
+    void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob);
 
     /**
      * Called when the player throws an artifact with this ability out
@@ -51,17 +49,13 @@ public interface ArtifactAbility {
     /**
      * Called when the player takes damage. Artifacts do not need to be in
      * the player's hand for this to run.
-     * <br><br>
-     * @return True if durability should be decreased on the used artifact
      */
-    boolean onUserDamaged(Level level, Player player, @javax.annotation.Nullable LivingEntity attacker, DamageSource damageSource, ItemStack artifact);
+    void onUserDamaged(Level level, Player player, DamageSource damageSource, ItemStack artifact);
 
     /**
      * Called when the player is holding an artifact with this ability in their hand,
-     * <br><br>
-     * @return True if durability should be decreased on the used artifact
      */
-    boolean onHeld(Level level, Player player, ItemStack heldArtifact);
+    void onHeld(Level level, Player player, ItemStack heldArtifact);
 
     /**
      * Called each tick, server-side. Artifacts do not need to be in

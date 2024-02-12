@@ -22,9 +22,6 @@ import java.util.List;
 
 public class NightVisionAbility extends BaseArtifactAbility {
 
-    private static final int USE_EFFECT_DURATION = 2400;
-    private static final int PASSIVE_EFFECT_DURATION = 310;
-
     private static final String[] PREFIXES = {
             createPrefix("night_vision", "sensing"),
             createPrefix("night_vision", "sighted")
@@ -47,6 +44,9 @@ public class NightVisionAbility extends BaseArtifactAbility {
             ArtifactCategory.HELMET
     );
 
+    private static final int USE_EFFECT_DURATION = 2400;
+    private static final int PASSIVE_EFFECT_DURATION = 310;
+
 
     public NightVisionAbility() {
     }
@@ -56,6 +56,8 @@ public class NightVisionAbility extends BaseArtifactAbility {
     public boolean onUse(Level level, Player player, ItemStack itemStack) {
         if (!ArtifactUtils.isAbilityOnCooldown(itemStack, this)) {
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, USE_EFFECT_DURATION));
+
+            itemStack.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
 
             ArtifactUtils.setAbilityCooldown(itemStack, this, USE_EFFECT_DURATION);
             return true;

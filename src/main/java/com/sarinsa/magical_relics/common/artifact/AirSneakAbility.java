@@ -41,7 +41,7 @@ public class AirSneakAbility extends BaseArtifactAbility {
 
 
     @Override
-    public boolean onHeld(Level level, Player player, ItemStack heldArtifact) {
+    public void onHeld(Level level, Player player, ItemStack heldArtifact) {
         BlockPos belowPos = player.blockPosition().below().immutable();
 
         if (!level.isClientSide) {
@@ -56,7 +56,6 @@ public class AirSneakAbility extends BaseArtifactAbility {
                     level.removeBlock(belowPos, false);
             }
         }
-        return false;
     }
 
     @Override

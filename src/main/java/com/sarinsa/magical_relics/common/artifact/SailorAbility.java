@@ -3,33 +3,27 @@ package com.sarinsa.magical_relics.common.artifact;
 import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class AdrenalineAbility extends BaseArtifactAbility {
+public class SailorAbility extends BaseArtifactAbility {
 
     private static final String[] PREFIXES = {
-            createPrefix("adrenaline", "brawling"),
-            createPrefix("adrenaline", "skirmish")
+            createPrefix("sailor", "sailors"),
+            createPrefix("sailor", "paddling")
     };
 
     private static final String[] SUFFIXES = {
-            createSuffix("adrenaline", "rage"),
-            createSuffix("adrenaline", "fury")
+            createSuffix("sailor", "rowing"),
+            createSuffix("sailor", "boating")
     };
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
@@ -37,19 +31,13 @@ public class AdrenalineAbility extends BaseArtifactAbility {
     );
 
 
-    public AdrenalineAbility() {
+    public SailorAbility() {
+
     }
 
-
     @Override
-    public void onUserDamaged(Level level, Player player, DamageSource damageSource, ItemStack artifact) {
-        if (damageSource.getEntity() != null && !ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 100, 1));
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 100, 1));
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 2));
-
-            ArtifactUtils.setAbilityCooldown(artifact, this, 300);
-        }
+    public void onArmorTick(ItemStack artifact, Level level, Player player) {
+        super.onArmorTick(artifact, level, player);
     }
 
     @Override
@@ -62,11 +50,7 @@ public class AdrenalineAbility extends BaseArtifactAbility {
         return SUFFIXES;
     }
 
-    @Override
-    public Rarity getRarity() {
-        return Rarity.RARE;
-    }
-
+    @Nullable
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
         return isArmor ? TriggerType.ARMOR_TICK : null;
@@ -79,6 +63,6 @@ public class AdrenalineAbility extends BaseArtifactAbility {
 
     @Override
     public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.adrenaline.description");
+        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.sailor.description");
     }
 }

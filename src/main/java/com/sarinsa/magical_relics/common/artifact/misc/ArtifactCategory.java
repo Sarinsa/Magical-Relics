@@ -1,5 +1,9 @@
 package com.sarinsa.magical_relics.common.artifact.misc;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+
 public enum ArtifactCategory {
     TRINKET,
     SWORD,
@@ -13,5 +17,7 @@ public enum ArtifactCategory {
     HELMET,
     CHESTPLATE,
     LEGGINGS,
-    BOOTS
+    BOOTS;
+
+    public static final List<ArtifactCategory> ALL = ImmutableList.copyOf(values());
 }
