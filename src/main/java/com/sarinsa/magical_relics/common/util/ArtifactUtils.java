@@ -1,6 +1,5 @@
 package com.sarinsa.magical_relics.common.util;
 
-import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -15,7 +14,6 @@ import com.sarinsa.magical_relics.common.item.ItemArtifact;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,7 +27,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -178,6 +175,7 @@ public class ArtifactUtils {
         }
     }
 
+    @Nullable
     public static Multimap<Attribute, AttributeModifier> getAttributeMods(ItemStack itemStack) {
         CompoundTag stackTag = itemStack.getOrCreateTag();
 
@@ -274,7 +272,7 @@ public class ArtifactUtils {
             nextToApply.onAbilityAttached(itemStack, random);
             successfullyApplied.add(nextToApply);
 
-            // Save any attribute ability attribute modifiers to NBT
+            // Save any ability attribute modifiers to NBT
             AttributeBoost boost = nextToApply.getAttributeWithBoost();
 
             if (boost != null) {

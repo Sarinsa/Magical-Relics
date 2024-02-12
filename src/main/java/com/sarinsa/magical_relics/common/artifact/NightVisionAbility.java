@@ -22,8 +22,8 @@ import java.util.List;
 
 public class NightVisionAbility extends BaseArtifactAbility {
 
-    private static final int EFFECT_DURATION = 1800;
-
+    private static final int USE_EFFECT_DURATION = 2400;
+    private static final int PASSIVE_EFFECT_DURATION = 310;
 
     private static final String[] PREFIXES = {
             createPrefix("night_vision", "sensing"),
@@ -55,9 +55,9 @@ public class NightVisionAbility extends BaseArtifactAbility {
     @Override
     public boolean onUse(Level level, Player player, ItemStack itemStack) {
         if (!ArtifactUtils.isAbilityOnCooldown(itemStack, this)) {
-            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, EFFECT_DURATION));
+            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, USE_EFFECT_DURATION));
 
-            ArtifactUtils.setAbilityCooldown(itemStack, this, EFFECT_DURATION);
+            ArtifactUtils.setAbilityCooldown(itemStack, this, USE_EFFECT_DURATION);
             return true;
         }
         return false;
@@ -66,14 +66,14 @@ public class NightVisionAbility extends BaseArtifactAbility {
     @Override
     public void onInventoryTick(ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem) {
         if (!level.isClientSide && entity instanceof Player player) {
-            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 310));
+            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, PASSIVE_EFFECT_DURATION));
         }
     }
 
     @Override
     public void onArmorTick(ItemStack stack, Level level, Player player) {
         if (!level.isClientSide) {
-            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 310));
+            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, PASSIVE_EFFECT_DURATION));
         }
     }
 
@@ -115,7 +115,7 @@ public class NightVisionAbility extends BaseArtifactAbility {
         return switch (type) {
             default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.inventory_tick");
             case ARMOR_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.armor_tick");
-            case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.use");
+            case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.use", (USE_EFFECT_DURATION / 20) / 60);
         };
     }
 }

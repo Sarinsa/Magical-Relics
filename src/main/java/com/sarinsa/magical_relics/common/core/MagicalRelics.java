@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.core;
 
 import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.event.MREventListener;
+import com.sarinsa.magical_relics.common.network.PacketHandler;
 import com.sarinsa.magical_relics.common.tag.MRBlockTags;
 import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +33,7 @@ public class MagicalRelics {
     public static final String MODID = "magical_relics";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
+
     public MagicalRelics() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -41,6 +43,8 @@ public class MagicalRelics {
 
         MRDamageSources.init();
         MRBlockTags.init();
+
+        PacketHandler.registerMessages();
 
         MRBlocks.BLOCKS.register(modBus);
         MRItems.ITEMS.register(modBus);

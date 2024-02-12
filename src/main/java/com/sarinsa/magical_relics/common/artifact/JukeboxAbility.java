@@ -3,12 +3,13 @@ package com.sarinsa.magical_relics.common.artifact;
 import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.network.NetworkHelper;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -50,6 +51,12 @@ public class JukeboxAbility extends BaseArtifactAbility {
     @SuppressWarnings("ConstantConditions")
     public void onAbilityAttached(ItemStack artifact, RandomSource random) {
         CompoundTag modDataTag = artifact.getOrCreateTag().getCompound(ArtifactUtils.MOD_DATA_KEY);
+        CompoundTag abilityDataTag = new CompoundTag();
+        abilityDataTag.putInt("x", 0);
+        abilityDataTag.putInt("y", 0);
+        abilityDataTag.putInt("z", 0);
+        abilityDataTag.putBoolean("PlayMusic", true);
+        modDataTag.put("JukeboxAbilityData", abilityDataTag);
 
         List<RecordItem> records = new ArrayList<>();
 
@@ -67,15 +74,30 @@ public class JukeboxAbility extends BaseArtifactAbility {
     public boolean onUse(Level level, Player player, ItemStack artifact) {
         if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
             CompoundTag modDataTag = artifact.getOrCreateTag().getCompound(ArtifactUtils.MOD_DATA_KEY);
+            CompoundTag abilityDataTag = modDataTag.getCompound("JukeboxAbilityData");
             RecordItem record = (RecordItem) ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(modDataTag.getString("JUKEBOXMusicDiscId")));
 
+            // Don't bother trying if for some reason there
+            // is no record ID in the NBT. Shouldn't happen, but who knows
             if (record == null)
                 return false;
 
-            if (level.isClientSide) {
-                Minecraft.getInstance().levelRenderer.playStreamingMusic(record.getSound(), player.blockPosition(), record);
+            if (!level.isClientSide) {
+                boolean playMusic = abilityDataTag.getBoolean("PlayMusic");
+
+                NetworkHelper.sendJukeboxAbilityUse(
+                        (ServerPlayer) player,
+                        playMusic ? player.blockPosition().getX() : abilityDataTag.getInt("x"),
+                        playMusic ? player.blockPosition().getY() : abilityDataTag.getInt("y"),
+                        playMusic ? player.blockPosition().getZ() : abilityDataTag.getInt("z"),
+                        playMusic
+                );
             }
-            ArtifactUtils.setAbilityCooldown(artifact, this, 200);
+            abilityDataTag.putInt("x", player.getBlockX());
+            abilityDataTag.putInt("y", player.getBlockY());
+            abilityDataTag.putInt("z", player.getBlockZ());
+            abilityDataTag.putBoolean("PlayMusic", !abilityDataTag.getBoolean("PlayMusic"));
+            ArtifactUtils.setAbilityCooldown(artifact, this, 40);
         }
         return false;
     }

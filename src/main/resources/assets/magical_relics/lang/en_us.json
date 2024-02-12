@@ -96,7 +96,7 @@
   "magical_relics.artifact_ability.magical_relics.air_sneak.description": "Allows standing on air when sneaking",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.inventory_tick": "Grants Night Vision",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.armor_tick": "Grants Night Vision when equipped",
-  "magical_relics.artifact_ability.magical_relics.night_vision.description.use": "Grants temporary Night Vision when used",
+  "magical_relics.artifact_ability.magical_relics.night_vision.description.use": "Grants temporary Night Vision for %1$s minutes when used",
   "magical_relics.artifact_ability.magical_relics.adrenaline.description": "Applies several potion effects after taking damage from an enemy",
   "magical_relics.artifact_ability.magical_relics.jukebox.description": "Plays the record %1$s when used",
 
