@@ -1,7 +1,6 @@
 package com.sarinsa.magical_relics.common.item;
 
 import com.google.common.collect.Multimap;
-import com.sarinsa.magical_relics.common.artifact.ArtifactAbility;
 import com.sarinsa.magical_relics.common.artifact.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
@@ -90,7 +89,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem) {
-        ArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.INVENTORY_TICK, itemStack);
+        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.INVENTORY_TICK, itemStack);
 
         if (ability != null) {
             ability.onInventoryTick(itemStack, level, entity, slot, isSelectedItem);

@@ -7,7 +7,6 @@ import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,19 +19,15 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class BaseArtifactAbility implements ArtifactAbility {
+public abstract class BaseArtifactAbility {
 
     public BaseArtifactAbility() {
 
     }
-
-    //Component.translatable(MagicalRelics.MODID + ".artifact_ability." + modid + "." + abilityName + ".description");
-
 
     /** Helper method for creating artifact prefixes. */
     protected static String createPrefix(String abilityName, String prefix) {
@@ -45,6 +40,15 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
     }
 
 
+    /**
+     * @return An array of possible translatable prefixes for this ability.
+     */
+    public abstract String[] getPrefixes();
+
+    /**
+     * @return An array of possible translatable suffixes for this ability.
+     */
+    public abstract String[] getSuffixes();
     /**
      * @return A random TriggerType that should be used for this ability when attached to an
      *         artifact item stack.
@@ -69,41 +73,33 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
 
     }
 
-    @Override
     public boolean onUse(Level level, Player player, ItemStack artifact) {
         return false;
     }
 
-    @Override
     public boolean onClickBlock(Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player) {
         return false;
     }
 
-    @Override
     public void onHeld(Level level, Player player, ItemStack artifact) {
     }
 
-    @Override
     public boolean onDropped(Level level, ItemEntity itemEntity, Player player) {
         return false;
     }
 
-    @Override
     public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
 
     }
 
-    @Override
     public void onUserDamaged(Level level, Player player, DamageSource damageSource, ItemStack artifact) {
 
     }
 
-    @Override
     public void onInventoryTick(ItemStack artifact, Level level, Entity entity, int slot, boolean isSelectedItem) {
 
     }
 
-    @Override
     public void onArmorTick(ItemStack artifact, Level level, Player player) {
 
     }
@@ -116,7 +112,6 @@ public abstract class BaseArtifactAbility implements ArtifactAbility {
         return ArtifactUtils.COMMON_ABILITY;
     }
 
-    @Override
     public AttributeBoost getAttributeWithBoost() {
         return null;
     }
