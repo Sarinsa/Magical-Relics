@@ -97,7 +97,7 @@
   "magical_relics.artifact_ability.magical_relics.health_boost.description": "Passively boosts max health",
   "magical_relics.artifact_ability.magical_relics.speed_boost.description.armor_tick": "Boosts speed while equipped",
   "magical_relics.artifact_ability.magical_relics.speed_boost.description.held": "Boosts speed when held",
-  "magical_relics.artifact_ability.magical_relics.air_sneak.description": "Allows standing on air when sneaking",
+  "magical_relics.artifact_ability.magical_relics.air_sneak.description": "Allows standing on air when sneaking while held",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.inventory_tick": "Grants Night Vision",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.armor_tick": "Grants Night Vision while equipped",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.use": "Grants temporary Night Vision for %1$s minutes when used",
@@ -112,6 +112,8 @@
   "magical_relics.artifact_ability.magical_relics.obscurity.description.user_damaged": "Cloaks the user and grants Invisibility for %1$s seconds when you get hurt",
   "magical_relics.artifact_ability.magical_relics.obscurity.description.user_attacking": "Cloaks the user and grants Invisibility for %1$s seconds when dealing damage",
   "magical_relics.artifact_ability.magical_relics.sailor.description": "Increased paddling speed while equipped",
+  "magical_relics.artifact_ability.magical_relics.stun.description": "Slows down all nearby mobs for %1$s seconds when dropped",
+
 
 
 
@@ -179,5 +181,10 @@
   "magical_relics.artifact_ability.magical_relics.sailor.prefix.sailors": "Sailor's",
   "magical_relics.artifact_ability.magical_relics.sailor.prefix.paddling": "Paddling",
   "magical_relics.artifact_ability.magical_relics.sailor.suffix.rowing": "of Rowing",
-  "magical_relics.artifact_ability.magical_relics.sailor.suffix.boating": "of Boating"
+  "magical_relics.artifact_ability.magical_relics.sailor.suffix.boating": "of Boating",
+
+  "magical_relics.artifact_ability.magical_relics.stun.prefix.slowing": "Slowing",
+  "magical_relics.artifact_ability.magical_relics.stun.prefix.immobilizing": "Immobilizing",
+  "magical_relics.artifact_ability.magical_relics.stun.suffix.trapping": "of Trapping",
+  "magical_relics.artifact_ability.magical_relics.stun.suffix.halting": "of Halting"
 }

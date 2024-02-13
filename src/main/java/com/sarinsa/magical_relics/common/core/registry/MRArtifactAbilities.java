@@ -30,6 +30,7 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> WATER_BREATHING = register("water_breathing", WaterBreathingAbility::new);
     public static final RegistryObject<BaseArtifactAbility> OBSCURITY = register("obscurity", ObscurityAbility::new);
     public static final RegistryObject<BaseArtifactAbility> SAILOR = register("sailor", SailorAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> STUN = register("stun", StunAbility::new);
 
 
     private static RegistryObject<BaseArtifactAbility> register(String name, Supplier<BaseArtifactAbility> supplier) {

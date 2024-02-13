@@ -91,7 +91,7 @@ public class ArtifactUtils {
         for (int i = 0; i < 10; i++) {
             Collections.shuffle(allAbilities);
 
-            final int maxAbilities = Math.min(random.nextInt(2) + 1, allAbilities.size());
+            final int maxAbilities = Math.min(random.nextInt(3) + 1, allAbilities.size());
             abilitiesToApply = new BaseArtifactAbility[maxAbilities];
 
             for (int j = 0; j < maxAbilities; j++)
@@ -236,6 +236,7 @@ public class ArtifactUtils {
             modDataTag.put(ATTRIBUTE_MODS_KEY, new ListTag());
 
         List<BaseArtifactAbility> successfullyApplied = new ArrayList<>();
+        List<BaseArtifactAbility.TriggerType> occupiedTriggers = new ArrayList<>();
 
         for (BaseArtifactAbility nextToApply : toApply) {
             // Skip if the item already has the ability
@@ -248,12 +249,8 @@ public class ArtifactUtils {
 
             // No suitable trigger found, skip to next ability
             if (randomTrigger == null) continue;
-
-            for (BaseArtifactAbility ability : currentAbilities.keySet()) {
-                if (currentAbilities.get(ability) == randomTrigger && !randomTrigger.canStack())
-                    goToNext = true;
-            }
-            if (goToNext) continue;
+            // Continue if we already applied an ability with this trigger type, and it is not stackable
+            if (occupiedTriggers.contains(randomTrigger) && !randomTrigger.canStack()) continue;
 
             ResourceLocation abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey(nextToApply);
 
@@ -271,6 +268,7 @@ public class ArtifactUtils {
             modDataTag.getList(ABILITY_KEY, Tag.TAG_COMPOUND).add(abilityData);
             nextToApply.onAbilityAttached(itemStack, random);
             successfullyApplied.add(nextToApply);
+            occupiedTriggers.add(randomTrigger);
 
             // Save any ability attribute modifiers to NBT
             AttributeBoost boost = nextToApply.getAttributeWithBoost();

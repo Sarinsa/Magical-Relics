@@ -98,6 +98,7 @@ public class JukeboxAbility extends BaseArtifactAbility {
             abilityDataTag.putInt("z", player.getBlockZ());
             abilityDataTag.putBoolean("PlayMusic", !abilityDataTag.getBoolean("PlayMusic"));
             ArtifactUtils.setAbilityCooldown(artifact, this, 40);
+            return true;
         }
         return false;
     }
