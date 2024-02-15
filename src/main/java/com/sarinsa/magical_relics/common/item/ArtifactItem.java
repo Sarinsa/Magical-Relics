@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -97,6 +98,9 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         if (enchantment == Enchantments.MENDING)
             return false;
+
+        if ((artifactCategory == ArtifactCategory.SWORD || artifactCategory == ArtifactCategory.DAGGER) && enchantment.category == EnchantmentCategory.WEAPON)
+            return true;
 
         return super.canApplyAtEnchantingTable(stack, enchantment);
     }

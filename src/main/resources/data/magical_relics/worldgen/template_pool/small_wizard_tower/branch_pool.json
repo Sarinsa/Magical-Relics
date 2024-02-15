@@ -10,7 +10,7 @@
         "processors": [
           {
             "processor_type": "magical_relics:display_pedestal",
-            "legendary_chance": 3
+            "legendary_chance": 0.05
           },
           {
             "processor_type": "magical_relics:custom_mossifier",

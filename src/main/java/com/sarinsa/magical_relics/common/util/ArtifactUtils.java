@@ -24,6 +24,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -63,11 +64,12 @@ public class ArtifactUtils {
      * <br><br>
      * @return The randomly generated artifact ItemStack.
      */
-    public static ItemStack generateRandomArtifact(RandomSource random) {
+    public static ItemStack generateRandomArtifact(RandomSource random, boolean legendary) {
         ArtifactSet<List<RegistryObject<Item>>> artifactSet = MRItems.ALL_ARTIFACTS.get(random.nextInt(MRItems.ALL_ARTIFACTS.size()));
         Item artifactItem = artifactSet.dataStructure().get(random.nextInt(artifactSet.dataStructure().size())).get();
         ItemStack artifactStack = new ItemStack(artifactItem);
 
+        // Create necessary tags needed later
         CompoundTag tag = artifactStack.getOrCreateTag();
         CompoundTag modDataTag = new CompoundTag();
 
@@ -79,7 +81,7 @@ public class ArtifactUtils {
         tag.put(MOD_DATA_KEY, modDataTag);
 
         List<BaseArtifactAbility> allAbilities = Lists.newArrayList(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues());
-        // Filter out abilities that are not applicable to the Artifact's type.
+        // Filter out abilities that are not applicable to the Artifact's category.
         allAbilities.removeIf((ability) -> !ability.getCompatibleTypes().contains(((ItemArtifact) artifactItem).getType()));
         // Make sure we don't try to apply the empty ability
         allAbilities.remove(MRArtifactAbilities.EMPTY.get());
@@ -91,7 +93,9 @@ public class ArtifactUtils {
         for (int i = 0; i < 10; i++) {
             Collections.shuffle(allAbilities);
 
-            final int maxAbilities = Math.min(random.nextInt(3) + 1, allAbilities.size());
+            final int maxAbilities = legendary
+                    ? Math.min(4, allAbilities.size())
+                    : Math.min(1 + (random.nextInt(3) == 0 ? random.nextInt(3) : 0), allAbilities.size());
             abilitiesToApply = new BaseArtifactAbility[maxAbilities];
 
             for (int j = 0; j < maxAbilities; j++)
@@ -102,8 +106,15 @@ public class ArtifactUtils {
             if (appliedAbilities.length > 0)
                 break;
         }
+        // Try to apply enchantments if this is a legendary artifact
+        if (legendary) {
+            EnchantmentHelper.enchantItem(random, artifactStack, 20, false);
+        }
+        // Apply some stock attribute mods for daggers and swords and whatnot
         applyMandatoryAttributeMods(artifactStack, ((ItemArtifact) artifactItem).getType(), random);
 
+        // Create a custom display name for the ItemStack, picking random
+        // prefixes and suffixes from successfully applied abilities
         if (appliedAbilities.length > 0) {
             modDataTag.putString(PREFIX_KEY, appliedAbilities[0].getPrefixes()[random.nextInt(appliedAbilities[0].getPrefixes().length)]);
 

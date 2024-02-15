@@ -20,15 +20,14 @@ import javax.annotation.Nullable;
 
 public class DisplayPedestalProcessor extends StructureProcessor {
 
-    public static final Codec<DisplayPedestalProcessor> CODEC = Codec.INT.fieldOf("legendary_chance")
+    public static final Codec<DisplayPedestalProcessor> CODEC = Codec.FLOAT.fieldOf("legendary_chance")
             .xmap(DisplayPedestalProcessor::new, (processor) -> processor.legendaryChance)
             .codec();
 
 
-    // TODO - Do something with this
-    private final int legendaryChance;
+    private final float legendaryChance;
 
-    public DisplayPedestalProcessor(int legendaryChance) {
+    public DisplayPedestalProcessor(float legendaryChance) {
         this.legendaryChance = legendaryChance;
     }
 
@@ -46,7 +45,7 @@ public class DisplayPedestalProcessor extends StructureProcessor {
         if (isDisplayPedestal) {
             if (tag == null) tag = new CompoundTag();
             CompoundTag itemStackTag = new CompoundTag();
-            ItemStack itemStack = ArtifactUtils.generateRandomArtifact(random);
+            ItemStack itemStack = ArtifactUtils.generateRandomArtifact(random, random.nextFloat() < legendaryChance);
             itemStack.save(itemStackTag);
 
             tag.put(DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag);
