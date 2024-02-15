@@ -17,8 +17,8 @@ import javax.annotation.Nonnull;
 
 public class DisplayPedestalBlockEntity extends BlockEntity {
 
-    private static final String GENERATE_KEY = "GenerateArtifact";
-    private static final String ITEM_KEY = "ArtifactItem";
+    public static final String GENERATE_KEY = "GenerateArtifact";
+    public static final String ITEM_KEY = "ArtifactItem";
 
 
     private ItemStack artifact;

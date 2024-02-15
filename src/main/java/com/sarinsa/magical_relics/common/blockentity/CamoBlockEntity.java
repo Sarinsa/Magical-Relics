@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.common.blockentity;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
@@ -19,21 +20,23 @@ public interface CamoBlockEntity {
 
     @Nullable
     default BlockState readCamoState(CompoundTag compoundTag) {
-        if (compoundTag.contains("CamoState", Tag.TAG_STRING)) {
-            BlockState state = Blocks.STONE_BRICKS.defaultBlockState();
-            ResourceLocation blockId = ResourceLocation.tryParse(compoundTag.getString("CamoState"));
+        if (compoundTag.contains("CamoState", Tag.TAG_COMPOUND)) {
+            BlockState camo = null;
 
-            if (blockId != null && ForgeRegistries.BLOCKS.containsKey(blockId))
-                state = ForgeRegistries.BLOCKS.getValue(blockId).defaultBlockState();
+            try {
+                camo = NbtUtils.readBlockState(compoundTag.getCompound("CamoState"));
+            }
+            catch (Exception ignored) {
 
-            return state;
+            }
+            return camo == null || camo == Blocks.AIR.defaultBlockState() ? Blocks.STONE_BRICKS.defaultBlockState() : camo;
         }
         return null;
     }
 
     default void writeUpdateData(CompoundTag compoundTag, @Nullable BlockState camoState) {
         if (camoState != null) {
-            compoundTag.putString("CamoState", ForgeRegistries.BLOCKS.getKey(camoState.getBlock()).toString());
+            compoundTag.put("CamoState", NbtUtils.writeBlockState(camoState));
         }
     }
 }

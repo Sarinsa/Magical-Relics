@@ -1,0 +1,35 @@
+{
+  "name": "magical_relics:small_wizard_tower/top_pool",
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+      "weight": 25,
+      "element": {
+        "location": "magical_relics:small_wizard_tower/top_1",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_mossifier",
+            "mossiness": 0.2
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 20,
+      "element": {
+        "location": "magical_relics:small_wizard_tower/top_2",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_mossifier",
+            "mossiness": 0.2
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

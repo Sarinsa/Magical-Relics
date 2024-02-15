@@ -13,6 +13,8 @@ public class MRBiomeTags {
 
     public static final TagKey<Biome> CAN_HAVE_QUICKSAND_LAKES = modTag("can_have_quicksand_lakes");
 
+    public static final TagKey<Biome> HAS_WIZARD_TOWERS = modTag("has_structure/small_wizard_tower");
+    public static final TagKey<Biome> HAS_BURIED_DUNGEONS = modTag("has_structure/buried_dungeons");
 
     private static TagKey<Biome> modTag(String name) {
         return create(MagicalRelics.resLoc(name));

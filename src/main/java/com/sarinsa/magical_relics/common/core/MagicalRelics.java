@@ -5,6 +5,8 @@ import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.network.PacketHandler;
 import com.sarinsa.magical_relics.common.tag.MRBlockTags;
 import com.sarinsa.magical_relics.common.util.MRDamageSources;
+import com.sarinsa.magical_relics.common.worldgen.WorldgenHelper;
+import net.minecraft.data.worldgen.ProcessorLists;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -51,13 +53,17 @@ public class MagicalRelics {
         MRItems.ITEMS.register(modBus);
         MRBlockEntities.BLOCK_ENTITIES.register(modBus);
         MRArtifactAbilities.ARTIFACT_ABILITIES.register(modBus);
+        MRStructureTypes.STRUCTURES.register(modBus);
+        MRStructureProcessors.PROCESSORS.register(modBus);
         MRConfiguredFeatures.CF_REGISTRY.register(modBus);
         MRConfiguredFeatures.P_REGISTRY.register(modBus);
     }
 
 
     public void onCommonSetup(FMLCommonSetupEvent event) {
-
+        event.enqueueWork(() -> {
+            WorldgenHelper.bootstrap();
+        });
     }
 
     public static ResourceLocation resLoc(String path) {

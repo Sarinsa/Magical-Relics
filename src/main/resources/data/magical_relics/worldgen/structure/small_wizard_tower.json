@@ -1,0 +1,21 @@
+{
+  "type": "magical_relics:small_wizard_tower",
+  "start_pool": "magical_relics:small_wizard_tower/start_pool",
+  "size": 4,
+  "max_distance_from_center": 60,
+  "biomes": "#magical_relics:has_structure/small_wizard_tower",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "start_height": {
+    "absolute": -3
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "use_expansion_hack": false,
+  "spawn_overrides": {
+    "monster": {
+      "bounding_box": "piece",
+      "spawns": [
+      ]
+    }
+  }
+}

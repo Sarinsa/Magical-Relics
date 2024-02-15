@@ -83,6 +83,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
                 player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, USE_EFFECT_DURATION));
 
             ArtifactUtils.setAbilityCooldown(artifact, this, 400);
+            return true;
         }
         return false;
     }

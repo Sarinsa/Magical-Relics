@@ -29,5 +29,19 @@ public class MRBiomeTagProvider extends BiomeTagsProvider {
                 Tags.Biomes.IS_DESERT,
                 Tags.Biomes.IS_PLAINS
         );
+
+        tag(MRBiomeTags.HAS_WIZARD_TOWERS).addTags(
+                BiomeTags.IS_HILL,
+                BiomeTags.IS_MOUNTAIN
+        );
+
+        tag(MRBiomeTags.HAS_BURIED_DUNGEONS).addTags(
+                Tags.Biomes.IS_PLAINS,
+                BiomeTags.IS_FOREST,
+                BiomeTags.IS_JUNGLE,
+                BiomeTags.IS_TAIGA,
+                BiomeTags.IS_SAVANNA,
+                Tags.Biomes.IS_DESERT
+        );
     }
 }

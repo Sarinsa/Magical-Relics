@@ -15,10 +15,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.TieredItem;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -32,16 +29,16 @@ import java.util.List;
 
 public class ArtifactItem extends TieredItem implements ItemArtifact {
 
-    private final ArtifactCategory type;
+    private final ArtifactCategory artifactCategory;
 
-    public ArtifactItem(Tier tier, ArtifactCategory type) {
+    public ArtifactItem(Tier tier, ArtifactCategory artifactCategory) {
         super(tier, new Properties().rarity(ArtifactUtils.MAGICAL).stacksTo(1));
-        this.type = type;
+        this.artifactCategory = artifactCategory;
     }
 
     @Override
     public ArtifactCategory getType() {
-        return type;
+        return artifactCategory;
     }
 
     @Override
@@ -115,8 +112,15 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
     }
 
     @Override
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
+        return artifactCategory == ArtifactCategory.DAGGER || artifactCategory == ArtifactCategory.SWORD
+                ? !player.isCreative()
+                : super.canAttackBlock(state, level, pos, player);
+    }
+
+    @Override
     public float getDestroySpeed(ItemStack itemStack, BlockState state) {
-        if (type == ArtifactCategory.SWORD) {
+        if (artifactCategory == ArtifactCategory.SWORD) {
             if (state.is(Blocks.COBWEB)) {
                 return 15.0F;
             }

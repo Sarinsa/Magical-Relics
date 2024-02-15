@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "minecraft:item/handheld",
   "overrides": [
     {
       "model": "magical_relics:item/staff1",

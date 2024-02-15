@@ -57,24 +57,24 @@ public class MRItems {
     public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> GOLD_ARTIFACT_ARMOR = artifactArmorSet("gold", ArtifactArmorMaterials.GOLD);
     public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> DIAMOND_ARTIFACT_ARMOR = artifactArmorSet("diamond", ArtifactArmorMaterials.DIAMOND);
 
-    public static final ArtifactSet<List<RegistryObject<Item>>> AMULETS = artifactSet("amulet", ArtifactCategory.AMULET, 7);
-    public static final ArtifactSet<List<RegistryObject<Item>>> BELTS = artifactSet("belt", ArtifactCategory.BELT, 6);
-    public static final ArtifactSet<List<RegistryObject<Item>>> DAGGERS = artifactSet("dagger", ArtifactCategory.DAGGER, 6);
-    public static final ArtifactSet<List<RegistryObject<Item>>> FIGURINES = artifactSet("figurine", ArtifactCategory.FIGURINE, 5);
-    public static final ArtifactSet<List<RegistryObject<Item>>> RINGS = artifactSet("ring", ArtifactCategory.RING, 8);
-    public static final ArtifactSet<List<RegistryObject<Item>>> STAFFS = artifactSet("staff", ArtifactCategory.STAFF, 6);
-    public static final ArtifactSet<List<RegistryObject<Item>>> SWORDS = artifactSet("sword", ArtifactCategory.SWORD, 7);
-    public static final ArtifactSet<List<RegistryObject<Item>>> TRINKETS = artifactSet("trinket", ArtifactCategory.TRINKET, 10);
-    public static final ArtifactSet<List<RegistryObject<Item>>> WANDS = artifactSet("wand", ArtifactCategory.WAND, 7);
+    public static final ArtifactSet<List<RegistryObject<Item>>> AMULETS = artifactSet(ArtifactCategory.AMULET, 7);
+    public static final ArtifactSet<List<RegistryObject<Item>>> BELTS = artifactSet(ArtifactCategory.BELT, 6);
+    public static final ArtifactSet<List<RegistryObject<Item>>> DAGGERS = artifactSet(ArtifactCategory.DAGGER, 6);
+    public static final ArtifactSet<List<RegistryObject<Item>>> FIGURINES = artifactSet(ArtifactCategory.FIGURINE, 5);
+    public static final ArtifactSet<List<RegistryObject<Item>>> RINGS = artifactSet(ArtifactCategory.RING, 8);
+    public static final ArtifactSet<List<RegistryObject<Item>>> STAFFS = artifactSet(ArtifactCategory.STAFF, 6);
+    public static final ArtifactSet<List<RegistryObject<Item>>> SWORDS = artifactSet(ArtifactCategory.SWORD, 7);
+    public static final ArtifactSet<List<RegistryObject<Item>>> TRINKETS = artifactSet(ArtifactCategory.TRINKET, 10);
+    public static final ArtifactSet<List<RegistryObject<Item>>> WANDS = artifactSet(ArtifactCategory.WAND, 7);
 
 
-    private static ArtifactSet<List<RegistryObject<Item>>> artifactSet(String name, ArtifactCategory category, int variations) {
-        ArtifactSet<List<RegistryObject<Item>>> artifactSet = new ArtifactSet<>(name, variations, new ArrayList<>());
-        artifactSet.dataStructure().add(ITEMS.register("wood_" + name + "_artifact", () -> new ArtifactItem(Tiers.WOOD, category)));
-        artifactSet.dataStructure().add(ITEMS.register("stone_" + name + "_artifact", () -> new ArtifactItem(Tiers.STONE, category)));
-        artifactSet.dataStructure().add(ITEMS.register("iron_" + name + "_artifact", () -> new ArtifactItem(Tiers.IRON, category)));
-        artifactSet.dataStructure().add(ITEMS.register("gold_" + name + "_artifact", () -> new ArtifactItem(Tiers.GOLD, category)));
-        artifactSet.dataStructure().add(ITEMS.register("diamond_" + name + "_artifact", () -> new ArtifactItem(Tiers.DIAMOND, category)));
+    private static ArtifactSet<List<RegistryObject<Item>>> artifactSet(ArtifactCategory category, int variations) {
+        ArtifactSet<List<RegistryObject<Item>>> artifactSet = new ArtifactSet<>(category, variations, new ArrayList<>());
+        artifactSet.dataStructure().add(ITEMS.register("wood_" + category.getName() + "_artifact", () -> new ArtifactItem(Tiers.WOOD, category)));
+        artifactSet.dataStructure().add(ITEMS.register("stone_" + category.getName() + "_artifact", () -> new ArtifactItem(Tiers.STONE, category)));
+        artifactSet.dataStructure().add(ITEMS.register("iron_" + category.getName() + "_artifact", () -> new ArtifactItem(Tiers.IRON, category)));
+        artifactSet.dataStructure().add(ITEMS.register("gold_" + category.getName() + "_artifact", () -> new ArtifactItem(Tiers.GOLD, category)));
+        artifactSet.dataStructure().add(ITEMS.register("diamond_" + category.getName() + "_artifact", () -> new ArtifactItem(Tiers.DIAMOND, category)));
         ALL_ARTIFACTS.add(artifactSet);
         return artifactSet;
     }

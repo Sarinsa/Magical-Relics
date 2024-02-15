@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.datagen.model;
 
+import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
@@ -13,6 +14,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
+import java.util.Locale;
 
 public class MRItemModelProvider extends ItemModelProvider {
 
@@ -28,23 +30,26 @@ public class MRItemModelProvider extends ItemModelProvider {
     private void artifactSet(ArtifactSet<List<RegistryObject<Item>>> artifactSet) {
         for (RegistryObject<Item> regObj : artifactSet.dataStructure()) {
             ResourceLocation itemId = regObj.getId();
-            String artifactType = artifactSet.type();
+            ArtifactCategory category = artifactSet.category();
+            String categoryName = category.getName();
+            String parentModel = "item/generated";
+
+            if (category == ArtifactCategory.SWORD || category == ArtifactCategory.DAGGER
+            || category == ArtifactCategory.STAFF || category == ArtifactCategory.WAND)
+                parentModel = "item/handheld";
 
             ItemModelBuilder builder = getBuilder(itemId.toString())
-                    .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                    .texture("layer0", modArtifactTexture(artifactType, artifactType + "1"));
+                    .parent(new ModelFile.UncheckedModelFile(parentModel))
+                    .texture("layer0", modArtifactTexture(categoryName, categoryName + "1"));
 
             for (int i = 1; i < artifactSet.variants() + 1; ++i) {
-                System.out.println(artifactType);
-                System.out.println(i);
-                System.out.println("--------------------------------------");
-                ItemModelBuilder subModelBuilder = getBuilder(MagicalRelics.MODID + ":" + artifactType + i)
-                        .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                        .texture("layer0", modArtifactTexture(artifactType, artifactType + i))
-                        .texture("layer1", modArtifactTexture(artifactType, artifactType + i + "_overlay"));
+                ItemModelBuilder subModelBuilder = getBuilder(MagicalRelics.MODID + ":" + categoryName + i)
+                        .parent(new ModelFile.UncheckedModelFile(parentModel))
+                        .texture("layer0", modArtifactTexture(categoryName, categoryName + i))
+                        .texture("layer1", modArtifactTexture(categoryName, categoryName + i + "_overlay"));
 
                 builder.override()
-                        .predicate(MagicalRelics.resLoc(artifactType + "_variant"), i)
+                        .predicate(MagicalRelics.resLoc(categoryName + "_variant"), i)
                         .model(new ModelFile.UncheckedModelFile(subModelBuilder.getUncheckedLocation()));
             }
         }
