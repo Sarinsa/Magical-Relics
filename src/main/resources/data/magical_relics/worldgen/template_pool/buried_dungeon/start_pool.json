@@ -1,0 +1,21 @@
+{
+  "name": "magical_relics:buried_dungeon/start_pool",
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "magical_relics:buried_dungeon/entrance",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_mossifier",
+            "mossiness": 0.2
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

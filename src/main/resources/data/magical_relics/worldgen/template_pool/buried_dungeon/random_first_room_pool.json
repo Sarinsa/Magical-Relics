@@ -1,0 +1,79 @@
+{
+  "name": "magical_relics:buried_dungeon/random_first_room_pool",
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+      "weight": 30,
+      "element": {
+        "location": "magical_relics:buried_dungeon/quicksand_room",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_mossifier",
+            "mossiness": 0.2
+          },
+          {
+            "processor_type": "magical_relics:display_pedestal",
+            "legendary_chance": 0.05
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 10,
+      "element": {
+        "location": "magical_relics:buried_dungeon/three_path_room_0",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_mossifier",
+            "mossiness": 0.2
+          },
+          {
+            "processor_type": "magical_relics:display_pedestal",
+            "legendary_chance": 0.05
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 10,
+      "element": {
+        "location": "magical_relics:buried_dungeon/three_path_room_1",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_mossifier",
+            "mossiness": 0.2
+          },
+          {
+            "processor_type": "magical_relics:display_pedestal",
+            "legendary_chance": 0.05
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 10,
+      "element": {
+        "location": "magical_relics:buried_dungeon/three_path_room_2",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_mossifier",
+            "mossiness": 0.2
+          },
+          {
+            "processor_type": "magical_relics:display_pedestal",
+            "legendary_chance": 0.05
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

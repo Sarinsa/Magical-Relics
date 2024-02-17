@@ -32,7 +32,10 @@ import javax.annotation.Nullable;
 // TODO - Make effective area customizable
 public class AntiBuilderBlockEntity extends BlockEntity {
 
-    private AABB effectiveArea = null;
+    private AABB effectiveArea = new AABB(
+            getBlockPos().offset(-20, -20, -20),
+            getBlockPos().offset(20, 20, 20)
+    );
     private boolean registeredListener = false;
 
 
@@ -48,12 +51,6 @@ public class AntiBuilderBlockEntity extends BlockEntity {
         if (level != null && !registeredListener) {
             MinecraftForge.EVENT_BUS.register(this);
             registeredListener = true;
-
-            // Default box
-            setEffectiveArea(new AABB(
-                    getBlockPos().offset(-20, -20, -20),
-                    getBlockPos().offset(20, 20, 20)
-            ));
         }
     }
 
@@ -86,14 +83,12 @@ public class AntiBuilderBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
-
         saveBoundData(compoundTag);
     }
 
     @Override
     public void load(CompoundTag compoundTag) {
         super.load(compoundTag);
-
         readBoundData(compoundTag);
     }
 
@@ -116,7 +111,6 @@ public class AntiBuilderBlockEntity extends BlockEntity {
                 }
             }
             catch (Exception ignored) {
-
             }
         }
     }

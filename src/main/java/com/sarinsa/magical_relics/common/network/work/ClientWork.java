@@ -1,6 +1,9 @@
 package com.sarinsa.magical_relics.common.network.work;
 
+import com.sarinsa.magical_relics.client.screen.AlterationNegatorScreen;
+import com.sarinsa.magical_relics.common.blockentity.AntiBuilderBlockEntity;
 import com.sarinsa.magical_relics.common.network.message.S2CJukeboxAbility;
+import com.sarinsa.magical_relics.common.network.message.S2COpenBEScreen;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -12,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.RecordItem;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ClientWork {
@@ -45,6 +49,22 @@ public class ClientWork {
                             (player.getZ() + 0.5D) + (random.nextGaussian() / 2),
                             random.nextInt(25) / 24.0D, 0.0D, 0.0D);
                 }
+            }
+        }
+    }
+
+    public static void handleOpenBEScreen(S2COpenBEScreen message) {
+        int screenType = message.screenType;
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        if (player == null) return;
+
+        if (screenType == 0) {
+            BlockPos blockPos = new BlockPos(message.x, message.y, message.z);
+            BlockEntity blockEntity = player.level.getExistingBlockEntity(blockPos);
+
+            if (blockEntity instanceof AntiBuilderBlockEntity antiBuilder) {
+                Minecraft.getInstance().setScreen(new AlterationNegatorScreen(blockPos, antiBuilder));
             }
         }
     }

@@ -1,0 +1,16 @@
+{
+  "name": "magical_relics:buried_dungeon/top_cover_pool",
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "magical_relics:buried_dungeon/top_cover",
+        "processors": [],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

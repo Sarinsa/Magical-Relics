@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.worldgen.processor.CustomMossifierProcessor;
 import com.sarinsa.magical_relics.common.worldgen.processor.DisplayPedestalProcessor;
-import com.sarinsa.magical_relics.common.worldgen.structure.SmallWizardTowerStructure;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;

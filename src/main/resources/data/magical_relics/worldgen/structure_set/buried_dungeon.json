@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "magical_relics:buried_dungeon",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1004556533,
+    "spacing": 12,
+    "separation": 5
+  }
+}

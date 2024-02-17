@@ -90,6 +90,9 @@
 
 
   "magical_relics.anti_builder.blocked_message": "A powerful spell protects this land",
+  "magical_relics.anti_builder.screen.x_size": "X Size",
+  "magical_relics.anti_builder.screen.y_size": "Y Size",
+  "magical_relics.anti_builder.screen.z_size": "Z Size",
 
 
   "magical_relics.artifact_ability.magical_relics.baker.description": "Conjures cakes on solid surfaces when right-clicking",

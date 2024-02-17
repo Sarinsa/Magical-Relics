@@ -1,7 +1,9 @@
 package com.sarinsa.magical_relics.common.network;
 
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.network.message.C2SSaveALTNEGData;
 import com.sarinsa.magical_relics.common.network.message.S2CJukeboxAbility;
+import com.sarinsa.magical_relics.common.network.message.S2COpenBEScreen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -38,8 +40,10 @@ public class PacketHandler {
 
         // Server -> Client
         registerMessage(S2CJukeboxAbility.class, S2CJukeboxAbility::encode, S2CJukeboxAbility::decode, S2CJukeboxAbility::handle);
+        registerMessage(S2COpenBEScreen.class, S2COpenBEScreen::encode, S2COpenBEScreen::decode, S2COpenBEScreen::handle);
 
         // Client -> Server
+        registerMessage(C2SSaveALTNEGData.class, C2SSaveALTNEGData::encode, C2SSaveALTNEGData::decode, C2SSaveALTNEGData::handle);
 
         registered = true;
     }
@@ -49,7 +53,7 @@ public class PacketHandler {
     }
 
     /**
-     * Sends the specified message to the client.
+     * Sends the specified message to the given ServerPlayer's client.
      *
      * @param message The message to send to the client.
      * @param player The player client that should receive this message.

@@ -16,10 +16,6 @@ public class S2CJukeboxAbility {
     public final boolean play;
 
 
-    public S2CJukeboxAbility(BlockPos pos, boolean play) {
-        this(pos.getX(), pos.getY(), pos.getZ(), play);
-    }
-
     public S2CJukeboxAbility(int x, int y, int z, boolean play) {
         this.x = x;
         this.y = y;

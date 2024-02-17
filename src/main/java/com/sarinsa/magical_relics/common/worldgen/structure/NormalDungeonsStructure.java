@@ -9,35 +9,33 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.WorldGenerationContext;
 import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
-import net.minecraft.world.level.levelgen.placement.HeightmapPlacement;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.StructureType;
-import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.structures.IglooStructure;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class SmallWizardTowerStructure extends Structure {
+public class NormalDungeonsStructure extends Structure {
 
-    public static final Codec<SmallWizardTowerStructure> CODEC = RecordCodecBuilder.<SmallWizardTowerStructure>mapCodec(instance ->
-            instance.group(SmallWizardTowerStructure.settingsCodec(instance),
+    public static final Codec<NormalDungeonsStructure> CODEC = RecordCodecBuilder.<NormalDungeonsStructure>mapCodec(instance ->
+            instance.group(NormalDungeonsStructure.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.intRange(0, 30).fieldOf("size").forGetter(structure -> structure.size),
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                     Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
-                    Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter)
-            ).apply(instance, SmallWizardTowerStructure::new)).codec();
+                    Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter),
+                    Codec.intRange(-20, 180).fieldOf("max_y").forGetter(structure -> structure.maxY),
+                    Codec.BOOL.fieldOf("can_generate_in_water").forGetter(structure -> structure.canGenerateInWater)
+            ).apply(instance, NormalDungeonsStructure::new)).codec();
 
     private final Holder<StructureTemplatePool> startPool;
     private final Optional<ResourceLocation> startJigsawName;
@@ -45,9 +43,12 @@ public class SmallWizardTowerStructure extends Structure {
     private final HeightProvider startHeight;
     private final Optional<Heightmap.Types> projectStartToHeightmap;
     private final int maxDistanceFromCenter;
+    private final int maxY;
+    private final boolean canGenerateInWater;
 
 
-    public SmallWizardTowerStructure(Structure.StructureSettings config, Holder<StructureTemplatePool> startPool, Optional<ResourceLocation> startJigsawName, int size, HeightProvider startHeight, Optional<Heightmap.Types> projectStartToHeightmap, int maxDistanceFromCenter) {
+    public NormalDungeonsStructure(Structure.StructureSettings config, Holder<StructureTemplatePool> startPool, Optional<ResourceLocation> startJigsawName, int size,
+                                   HeightProvider startHeight, Optional<Heightmap.Types> projectStartToHeightmap, int maxDistanceFromCenter, int maxY, boolean canGenerateInWater) {
         super(config);
         this.startPool = startPool;
         this.startJigsawName = startJigsawName;
@@ -55,20 +56,24 @@ public class SmallWizardTowerStructure extends Structure {
         this.startHeight = startHeight;
         this.projectStartToHeightmap = projectStartToHeightmap;
         this.maxDistanceFromCenter = maxDistanceFromCenter;
+        this.maxY = maxY;
+        this.canGenerateInWater = canGenerateInWater;
     }
 
 
-    private static boolean extraSpawningChecks(Structure.GenerationContext context) {
+    private static boolean extraSpawningChecks(Structure.GenerationContext context, int maxY, boolean canGenerateInWater) {
         ChunkPos chunkpos = context.chunkPos();
 
-        // Don't generate in water
-        BlockPos centerOfChunk = chunkpos.getMiddleBlockPosition(0);
-        int landHeight = context.chunkGenerator().getFirstOccupiedHeight(centerOfChunk.getX(), centerOfChunk.getZ(), Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState());
-        NoiseColumn columnOfBlocks = context.chunkGenerator().getBaseColumn(centerOfChunk.getX(), centerOfChunk.getZ(), context.heightAccessor(), context.randomState());
-        BlockState topBlock = columnOfBlocks.getBlock(centerOfChunk.getY() + landHeight);
+        if (!canGenerateInWater) {
+            // Don't generate in water
+            BlockPos centerOfChunk = chunkpos.getMiddleBlockPosition(0);
+            int landHeight = context.chunkGenerator().getFirstOccupiedHeight(centerOfChunk.getX(), centerOfChunk.getZ(), Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState());
+            NoiseColumn columnOfBlocks = context.chunkGenerator().getBaseColumn(centerOfChunk.getX(), centerOfChunk.getZ(), context.heightAccessor(), context.randomState());
+            BlockState topBlock = columnOfBlocks.getBlock(centerOfChunk.getY() + landHeight);
 
-        if(!topBlock.getFluidState().isEmpty()) {
-            return false;
+            if (!topBlock.getFluidState().isEmpty()) {
+                return false;
+            }
         }
 
         // Do not generate at Y 150 or above
@@ -77,13 +82,14 @@ public class SmallWizardTowerStructure extends Structure {
                 chunkpos.getMinBlockZ(),
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 context.heightAccessor(),
-                context.randomState()) < 170;
+                context.randomState()) <= maxY;
+
     }
 
     @Override
     @Nonnull
     public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
-        if (!extraSpawningChecks(context))
+        if (!extraSpawningChecks(context, maxY, canGenerateInWater))
             return Optional.empty();
 
         int startY = startHeight.sample(context.random(), new WorldGenerationContext(context.chunkGenerator(), context.heightAccessor()));
@@ -105,6 +111,6 @@ public class SmallWizardTowerStructure extends Structure {
     @Override
     @Nonnull
     public StructureType<?> type() {
-        return MRStructureTypes.SMALL_WIZARD_TOWER.get();
+        return MRStructureTypes.NORMAL_DUNGEON.get();
     }
 }

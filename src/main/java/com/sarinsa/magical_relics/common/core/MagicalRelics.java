@@ -29,6 +29,8 @@ public class MagicalRelics {
     //
     // - Improve cleanup of solid air blocks placed by air sneak ability
     //
+    // - Create creative only GUI for Alteration Negator to allow manually setting affected area size
+    //
     // - Curios integration
     //
 
@@ -52,6 +54,7 @@ public class MagicalRelics {
         MRBlocks.BLOCKS.register(modBus);
         MRItems.ITEMS.register(modBus);
         MRBlockEntities.BLOCK_ENTITIES.register(modBus);
+        MRContainers.CONTAINERS.register(modBus);
         MRArtifactAbilities.ARTIFACT_ABILITIES.register(modBus);
         MRStructureTypes.STRUCTURES.register(modBus);
         MRStructureProcessors.PROCESSORS.register(modBus);
