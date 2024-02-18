@@ -12,6 +12,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -99,7 +100,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
         if (enchantment == Enchantments.MENDING)
             return false;
 
-        if ((artifactCategory == ArtifactCategory.SWORD || artifactCategory == ArtifactCategory.DAGGER) && enchantment.category == EnchantmentCategory.WEAPON)
+        if ((getType() == ArtifactCategory.SWORD || getType() == ArtifactCategory.DAGGER) && enchantment.category == EnchantmentCategory.WEAPON)
             return true;
 
         return super.canApplyAtEnchantingTable(stack, enchantment);
@@ -113,6 +114,15 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
             return artifactModifiers;
         }
         return super.getAttributeModifiers(slot, stack);
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack itemStack, LivingEntity attacked, LivingEntity attacker) {
+        if (getType() == ArtifactCategory.SWORD || getType() == ArtifactCategory.DAGGER)
+        itemStack.hurtAndBreak(1, attacker, (entity) -> {
+            entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+        });
+        return true;
     }
 
     @Override
