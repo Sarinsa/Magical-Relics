@@ -70,8 +70,13 @@ public class WallPressurePlateBlock extends PressurePlateBlock {
 
     @Override
     protected void updateNeighbours(Level level, BlockPos pos) {
-        level.updateNeighborsAt(pos, this);
-        level.updateNeighborsAt(pos.relative(level.getBlockState(pos).getValue(FACING).getOpposite()), this);
+        if (level.getBlockState(pos).is(this)) {
+            level.updateNeighborsAt(pos, this);
+            level.updateNeighborsAt(pos.relative(level.getBlockState(pos).getValue(FACING).getOpposite()), this);
+        }
+        else {
+            super.updateNeighbours(level, pos);
+        }
     }
 
     @Override
