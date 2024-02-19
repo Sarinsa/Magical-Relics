@@ -85,6 +85,9 @@
   "block.magical_relics.crumbling_mossy_stone_bricks": "Crumbling Mossy Stone Bricks",
 
 
+  "entity.magical_relics.volatile_fireball": "Volatile Fireball",
+
+
   "death.attack.magical_relics.spikes": "%1$s was impaled on a spike trap",
   "death.attack.magical_relics.spikes.player": "%1$s got impaled on a spike trap whilst trying to escape %2$s",
 
@@ -116,6 +119,8 @@
   "magical_relics.artifact_ability.magical_relics.obscurity.description.user_attacking": "Cloaks the user and grants Invisibility for %1$s seconds when dealing damage",
   "magical_relics.artifact_ability.magical_relics.sailor.description": "Increased paddling speed while equipped",
   "magical_relics.artifact_ability.magical_relics.stun.description": "Slows down all nearby mobs for %1$s seconds when dropped",
+  "magical_relics.artifact_ability.magical_relics.fireball.description": "Shoots fireballs when used",
+
 
 
 
@@ -189,5 +194,12 @@
   "magical_relics.artifact_ability.magical_relics.stun.prefix.slowing": "Slowing",
   "magical_relics.artifact_ability.magical_relics.stun.prefix.immobilizing": "Immobilizing",
   "magical_relics.artifact_ability.magical_relics.stun.suffix.trapping": "of Trapping",
-  "magical_relics.artifact_ability.magical_relics.stun.suffix.halting": "of Halting"
+  "magical_relics.artifact_ability.magical_relics.stun.suffix.halting": "of Halting",
+
+  "magical_relics.artifact_ability.magical_relics.fireball.prefix.flaming": "Flaming",
+  "magical_relics.artifact_ability.magical_relics.fireball.prefix.burning": "Burning",
+  "magical_relics.artifact_ability.magical_relics.fireball.suffix.fire": "of Fire",
+  "magical_relics.artifact_ability.magical_relics.fireball.suffix.heat": "of Heat",
+  "magical_relics.artifact_ability.magical_relics.fireball.suffix.incineration": "of Incineration"
+
 }

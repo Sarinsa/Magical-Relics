@@ -5,12 +5,15 @@ import com.sarinsa.magical_relics.client.renderer.block.DisplayPedestalRenderer;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
+import com.sarinsa.magical_relics.common.core.registry.MREntities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.DragonFireballRenderer;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.DyeColor;
@@ -45,6 +48,8 @@ public class ClientRegister {
         event.registerBlockEntityRenderer(MRBlockEntities.CAMO_DISPENSER.get(), CamoTrapRenderer::new);
         event.registerBlockEntityRenderer(MRBlockEntities.CAMO_TRIPWIRE_HOOK.get(), CamoTrapRenderer::new);
         event.registerBlockEntityRenderer(MRBlockEntities.ILLUSIONARY_BLOCK.get(), CamoTrapRenderer::new);
+
+        event.registerEntityRenderer(MREntities.VOLATILE_FIREBALL.get(), (context) -> new ThrownItemRenderer<>(context, 3.0F, true));
     }
 
     @SubscribeEvent
