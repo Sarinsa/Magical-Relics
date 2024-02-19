@@ -38,6 +38,7 @@ public class ServerWork {
 
         if (blockEntity instanceof AntiBuilderBlockEntity antiBuilder) {
             antiBuilder.setEffectiveArea(new AABB(message.blockEntityPos).inflate(message.xSize, message.ySize, message.zSize));
+            antiBuilder.setChanged();
         }
     }
 }

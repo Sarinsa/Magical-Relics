@@ -26,6 +26,7 @@ import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 
@@ -94,9 +95,12 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     private void saveBoundData(CompoundTag tag) {
         if (getEffectiveArea() != null) {
+            int xSize = (int) effectiveArea.maxX - getBlockPos().getX();
+            int ySize = (int) effectiveArea.maxY - getBlockPos().getY();
+            int zSize = (int) effectiveArea.maxZ - getBlockPos().getZ();
+
             tag.putIntArray("effectiveAreaBounds", new int[] {
-                    (int) effectiveArea.minX, (int) effectiveArea.minY, (int) effectiveArea.minZ,
-                    (int) effectiveArea.maxX, (int) effectiveArea.maxY, (int) effectiveArea.maxZ
+                    xSize, ySize, zSize
             });
         }
     }
@@ -106,8 +110,8 @@ public class AntiBuilderBlockEntity extends BlockEntity {
             try {
                 int[] bounds = tag.getIntArray("effectiveAreaBounds");
 
-                if (bounds.length == 6) {
-                    setEffectiveArea(new AABB(bounds[0], bounds[1], bounds[2], bounds[3], bounds[4], bounds[5]));
+                if (bounds.length == 3) {
+                    setEffectiveArea(new AABB(getBlockPos()).inflate(bounds[0] - 1, bounds[1] - 1, bounds[2] - 1));
                 }
             }
             catch (Exception ignored) {
