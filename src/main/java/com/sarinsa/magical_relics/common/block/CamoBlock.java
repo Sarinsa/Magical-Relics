@@ -73,8 +73,10 @@ public interface CamoBlock {
                 }
             }
             else {
-                if (containerOpener != null)
+                if (containerOpener != null) {
                     containerOpener.accept(player, (MenuProvider) camoBlockEntity);
+                    return InteractionResult.SUCCESS;
+                }
             }
         }
         return InteractionResult.PASS;
