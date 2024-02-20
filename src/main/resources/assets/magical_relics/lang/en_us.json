@@ -120,6 +120,7 @@
   "magical_relics.artifact_ability.magical_relics.sailor.description": "Increased paddling speed while equipped",
   "magical_relics.artifact_ability.magical_relics.stun.description": "Slows down all nearby mobs for %1$s seconds when dropped",
   "magical_relics.artifact_ability.magical_relics.fireball.description": "Shoots fireballs when used",
+  "magical_relics.artifact_ability.magical_relics.mass_excavate.description": "Digs large holes when right clicking blocks",
 
 
 
@@ -200,6 +201,11 @@
   "magical_relics.artifact_ability.magical_relics.fireball.prefix.burning": "Burning",
   "magical_relics.artifact_ability.magical_relics.fireball.suffix.fire": "of Fire",
   "magical_relics.artifact_ability.magical_relics.fireball.suffix.heat": "of Heat",
-  "magical_relics.artifact_ability.magical_relics.fireball.suffix.incineration": "of Incineration"
+  "magical_relics.artifact_ability.magical_relics.fireball.suffix.incineration": "of Incineration",
 
+  "magical_relics.artifact_ability.magical_relics.mass_excavate.prefix.miners": "Miner's",
+  "magical_relics.artifact_ability.magical_relics.mass_excavate.prefix.digging": "Digging",
+  "magical_relics.artifact_ability.magical_relics.mass_excavate.prefix.excavating": "Excavating",
+  "magical_relics.artifact_ability.magical_relics.mass_excavate.suffix.drilling": "of Drilling",
+  "magical_relics.artifact_ability.magical_relics.mass_excavate.suffix.tunneling": "of Tunneling"
 }

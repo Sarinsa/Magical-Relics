@@ -32,6 +32,7 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> SAILOR = register("sailor", SailorAbility::new);
     public static final RegistryObject<BaseArtifactAbility> STUN = register("stun", StunAbility::new);
     public static final RegistryObject<BaseArtifactAbility> FIREBALL = register("fireball", FireballAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> MASS_EXCAVATE = register("mass_excavate", MassExcavateAbility::new);
 
 
     private static RegistryObject<BaseArtifactAbility> register(String name, Supplier<BaseArtifactAbility> supplier) {
