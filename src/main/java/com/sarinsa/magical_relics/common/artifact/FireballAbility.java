@@ -7,6 +7,8 @@ import com.sarinsa.magical_relics.common.entity.VolatileFireball;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Ghast;
@@ -50,6 +52,10 @@ public class FireballAbility extends BaseArtifactAbility {
             fireball.shootFromRotation(player, player.getXRot(), player.getYRot(), 2.5F, 2.5F, 2.5F);
             level.addFreshEntity(fireball);
 
+            if (!level.isClientSide) {
+                RandomSource random = level.random;
+                level.playSound(null, player.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0F, (random.nextFloat() -random.nextFloat()) * 0.2F + 1.0F);
+            }
             itemStack.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
 
             ArtifactUtils.setAbilityCooldown(itemStack, this, 20);
