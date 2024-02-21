@@ -14,6 +14,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -123,13 +124,20 @@ public class MassExcavateAbility extends BaseArtifactAbility {
             BlockState state = level.getBlockState(pos);
 
             if (state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
-                Block.dropResources(state, level, pos);
+                if (!player.isCreative()) {
+                    Block.dropResources(state, level, pos);
+                }
                 level.playSound(null, pos, state.getSoundType().getBreakSound(), SoundSource.BLOCKS, 0.5F, 1.0F);
                 level.removeBlock(pos, false);
                 return true;
             }
         }
         return false;
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.UNCOMMON;
     }
 
     @Nullable
