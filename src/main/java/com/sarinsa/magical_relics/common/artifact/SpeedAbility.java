@@ -50,7 +50,7 @@ public class SpeedAbility extends BaseArtifactAbility {
             "MRSpeedBoost",
             UUID.fromString("fd3d9614-7433-4314-8ad0-83ea10c6bc0b"),
             AttributeModifier.Operation.MULTIPLY_BASE,
-            (random) -> (3.0D + random.nextInt(8)) / 100
+            (random) -> (4.0D + random.nextInt(12)) / 100
     );
 
 
