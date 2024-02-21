@@ -121,9 +121,8 @@
   "magical_relics.artifact_ability.magical_relics.stun.description": "Slows down all nearby mobs for %1$s seconds when dropped",
   "magical_relics.artifact_ability.magical_relics.fireball.description": "Shoots fireballs when used",
   "magical_relics.artifact_ability.magical_relics.mass_excavate.description": "Digs large holes when right clicking blocks",
-
-
-
+  "magical_relics.artifact_ability.magical_relics.illumination.description.armor_tick": "Provides illumination while equipped",
+  "magical_relics.artifact_ability.magical_relics.illumination.description.held": "Provides illumination while held",
 
 
   "magical_relics.artifact_ability.magical_relics.baker.prefix.bakers": "Baker's",
@@ -207,5 +206,11 @@
   "magical_relics.artifact_ability.magical_relics.mass_excavate.prefix.digging": "Digging",
   "magical_relics.artifact_ability.magical_relics.mass_excavate.prefix.excavating": "Excavating",
   "magical_relics.artifact_ability.magical_relics.mass_excavate.suffix.drilling": "of Drilling",
-  "magical_relics.artifact_ability.magical_relics.mass_excavate.suffix.tunneling": "of Tunneling"
+  "magical_relics.artifact_ability.magical_relics.mass_excavate.suffix.tunneling": "of Tunneling",
+
+  "magical_relics.artifact_ability.magical_relics.illumination.prefix.illuminating": "Illuminating",
+  "magical_relics.artifact_ability.magical_relics.illumination.prefix.bright": "Bright",
+  "magical_relics.artifact_ability.magical_relics.illumination.prefix.shining": "Shining",
+  "magical_relics.artifact_ability.magical_relics.illumination.suffix.light": "of Light",
+  "magical_relics.artifact_ability.magical_relics.illumination.suffix.sun": "of The Sun"
 }
