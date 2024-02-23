@@ -46,8 +46,7 @@ public class IlluminationBlock extends Block {
     }
 
     /**
-     * Display some very epic particle effects at times.
-     * Also remove this block if no players with the Illumination ability is nearby.
+     * Remove this block if no players with the Illumination ability is nearby.
      */
     @SuppressWarnings("deprecation")
     @Override
@@ -73,7 +72,7 @@ public class IlluminationBlock extends Block {
 
     private void showExtinguishEffect(ServerLevel level, BlockPos pos, RandomSource random) {
         level.sendParticles(ParticleTypes.SMOKE, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 10, 0.0D, random.nextDouble() * 0.2, 0.0D, 0.01D);
-        level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.8F, 1.0F);
+        level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 1.0F);
     }
 
     @SuppressWarnings("deprecation")

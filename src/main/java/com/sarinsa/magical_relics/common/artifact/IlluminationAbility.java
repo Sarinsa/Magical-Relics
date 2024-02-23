@@ -47,10 +47,17 @@ public class IlluminationAbility extends BaseArtifactAbility {
     public void onArmorTick(ItemStack artifact, Level level, Player player) {
         BlockPos pos = player.blockPosition();
 
-        int brightnessAt = level.getBrightness(LightLayer.BLOCK, pos);
+        boolean shouldIlluminate = level.getBrightness(LightLayer.BLOCK, pos) < 3;
 
-        if (brightnessAt < 3 && level.getBlockState(pos).getMaterial().isReplaceable() && level.getFluidState(pos).isEmpty()) {
-            level.setBlock(pos, MRBlocks.ILLUMINATION_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+        if (shouldIlluminate) {
+            if (level.getFluidState(pos).isEmpty() && level.getBlockState(pos).getMaterial().isReplaceable()) {
+                level.setBlock(pos, MRBlocks.ILLUMINATION_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+            }
+            else {
+                if (level.getFluidState(pos.above()).isEmpty() && level.getBlockState(pos.above()).getMaterial().isReplaceable()) {
+                    level.setBlock(pos.above(), MRBlocks.ILLUMINATION_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+                }
+            }
         }
     }
 
