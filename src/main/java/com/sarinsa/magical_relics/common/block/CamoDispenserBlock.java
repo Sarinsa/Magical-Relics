@@ -2,12 +2,18 @@ package com.sarinsa.magical_relics.common.block;
 
 import com.sarinsa.magical_relics.common.blockentity.CamoDispenserBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -23,7 +29,14 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, CamoBlock {
+
+    /** The vanilla dispenser behavior registry is copied over to this one during {@link net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent} */
+    private static Map<Item, DispenseItemBehavior> DISPENSER_BEHAVIORS = new HashMap<>();
+
 
     public CamoDispenserBlock() {
         super(BlockBehaviour.Properties.of(Material.STONE)
@@ -33,6 +46,16 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TRIGGERED, false));
     }
 
+    public static void setupBehaviors() {
+        DISPENSER_BEHAVIORS = Map.copyOf(DispenserBlock.DISPENSER_REGISTRY);
+
+
+    }
+
+    @Override
+    protected DispenseItemBehavior getDispenseMethod(ItemStack itemStack) {
+        return DISPENSER_BEHAVIORS.get(itemStack.getItem());
+    }
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {

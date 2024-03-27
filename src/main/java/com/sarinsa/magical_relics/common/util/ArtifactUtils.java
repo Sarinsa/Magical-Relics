@@ -232,7 +232,7 @@ public class ArtifactUtils {
 
         Map<BaseArtifactAbility, BaseArtifactAbility.TriggerType> currentAbilities = getAllAbilities(itemStack);
 
-        // Make sure necessary NBT tags exist on the ItemStack
+        // Make sure necessary NBT keys exist on the ItemStack
         CompoundTag stackTag = itemStack.getOrCreateTag();
 
         if (!stackTag.contains(MOD_DATA_KEY, Tag.TAG_COMPOUND))

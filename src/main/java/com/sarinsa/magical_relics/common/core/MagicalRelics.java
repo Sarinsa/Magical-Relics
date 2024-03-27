@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.core;
 
+import com.sarinsa.magical_relics.common.block.CamoDispenserBlock;
 import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.network.PacketHandler;
@@ -28,8 +29,6 @@ public class MagicalRelics {
     // - Make a lock function and key for the Display Pedestal, preventing looting unless a key is found first
     //
     // - Improve cleanup of solid air blocks placed by air sneak ability
-    //
-    // - Create creative only GUI for Alteration Negator to allow manually setting affected area size
     //
     // - Curios integration
     //
@@ -67,6 +66,7 @@ public class MagicalRelics {
     public void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             WorldgenHelper.bootstrap();
+            CamoDispenserBlock.setupBehaviors();
         });
     }
 

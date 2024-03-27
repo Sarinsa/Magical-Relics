@@ -64,7 +64,7 @@ public abstract class BaseArtifactAbility {
     public abstract MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag);
 
     /**
-     * Called from {@link ArtifactUtils#generateRandomArtifact(RandomSource)} when the ability
+     * Called from {@link ArtifactUtils#generateRandomArtifact(RandomSource, boolean)} when the ability
      * is applied to the generated artifact item.
      * <br><br>
      * Can be used to write additional data to the ItemStack's NBT.
