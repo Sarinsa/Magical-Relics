@@ -1,7 +1,7 @@
 package com.sarinsa.magical_relics.common.item;
 
-import com.sarinsa.magical_relics.common.artifact.BaseArtifactAbility;
-import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;

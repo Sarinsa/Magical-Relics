@@ -1,7 +1,7 @@
-package com.sarinsa.magical_relics.common.artifact;
+package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.network.chat.Component;
@@ -10,7 +10,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;

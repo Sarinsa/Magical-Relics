@@ -1,14 +1,12 @@
-package com.sarinsa.magical_relics.common.artifact;
+package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;

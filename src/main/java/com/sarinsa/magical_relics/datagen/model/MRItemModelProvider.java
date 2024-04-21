@@ -1,6 +1,6 @@
 package com.sarinsa.magical_relics.datagen.model;
 
-import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
@@ -14,7 +14,6 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
-import java.util.Locale;
 
 public class MRItemModelProvider extends ItemModelProvider {
 

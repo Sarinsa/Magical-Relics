@@ -1,13 +1,14 @@
-package com.sarinsa.magical_relics.common.artifact;
+package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -49,6 +50,9 @@ public class AirSneakAbility extends BaseArtifactAbility {
                 if (level.getBlockState(belowPos).isAir() && !level.getBlockState(belowPos).is(MRBlocks.SOLID_AIR.get())) {
                     level.setBlock(belowPos, MRBlocks.SOLID_AIR.get().defaultBlockState(), Block.UPDATE_ALL);
                     level.scheduleTick(belowPos, MRBlocks.SOLID_AIR.get(), 20);
+
+                    if (!player.isCreative())
+                        heldArtifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
             }
             else {

@@ -1,4 +1,4 @@
-package com.sarinsa.magical_relics.common.artifact.misc;
+package com.sarinsa.magical_relics.common.ability.misc;
 
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.Attribute;

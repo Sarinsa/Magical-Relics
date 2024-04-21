@@ -1,6 +1,6 @@
 package com.sarinsa.magical_relics.common.core.registry;
 
-import com.sarinsa.magical_relics.common.artifact.*;
+import com.sarinsa.magical_relics.common.ability.*;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.DeferredRegister;
@@ -34,6 +34,7 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> FIREBALL = register("fireball", FireballAbility::new);
     public static final RegistryObject<BaseArtifactAbility> MASS_EXCAVATE = register("mass_excavate", MassExcavateAbility::new);
     public static final RegistryObject<BaseArtifactAbility> ILLUMINATION = register("illumination", IlluminationAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> GLOW_VISION = register("glow_vision", GlowVisionAbility::new);
 
 
     private static RegistryObject<BaseArtifactAbility> register(String name, Supplier<BaseArtifactAbility> supplier) {

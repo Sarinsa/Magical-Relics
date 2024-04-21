@@ -1,11 +1,9 @@
 package com.sarinsa.magical_relics.common.core.registry;
 
-import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
 import com.sarinsa.magical_relics.common.item.*;
-import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;

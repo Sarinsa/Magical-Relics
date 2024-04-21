@@ -1,6 +1,6 @@
 package com.sarinsa.magical_relics.common.core.registry.util;
 
-import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;

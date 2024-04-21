@@ -1,6 +1,6 @@
 package com.sarinsa.magical_relics.common.item;
 
-import com.sarinsa.magical_relics.common.artifact.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 
 public interface ItemArtifact {
 

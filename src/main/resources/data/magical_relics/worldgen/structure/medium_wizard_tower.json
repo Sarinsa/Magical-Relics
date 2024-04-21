@@ -1,15 +1,15 @@
 {
   "type": "magical_relics:normal_dungeon",
-  "start_pool": "magical_relics:small_wizard_tower/start_pool",
+  "start_pool": "magical_relics:medium_wizard_tower/start_pool",
   "size": 4,
   "max_y": 160,
   "can_generate_in_water": false,
   "max_distance_from_center": 60,
   "biomes": "#magical_relics:has_structure/wizard_tower",
   "step": "surface_structures",
-  "terrain_adaptation": "none",
+  "terrain_adaptation": "beard_thin",
   "start_height": {
-    "absolute": -3
+    "absolute": -1
   },
   "project_start_to_heightmap": "WORLD_SURFACE_WG",
   "use_expansion_hack": false,
