@@ -325,6 +325,8 @@ public class ArtifactUtils {
      */
     @Nullable
     public static BaseArtifactAbility getAbilityWithTrigger(BaseArtifactAbility.TriggerType type, ItemStack itemStack) {
+        if (itemStack.isEmpty()) return null;
+
         Map<BaseArtifactAbility, BaseArtifactAbility.TriggerType> abilities = getAllAbilities(itemStack);
 
         if (abilities.isEmpty()) return null;
