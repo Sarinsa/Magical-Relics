@@ -66,6 +66,12 @@ public class NightVisionAbility extends BaseArtifactAbility {
     }
 
     @Override
+    public void onHeld(Level level, Player player, ItemStack artifact) {
+        if (!player.level.isClientSide)
+            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, PASSIVE_EFFECT_DURATION));
+    }
+
+    @Override
     public void onInventoryTick(ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem) {
         if (!level.isClientSide && entity instanceof Player player) {
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, PASSIVE_EFFECT_DURATION));
@@ -98,9 +104,11 @@ public class NightVisionAbility extends BaseArtifactAbility {
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
         if (isArmor) return TriggerType.ARMOR_TICK;
 
-        if (random.nextInt(2) == 0)
-            return TriggerType.USE;
-        else return TriggerType.INVENTORY_TICK;
+        return switch (random.nextInt(3)) {
+            default -> TriggerType.USE;
+            case 1 -> TriggerType.INVENTORY_TICK;
+            case 2 -> TriggerType.HELD;
+        };
     }
 
     @Override
@@ -118,6 +126,7 @@ public class NightVisionAbility extends BaseArtifactAbility {
             default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.inventory_tick");
             case ARMOR_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.armor_tick");
             case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.use", (USE_EFFECT_DURATION / 20) / 60);
+            case HELD -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.held");
         };
     }
 }

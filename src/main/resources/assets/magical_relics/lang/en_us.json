@@ -107,6 +107,7 @@
   "magical_relics.artifact_ability.magical_relics.night_vision.description.inventory_tick": "Grants Night Vision",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.armor_tick": "Grants Night Vision while equipped",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.use": "Grants temporary Night Vision for %1$s minutes when used",
+  "magical_relics.artifact_ability.magical_relics.night_vision.description.held": "Grants Night Vision when held",
   "magical_relics.artifact_ability.magical_relics.adrenaline.description": "Applies several potion effects after an enemy hurts you",
   "magical_relics.artifact_ability.magical_relics.jukebox.description": "Plays the record %1$s when used",
   "magical_relics.artifact_ability.magical_relics.water_breathing.description.use": "Grants Water Breathing for %1$s minutes when used",
