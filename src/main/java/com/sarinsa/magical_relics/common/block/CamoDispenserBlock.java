@@ -1,16 +1,20 @@
 package com.sarinsa.magical_relics.common.block;
 
 import com.sarinsa.magical_relics.common.blockentity.CamoDispenserBlockEntity;
+import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSourceImpl;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +27,10 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +41,7 @@ import java.util.Map;
 public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, CamoBlock {
 
     /** The vanilla dispenser behavior registry is copied over to this one during {@link net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent} */
-    private static Map<Item, DispenseItemBehavior> DISPENSER_BEHAVIORS = new HashMap<>();
+    private static Object2ObjectOpenHashMap<Item, DispenseItemBehavior> DISPENSER_BEHAVIORS;
 
 
     public CamoDispenserBlock() {
@@ -48,14 +54,39 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
     }
 
     public static void setupBehaviors() {
-        DISPENSER_BEHAVIORS = Map.copyOf(DispenserBlock.DISPENSER_REGISTRY);
-
-
+        // Copy vanilla behavior first
+        DISPENSER_BEHAVIORS = new Object2ObjectOpenHashMap<>(DispenserBlock.DISPENSER_REGISTRY);
+        DISPENSER_BEHAVIORS.defaultReturnValue(new DefaultDispenseItemBehavior());
     }
 
     @Override
     protected DispenseItemBehavior getDispenseMethod(ItemStack itemStack) {
         return DISPENSER_BEHAVIORS.get(itemStack.getItem());
+    }
+
+    @Override
+    protected void dispenseFrom(ServerLevel serverLevel, BlockPos pos) {
+        BlockSourceImpl blockSource = new BlockSourceImpl(serverLevel, pos);
+        DispenserBlockEntity dispenser = blockSource.getEntity();
+        int slot = dispenser.getRandomSlot(serverLevel.random);
+
+        if (slot < 0) {
+            serverLevel.levelEvent(1001, pos, 0);
+            serverLevel.gameEvent(null, GameEvent.DISPENSE_FAIL, pos);
+        }
+        else {
+            ItemStack itemStack = dispenser.getItem(slot);
+            DispenseItemBehavior behavior = DispenserBlock.DISPENSER_REGISTRY.get(itemStack.getItem());
+
+            try {
+                if (behavior != DispenseItemBehavior.NOOP) {
+                    dispenser.setItem(slot, behavior.dispense(blockSource, itemStack));
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
