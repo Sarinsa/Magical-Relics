@@ -41,6 +41,7 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
     public CamoDispenserBlock() {
         super(BlockBehaviour.Properties.of(Material.STONE)
                 .sound(SoundType.STONE)
+                .requiresCorrectToolForDrops()
                 .strength(1.5F, 1.0F));
 
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TRIGGERED, false));

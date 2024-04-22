@@ -52,6 +52,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
     public DisplayPedestalBlock() {
         super(BlockBehaviour.Properties.of(Material.GLASS)
                 .strength(1.0F, 0.5F)
+                .requiresCorrectToolForDrops()
                 .sound(SoundType.GLASS));
 
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
