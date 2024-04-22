@@ -47,7 +47,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
     private static final int USE_EFFECT_DURATION = 1210;
     private static final int DROWN_EFFECT_DURATION = 50;
     private static final int ATTACK_EFFECT_DURATION = 125;
-    private static final int PASSIVE_EFFECT_DURATION = 30;
+    private static final int PASSIVE_EFFECT_DURATION = 310;
 
 
 
