@@ -107,7 +107,13 @@ public class QuicksandBlock extends Block {
             if (state.getValue(LAYERS) == MAX_HEIGHT) {
                 ItemStack stack = new ItemStack(MRItems.QUICKSAND_BUCKET.get());
 
-                player.setItemInHand(hand, stack);
+                if (player.isCreative()) {
+                    if (!player.getInventory().contains(stack))
+                        player.addItem(stack);
+                }
+                else {
+                    player.setItemInHand(hand, stack);
+                }
                 player.playSound(SoundEvents.PACKED_MUD_BREAK, 1.0F, 1.0F);
                 level.removeBlock(pos, false);
                 return InteractionResult.SUCCESS;
