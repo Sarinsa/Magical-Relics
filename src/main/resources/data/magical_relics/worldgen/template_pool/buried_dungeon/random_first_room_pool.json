@@ -9,8 +9,8 @@
         "location": "magical_relics:buried_dungeon/quicksand_room",
         "processors": [
           {
-            "processor_type": "magical_relics:custom_mossifier",
-            "mossiness": 0.2
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
           },
           {
             "processor_type": "magical_relics:display_pedestal",
@@ -27,8 +27,8 @@
         "location": "magical_relics:buried_dungeon/three_path_room_0",
         "processors": [
           {
-            "processor_type": "magical_relics:custom_mossifier",
-            "mossiness": 0.2
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
           },
           {
             "processor_type": "magical_relics:display_pedestal",
@@ -45,8 +45,8 @@
         "location": "magical_relics:buried_dungeon/three_path_room_1",
         "processors": [
           {
-            "processor_type": "magical_relics:custom_mossifier",
-            "mossiness": 0.2
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
           },
           {
             "processor_type": "magical_relics:display_pedestal",
@@ -63,8 +63,8 @@
         "location": "magical_relics:buried_dungeon/three_path_room_2",
         "processors": [
           {
-            "processor_type": "magical_relics:custom_mossifier",
-            "mossiness": 0.2
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
           },
           {
             "processor_type": "magical_relics:display_pedestal",

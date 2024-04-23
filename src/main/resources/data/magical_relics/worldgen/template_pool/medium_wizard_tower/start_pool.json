@@ -13,8 +13,8 @@
             "legendary_chance": 0.05
           },
           {
-            "processor_type": "magical_relics:custom_mossifier",
-            "mossiness": 0.2
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
           }
         ],
         "projection": "rigid",

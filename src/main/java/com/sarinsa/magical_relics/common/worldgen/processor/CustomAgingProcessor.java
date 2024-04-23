@@ -21,39 +21,41 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Mossifies all things stone-ish. Doesn't wreak havoc on all sorts of slabs and stairs unlike
+ * Makes things look old. Doesn't wreak havoc on all sorts of slabs and stairs unlike
  * {@link BlockAgeProcessor} which is a completely insane structure processor.
  * Designed to work with Magical Relics' camo block entities and other blocks,
  * such as camo dispensers, illusionary blocks and crumbling blocks.
  */
-public class CustomMossifierProcessor extends StructureProcessor {
+public class CustomAgingProcessor extends StructureProcessor {
 
-    public static final Codec<CustomMossifierProcessor> CODEC = Codec.FLOAT.fieldOf("mossiness")
-            .xmap(CustomMossifierProcessor::new, (processor) -> processor.mossiness)
+    public static final Codec<CustomAgingProcessor> CODEC = Codec.FLOAT.fieldOf("oldness")
+            .xmap(CustomAgingProcessor::new, (processor) -> processor.oldness)
             .codec();
 
 
-    private static final Map<Block, Block> MOSSY_STONE_REPLACEMENTS = new HashMap<>();
+    private static final Map<Block, Block> REPLACEMENTS = new HashMap<>();
 
 
+    // Its chewsday innit?
     public static void init() {
-        MOSSY_STONE_REPLACEMENTS.put(Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE);
-        MOSSY_STONE_REPLACEMENTS.put(Blocks.COBBLESTONE_SLAB, Blocks.MOSSY_COBBLESTONE_SLAB);
-        MOSSY_STONE_REPLACEMENTS.put(Blocks.COBBLESTONE_STAIRS, Blocks.MOSSY_COBBLESTONE_STAIRS);
-        MOSSY_STONE_REPLACEMENTS.put(Blocks.COBBLESTONE_WALL, Blocks.MOSSY_COBBLESTONE_WALL);
-        MOSSY_STONE_REPLACEMENTS.put(Blocks.STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS);
-        MOSSY_STONE_REPLACEMENTS.put(Blocks.STONE_BRICK_SLAB, Blocks.MOSSY_STONE_BRICK_SLAB);
-        MOSSY_STONE_REPLACEMENTS.put(Blocks.STONE_BRICK_STAIRS, Blocks.MOSSY_STONE_BRICK_STAIRS);
-        MOSSY_STONE_REPLACEMENTS.put(Blocks.STONE_BRICK_WALL, Blocks.MOSSY_COBBLESTONE_WALL);
-        MOSSY_STONE_REPLACEMENTS.put(MRBlocks.CRUMBLING_COBBLESTONE.get(), MRBlocks.CRUMBLING_MOSSY_COBBLESTONE.get());
-        MOSSY_STONE_REPLACEMENTS.put(MRBlocks.CRUMBLING_STONE_BRICKS.get(), MRBlocks.CRUMBLING_MOSSY_STONE_BRICKS.get());
+        REPLACEMENTS.put(Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE);
+        REPLACEMENTS.put(Blocks.COBBLESTONE_SLAB, Blocks.MOSSY_COBBLESTONE_SLAB);
+        REPLACEMENTS.put(Blocks.COBBLESTONE_STAIRS, Blocks.MOSSY_COBBLESTONE_STAIRS);
+        REPLACEMENTS.put(Blocks.COBBLESTONE_WALL, Blocks.MOSSY_COBBLESTONE_WALL);
+        REPLACEMENTS.put(Blocks.STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS);
+        REPLACEMENTS.put(Blocks.STONE_BRICK_SLAB, Blocks.MOSSY_STONE_BRICK_SLAB);
+        REPLACEMENTS.put(Blocks.STONE_BRICK_STAIRS, Blocks.MOSSY_STONE_BRICK_STAIRS);
+        REPLACEMENTS.put(Blocks.STONE_BRICK_WALL, Blocks.MOSSY_COBBLESTONE_WALL);
+        REPLACEMENTS.put(MRBlocks.CRUMBLING_COBBLESTONE.get(), MRBlocks.CRUMBLING_MOSSY_COBBLESTONE.get());
+        REPLACEMENTS.put(MRBlocks.CRUMBLING_STONE_BRICKS.get(), MRBlocks.CRUMBLING_MOSSY_STONE_BRICKS.get());
+        REPLACEMENTS.put(Blocks.BOOKSHELF, Blocks.COBWEB);
     }
 
-    private final float mossiness;
+    private final float oldness;
 
 
-    public CustomMossifierProcessor(float mossiness) {
-        this.mossiness = mossiness;
+    public CustomAgingProcessor(float oldness) {
+        this.oldness = oldness;
     }
 
     @SuppressWarnings({"unchecked", "ConstantConditions", "rawtypes"})
@@ -69,7 +71,7 @@ public class CustomMossifierProcessor extends StructureProcessor {
 
             // Don't bother checking for camo blocks
             // that don't have an existing camo.
-            if (blockEntityTag != null && random.nextFloat() < mossiness) {
+            if (blockEntityTag != null && random.nextFloat() < oldness) {
                 CompoundTag camoTag = blockEntityTag.getCompound("CamoState");
                 BlockState nbtBlockState = NbtUtils.readBlockState(camoTag);
 
@@ -82,9 +84,9 @@ public class CustomMossifierProcessor extends StructureProcessor {
             }
         }
         else {
-            if (MOSSY_STONE_REPLACEMENTS.containsKey(blockInfo.state.getBlock())) {
-                if (random.nextFloat() < mossiness) {
-                    newState = MOSSY_STONE_REPLACEMENTS.get(blockState.getBlock()).defaultBlockState();
+            if (REPLACEMENTS.containsKey(blockInfo.state.getBlock())) {
+                if (random.nextFloat() < oldness) {
+                    newState = REPLACEMENTS.get(blockState.getBlock()).defaultBlockState();
 
                     try {
                         for (Property property : blockState.getProperties()) {
@@ -92,7 +94,7 @@ public class CustomMossifierProcessor extends StructureProcessor {
                         }
                     }
                     catch (Exception e) {
-                        MagicalRelics.LOG.error("Mossifier processor failed to copy block state properties from state '" + blockState + "' to state '" + newState + "'");
+                        MagicalRelics.LOG.error("Aging processor failed to copy block state properties from state '" + blockState + "' to state '" + newState + "'");
                     }
                 }
             }

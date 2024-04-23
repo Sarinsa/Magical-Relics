@@ -1,11 +1,11 @@
 package com.sarinsa.magical_relics.common.worldgen;
 
-import com.sarinsa.magical_relics.common.worldgen.processor.CustomMossifierProcessor;
+import com.sarinsa.magical_relics.common.worldgen.processor.CustomAgingProcessor;
 
 public class WorldgenHelper {
 
 
     public static void bootstrap() {
-        CustomMossifierProcessor.init();
+        CustomAgingProcessor.init();
     }
 }

@@ -9,8 +9,8 @@
         "location": "magical_relics:small_wizard_tower/start",
         "processors": [
           {
-            "processor_type": "magical_relics:custom_mossifier",
-            "mossiness": 0.2
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
           }
         ],
         "projection": "rigid",
