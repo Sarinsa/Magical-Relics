@@ -13,6 +13,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
@@ -26,7 +27,7 @@ import java.util.List;
 public class SolidAirBlock extends AirBlock {
 
     public SolidAirBlock(Properties properties) {
-        super(properties);
+        super(properties.sound(SoundType.WOOL));
     }
 
     @Override
