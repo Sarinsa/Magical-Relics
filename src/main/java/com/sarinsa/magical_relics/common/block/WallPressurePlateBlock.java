@@ -40,18 +40,18 @@ public class WallPressurePlateBlock extends PressurePlateBlock {
     };
 
     private static final AABB[] touchShapes = {
-            new AABB(0.1D, 0.1D, 0.0D, 0.9375D, 0.9375D, 0.1D),
-            new AABB(0.9375D, 0.1D, 0.1D, 1.0D, 0.9375D, 0.9375D),
-            new AABB(0.1D, 0.1D, 0.9375D, 0.9375D, 0.9375D, 1.0D),
-            new AABB(0.0D, 0.1D, 0.1D, 0.1D, 0.9375D, 0.9375D)
+            new AABB(0.1D, 0.1D, 0.0D, 0.8D, 0.8D, 0.2D),
+            new AABB(0.8D, 0.1D, 0.1D, 1.0D, 0.8D, 0.8D),
+            new AABB(0.1D, 0.1D, 0.8D, 0.8D, 0.8D, 1.0D),
+            new AABB(0.0D, 0.1D, 0.1D, 0.2D, 0.8D, 0.8D)
     };
-
 
 
     public WallPressurePlateBlock(Properties properties) {
         super(Sensitivity.EVERYTHING, properties.noOcclusion().noCollission());
         registerDefaultState(stateDefinition.any().setValue(POWERED, false).setValue(FACING, Direction.NORTH));
     }
+
 
     @Override
     protected int getSignalStrength(Level level, BlockPos pos) {
