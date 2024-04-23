@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.sarinsa.magical_relics.common.blockentity.BaseCamoBlockEntity;
 import com.sarinsa.magical_relics.common.blockentity.CamoBlockEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -38,6 +39,6 @@ public class CamoTrapRenderer<T extends BlockEntity & CamoBlockEntity> implement
 
     @Override
     public int getViewDistance() {
-        return 96;
+        return 192;
     }
 }
