@@ -66,7 +66,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
         if (blockEntity instanceof DisplayPedestalBlockEntity displayPedestal) {
             if (!player.isShiftKeyDown()) {
                 if (!displayPedestal.getArtifact().isEmpty()) {
-                    Block.popResource(level, pos.above(), displayPedestal.getArtifact());
+                    Block.popResourceFromFace(level, pos, Direction.UP, displayPedestal.getArtifact());
                     displayPedestal.setArtifact(ItemStack.EMPTY);
 
                     level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
