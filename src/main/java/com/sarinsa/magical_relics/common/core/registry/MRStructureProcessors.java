@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.worldgen.processor.CustomAgingProcessor;
 import com.sarinsa.magical_relics.common.worldgen.processor.DisplayPedestalProcessor;
+import com.sarinsa.magical_relics.common.worldgen.processor.NoWaterloggingProcessor;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
@@ -17,6 +18,7 @@ public class MRStructureProcessors {
 
     public static final RegistryObject<StructureProcessorType<DisplayPedestalProcessor>> DISPLAY_PEDESTAL = PROCESSORS.register("display_pedestal", () -> type(DisplayPedestalProcessor.CODEC));
     public static final RegistryObject<StructureProcessorType<CustomAgingProcessor>> CUSTOM_MOSSIFIER = PROCESSORS.register("custom_aging", () -> type(CustomAgingProcessor.CODEC));
+    public static final RegistryObject<StructureProcessorType<NoWaterloggingProcessor>> NO_WATERLOGGING = PROCESSORS.register("no_waterlogging", () -> type(NoWaterloggingProcessor.CODEC));
 
 
     private static <T extends StructureProcessor> StructureProcessorType<T> type(Codec<T> codec) {

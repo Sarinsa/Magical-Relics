@@ -15,6 +15,9 @@
           {
             "processor_type": "magical_relics:display_pedestal",
             "legendary_chance": 0.05
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
           }
         ],
         "projection": "rigid",
@@ -33,6 +36,9 @@
           {
             "processor_type": "magical_relics:display_pedestal",
             "legendary_chance": 0.05
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
           }
         ],
         "projection": "rigid",
@@ -51,6 +57,9 @@
           {
             "processor_type": "magical_relics:display_pedestal",
             "legendary_chance": 0.05
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
           }
         ],
         "projection": "rigid",
@@ -69,6 +78,9 @@
           {
             "processor_type": "magical_relics:display_pedestal",
             "legendary_chance": 0.05
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
           }
         ],
         "projection": "rigid",

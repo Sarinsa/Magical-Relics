@@ -11,6 +11,9 @@
           {
             "processor_type": "magical_relics:custom_aging",
             "oldness": 0.2
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
           }
         ],
         "projection": "rigid",

@@ -4,7 +4,10 @@
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
   "refmap": "magical_relics.mixins.refmap.json",
-  "mixins": [],
+  "mixins": [
+    "common.StructureProcessorAccessor",
+    "common.StructureTemplateMixin"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
