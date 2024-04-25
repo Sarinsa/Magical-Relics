@@ -5,6 +5,7 @@ import com.mojang.math.Vector3f;
 import com.sarinsa.magical_relics.common.entity.SwungSword;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.CampfireRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -26,7 +27,8 @@ public class SwungSwordRenderer extends EntityRenderer<SwungSword> {
         return null;
     }
 
-    // TODO - Make this less terrible looking
+
+    // TODO - Make this a bit cooler looking, maybe
     @Override
     public void render(SwungSword sword, float rot, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         ItemStack itemStack = sword.getSwordItem();
