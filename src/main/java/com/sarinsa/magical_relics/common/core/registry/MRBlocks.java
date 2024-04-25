@@ -43,7 +43,7 @@ public class MRBlocks {
     public static final RegistryObject<CamoDispenserBlock> CAMO_DISPENSER = register("camo_dispenser", MRItems.MRCreativeTab.MOD_TAB, CamoDispenserBlock::new, BlockTags.MINEABLE_WITH_PICKAXE);
     public static final RegistryObject<CamoTripwireHookBlock> CAMO_TRIPWIRE_HOOK = register("camo_tripwire_hook", MRItems.MRCreativeTab.MOD_TAB, CamoTripwireHookBlock::new);
     public static final RegistryObject<TripWireBlock> THICK_TRIPWIRE = registerNoItem("thick_tripwire", () -> new ThickTripwireBlock(CAMO_TRIPWIRE_HOOK.get(), BlockBehaviour.Properties.copy(Blocks.TRIPWIRE)));
-    public static final RegistryObject<IllusionaryBlock> ILLUSIONARY_BLOCK = register("illusionary_block", MRItems.MRCreativeTab.MOD_TAB, () -> new IllusionaryBlock(BlockBehaviour.Properties.of(Material.BARRIER).noLootTable().noOcclusion().isViewBlocking((state, level, pos) -> false)));
+    public static final RegistryObject<IllusionaryBlock> ILLUSIONARY_BLOCK = register("illusionary_block", MRItems.MRCreativeTab.MOD_TAB, () -> new IllusionaryBlock(BlockBehaviour.Properties.of(Material.BARRIER).strength(0.8F).noLootTable().noOcclusion().isViewBlocking((state, level, pos) -> false)));
     public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", MRItems.MRCreativeTab.MOD_TAB, DisplayPedestalBlock::new, BlockTags.MINEABLE_WITH_PICKAXE);
     public static final RegistryObject<AntiBuilderBlock> ANTI_BUILDER = register("anti_builder", MRItems.MRCreativeTab.MOD_TAB, AntiBuilderBlock::new);
 
