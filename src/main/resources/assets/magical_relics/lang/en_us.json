@@ -90,6 +90,8 @@
 
   "death.attack.magical_relics.spikes": "%1$s was impaled on a spike trap",
   "death.attack.magical_relics.spikes.player": "%1$s got impaled on a spike trap whilst trying to escape %2$s",
+  "death.attack.magical_relics.swung_sword": "%1$s was sliced with a sword",
+  "death.attack.magical_relics.swung_sword.player": "%1$s was sliced by a sword whilst trying to escape %2$s",
 
 
   "magical_relics.anti_builder.blocked_message": "A powerful spell protects this land",

@@ -2,12 +2,14 @@ package com.sarinsa.magical_relics.client;
 
 import com.sarinsa.magical_relics.client.renderer.block.CamoTrapRenderer;
 import com.sarinsa.magical_relics.client.renderer.block.DisplayPedestalRenderer;
+import com.sarinsa.magical_relics.client.renderer.entity.SwungSwordRenderer;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MREntities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
+import com.sarinsa.magical_relics.common.entity.SwungSword;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -33,6 +35,7 @@ import java.util.List;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD, modid = MagicalRelics.MODID)
 public class ClientRegister {
 
+    @SuppressWarnings("removal")
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(new ClientEventListener());
@@ -50,6 +53,7 @@ public class ClientRegister {
         event.registerBlockEntityRenderer(MRBlockEntities.ILLUSIONARY_BLOCK.get(), CamoTrapRenderer::new);
 
         event.registerEntityRenderer(MREntities.VOLATILE_FIREBALL.get(), (context) -> new ThrownItemRenderer<>(context, 3.0F, true));
+        event.registerEntityRenderer(MREntities.SWUNG_SWORD.get(), SwungSwordRenderer::new);
     }
 
     @SubscribeEvent

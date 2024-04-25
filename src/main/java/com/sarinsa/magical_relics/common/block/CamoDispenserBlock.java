@@ -1,23 +1,24 @@
 package com.sarinsa.magical_relics.common.block;
 
 import com.sarinsa.magical_relics.common.blockentity.CamoDispenserBlockEntity;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
+import com.sarinsa.magical_relics.common.entity.SwungSword;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.BlockSourceImpl;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -32,11 +33,10 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, CamoBlock {
 
@@ -57,6 +57,34 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
         // Copy vanilla behavior first
         DISPENSER_BEHAVIORS = new Object2ObjectOpenHashMap<>(DispenserBlock.DISPENSER_REGISTRY);
         DISPENSER_BEHAVIORS.defaultReturnValue(new DefaultDispenseItemBehavior());
+
+        // Swung Sword behavior
+        for (Item item : ForgeRegistries.ITEMS.getValues()) {
+            if (item instanceof SwordItem swordItem) {
+                DISPENSER_BEHAVIORS.put(item, new OptionalDispenseItemBehavior() {
+                    protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+                        Level level = blockSource.getLevel();
+                        setSuccess(true);
+                        Direction direction = blockSource.getBlockState().getValue(DispenserBlock.FACING);
+                        BlockPos blockPos = blockSource.getPos().relative(direction);
+                        BlockState state = level.getBlockState(blockPos);
+
+                        if (!state.isAir() || !level.getEntitiesOfClass(SwungSword.class, new AABB(blockPos)).isEmpty()) {
+                            setSuccess(false);
+                            return itemStack;
+                        }
+                        SwungSword sword = new SwungSword(level, blockPos.getX() + 0.5D, blockPos.getY(), blockPos.getZ() + 0.5D);
+                        sword.setSwordItem(swordItem);
+                        sword.setAttackDirection(direction);
+                        level.addFreshEntity(sword);
+
+                        itemStack.hurt(1, level.random, null);
+
+                        return itemStack;
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -76,7 +104,7 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
         }
         else {
             ItemStack itemStack = dispenser.getItem(slot);
-            DispenseItemBehavior behavior = DispenserBlock.DISPENSER_REGISTRY.get(itemStack.getItem());
+            DispenseItemBehavior behavior = DISPENSER_BEHAVIORS.get(itemStack.getItem());
 
             try {
                 if (behavior != DispenseItemBehavior.NOOP) {
