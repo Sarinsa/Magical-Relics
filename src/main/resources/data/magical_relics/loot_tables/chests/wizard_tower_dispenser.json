@@ -66,13 +66,36 @@
         },
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "percentage": 0.07,
+              "function": "magical_relics:percentage_set_damage"
+            }
+          ],
           "name": "minecraft:iron_sword",
-          "weight": 50
+          "weight": 30
         },
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "percentage": 0.07,
+              "function": "magical_relics:percentage_set_damage"
+            }
+          ],
+          "name": "minecraft:golden_sword",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "percentage": 0.07,
+              "function": "magical_relics:percentage_set_damage"
+            }
+          ],
           "name": "minecraft:diamond_sword",
-          "weight": 40
+          "weight": 20
         }
       ],
       "rolls": {

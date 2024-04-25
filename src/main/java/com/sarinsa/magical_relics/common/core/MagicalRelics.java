@@ -56,6 +56,7 @@ public class MagicalRelics {
         MREntities.ENTITIES.register(modBus);
         MRContainers.CONTAINERS.register(modBus);
         MRArtifactAbilities.ARTIFACT_ABILITIES.register(modBus);
+        MRLootItemFunctions.LOOT_ITEM_FUNCTIONS.register(modBus);
         MRStructureTypes.STRUCTURES.register(modBus);
         MRStructureProcessors.PROCESSORS.register(modBus);
         MRConfiguredFeatures.CF_REGISTRY.register(modBus);
