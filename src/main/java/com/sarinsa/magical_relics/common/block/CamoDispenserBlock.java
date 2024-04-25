@@ -69,7 +69,7 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
                         BlockPos blockPos = blockSource.getPos().relative(direction);
                         BlockState state = level.getBlockState(blockPos);
 
-                        if (!state.isAir() || !level.getEntitiesOfClass(SwungSword.class, new AABB(blockPos)).isEmpty()) {
+                        if (state.isFaceSturdy(level, blockPos, direction.getOpposite()) || !level.getEntitiesOfClass(SwungSword.class, new AABB(blockPos)).isEmpty()) {
                             setSuccess(false);
                             return itemStack;
                         }
@@ -78,8 +78,9 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
                         sword.setAttackDirection(direction);
                         level.addFreshEntity(sword);
 
-                        itemStack.hurt(1, level.random, null);
-
+                        if (itemStack.hurt(1, level.random, null)) {
+                            itemStack.setCount(0);
+                        }
                         return itemStack;
                     }
                 });

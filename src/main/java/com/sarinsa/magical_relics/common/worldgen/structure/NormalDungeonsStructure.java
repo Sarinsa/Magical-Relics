@@ -5,21 +5,31 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sarinsa.magical_relics.common.core.registry.MRStructureTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.WorldGenerationContext;
 import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctions;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -33,7 +43,7 @@ public class NormalDungeonsStructure extends Structure {
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                     Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
                     Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter),
-                    Codec.intRange(-20, 180).fieldOf("max_y").forGetter(structure -> structure.maxY),
+                    Codec.intRange(-20, 200).fieldOf("max_y").forGetter(structure -> structure.maxY),
                     Codec.BOOL.fieldOf("can_generate_in_water").forGetter(structure -> structure.canGenerateInWater)
             ).apply(instance, NormalDungeonsStructure::new)).codec();
 
@@ -59,7 +69,6 @@ public class NormalDungeonsStructure extends Structure {
         this.maxY = maxY;
         this.canGenerateInWater = canGenerateInWater;
     }
-
 
     private static boolean extraSpawningChecks(Structure.GenerationContext context, int maxY, boolean canGenerateInWater) {
         ChunkPos chunkpos = context.chunkPos();
