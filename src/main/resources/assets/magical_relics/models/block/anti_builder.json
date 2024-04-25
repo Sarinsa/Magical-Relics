@@ -1,6 +1,12 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "magical_relics:block/anti_builder"
+    "up": "magical_relics:block/anti_builder_top",
+    "down": "magical_relics:block/anti_builder_bottom",
+    "east": "magical_relics:block/anti_builder",
+    "north": "magical_relics:block/anti_builder",
+    "south": "magical_relics:block/anti_builder",
+    "west": "magical_relics:block/anti_builder",
+    "particle": "magical_relics:block/anti_builder"
   }
 }

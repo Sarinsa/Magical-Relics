@@ -1,6 +1,8 @@
 {
-  "parent": "magical_relics:block/template/template_spike_trap",
-  "textures": {
-    "spikes": "magical_relics:block/spike_trap"
-  }
+	"parent": "magical_relics:block/template/template_spike_trap",
+	"textures": {
+		"base": "magical_relics:block/spike_trap_base",
+		"particle": "magical_relics:block/spike_trap_base",
+		"spikes": "magical_relics:block/spike_trap"
+	}
 }
