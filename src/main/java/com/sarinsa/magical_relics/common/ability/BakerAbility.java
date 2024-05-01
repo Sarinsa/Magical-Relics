@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -38,6 +39,10 @@ public class BakerAbility extends BaseArtifactAbility {
             createSuffix("baker", "tastiness"),
             createSuffix("baker", "delight"),
     };
+
+    private static final List<TriggerType> TRIGGERS = ImmutableList.of(
+            TriggerType.RIGHT_CLICK_BLOCK
+    );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.AMULET, ArtifactCategory.STAFF, ArtifactCategory.TRINKET, ArtifactCategory.FIGURINE, ArtifactCategory.WAND
@@ -92,6 +97,12 @@ public class BakerAbility extends BaseArtifactAbility {
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
         return isArmor ? null : TriggerType.RIGHT_CLICK_BLOCK;
+    }
+
+    @NotNull
+    @Override
+    public List<TriggerType> supportedTriggers() {
+        return TRIGGERS;
     }
 
     @Override

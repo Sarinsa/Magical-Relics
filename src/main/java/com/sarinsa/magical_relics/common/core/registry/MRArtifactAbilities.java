@@ -35,6 +35,7 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> MASS_EXCAVATE = register("mass_excavate", MassExcavateAbility::new);
     public static final RegistryObject<BaseArtifactAbility> ILLUMINATION = register("illumination", IlluminationAbility::new);
     public static final RegistryObject<BaseArtifactAbility> GLOW_VISION = register("glow_vision", GlowVisionAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> JUMP_BOOST = register("jump_boost", JumpBoostAbility::new);
 
 
     private static RegistryObject<BaseArtifactAbility> register(String name, Supplier<BaseArtifactAbility> supplier) {

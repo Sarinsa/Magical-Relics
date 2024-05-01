@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -32,6 +33,10 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
             createSuffix("water_breathing", "breathing"),
             createSuffix("water_breathing", "fresh_air"),
     };
+
+    private static final List<TriggerType> TRIGGERS = ImmutableList.of(
+            TriggerType.ARMOR_TICK, TriggerType.USER_DAMAGED, TriggerType.USE, TriggerType.HELD, TriggerType.USER_ATTACKING
+    );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.AMULET,
@@ -114,6 +119,12 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
             case 1 -> TriggerType.HELD;
             case 2 -> TriggerType.USER_ATTACKING;
         };
+    }
+
+    @NotNull
+    @Override
+    public List<TriggerType> supportedTriggers() {
+        return TRIGGERS;
     }
 
     @Override

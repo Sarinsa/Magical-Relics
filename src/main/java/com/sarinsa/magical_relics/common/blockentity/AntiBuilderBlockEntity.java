@@ -30,7 +30,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 
-// TODO - Make effective area customizable
+
 public class AntiBuilderBlockEntity extends BlockEntity {
 
     private AABB effectiveArea = new AABB(
@@ -159,7 +159,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
         if (effectiveArea.contains(pos.getX(), pos.getY(), pos.getZ())) {
             event.setUseItem(Event.Result.DENY);
-            event.getEntity().displayClientMessage(Component.translatable(References.ANTI_BUILDER_MESSAGE), true);
+            event.getEntity().displayClientMessage(References.ALTNEG_BLOCK_MESSAGE, true);
         }
     }
 
@@ -177,7 +177,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
         if (effectiveArea.contains(pos.getX(), pos.getY(), pos.getZ())) {
             event.setUseItem(Event.Result.DENY);
-            event.getEntity().displayClientMessage(Component.translatable(References.ANTI_BUILDER_MESSAGE), true);
+            event.getEntity().displayClientMessage(References.ALTNEG_BLOCK_MESSAGE, true);
         }
     }
 
@@ -268,7 +268,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
         if (effectiveArea.contains(pos.getX(), pos.getY(), pos.getZ())) {
             event.setCanceled(true);
-            player.displayClientMessage(Component.translatable(References.ANTI_BUILDER_MESSAGE), true);
+            player.displayClientMessage(References.ALTNEG_BLOCK_MESSAGE, true);
         }
     }
 }

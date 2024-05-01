@@ -20,6 +20,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -40,6 +41,10 @@ public class CashoutAbility extends BaseArtifactAbility {
             createSuffix("cashout", "money"),
             createSuffix("cashout", "treasure"),
     };
+
+    private static final List<TriggerType> TRIGGERS = ImmutableList.of(
+            TriggerType.DROPPED
+    );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.AMULET, ArtifactCategory.TRINKET, ArtifactCategory.FIGURINE, ArtifactCategory.RING
@@ -92,6 +97,12 @@ public class CashoutAbility extends BaseArtifactAbility {
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
         return TriggerType.DROPPED;
+    }
+
+    @NotNull
+    @Override
+    public List<TriggerType> supportedTriggers() {
+        return TRIGGERS;
     }
 
     @Override

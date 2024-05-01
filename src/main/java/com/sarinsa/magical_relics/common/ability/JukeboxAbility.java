@@ -18,6 +18,7 @@ import net.minecraft.world.item.RecordItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -37,6 +38,10 @@ public class JukeboxAbility extends BaseArtifactAbility {
             createSuffix("jukebox", "songs"),
             createSuffix("jukebox", "notes")
     };
+
+    private static final List<TriggerType> TRIGGERS = ImmutableList.of(
+            TriggerType.USE
+    );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.AMULET, ArtifactCategory.TRINKET, ArtifactCategory.STAFF, ArtifactCategory.WAND, ArtifactCategory.FIGURINE, ArtifactCategory.RING
@@ -116,6 +121,12 @@ public class JukeboxAbility extends BaseArtifactAbility {
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
         return isArmor ? null : TriggerType.USE;
+    }
+
+    @NotNull
+    @Override
+    public List<TriggerType> supportedTriggers() {
+        return TRIGGERS;
     }
 
     @Override

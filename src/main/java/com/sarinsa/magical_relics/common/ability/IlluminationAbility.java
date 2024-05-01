@@ -15,6 +15,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -32,6 +33,10 @@ public class IlluminationAbility extends BaseArtifactAbility {
             createSuffix("illumination", "light"),
             createSuffix("illumination", "sun")
     };
+
+    private static final List<TriggerType> TRIGGERS = ImmutableList.of(
+            TriggerType.ARMOR_TICK, TriggerType.HELD
+    );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.AMULET, ArtifactCategory.TRINKET, ArtifactCategory.STAFF, ArtifactCategory.WAND, ArtifactCategory.FIGURINE, ArtifactCategory.RING, ArtifactCategory.WAND, ArtifactCategory.HELMET
@@ -79,6 +84,12 @@ public class IlluminationAbility extends BaseArtifactAbility {
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
         return isArmor ? TriggerType.ARMOR_TICK : TriggerType.HELD;
+    }
+
+    @NotNull
+    @Override
+    public List<TriggerType> supportedTriggers() {
+        return TRIGGERS;
     }
 
     @Override

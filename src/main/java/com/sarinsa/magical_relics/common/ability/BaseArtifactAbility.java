@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -56,6 +58,16 @@ public abstract class BaseArtifactAbility {
     @Nullable
     public abstract TriggerType getRandomTrigger(RandomSource random, boolean isArmor);
 
+    /**
+     * @return A List of trigger types supported by this ability. This is not super
+     *         important; primarily utilized in the "apply ability" command.
+     */
+    @Nonnull
+    public abstract List<TriggerType> supportedTriggers();
+
+    /**
+     * @return A List of artifact categories this ability is compatible with.
+     */
     public abstract List<ArtifactCategory> getCompatibleTypes();
 
     /**
@@ -65,9 +77,9 @@ public abstract class BaseArtifactAbility {
 
     /**
      * Called from {@link ArtifactUtils#generateRandomArtifact(RandomSource, boolean)} when the ability
-     * is applied to the generated artifact item.
+     * is applied to an artifact item.
      * <br><br>
-     * Can be used to write additional data to the ItemStack's NBT.
+     * Can be used to write additional data to the ItemStack's NBT and whatnot.
      */
     public void onAbilityAttached(ItemStack artifact, RandomSource randomSource) {
 
@@ -137,7 +149,8 @@ public abstract class BaseArtifactAbility {
         USER_ATTACKING("user_attacking", true), // Activates when the player deals damage to a mob
         DROPPED("dropped", false), // Activates when the artifact is thrown out of the player's inventory
         ARMOR_TICK("armor_tick", true), // Activates when the artifact is equipped as armor, every tick
-        INVENTORY_TICK("inventory_tick", true); // Activates every tick, regardless of where in the inventory the artifact is
+        INVENTORY_TICK("inventory_tick", true), // Activates every tick, regardless of where in the inventory the artifact is
+        ON_DEATH("on_death", true); // Activates when the player dies
 
         TriggerType(String name, boolean canStack) {
             this.name = name;

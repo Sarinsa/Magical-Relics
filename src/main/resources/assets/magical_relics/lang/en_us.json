@@ -84,8 +84,21 @@
   "block.magical_relics.crumbling_stone_bricks": "Crumbling Stone Bricks",
   "block.magical_relics.crumbling_mossy_stone_bricks": "Crumbling Mossy Stone Bricks",
 
+  "magical_relics.command.artifact.create.message": "Created artifact of type %1$s",
+  "magical_relics.command.artifact.create.error.invalid_variation": "Specified artifact category only has %1$s variations",
+  "magical_relics.command.ability.apply.error.already_exists": "Item already possesses this ability",
+  "magical_relics.command.ability.apply.error.trigger_occupied": "Specified trigger type is already occupied on this item and can't stack",
+  "magical_relics.command.ability.apply.error.invalid_item": "Held item must be an artifact item",
+  "magical_relics.command.ability.apply.error.unsupported_trigger": "Trigger is not supported by this ability",
+  "magical_relics.command.ability.remove.message": "Successfully removed ability %1$s from held artifact",
+  "magical_relics.command.ability.remove.error": "Unsuccessfully or only partially removed ability %1$s from artifact",
+  "magical_relics.command.failure.player_only": "This command must be executed by a player",
+  "magical_relics.command.argument.artifact_category.error.invalid_category": "%1$s is not a valid artifact category",
+  "magical_relics.command.argument.artifact_ability.error.invalid_ability": "%1$s is not a valid artifact ability",
+  "magical_relics.command.argument.trigger_type.error.invalid_trigger": "%1$s is not a valid trigger type",
 
   "entity.magical_relics.volatile_fireball": "Volatile Fireball",
+  "entity.magical_relics.swung_sword": "Sword",
 
 
   "death.attack.magical_relics.spikes": "%1$s was impaled on a spike trap",
@@ -127,7 +140,12 @@
   "magical_relics.artifact_ability.magical_relics.illumination.description.armor_tick": "Provides illumination while equipped",
   "magical_relics.artifact_ability.magical_relics.illumination.description.held": "Provides illumination while held",
   "magical_relics.artifact_ability.magical_relics.glow_vision.description": "Makes nearby creatures glow when used",
+  "magical_relics.artifact_ability.magical_relics.jump_boost.description.use": "Grants Jump Boost for %1$s seconds when used",
+  "magical_relics.artifact_ability.magical_relics.jump_boost.description.user_attacking": "Grants Jump Boost for %1$s seconds when dealing damage",
+  "magical_relics.artifact_ability.magical_relics.jump_boost.description.inventory_tick": "Grants Jump Boost",
 
+
+  "magical_relics.ability.mundane_prefix": "Mundane",
 
   "magical_relics.artifact_ability.magical_relics.baker.prefix.bakers": "Baker's",
   "magical_relics.artifact_ability.magical_relics.baker.prefix.confectioners": "Confectioner's",
@@ -222,5 +240,10 @@
   "magical_relics.artifact_ability.magical_relics.glow_vision.prefix.glowing": "Glowing",
   "magical_relics.artifact_ability.magical_relics.glow_vision.prefix.seekers": "Seeker's",
   "magical_relics.artifact_ability.magical_relics.glow_vision.suffix.silhouettes": "of Silhouettes",
-  "magical_relics.artifact_ability.magical_relics.glow_vision.suffix.spotting": "of Spotting"
+  "magical_relics.artifact_ability.magical_relics.glow_vision.suffix.spotting": "of Spotting",
+
+  "magical_relics.artifact_ability.magical_relics.jump_boost.prefix.jumpy": "Jumpy",
+  "magical_relics.artifact_ability.magical_relics.jump_boost.prefix.bouncing": "Bouncing",
+  "magical_relics.artifact_ability.magical_relics.jump_boost.suffix.leaping": "of Leaping",
+  "magical_relics.artifact_ability.magical_relics.jump_boost.suffix.lightness": "of Lightness"
 }

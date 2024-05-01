@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.ability;
 
+import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -30,6 +32,10 @@ public class ObscurityAbility extends BaseArtifactAbility {
             createSuffix("obscurity", "obscurity"),
             createSuffix("obscurity", "cloaking"),
     };
+
+    private static final List<TriggerType> TRIGGERS = ImmutableList.of(
+            TriggerType.USER_DAMAGED, TriggerType.USER_ATTACKING, TriggerType.USE
+    );
 
     private static final int EFFECT_DURATION = 610;
 
@@ -91,6 +97,12 @@ public class ObscurityAbility extends BaseArtifactAbility {
         return random.nextInt(2) == 0
                 ? TriggerType.USE
                 : TriggerType.USER_ATTACKING;
+    }
+
+    @NotNull
+    @Override
+    public List<TriggerType> supportedTriggers() {
+        return TRIGGERS;
     }
 
     @Override

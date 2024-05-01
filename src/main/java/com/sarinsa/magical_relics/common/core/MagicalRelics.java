@@ -1,15 +1,18 @@
 package com.sarinsa.magical_relics.common.core;
 
+import com.mojang.brigadier.CommandDispatcher;
 import com.sarinsa.magical_relics.common.block.CamoDispenserBlock;
+import com.sarinsa.magical_relics.common.command.MRBaseCommand;
 import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.network.PacketHandler;
 import com.sarinsa.magical_relics.common.tag.MRBlockTags;
 import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import com.sarinsa.magical_relics.common.worldgen.WorldgenHelper;
-import net.minecraft.data.worldgen.ProcessorLists;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -44,6 +47,7 @@ public class MagicalRelics {
         modBus.addListener(this::onCommonSetup);
 
         MinecraftForge.EVENT_BUS.register(new MREventListener());
+        MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
 
         MRDamageSources.init();
         MRBlockTags.init();
@@ -61,6 +65,7 @@ public class MagicalRelics {
         MRStructureProcessors.PROCESSORS.register(modBus);
         MRConfiguredFeatures.CF_REGISTRY.register(modBus);
         MRConfiguredFeatures.P_REGISTRY.register(modBus);
+        MRArgumentTypes.ARGUMENT_TYPES.register(modBus);
     }
 
 
@@ -70,6 +75,13 @@ public class MagicalRelics {
             CamoDispenserBlock.setupBehaviors();
         });
     }
+
+    private void registerCommands(RegisterCommandsEvent event) {
+        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+
+        MRBaseCommand.register(dispatcher);
+    }
+
 
     public static ResourceLocation resLoc(String path) {
         return new ResourceLocation(MODID, path);

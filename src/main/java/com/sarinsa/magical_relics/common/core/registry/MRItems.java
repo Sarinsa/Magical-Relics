@@ -19,6 +19,13 @@ public class MRItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MagicalRelics.MODID);
 
     public static final List<ArtifactSet<List<RegistryObject<Item>>>> ALL_ARTIFACTS = new ArrayList<>();
+    public static final Map<ArtifactCategory, List<RegistryObject<? extends Item>>> ARTIFACTS_BY_CATEGORY = new HashMap<>();
+
+    static {
+        for (ArtifactCategory category : ArtifactCategory.values()) {
+            ARTIFACTS_BY_CATEGORY.put(category, new ArrayList<>());
+        }
+    }
 
     public static class MRCreativeTab extends CreativeModeTab {
 
@@ -74,6 +81,7 @@ public class MRItems {
         artifactSet.dataStructure().add(ITEMS.register("gold_" + category.getName() + "_artifact", () -> new ArtifactItem(ArtifactItemTiers.GOLD, category)));
         artifactSet.dataStructure().add(ITEMS.register("diamond_" + category.getName() + "_artifact", () -> new ArtifactItem(ArtifactItemTiers.DIAMOND, category)));
         ALL_ARTIFACTS.add(artifactSet);
+        ARTIFACTS_BY_CATEGORY.get(category).addAll(artifactSet.dataStructure());
         return artifactSet;
     }
 
@@ -83,6 +91,10 @@ public class MRItems {
         armorSet.put(EquipmentSlot.LEGS, register(name + "_leggings_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.LEGGINGS, EquipmentSlot.LEGS, new Item.Properties().stacksTo(1))));
         armorSet.put(EquipmentSlot.CHEST, register(name + "_chestplate_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.CHESTPLATE, EquipmentSlot.CHEST, new Item.Properties().stacksTo(1))));
         armorSet.put(EquipmentSlot.HEAD, register(name + "_helmet_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.HELMET, EquipmentSlot.HEAD, new Item.Properties().stacksTo(1))));
+        ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.BOOTS).add(armorSet.get(EquipmentSlot.FEET));
+        ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.LEGGINGS).add(armorSet.get(EquipmentSlot.LEGS));
+        ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.CHESTPLATE).add(armorSet.get(EquipmentSlot.CHEST));
+        ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.HELMET).add(armorSet.get(EquipmentSlot.HEAD));
         return armorSet;
     }
 

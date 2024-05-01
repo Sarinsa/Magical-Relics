@@ -15,8 +15,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class AdrenalineAbility extends BaseArtifactAbility {
@@ -30,6 +32,10 @@ public class AdrenalineAbility extends BaseArtifactAbility {
             createSuffix("adrenaline", "rage"),
             createSuffix("adrenaline", "fury")
     };
+
+    private static final List<TriggerType> TRIGGERS = ImmutableList.of(
+            TriggerType.ARMOR_TICK
+    );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.CHESTPLATE
@@ -69,6 +75,12 @@ public class AdrenalineAbility extends BaseArtifactAbility {
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
         return isArmor ? TriggerType.ARMOR_TICK : null;
+    }
+
+    @Override
+    @Nonnull
+    public List<TriggerType> supportedTriggers() {
+        return TRIGGERS;
     }
 
     @Override

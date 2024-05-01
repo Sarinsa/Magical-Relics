@@ -9,6 +9,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -17,7 +18,10 @@ import java.util.List;
 public class OreRadarAbility extends BaseArtifactAbility {
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(ArtifactCategory.HELMET);
-    private static final List<TriggerType> TRIGGERS = ImmutableList.of(TriggerType.ARMOR_TICK);
+
+    private static final List<TriggerType> TRIGGERS = ImmutableList.of(
+            TriggerType.ARMOR_TICK
+    );
 
 
     public OreRadarAbility(String abilityName) {
@@ -38,6 +42,12 @@ public class OreRadarAbility extends BaseArtifactAbility {
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
         return isArmor ? TriggerType.ARMOR_TICK : null;
+    }
+
+    @NotNull
+    @Override
+    public List<TriggerType> supportedTriggers() {
+        return TRIGGERS;
     }
 
     @Override

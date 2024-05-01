@@ -7,6 +7,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -18,6 +19,10 @@ public class EmptyAbility extends BaseArtifactAbility {
     private static final String[] NO_SUFFIXES = {""};
     private static final List<ArtifactCategory> TYPES = ImmutableList.copyOf(ArtifactCategory.values());
 
+    private static final List<TriggerType> TRIGGERS = ImmutableList.copyOf(
+            TriggerType.values()
+    );
+
     public EmptyAbility() {
     }
 
@@ -25,6 +30,12 @@ public class EmptyAbility extends BaseArtifactAbility {
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
         return TriggerType.HELD;
+    }
+
+    @NotNull
+    @Override
+    public List<TriggerType> supportedTriggers() {
+        return TRIGGERS;
     }
 
     @Override

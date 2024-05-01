@@ -63,6 +63,22 @@ public class ArtifactUtils {
             0x84BF4E, 0x6B75BC, 0xD8D8D8
     };
 
+    public static ItemStack createBlankArtifact(Item artifactItem, int variant, RandomSource randomSource) {
+        ItemStack artifactStack = new ItemStack(artifactItem);
+
+        // Create necessary tags needed later
+        CompoundTag tag = artifactStack.getOrCreateTag();
+        CompoundTag modDataTag = new CompoundTag();
+
+        modDataTag.putInt(VARIANT_KEY, variant);
+        modDataTag.putInt(ITEM_COLOR_KEY, ARTIFACT_COLORS[randomSource.nextInt(ARTIFACT_COLORS.length)]);
+        modDataTag.put(ABILITY_COOLDOWNS_KEY, new CompoundTag());
+        modDataTag.putString(PREFIX_KEY, "");
+        modDataTag.putString(SUFFIX_KEY, "");
+        tag.put(MOD_DATA_KEY, modDataTag);
+
+        return artifactStack;
+    }
     /**
      * Generates an artifact with randomized abilities, type and overlay color. Neat!
      * <br><br>
@@ -71,18 +87,7 @@ public class ArtifactUtils {
     public static ItemStack generateRandomArtifact(RandomSource random, boolean legendary) {
         ArtifactSet<List<RegistryObject<Item>>> artifactSet = MRItems.ALL_ARTIFACTS.get(random.nextInt(MRItems.ALL_ARTIFACTS.size()));
         Item artifactItem = artifactSet.dataStructure().get(random.nextInt(artifactSet.dataStructure().size())).get();
-        ItemStack artifactStack = new ItemStack(artifactItem);
-
-        // Create necessary tags needed later
-        CompoundTag tag = artifactStack.getOrCreateTag();
-        CompoundTag modDataTag = new CompoundTag();
-
-        modDataTag.putInt(VARIANT_KEY, random.nextInt(artifactSet.variants()));
-        modDataTag.putInt(ITEM_COLOR_KEY, ARTIFACT_COLORS[random.nextInt(ARTIFACT_COLORS.length)]);
-        modDataTag.put(ABILITY_COOLDOWNS_KEY, new CompoundTag());
-        modDataTag.putString(PREFIX_KEY, "");
-        modDataTag.putString(SUFFIX_KEY, "");
-        tag.put(MOD_DATA_KEY, modDataTag);
+        ItemStack artifactStack = createBlankArtifact(artifactItem, random.nextInt(artifactSet.variants()), random);
 
         List<BaseArtifactAbility> allAbilities = Lists.newArrayList(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues());
         // Filter out abilities that are not applicable to the Artifact's category.
@@ -112,7 +117,7 @@ public class ArtifactUtils {
         }
         // Try to apply enchantments if this is a legendary artifact
         if (legendary) {
-            EnchantmentHelper.enchantItem(random, artifactStack, 20, false);
+            EnchantmentHelper.enchantItem(random, artifactStack, 20 + random.nextInt(11), false);
         }
         // Apply some stock attribute mods for daggers and swords and whatnot
         applyMandatoryAttributeMods(artifactStack, ((ItemArtifact) artifactItem).getType(), random);
@@ -120,6 +125,9 @@ public class ArtifactUtils {
         // Create a custom display name for the ItemStack, picking random
         // prefixes and suffixes from successfully applied abilities
         if (appliedAbilities.length > 0) {
+            CompoundTag tag = artifactStack.getOrCreateTag();
+            CompoundTag modDataTag = tag.getCompound(MOD_DATA_KEY);
+
             modDataTag.putString(PREFIX_KEY, appliedAbilities[0].getPrefixes()[random.nextInt(appliedAbilities[0].getPrefixes().length)]);
 
             if (appliedAbilities.length > 1) {
@@ -158,7 +166,7 @@ public class ArtifactUtils {
      * a certain artifact category.
      */
     @SuppressWarnings("ConstantConditions")
-    private static void applyMandatoryAttributeMods(ItemStack itemStack, ArtifactCategory category, RandomSource random) {
+    public static void applyMandatoryAttributeMods(ItemStack itemStack, ArtifactCategory category, RandomSource random) {
         CompoundTag modDataTag = itemStack.getOrCreateTag().getCompound(MOD_DATA_KEY);
 
         if (category == ArtifactCategory.SWORD || category == ArtifactCategory.DAGGER) {
@@ -257,8 +265,6 @@ public class ArtifactUtils {
             // Skip if the item already has the ability
             if (currentAbilities.containsKey(nextToApply)) continue;
 
-            boolean goToNext = false;
-
             // TODO - Don't forget about changing this once armor is incorporated into this whole thingamajig
             BaseArtifactAbility.TriggerType randomTrigger = nextToApply.getRandomTrigger(random, false);
 
@@ -303,6 +309,33 @@ public class ArtifactUtils {
             }
         }
         return successfullyApplied.toArray(new BaseArtifactAbility[0]);
+    }
+
+    /**
+     * Attempts to remove the specified ability from the artifact item.
+     * @return True if nothing went horribly wrong.
+     */
+    public static boolean removeAbility(@Nonnull ItemStack artifact, @Nonnull BaseArtifactAbility ability) {
+        try {
+            CompoundTag stackTag = artifact.getOrCreateTag();
+            CompoundTag modDataTag = stackTag.getCompound(MOD_DATA_KEY);
+            ListTag abilityListTag = modDataTag.getList(ABILITY_KEY, Tag.TAG_COMPOUND);
+
+            String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey(ability).toString();
+
+            abilityListTag.removeIf((tag) -> ((CompoundTag) tag).getString("AbilityId").equals(abilityId));
+
+            ListTag attributeBoostListTag = modDataTag.getList(ATTRIBUTE_MODS_KEY, Tag.TAG_COMPOUND);
+
+            attributeBoostListTag.removeIf((tag) -> {
+                CompoundTag attributeModTag = ((CompoundTag) tag).getCompound("AttributeMod");
+                return attributeModTag.getString("Name").equals(ability.getAttributeWithBoost().name());
+            });
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     /**

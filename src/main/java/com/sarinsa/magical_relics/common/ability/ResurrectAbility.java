@@ -2,11 +2,8 @@ package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -15,50 +12,32 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SailorAbility extends BaseArtifactAbility {
+public class ResurrectAbility extends BaseArtifactAbility {
 
-    private static final String[] PREFIXES = {
-            createPrefix("sailor", "sailors"),
-            createPrefix("sailor", "paddling")
-    };
-
-    private static final String[] SUFFIXES = {
-            createSuffix("sailor", "rowing"),
-            createSuffix("sailor", "boating")
-    };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK
+            TriggerType.ON_DEATH
     );
 
-    private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.CHESTPLATE
-    );
-
-
-    public SailorAbility() {
+    public ResurrectAbility() {
 
     }
 
-    @Override
-    public void onArmorTick(ItemStack artifact, Level level, Player player) {
-        super.onArmorTick(artifact, level, player);
-    }
 
     @Override
     public String[] getPrefixes() {
-        return PREFIXES;
+        return new String[0];
     }
 
     @Override
     public String[] getSuffixes() {
-        return SUFFIXES;
+        return new String[0];
     }
 
     @Nullable
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
-        return isArmor ? TriggerType.ARMOR_TICK : null;
+        return null;
     }
 
     @NotNull
@@ -69,11 +48,11 @@ public class SailorAbility extends BaseArtifactAbility {
 
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
-        return TYPES;
+        return null;
     }
 
     @Override
     public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.sailor.description");
+        return null;
     }
 }
