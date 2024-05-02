@@ -18,6 +18,7 @@ public final class MRBlockTags {
 
     public static void init() {
         MRBiomeTags.init();
+        MRItemTags.init();
     }
     private MRBlockTags() {}
 }

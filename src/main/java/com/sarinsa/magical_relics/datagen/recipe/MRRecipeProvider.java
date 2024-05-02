@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.datagen.recipe;
 
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
+import com.sarinsa.magical_relics.common.tag.MRItemTags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -13,7 +14,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -33,6 +36,11 @@ public class MRRecipeProvider extends RecipeProvider {
         manaessenceRecipe(MRItems.DIAMOND_MANAESSENCE, Items.DIAMOND, consumer);
 
         simpleShapeless(Items.STRING, 2, MRBlocks.THICK_TRIPWIRE.get(), consumer);
+
+        ShapelessRecipeBuilder.shapeless(MRItems.RAW_MANAESSENCE.get(), 4)
+                .requires(MRItemTags.ARTIFACTS)
+                .unlockedBy("has_artifact", has(MRItemTags.ARTIFACTS))
+                .save(consumer);
     }
 
     private void manaessenceRecipe(Supplier<Item> manaessenceItem, ItemLike keyIngredient, Consumer<FinishedRecipe> consumer) {
