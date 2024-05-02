@@ -35,7 +35,7 @@ public class AdrenalineAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK
+            TriggerType.USER_DAMAGED
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
