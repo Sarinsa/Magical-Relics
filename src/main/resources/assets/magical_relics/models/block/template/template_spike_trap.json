@@ -1,7 +1,6 @@
 {
 	"credit": "Made with Blockbench, by Tuttita",
 	"render_type": "cutout",
-	"parent": "magical_relics:block/template/template_spike_trap",
 	"elements": [
 		{
 			"from": [0, 0, 0],
