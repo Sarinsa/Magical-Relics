@@ -48,7 +48,11 @@ public class CashoutAbility extends BaseArtifactAbility {
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.AMULET, ArtifactCategory.TRINKET, ArtifactCategory.FIGURINE, ArtifactCategory.RING
+            ArtifactCategory.AMULET,
+            ArtifactCategory.TRINKET,
+            ArtifactCategory.FIGURINE,
+            ArtifactCategory.RING,
+            ArtifactCategory.AXE
     );
 
 

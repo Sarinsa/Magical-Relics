@@ -60,6 +60,72 @@
       "predicate": {
         "magical_relics:trinket_variant": 10.0
       }
+    },
+    {
+      "model": "magical_relics:item/trinket11",
+      "predicate": {
+        "magical_relics:trinket_variant": 11.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket12",
+      "predicate": {
+        "magical_relics:trinket_variant": 12.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket13",
+      "predicate": {
+        "magical_relics:trinket_variant": 13.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket14",
+      "predicate": {
+        "magical_relics:trinket_variant": 14.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket15",
+      "predicate": {
+        "magical_relics:trinket_variant": 15.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket16",
+      "predicate": {
+        "magical_relics:trinket_variant": 16.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket17",
+      "predicate": {
+        "magical_relics:trinket_variant": 17.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket18",
+      "predicate": {
+        "magical_relics:trinket_variant": 18.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket19",
+      "predicate": {
+        "magical_relics:trinket_variant": 19.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket20",
+      "predicate": {
+        "magical_relics:trinket_variant": 20.0
+      }
+    },
+    {
+      "model": "magical_relics:item/trinket21",
+      "predicate": {
+        "magical_relics:trinket_variant": 21.0
+      }
     }
   ],
   "textures": {

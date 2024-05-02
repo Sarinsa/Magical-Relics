@@ -36,7 +36,15 @@ public class SelfRepairAbility extends BaseArtifactAbility {
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.AMULET, ArtifactCategory.RING, ArtifactCategory.FIGURINE, ArtifactCategory.TRINKET, ArtifactCategory.LEGGINGS, ArtifactCategory.BOOTS
+            ArtifactCategory.AMULET,
+            ArtifactCategory.RING,
+            ArtifactCategory.FIGURINE,
+            ArtifactCategory.TRINKET,
+            ArtifactCategory.LEGGINGS,
+            ArtifactCategory.BOOTS,
+            ArtifactCategory.DAGGER,
+            ArtifactCategory.SWORD,
+            ArtifactCategory.AXE
     );
 
 

@@ -48,7 +48,8 @@ public class SpeedAbility extends BaseArtifactAbility {
             ArtifactCategory.BOOTS,
             ArtifactCategory.DAGGER,
             ArtifactCategory.SWORD,
-            ArtifactCategory.LEGGINGS
+            ArtifactCategory.LEGGINGS,
+            ArtifactCategory.AXE
     );
 
     private static final AttributeBoost SPEED_BOOST = new AttributeBoost(

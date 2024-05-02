@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.item;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
@@ -101,9 +102,9 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
         if (enchantment == Enchantments.MENDING)
             return false;
 
-        if ((getType() == ArtifactCategory.SWORD || getType() == ArtifactCategory.DAGGER) && enchantment.category == EnchantmentCategory.WEAPON)
-            return true;
-
+        if (getType() == ArtifactCategory.SWORD || getType() == ArtifactCategory.DAGGER) {
+            return enchantment.category == EnchantmentCategory.WEAPON;
+        }
         return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 

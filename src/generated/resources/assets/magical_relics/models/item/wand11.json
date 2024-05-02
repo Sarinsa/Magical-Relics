@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "magical_relics:item/wand/wand11",
+    "layer1": "magical_relics:item/wand/wand11_overlay"
+  }
+}

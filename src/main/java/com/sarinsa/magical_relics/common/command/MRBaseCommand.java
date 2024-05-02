@@ -191,7 +191,7 @@ public class MRBaseCommand {
         private static ArgumentBuilder<CommandSourceStack, ?> cmdCreate(CommandBuildContext buildContext) {
             return Commands.literal("create")
                     .then(Commands.argument("category", ArtifactCategoryArgument.artifactCategory())
-                            .then(Commands.argument("variant", IntegerArgumentType.integer(0, 100)).executes((context) -> createArtifact(context.getSource(), ArtifactCategoryArgument.getCategory(context, "category"), IntegerArgumentType.getInteger(context, "variant")))));
+                            .then(Commands.argument("variant", IntegerArgumentType.integer(1, 100)).executes((context) -> createArtifact(context.getSource(), ArtifactCategoryArgument.getCategory(context, "category"), IntegerArgumentType.getInteger(context, "variant")))));
         }
 
         private static int createArtifact(CommandSourceStack source, ArtifactCategory category, int variant) {

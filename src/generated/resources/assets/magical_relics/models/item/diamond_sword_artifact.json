@@ -42,6 +42,54 @@
       "predicate": {
         "magical_relics:sword_variant": 7.0
       }
+    },
+    {
+      "model": "magical_relics:item/sword8",
+      "predicate": {
+        "magical_relics:sword_variant": 8.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword9",
+      "predicate": {
+        "magical_relics:sword_variant": 9.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword10",
+      "predicate": {
+        "magical_relics:sword_variant": 10.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword11",
+      "predicate": {
+        "magical_relics:sword_variant": 11.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword12",
+      "predicate": {
+        "magical_relics:sword_variant": 12.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword13",
+      "predicate": {
+        "magical_relics:sword_variant": 13.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword14",
+      "predicate": {
+        "magical_relics:sword_variant": 14.0
+      }
+    },
+    {
+      "model": "magical_relics:item/sword15",
+      "predicate": {
+        "magical_relics:sword_variant": 15.0
+      }
     }
   ],
   "textures": {

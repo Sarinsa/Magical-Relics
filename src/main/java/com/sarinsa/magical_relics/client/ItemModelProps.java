@@ -14,7 +14,7 @@ public class ItemModelProps {
         // ItemArtifact Items
         MRItems.ALL_ARTIFACTS.forEach((artifactSet) -> {
             ItemProperties.registerGeneric(MagicalRelics.resLoc(artifactSet.category().getName() + "_variant"),
-                    (itemStack, level, livingEntity, seed) -> (float) Mth.clamp(ArtifactUtils.getVariant(itemStack), 1, artifactSet.variants()));
+                    (itemStack, level, livingEntity, seed) -> (float) Mth.clamp(ArtifactUtils.getVariant(itemStack), 1, artifactSet.category().getVariations()));
         });
     }
 }

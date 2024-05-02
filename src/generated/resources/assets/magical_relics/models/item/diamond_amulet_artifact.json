@@ -42,6 +42,54 @@
       "predicate": {
         "magical_relics:amulet_variant": 7.0
       }
+    },
+    {
+      "model": "magical_relics:item/amulet8",
+      "predicate": {
+        "magical_relics:amulet_variant": 8.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet9",
+      "predicate": {
+        "magical_relics:amulet_variant": 9.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet10",
+      "predicate": {
+        "magical_relics:amulet_variant": 10.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet11",
+      "predicate": {
+        "magical_relics:amulet_variant": 11.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet12",
+      "predicate": {
+        "magical_relics:amulet_variant": 12.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet13",
+      "predicate": {
+        "magical_relics:amulet_variant": 13.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet14",
+      "predicate": {
+        "magical_relics:amulet_variant": 14.0
+      }
+    },
+    {
+      "model": "magical_relics:item/amulet15",
+      "predicate": {
+        "magical_relics:amulet_variant": 15.0
+      }
     }
   ],
   "textures": {

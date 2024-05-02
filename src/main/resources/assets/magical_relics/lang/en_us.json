@@ -71,6 +71,11 @@
   "item.magical_relics.diamond_leggings_artifact": "Diamond Leggings",
   "item.magical_relics.diamond_chestplate_artifact": "Diamond Chestplate",
   "item.magical_relics.diamond_helmet_artifact": "Diamond Helmet",
+  "item.magical_relics.wood_axe_artifact": "Wooden Axe",
+  "item.magical_relics.stone_axe_artifact": "Stone Axe",
+  "item.magical_relics.iron_axe_artifact": "Iron Axe",
+  "item.magical_relics.gold_axe_artifact": "Golden Axe",
+  "item.magical_relics.diamond_axe_artifact": "Diamond Axe",
 
 
   "block.magical_relics.thick_tripwire": "Thick Thread",

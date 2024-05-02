@@ -34,14 +34,14 @@ public class MRItemModelProvider extends ItemModelProvider {
             String parentModel = "item/generated";
 
             if (category == ArtifactCategory.SWORD || category == ArtifactCategory.DAGGER
-            || category == ArtifactCategory.STAFF || category == ArtifactCategory.WAND)
+            || category == ArtifactCategory.STAFF || category == ArtifactCategory.WAND || category == ArtifactCategory.AXE)
                 parentModel = "item/handheld";
 
             ItemModelBuilder builder = getBuilder(itemId.toString())
                     .parent(new ModelFile.UncheckedModelFile(parentModel))
                     .texture("layer0", modArtifactTexture(categoryName, categoryName + "1"));
 
-            for (int i = 1; i < artifactSet.variants() + 1; ++i) {
+            for (int i = 1; i < artifactSet.category().getVariations() + 1; ++i) {
                 ItemModelBuilder subModelBuilder = getBuilder(MagicalRelics.MODID + ":" + categoryName + i)
                         .parent(new ModelFile.UncheckedModelFile(parentModel))
                         .texture("layer0", modArtifactTexture(categoryName, categoryName + i))

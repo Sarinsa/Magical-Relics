@@ -39,7 +39,8 @@ public class StunAbility extends BaseArtifactAbility {
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.FIGURINE,
-            ArtifactCategory.TRINKET
+            ArtifactCategory.TRINKET,
+            ArtifactCategory.AXE
     );
 
     private static final int EFFECT_DURATION = 100;

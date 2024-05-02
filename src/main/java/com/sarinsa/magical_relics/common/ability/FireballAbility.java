@@ -39,7 +39,11 @@ public class FireballAbility extends BaseArtifactAbility {
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.RING, ArtifactCategory.WAND, ArtifactCategory.STAFF, ArtifactCategory.DAGGER
+            ArtifactCategory.RING,
+            ArtifactCategory.WAND,
+            ArtifactCategory.STAFF,
+            ArtifactCategory.DAGGER,
+            ArtifactCategory.AXE
     );
 
 

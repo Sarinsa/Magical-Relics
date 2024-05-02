@@ -5,13 +5,12 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public record ArtifactSet<T>(ArtifactCategory category, int variants, T dataStructure) {
+public record ArtifactSet<T>(ArtifactCategory category, T dataStructure) {
 
-    public ArtifactSet(ArtifactCategory category, int variants, @Nonnull T dataStructure) {
+    public ArtifactSet(ArtifactCategory category, @Nonnull T dataStructure) {
         Objects.requireNonNull(dataStructure);
         Objects.requireNonNull(category);
         this.category = category;
-        this.variants = variants;
         this.dataStructure = dataStructure;
     }
 }

@@ -48,6 +48,48 @@
       "predicate": {
         "magical_relics:ring_variant": 8.0
       }
+    },
+    {
+      "model": "magical_relics:item/ring9",
+      "predicate": {
+        "magical_relics:ring_variant": 9.0
+      }
+    },
+    {
+      "model": "magical_relics:item/ring10",
+      "predicate": {
+        "magical_relics:ring_variant": 10.0
+      }
+    },
+    {
+      "model": "magical_relics:item/ring11",
+      "predicate": {
+        "magical_relics:ring_variant": 11.0
+      }
+    },
+    {
+      "model": "magical_relics:item/ring12",
+      "predicate": {
+        "magical_relics:ring_variant": 12.0
+      }
+    },
+    {
+      "model": "magical_relics:item/ring13",
+      "predicate": {
+        "magical_relics:ring_variant": 13.0
+      }
+    },
+    {
+      "model": "magical_relics:item/ring14",
+      "predicate": {
+        "magical_relics:ring_variant": 14.0
+      }
+    },
+    {
+      "model": "magical_relics:item/ring15",
+      "predicate": {
+        "magical_relics:ring_variant": 15.0
+      }
     }
   ],
   "textures": {

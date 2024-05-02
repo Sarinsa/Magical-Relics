@@ -18,6 +18,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -88,7 +90,7 @@ public class ArtifactUtils {
     public static ItemStack generateRandomArtifact(RandomSource random, boolean legendary) {
         ArtifactSet<List<RegistryObject<Item>>> artifactSet = MRItems.ALL_ARTIFACTS.get(random.nextInt(MRItems.ALL_ARTIFACTS.size()));
         Item artifactItem = artifactSet.dataStructure().get(random.nextInt(artifactSet.dataStructure().size())).get();
-        ItemStack artifactStack = createBlankArtifact(artifactItem, random.nextInt(artifactSet.variants()), random);
+        ItemStack artifactStack = createBlankArtifact(artifactItem, random.nextInt(artifactSet.category().getVariations()), random);
 
         List<BaseArtifactAbility> allAbilities = Lists.newArrayList(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues());
         // Filter out abilities that are not applicable to the Artifact's category.
@@ -417,8 +419,10 @@ public class ArtifactUtils {
                 MutableComponent description = ability.getAbilityDescription(itemStack, level, flag);
 
                 if (description != null) {
+                    MutableComponent baseComponent = Component.translatable(isAbilityOnCooldown(itemStack, ability) ? "❄ " : "").setStyle(Style.EMPTY.withColor(0xA3EFFF));
                     description.setStyle(ability.getRarity().getStyleModifier().apply(description.getStyle()));
-                    components.add(description);
+                    baseComponent.append(description);
+                    components.add(baseComponent);
                 }
             }
             components.add(Component.literal(" "));

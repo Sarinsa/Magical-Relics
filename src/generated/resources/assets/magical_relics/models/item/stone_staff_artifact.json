@@ -36,6 +36,60 @@
       "predicate": {
         "magical_relics:staff_variant": 6.0
       }
+    },
+    {
+      "model": "magical_relics:item/staff7",
+      "predicate": {
+        "magical_relics:staff_variant": 7.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff8",
+      "predicate": {
+        "magical_relics:staff_variant": 8.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff9",
+      "predicate": {
+        "magical_relics:staff_variant": 9.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff10",
+      "predicate": {
+        "magical_relics:staff_variant": 10.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff11",
+      "predicate": {
+        "magical_relics:staff_variant": 11.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff12",
+      "predicate": {
+        "magical_relics:staff_variant": 12.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff13",
+      "predicate": {
+        "magical_relics:staff_variant": 13.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff14",
+      "predicate": {
+        "magical_relics:staff_variant": 14.0
+      }
+    },
+    {
+      "model": "magical_relics:item/staff15",
+      "predicate": {
+        "magical_relics:staff_variant": 15.0
+      }
     }
   ],
   "textures": {

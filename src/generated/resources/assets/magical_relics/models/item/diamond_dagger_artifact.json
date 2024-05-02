@@ -36,6 +36,60 @@
       "predicate": {
         "magical_relics:dagger_variant": 6.0
       }
+    },
+    {
+      "model": "magical_relics:item/dagger7",
+      "predicate": {
+        "magical_relics:dagger_variant": 7.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger8",
+      "predicate": {
+        "magical_relics:dagger_variant": 8.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger9",
+      "predicate": {
+        "magical_relics:dagger_variant": 9.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger10",
+      "predicate": {
+        "magical_relics:dagger_variant": 10.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger11",
+      "predicate": {
+        "magical_relics:dagger_variant": 11.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger12",
+      "predicate": {
+        "magical_relics:dagger_variant": 12.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger13",
+      "predicate": {
+        "magical_relics:dagger_variant": 13.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger14",
+      "predicate": {
+        "magical_relics:dagger_variant": 14.0
+      }
+    },
+    {
+      "model": "magical_relics:item/dagger15",
+      "predicate": {
+        "magical_relics:dagger_variant": 15.0
+      }
     }
   ],
   "textures": {
