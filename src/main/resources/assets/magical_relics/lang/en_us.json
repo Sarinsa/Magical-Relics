@@ -144,6 +144,12 @@
   "magical_relics.artifact_ability.magical_relics.jump_boost.description.user_attacking": "Grants Jump Boost for %1$s seconds when dealing damage",
   "magical_relics.artifact_ability.magical_relics.jump_boost.description.inventory_tick": "Grants Jump Boost",
   "magical_relics.artifact_ability.magical_relics.resurrect.description": "Allows cheating death when held or equipped",
+  "magical_relics.artifact_ability.magical_relics.self_repair.description.held": "Slowly repairs itself when held",
+  "magical_relics.artifact_ability.magical_relics.self_repair.description.armor_tick": "Slowly repairs itself when equipped",
+  "magical_relics.artifact_ability.magical_relics.self_repair.description.inventory_tick": "Slowly repairs itself",
+  "magical_relics.artifact_ability.magical_relics.repair_others.description.use": "Repairs other non-artifacts when used",
+  "magical_relics.artifact_ability.magical_relics.repair_others.description.armor_tick": "Slowly repairs other non-artifacts when equipped",
+  "magical_relics.artifact_ability.magical_relics.repair_others.description.held": "Slowly repairs other non-artifacts when held",
 
 
   "magical_relics.ability.mundane_prefix": "Mundane",
@@ -251,5 +257,13 @@
   "magical_relics.artifact_ability.magical_relics.resurrect.prefix.regenerative": "Regenerative",
   "magical_relics.artifact_ability.magical_relics.resurrect.prefix.invigorating": "Invigorating",
   "magical_relics.artifact_ability.magical_relics.resurrect.suffix.resurrection": "of Resurrection",
-  "magical_relics.artifact_ability.magical_relics.resurrect.suffix.lazarus": "of Lazarus"
+  "magical_relics.artifact_ability.magical_relics.resurrect.suffix.lazarus": "of Lazarus",
+
+  "magical_relics.artifact_ability.magical_relics.self_repair.prefix.repairing": "Repairing",
+  "magical_relics.artifact_ability.magical_relics.self_repair.prefix.recharging": "Recharging",
+  "magical_relics.artifact_ability.magical_relics.self_repair.suffix.renewal": "of Renewal",
+
+  "magical_relics.artifact_ability.magical_relics.repair_others.prefix.repairing": "Repairing",
+  "magical_relics.artifact_ability.magical_relics.repair_others.prefix.recharging": "Recharging",
+  "magical_relics.artifact_ability.magical_relics.repair_others.suffix.renewal": "of Renewal"
 }

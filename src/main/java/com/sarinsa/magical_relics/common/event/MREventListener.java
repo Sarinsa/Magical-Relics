@@ -21,10 +21,20 @@ public class MREventListener {
     private static int timeNextServerTick = 0;
     private static final int serverTickDelay = 10;
 
+    private static int repairTick;
+
+
+    public static int getRepairTick() {
+        return repairTick;
+    }
+
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
+            if (++repairTick >= 1200)
+                repairTick = 0;
+
             ++timeNextServerTick;
 
             if (timeNextServerTick >= serverTickDelay) {

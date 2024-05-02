@@ -37,6 +37,8 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> GLOW_VISION = register("glow_vision", GlowVisionAbility::new);
     public static final RegistryObject<BaseArtifactAbility> JUMP_BOOST = register("jump_boost", JumpBoostAbility::new);
     public static final RegistryObject<BaseArtifactAbility> RESURRECT = register("resurrect", ResurrectAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> SELF_REPAIR = register("self_repair", SelfRepairAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> REPAIR_OTHERS = register("repair_others", RepairOthersAbility::new);
 
 
     private static RegistryObject<BaseArtifactAbility> register(String name, Supplier<BaseArtifactAbility> supplier) {
