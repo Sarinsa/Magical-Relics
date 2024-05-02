@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;

@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.item;
 
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -37,7 +38,7 @@ public class ArtifactArmorItem extends ArmorItem implements ItemArtifact {
 
     @Override
     public void onArmorTick(ItemStack stack, Level level, Player player) {
-        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.ARMOR_TICK, stack);
+        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.ARMOR_TICK, stack);
 
         if (ability != null)
             ability.onArmorTick(stack, level, player);

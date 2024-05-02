@@ -7,6 +7,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
+import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.command.argument.AbilityArgument;
 import com.sarinsa.magical_relics.common.command.argument.ArtifactCategoryArgument;
 import com.sarinsa.magical_relics.common.command.argument.TriggerTypeArgument;
@@ -82,7 +83,7 @@ public class MRBaseCommand {
         //TODO - Instead of having 2 ugly blocks of code in two different classes that almost does the same thing,
         //       lets consider making a more generalized method in ArtifactUtils that handles both random AND manual
         //       artifact creation, cause we all know I will forget and everything will explode at some point.
-        private static int applyAbility(CommandSourceStack source, BaseArtifactAbility ability, BaseArtifactAbility.TriggerType triggerType) {
+        private static int applyAbility(CommandSourceStack source, BaseArtifactAbility ability, TriggerType triggerType) {
             if (source.getPlayer() == null) {
                 source.sendFailure(Component.translatable(References.PLAYER_ONLY_CMD));
                 return 0;
@@ -99,7 +100,7 @@ public class MRBaseCommand {
                 source.sendFailure(Component.translatable(References.ABILITY_APPLY_ERROR_2));
                 return 0;
             }
-            Map<BaseArtifactAbility, BaseArtifactAbility.TriggerType> currentAbilities = ArtifactUtils.getAllAbilities(itemStack);
+            Map<BaseArtifactAbility, TriggerType> currentAbilities = ArtifactUtils.getAllAbilities(itemStack);
 
             // Make sure necessary NBT keys exist on the ItemStack
             CompoundTag stackTag = itemStack.getOrCreateTag();

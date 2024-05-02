@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
+import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
@@ -242,7 +243,7 @@ public class ArtifactUtils {
         if (toApply.length <= 0)
             return new BaseArtifactAbility[0];
 
-        Map<BaseArtifactAbility, BaseArtifactAbility.TriggerType> currentAbilities = getAllAbilities(itemStack);
+        Map<BaseArtifactAbility, TriggerType> currentAbilities = getAllAbilities(itemStack);
 
         // Make sure necessary NBT keys exist on the ItemStack
         CompoundTag stackTag = itemStack.getOrCreateTag();
@@ -259,14 +260,14 @@ public class ArtifactUtils {
             modDataTag.put(ATTRIBUTE_MODS_KEY, new ListTag());
 
         List<BaseArtifactAbility> successfullyApplied = new ArrayList<>();
-        List<BaseArtifactAbility.TriggerType> occupiedTriggers = new ArrayList<>();
+        List<TriggerType> occupiedTriggers = new ArrayList<>();
 
         for (BaseArtifactAbility nextToApply : toApply) {
             // Skip if the item already has the ability
             if (currentAbilities.containsKey(nextToApply)) continue;
 
             // TODO - Don't forget about changing this once armor is incorporated into this whole thingamajig
-            BaseArtifactAbility.TriggerType randomTrigger = nextToApply.getRandomTrigger(random, false);
+            TriggerType randomTrigger = nextToApply.getRandomTrigger(random, false);
 
             // No suitable trigger found, skip to next ability
             if (randomTrigger == null) continue;
@@ -343,8 +344,8 @@ public class ArtifactUtils {
      *         return null otherwise.
      */
     @Nullable
-    public static BaseArtifactAbility.TriggerType getTriggerFromStack(ItemStack artifact, BaseArtifactAbility ability) {
-        Map<BaseArtifactAbility, BaseArtifactAbility.TriggerType> allAbilities = getAllAbilities(artifact);
+    public static TriggerType getTriggerFromStack(ItemStack artifact, BaseArtifactAbility ability) {
+        Map<BaseArtifactAbility, TriggerType> allAbilities = getAllAbilities(artifact);
 
         for (BaseArtifactAbility abilityToCheck : allAbilities.keySet()) {
             if (abilityToCheck == ability)
@@ -357,10 +358,10 @@ public class ArtifactUtils {
      * @return All abilities on the artifact item stack with the given TriggerType
      */
     @Nullable
-    public static BaseArtifactAbility getAbilityWithTrigger(BaseArtifactAbility.TriggerType type, ItemStack itemStack) {
+    public static BaseArtifactAbility getAbilityWithTrigger(TriggerType type, ItemStack itemStack) {
         if (itemStack.isEmpty()) return null;
 
-        Map<BaseArtifactAbility, BaseArtifactAbility.TriggerType> abilities = getAllAbilities(itemStack);
+        Map<BaseArtifactAbility, TriggerType> abilities = getAllAbilities(itemStack);
 
         if (abilities.isEmpty()) return null;
 
@@ -372,7 +373,7 @@ public class ArtifactUtils {
     }
 
     public static boolean hasAbility(ItemStack itemStack, BaseArtifactAbility ability) {
-        Map<BaseArtifactAbility, BaseArtifactAbility.TriggerType> abilities = getAllAbilities(itemStack);
+        Map<BaseArtifactAbility, TriggerType> abilities = getAllAbilities(itemStack);
         if (abilities.isEmpty()) return false;
         return abilities.containsKey(ability);
     }
@@ -382,8 +383,8 @@ public class ArtifactUtils {
      *         return null, but will return an empty List if no abilities are found.
      */
     @Nonnull
-    public static Map<BaseArtifactAbility, BaseArtifactAbility.TriggerType> getAllAbilities(ItemStack itemStack) {
-        Map<BaseArtifactAbility, BaseArtifactAbility.TriggerType> abilities = new HashMap<>();
+    public static Map<BaseArtifactAbility, TriggerType> getAllAbilities(ItemStack itemStack) {
+        Map<BaseArtifactAbility, TriggerType> abilities = new HashMap<>();
         CompoundTag stackTag = itemStack.getOrCreateTag();
 
         if (!stackTag.contains(MOD_DATA_KEY) || !stackTag.getCompound(MOD_DATA_KEY).contains(ABILITY_KEY)) return abilities;
@@ -392,7 +393,7 @@ public class ArtifactUtils {
 
         for (int i = 0; i < abilitiesTag.size(); i++) {
             ResourceLocation abilityId = ResourceLocation.tryParse(abilitiesTag.getCompound(i).getString("AbilityId"));
-            BaseArtifactAbility.TriggerType triggerType = BaseArtifactAbility.TriggerType.getFromName(abilitiesTag.getCompound(i).getString("TriggerType"));
+            TriggerType triggerType = TriggerType.getFromName(abilitiesTag.getCompound(i).getString("TriggerType"));
 
             if (MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().containsKey(abilityId)) {
                 abilities.put(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValue(abilityId), triggerType);
@@ -407,7 +408,7 @@ public class ArtifactUtils {
      * {@link com.sarinsa.magical_relics.common.item.ArtifactArmorItem#appendHoverText(ItemStack, Level, List, TooltipFlag)}
      */
     public static void addDescriptionsToTooltip(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
-        Map<BaseArtifactAbility, BaseArtifactAbility.TriggerType> abilities = ArtifactUtils.getAllAbilities(itemStack);
+        Map<BaseArtifactAbility, TriggerType> abilities = ArtifactUtils.getAllAbilities(itemStack);
         
         if (!abilities.isEmpty()) {
             components.add(Component.literal(" "));

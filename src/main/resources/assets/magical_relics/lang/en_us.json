@@ -143,6 +143,7 @@
   "magical_relics.artifact_ability.magical_relics.jump_boost.description.use": "Grants Jump Boost for %1$s seconds when used",
   "magical_relics.artifact_ability.magical_relics.jump_boost.description.user_attacking": "Grants Jump Boost for %1$s seconds when dealing damage",
   "magical_relics.artifact_ability.magical_relics.jump_boost.description.inventory_tick": "Grants Jump Boost",
+  "magical_relics.artifact_ability.magical_relics.resurrect.description": "Allows cheating death when held or equipped",
 
 
   "magical_relics.ability.mundane_prefix": "Mundane",
@@ -245,5 +246,10 @@
   "magical_relics.artifact_ability.magical_relics.jump_boost.prefix.jumpy": "Jumpy",
   "magical_relics.artifact_ability.magical_relics.jump_boost.prefix.bouncing": "Bouncing",
   "magical_relics.artifact_ability.magical_relics.jump_boost.suffix.leaping": "of Leaping",
-  "magical_relics.artifact_ability.magical_relics.jump_boost.suffix.lightness": "of Lightness"
+  "magical_relics.artifact_ability.magical_relics.jump_boost.suffix.lightness": "of Lightness",
+
+  "magical_relics.artifact_ability.magical_relics.resurrect.prefix.regenerative": "Regenerative",
+  "magical_relics.artifact_ability.magical_relics.resurrect.prefix.invigorating": "Invigorating",
+  "magical_relics.artifact_ability.magical_relics.resurrect.suffix.resurrection": "of Resurrection",
+  "magical_relics.artifact_ability.magical_relics.resurrect.suffix.lazarus": "of Lazarus"
 }

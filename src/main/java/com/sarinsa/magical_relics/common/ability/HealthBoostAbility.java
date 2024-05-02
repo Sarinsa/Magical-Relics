@@ -3,6 +3,7 @@ package com.sarinsa.magical_relics.common.ability;
 import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
+import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

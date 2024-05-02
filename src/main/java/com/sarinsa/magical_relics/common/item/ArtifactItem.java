@@ -3,6 +3,7 @@ package com.sarinsa.magical_relics.common.item;
 import com.google.common.collect.Multimap;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -46,7 +47,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
-        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.USE, heldItem);
+        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.USE, heldItem);
 
         if (ability != null) {
             if (ability.onUse(level, player, heldItem)) {
@@ -63,7 +64,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
         BlockPos pos = context.getClickedPos();
         BlockState clickedState = level.getBlockState(pos);
         Player player = context.getPlayer();
-        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.RIGHT_CLICK_BLOCK, heldItem);
+        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.RIGHT_CLICK_BLOCK, heldItem);
 
         // Help prevent stupid things from happening
         // when holding a potentially dangerous artifact
@@ -88,7 +89,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem) {
-        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(BaseArtifactAbility.TriggerType.INVENTORY_TICK, itemStack);
+        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.INVENTORY_TICK, itemStack);
 
         if (ability != null) {
             ability.onInventoryTick(itemStack, level, entity, slot, isSelectedItem);
