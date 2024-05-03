@@ -171,6 +171,7 @@
   "magical_relics.artifact_ability.magical_relics.repair_others.description.use": "Repairs other non-artifacts when used",
   "magical_relics.artifact_ability.magical_relics.repair_others.description.armor_tick": "Slowly repairs other non-artifacts when equipped",
   "magical_relics.artifact_ability.magical_relics.repair_others.description.held": "Slowly repairs other non-artifacts when held",
+  "magical_relics.artifact_ability.magical_relics.tnt.description": "Summons an explosive when right-clicking a block",
 
 
   "magical_relics.ability.mundane_prefix": "Mundane",
@@ -286,5 +287,11 @@
 
   "magical_relics.artifact_ability.magical_relics.repair_others.prefix.repairing": "Repairing",
   "magical_relics.artifact_ability.magical_relics.repair_others.prefix.recharging": "Recharging",
-  "magical_relics.artifact_ability.magical_relics.repair_others.suffix.renewal": "of Renewal"
+  "magical_relics.artifact_ability.magical_relics.repair_others.suffix.renewal": "of Renewal",
+
+  "magical_relics.artifact_ability.magical_relics.tnt.prefix.demolishing": "Demolishing",
+  "magical_relics.artifact_ability.magical_relics.tnt.prefix.explosive": "Explosive",
+  "magical_relics.artifact_ability.magical_relics.tnt.suffix.booms": "of Booms",
+  "magical_relics.artifact_ability.magical_relics.tnt.suffix.combusting": "of Combusting",
+  "magical_relics.artifact_ability.magical_relics.tnt.suffix.explotando": "of Explotando"
 }
