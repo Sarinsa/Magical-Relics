@@ -57,9 +57,7 @@ public class AirSneakAbility extends BaseArtifactAbility {
                 if (level.getBlockState(belowPos).isAir() && !level.getBlockState(belowPos).is(MRBlocks.SOLID_AIR.get())) {
                     level.setBlock(belowPos, MRBlocks.SOLID_AIR.get().defaultBlockState(), Block.UPDATE_ALL);
                     level.scheduleTick(belowPos, MRBlocks.SOLID_AIR.get(), 20);
-
-                    if (!player.isCreative())
-                        heldArtifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                    heldArtifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
             }
             else {

@@ -62,10 +62,7 @@ public class GlowVisionAbility extends BaseArtifactAbility {
                     livingEntity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 180));
                 }
                 level.playSound(null, player.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.PLAYERS, 1.0F, 0.9F + (level.random.nextFloat() / 3));
-
-                if (!player.isCreative()) {
-                    artifact.hurtAndBreak(3, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                }
+                artifact.hurtAndBreak(3, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
             ArtifactUtils.setAbilityCooldown(artifact, this, 400);
             return true;

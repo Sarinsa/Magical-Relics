@@ -63,7 +63,7 @@ public class NightVisionAbility extends BaseArtifactAbility {
         if (!ArtifactUtils.isAbilityOnCooldown(itemStack, this)) {
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, USE_EFFECT_DURATION));
 
-            itemStack.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
+            itemStack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
 
             ArtifactUtils.setAbilityCooldown(itemStack, this, USE_EFFECT_DURATION);
             return true;

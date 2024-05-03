@@ -49,7 +49,7 @@ public class ObscurityAbility extends BaseArtifactAbility {
     @Override
     public boolean onUse(Level level, Player player, ItemStack artifact) {
         if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-            artifact.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
+            artifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
 
             if (!player.level.isClientSide)
                 player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, EFFECT_DURATION));

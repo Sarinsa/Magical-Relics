@@ -63,7 +63,7 @@ public class FireballAbility extends BaseArtifactAbility {
                 RandomSource random = level.random;
                 level.playSound(null, player.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0F, (random.nextFloat() -random.nextFloat()) * 0.2F + 1.0F);
             }
-            itemStack.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
+            itemStack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
 
             ArtifactUtils.setAbilityCooldown(itemStack, this, 20);
             return true;
