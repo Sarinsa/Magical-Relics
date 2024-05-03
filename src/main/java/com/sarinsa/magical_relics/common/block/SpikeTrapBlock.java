@@ -26,7 +26,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("all")
 public class SpikeTrapBlock extends Block {
 
-    private static final VoxelShape shape = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D);
+    private static final VoxelShape shape = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
+    private static final VoxelShape collisionShape = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D);
 
     public SpikeTrapBlock() {
         super(BlockBehaviour.Properties.of(Material.METAL)
@@ -40,6 +41,11 @@ public class SpikeTrapBlock extends Block {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return shape;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return collisionShape;
     }
 
     @Override
