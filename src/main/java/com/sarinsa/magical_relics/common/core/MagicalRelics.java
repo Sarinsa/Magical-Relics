@@ -11,6 +11,7 @@ import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import com.sarinsa.magical_relics.common.worldgen.WorldgenHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -35,7 +36,10 @@ public class MagicalRelics {
     //
     // - Curios integration
     //
-
+    // - More configurability for the anti-builder (specific blocked actions, blocked abilities etc.)
+    //
+    // - Revisit attribute mods provided by abilities (might be broken in some cases)
+    //
 
     public static final String MODID = "magical_relics";
     public static final Logger LOG = LogManager.getLogger(MODID);
