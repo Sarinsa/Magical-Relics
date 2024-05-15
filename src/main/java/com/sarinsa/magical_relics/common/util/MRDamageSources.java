@@ -5,6 +5,7 @@ import net.minecraft.world.damagesource.DamageSource;
 
 public class MRDamageSources {
 
+    public static final DamageSource QUICKSAND = new DamageSource(name("quicksand")).bypassArmor().bypassMagic();
     public static final DamageSource SPIKES = new DamageSource(name("spikes")).bypassArmor().bypassEnchantments().bypassMagic();
     public static final DamageSource SWUNG_SWORD = new DamageSource(name("swung_sword"));
 

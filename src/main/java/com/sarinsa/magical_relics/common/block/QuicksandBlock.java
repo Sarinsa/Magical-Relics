@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.block;
 
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.util.DirectionUtil;
+import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -10,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -94,8 +96,10 @@ public class QuicksandBlock extends Block {
         entity.makeStuckInBlock(state, new Vec3(0.5D, 0.2D, 0.5D));
 
         if (entity instanceof LivingEntity livingEntity) {
-            if (level.getBlockState(pos.above((int) livingEntity.getEyeHeight())).is(this)) {
-                livingEntity.setAirSupply(livingEntity.decreaseAirSupply(livingEntity.getAirSupply()));
+            BlockPos eyePos = new BlockPos(livingEntity.getX(), livingEntity.getEyeY(), livingEntity.getZ());
+
+            if (level.getBlockState(eyePos).is(this)) {
+                livingEntity.hurt(MRDamageSources.QUICKSAND, 1.0F);
             }
         }
     }
