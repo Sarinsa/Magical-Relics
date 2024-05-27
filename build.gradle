@@ -87,8 +87,13 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     runtimeOnly fg.deobf("com.telepathicgrunt:StructureVoidToggle-Forge:${structurevt_version}+${mc_version}")
-    runtimeOnly fg.deobf("curse.maven:jei-238222:${jei_version}")
     implementation fg.deobf("curse.maven:worldedit-225608:${we_version}")
+
+    // compile against the JEI API but do not include it at runtime
+    compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
+    // at runtime, use the full JEI jar for Forge
+    runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
