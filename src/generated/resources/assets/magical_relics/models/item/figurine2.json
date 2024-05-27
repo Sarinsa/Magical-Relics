@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "magical_relics:item/figurine/figurine2",
-    "layer1": "magical_relics:item/figurine/figurine2_overlay"
-  }
-}

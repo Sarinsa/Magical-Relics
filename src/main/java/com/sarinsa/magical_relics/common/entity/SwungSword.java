@@ -1,10 +1,11 @@
 package com.sarinsa.magical_relics.common.entity;
 
+import com.sarinsa.magical_relics.common.core.registry.MRDamageTypes;
 import com.sarinsa.magical_relics.common.core.registry.MREntities;
-import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -14,9 +15,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
-import net.minecraft.world.entity.decoration.ItemFrame;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
@@ -88,8 +86,8 @@ public class SwungSword extends Entity {
     }
 
     private void performAttack() {
-        if (!level.isClientSide) {
-            level.playSound(null, blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.BLOCKS, 1.0F, 1.0F);
+        if (!level().isClientSide) {
+            level().playSound(null, blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             AABB aabb = new AABB(blockPosition()).inflate(0.2D);
             float damage = 1.0F;
@@ -98,8 +96,8 @@ public class SwungSword extends Entity {
                 damage = swordItem.getDamage();
             }
 
-            for (LivingEntity livingEntity : level.getEntitiesOfClass(LivingEntity.class, aabb)) {
-                livingEntity.hurt(MRDamageSources.SWUNG_SWORD, damage);
+            for (LivingEntity livingEntity : level().getEntitiesOfClass(LivingEntity.class, aabb)) {
+                livingEntity.hurt(MRDamageTypes.of(level(), MRDamageTypes.SWUNG_SWORD), damage);
             }
         }
     }
@@ -123,7 +121,7 @@ public class SwungSword extends Entity {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

@@ -18,9 +18,11 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,17 +65,16 @@ public class CashoutAbility extends BaseArtifactAbility {
     @Override
     public boolean onDropped(Level level, ItemEntity itemEntity, Player player) {
         if (level instanceof ServerLevel serverLevel) {
-            LootTable lootTable = serverLevel.getServer().getLootTables().get(LOOT_TABLE);
+            LootTable lootTable = serverLevel.getServer().getLootData().getLootTable(LOOT_TABLE);
 
             if (lootTable == LootTable.EMPTY)
                 return false;
 
-            LootContext.Builder builder = new LootContext.Builder(serverLevel)
-                    .withRandom(serverLevel.random)
+            LootParams.Builder paramsBuilder = (new LootParams.Builder(serverLevel))
                     .withParameter(LootContextParams.ORIGIN, itemEntity.position())
-                    .withParameter(LootContextParams.THIS_ENTITY, player);
+                    .withOptionalParameter(LootContextParams.THIS_ENTITY, player);
 
-            ObjectArrayList<ItemStack> loot = lootTable.getRandomItems(builder.create(LootContextParamSets.GIFT));
+            ObjectArrayList<ItemStack> loot = lootTable.getRandomItems(paramsBuilder.create(LootContextParamSets.GIFT));
 
             for (ItemStack itemStack : loot) {
                 Block.popResource(serverLevel, itemEntity.blockPosition(), itemStack);

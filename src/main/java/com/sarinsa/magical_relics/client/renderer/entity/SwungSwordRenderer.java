@@ -1,7 +1,7 @@
 package com.sarinsa.magical_relics.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.sarinsa.magical_relics.common.entity.SwungSword;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class SwungSwordRenderer extends EntityRenderer<SwungSword> {
@@ -39,16 +40,16 @@ public class SwungSwordRenderer extends EntityRenderer<SwungSword> {
         poseStack.translate(0.0D, 0.5D, 0.0D);
 
         if (direction == Direction.UP) {
-            poseStack.mulPose(Vector3f.ZN.rotationDegrees(45.0F));
+            poseStack.mulPose(Axis.ZN.rotationDegrees(45.0F));
         }
         else if (direction == Direction.DOWN) {
-            poseStack.mulPose(Vector3f.ZN.rotationDegrees(225.0F));
+            poseStack.mulPose(Axis.ZN.rotationDegrees(225.0F));
         }
         else {
-            poseStack.mulPose(Vector3f.XN.rotationDegrees(90.0F));
-            poseStack.mulPose(Vector3f.ZN.rotationDegrees(direction.toYRot() - 135.0F));
+            poseStack.mulPose(Axis.XN.rotationDegrees(90.0F));
+            poseStack.mulPose(Axis.ZN.rotationDegrees(direction.toYRot() - 135.0F));
         }
-        Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemTransforms.TransformType.FIXED, packedLight, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, sword.getId());
+        Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemDisplayContext.FIXED, packedLight, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, sword.level(), sword.getId());
 
         poseStack.popPose();
     }

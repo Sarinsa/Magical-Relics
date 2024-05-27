@@ -18,7 +18,7 @@ import java.util.List;
 public class MRItemModelProvider extends ItemModelProvider {
 
     public MRItemModelProvider(DataGenerator generator, ExistingFileHelper fileHelper) {
-        super(generator, MagicalRelics.MODID, fileHelper);
+        super(generator.getPackOutput(), MagicalRelics.MODID, fileHelper);
     }
 
     @Override

@@ -35,12 +35,12 @@ public class DisplayPedestalProcessor extends StructureProcessor {
     @SuppressWarnings("ConstantConditions")
     @Nullable
     public StructureTemplate.StructureBlockInfo process(LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template) {
-        RandomSource random = structureSettings.getRandom(blockInfo.pos);
-        BlockState blockstate = blockInfo.state;
-        BlockPos blockpos = blockInfo.pos;
+        RandomSource random = structureSettings.getRandom(blockInfo.pos());
+        BlockState blockstate = blockInfo.state();
+        BlockPos blockpos = blockInfo.pos();
 
         boolean isDisplayPedestal = blockstate.is(MRBlocks.DISPLAY_PEDESTAL.get());
-        CompoundTag tag = blockInfo.nbt;
+        CompoundTag tag = blockInfo.nbt();
 
         if (isDisplayPedestal) {
             if (tag == null) tag = new CompoundTag();

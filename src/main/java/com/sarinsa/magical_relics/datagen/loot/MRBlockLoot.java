@@ -1,20 +1,26 @@
 package com.sarinsa.magical_relics.datagen.loot;
 
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
-import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class MRBlockLoot extends BlockLoot {
+public class MRBlockLoot extends BlockLootSubProvider {
 
     private final Set<Block> knownBlocks = new HashSet<>();
 
+    protected MRBlockLoot(Set<Item> set, FeatureFlagSet flagSet) {
+        super(set, flagSet);
+    }
+
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return this.knownBlocks;
+        return knownBlocks;
     }
 
     @Override
@@ -24,7 +30,7 @@ public class MRBlockLoot extends BlockLoot {
     }
 
     @Override
-    protected void addTables() {
+    protected void generate() {
         MRBlocks.WALL_PRESSURE_PLATES.keySet().forEach(block -> dropSelf(block.get()));
 
         dropSelf(MRBlocks.SPIKE_TRAP.get());

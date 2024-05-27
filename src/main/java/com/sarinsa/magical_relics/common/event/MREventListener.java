@@ -55,7 +55,7 @@ public class MREventListener {
     @SubscribeEvent
     public void onPlayerDropItem(ItemTossEvent event) {
         ItemEntity tossedItem = event.getEntity();
-        Level level = event.getEntity().level;
+        Level level = event.getEntity().level();
         Player player = event.getPlayer();
         BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.DROPPED, tossedItem.getItem());
 
@@ -70,7 +70,7 @@ public class MREventListener {
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
-        Level level = player.getLevel();
+        Level level = player.level();
         BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.HELD, heldItem);
 
         if (ability != null) {
@@ -95,7 +95,7 @@ public class MREventListener {
                 BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.USER_DAMAGED, artifact);
 
                 if (ability != null)
-                    ability.onUserDamaged(player.level, player, event.getSource(), artifact);
+                    ability.onUserDamaged(player.level(), player, event.getSource(), artifact);
             }
         }
     }
@@ -108,7 +108,7 @@ public class MREventListener {
                 BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.ON_DEATH, artifact);
 
                 if (ability != null)
-                    ability.onDeath(player.level, player, slot, artifact, event);
+                    ability.onDeath(player.level(), player, slot, artifact, event);
             }
         }
     }

@@ -11,19 +11,20 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class AntiBuilderBlock extends Block implements EntityBlock {
 
     public AntiBuilderBlock() {
-        super(BlockBehaviour.Properties.of(Material.STONE)
+        super(BlockBehaviour.Properties.of()
                 .strength(1.0F, 3600000.0F)
                 .sound(SoundType.STONE)
                 .destroyTime(0.5F)

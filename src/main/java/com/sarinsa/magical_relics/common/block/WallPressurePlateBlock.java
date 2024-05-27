@@ -11,6 +11,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.AABB;
@@ -47,8 +48,8 @@ public class WallPressurePlateBlock extends PressurePlateBlock {
     };
 
 
-    public WallPressurePlateBlock(Properties properties) {
-        super(Sensitivity.EVERYTHING, properties.noOcclusion().noCollission());
+    public WallPressurePlateBlock(Properties properties, BlockSetType blockSetType) {
+        super(Sensitivity.EVERYTHING, properties.noOcclusion().noCollission(), blockSetType);
         registerDefaultState(stateDefinition.any().setValue(POWERED, false).setValue(FACING, Direction.NORTH));
     }
 

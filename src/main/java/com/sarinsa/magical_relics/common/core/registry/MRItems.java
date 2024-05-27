@@ -4,8 +4,11 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
 import com.sarinsa.magical_relics.common.item.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -18,6 +21,8 @@ public class MRItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MagicalRelics.MODID);
 
+    public static final Map<ResourceKey<CreativeModeTab>, List<RegistryObject<? extends Item>>> TAB_ITEMS = new HashMap<>();
+
     public static final List<ArtifactSet<List<RegistryObject<Item>>>> ALL_ARTIFACTS = new ArrayList<>();
     public static final Map<ArtifactCategory, List<RegistryObject<? extends Item>>> ARTIFACTS_BY_CATEGORY = new HashMap<>();
 
@@ -27,35 +32,16 @@ public class MRItems {
         }
     }
 
-    public static class MRCreativeTab extends CreativeModeTab {
-
-        public static final CreativeModeTab MOD_TAB = new MRCreativeTab("all", () -> new ItemStack(MRBlocks.DISPLAY_PEDESTAL.get()));
-
-
-        private MRCreativeTab(String label, Supplier<ItemStack> itemIcon) {
-            super(MagicalRelics.MODID + "_" + label);
-            this.itemIcon = itemIcon;
-        }
-        private final Supplier<ItemStack> itemIcon;
-
-        @Override
-        @Nonnull
-        public ItemStack makeIcon() {
-            return itemIcon.get();
-        }
-    }
-
-
-    public static final RegistryObject<Item> RANDOM_ARTIFACT = register("random_artifact", () -> new RandomArtifactItem(new Item.Properties().stacksTo(1).tab(MRCreativeTab.MOD_TAB)));
-    public static final RegistryObject<Item> QUICKSAND_BUCKET = register("quicksand_bucket", () -> new BlockBucketItem(MRBlocks.QUICKSAND, new Item.Properties().stacksTo(1).tab(MRCreativeTab.MOD_TAB)));
-    public static final RegistryObject<Item> THICK_TRIPWIRE = register("thick_tripwire", () -> new BlockItem(MRBlocks.THICK_TRIPWIRE.get(), new Item.Properties().tab(MRCreativeTab.MOD_TAB)));
-    public static final RegistryObject<Item> RAW_MANAESSENCE = register("raw_manaessence", () -> new Item(new Item.Properties().tab(MRCreativeTab.MOD_TAB)));
-    public static final RegistryObject<Item> WOOD_MANAESSENCE = register("wood_manaessence", () -> new Item(new Item.Properties().tab(MRCreativeTab.MOD_TAB)));
-    public static final RegistryObject<Item> LEATHER_MANAESSENCE = register("leather_manaessence", () -> new Item(new Item.Properties().tab(MRCreativeTab.MOD_TAB)));
-    public static final RegistryObject<Item> STONE_MANAESSENCE = register("stone_manaessence", () -> new Item(new Item.Properties().tab(MRCreativeTab.MOD_TAB)));
-    public static final RegistryObject<Item> IRON_MANAESSENCE = register("iron_manaessence", () -> new Item(new Item.Properties().tab(MRCreativeTab.MOD_TAB)));
-    public static final RegistryObject<Item> GOLD_MANAESSENCE = register("gold_manaessence", () -> new Item(new Item.Properties().tab(MRCreativeTab.MOD_TAB)));
-    public static final RegistryObject<Item> DIAMOND_MANAESSENCE = register("diamond_manaessence", () -> new Item(new Item.Properties().tab(MRCreativeTab.MOD_TAB)));
+    public static final RegistryObject<Item> RANDOM_ARTIFACT = register("random_artifact", () -> new RandomArtifactItem(new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> QUICKSAND_BUCKET = register("quicksand_bucket", () -> new BlockBucketItem(MRBlocks.QUICKSAND, new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> THICK_TRIPWIRE = register("thick_tripwire", () -> new BlockItem(MRBlocks.THICK_TRIPWIRE.get(), new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> RAW_MANAESSENCE = register("raw_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> WOOD_MANAESSENCE = register("wood_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> LEATHER_MANAESSENCE = register("leather_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> STONE_MANAESSENCE = register("stone_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> IRON_MANAESSENCE = register("iron_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> GOLD_MANAESSENCE = register("gold_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> DIAMOND_MANAESSENCE = register("diamond_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
 
     public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> LEATHER_ARTIFACT_ARMOR = artifactArmorSet("leather", ArtifactArmorMaterials.LEATHER);
     public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> IRON_ARTIFACT_ARMOR = artifactArmorSet("iron", ArtifactArmorMaterials.IRON);
@@ -102,10 +88,10 @@ public class MRItems {
 
     private static Map<EquipmentSlot, RegistryObject<ArmorItem>> artifactArmorSet(String name, ArmorMaterial material) {
         Map<EquipmentSlot, RegistryObject<ArmorItem>> armorSet = new HashMap<>();
-        armorSet.put(EquipmentSlot.FEET, register(name + "_boots_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.BOOTS, EquipmentSlot.FEET, new Item.Properties().stacksTo(1))));
-        armorSet.put(EquipmentSlot.LEGS, register(name + "_leggings_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.LEGGINGS, EquipmentSlot.LEGS, new Item.Properties().stacksTo(1))));
-        armorSet.put(EquipmentSlot.CHEST, register(name + "_chestplate_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.CHESTPLATE, EquipmentSlot.CHEST, new Item.Properties().stacksTo(1))));
-        armorSet.put(EquipmentSlot.HEAD, register(name + "_helmet_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.HELMET, EquipmentSlot.HEAD, new Item.Properties().stacksTo(1))));
+        armorSet.put(EquipmentSlot.FEET, register(name + "_boots_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.BOOTS, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1))));
+        armorSet.put(EquipmentSlot.LEGS, register(name + "_leggings_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.LEGGINGS, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1))));
+        armorSet.put(EquipmentSlot.CHEST, register(name + "_chestplate_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.CHESTPLATE, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1))));
+        armorSet.put(EquipmentSlot.HEAD, register(name + "_helmet_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.HELMET, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1))));
         ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.BOOTS).add(armorSet.get(EquipmentSlot.FEET));
         ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.LEGGINGS).add(armorSet.get(EquipmentSlot.LEGS));
         ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.CHESTPLATE).add(armorSet.get(EquipmentSlot.CHEST));
@@ -113,7 +99,33 @@ public class MRItems {
         return armorSet;
     }
 
-    private static <T extends Item> RegistryObject<T> register(String name, Supplier<T> item) {
-        return ITEMS.register(name, item);
+    @SafeVarargs
+    protected static <T extends Item> RegistryObject<T> register(String name, Supplier<T> item, ResourceKey<CreativeModeTab>... creativeTabs) {
+        RegistryObject<T> regObj = ITEMS.register(name, item);
+        queueForCreativeTabs(regObj, creativeTabs);
+        return regObj;
+    }
+
+    @SafeVarargs
+    protected static void queueForCreativeTabs(RegistryObject<? extends Item> item, ResourceKey<CreativeModeTab>... creativeTabs) {
+        for (ResourceKey<CreativeModeTab> tab : creativeTabs) {
+            if (!TAB_ITEMS.containsKey(tab)) {
+                List<RegistryObject<? extends Item>> list = new ArrayList<>();
+                list.add(item);
+                TAB_ITEMS.put(tab, list);
+            } else {
+                TAB_ITEMS.get(tab).add(item);
+            }
+        }
+    }
+
+    /**
+     * Called when creative tabs gets populated with items.
+     */
+    public static void onCreativeTabPopulate(BuildCreativeModeTabContentsEvent event) {
+        if (TAB_ITEMS.containsKey(event.getTabKey())) {
+            List<RegistryObject<? extends Item>> items = TAB_ITEMS.get(event.getTabKey());
+            items.forEach((regObj) -> event.accept(regObj.get()));
+        }
     }
 }

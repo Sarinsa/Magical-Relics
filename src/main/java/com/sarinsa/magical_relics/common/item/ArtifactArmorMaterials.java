@@ -6,6 +6,7 @@ import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -47,22 +48,22 @@ public enum ArtifactArmorMaterials implements ArmorMaterial {
     }
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlot slot) {
-        return switch (slot) {
-            case LEGS -> durabilityMult * HEALTH_PER_SLOT[1];
-            case CHEST -> durabilityMult * HEALTH_PER_SLOT[2];
-            case HEAD -> durabilityMult * HEALTH_PER_SLOT[3];
-            default -> durabilityMult * HEALTH_PER_SLOT[0];
+    public int getDurabilityForType(ArmorItem.Type type) {
+        return switch (type) {
+            case LEGGINGS -> durabilityMult * HEALTH_PER_SLOT[1];
+            case CHESTPLATE -> durabilityMult * HEALTH_PER_SLOT[2];
+            case HELMET -> durabilityMult * HEALTH_PER_SLOT[3];
+            case BOOTS -> durabilityMult * HEALTH_PER_SLOT[0];
         };
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlot slot) {
-        return switch (slot) {
-            case LEGS -> defense[1];
-            case CHEST -> defense[2];
-            case HEAD -> defense[3];
-            default -> defense[0];
+    public int getDefenseForType(ArmorItem.Type type) {
+        return switch (type) {
+            case LEGGINGS -> defense[1];
+            case CHESTPLATE -> defense[2];
+            case HELMET -> defense[3];
+            case BOOTS -> defense[0];
         };
     }
 

@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -62,14 +63,14 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
 
     @Override
     public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
-        if (!player.level.isClientSide)
+        if (!player.level().isClientSide)
             player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, ATTACK_EFFECT_DURATION));
     }
 
     @Override
     public void onUserDamaged(Level level, Player player, DamageSource damageSource, ItemStack artifact) {
-        if (damageSource == DamageSource.DROWN) {
-            if (!player.level.isClientSide)
+        if (damageSource == level.damageSources().drown()) {
+            if (!player.level().isClientSide)
                 player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, DROWN_EFFECT_DURATION));
         }
     }
@@ -84,7 +85,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
         if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
             artifact.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
 
-            if (!player.level.isClientSide)
+            if (!player.level().isClientSide)
                 player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, USE_EFFECT_DURATION));
 
             ArtifactUtils.setAbilityCooldown(artifact, this, 400);
@@ -95,7 +96,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
 
     @Override
     public void onHeld(Level level, Player player, ItemStack artifact) {
-        if (!player.level.isClientSide)
+        if (!player.level().isClientSide)
             player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, PASSIVE_EFFECT_DURATION));
     }
 

@@ -4,9 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,7 +18,7 @@ import java.util.function.Consumer;
 public abstract class AbstractTextField<T> extends EditBox {
 
     private final MutableComponent descriptor;
-    private final Button.OnTooltip tooltip;
+    private final Tooltip tooltip;
     private T currentValue;
 
     protected final T defaultValue;
@@ -27,7 +28,7 @@ public abstract class AbstractTextField<T> extends EditBox {
     private boolean isValueValid = true;
 
 
-    public AbstractTextField(Font fontRenderer, T defaultValue, T minValue, T maxValue, int x, int y, int width, int height, @Nullable MutableComponent descriptor, @Nullable Button.OnTooltip tooltip) {
+    public AbstractTextField(Font fontRenderer, T defaultValue, T minValue, T maxValue, int x, int y, int width, int height, @Nullable MutableComponent descriptor, @Nullable Tooltip tooltip) {
         super(fontRenderer, x, y, width, height, Component.empty());
         this.defaultValue = defaultValue;
         this.minValue = minValue;
@@ -97,16 +98,17 @@ public abstract class AbstractTextField<T> extends EditBox {
     }
 
     @Nullable
-    public Button.OnTooltip getTooltip() {
+    @Override
+    public Tooltip getTooltip() {
         return tooltip;
     }
 
     @Override
-    public void render(PoseStack poseStack, int x, int y, float partialTick) {
-        super.render(poseStack, x, y, partialTick);
+    public void render(GuiGraphics guiGraphics, int x, int y, float partialTick) {
+        super.render(guiGraphics, x, y, partialTick);
 
         if (visible && descriptor != null) {
-            Screen.drawCenteredString(poseStack, Minecraft.getInstance().font, descriptor, this.x + width / 2, this.y - (height / 2) - 3, -1);
+            guiGraphics.drawCenteredString(Minecraft.getInstance().font, descriptor, this.getX() + width / 2, this.getY() - (height / 2) - 3, -1);
         }
     }
 }

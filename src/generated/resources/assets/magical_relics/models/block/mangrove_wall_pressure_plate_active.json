@@ -1,6 +1,0 @@
-{
-  "parent": "magical_relics:block/template/wall_pressure_plate_active",
-  "textures": {
-    "texture": "minecraft:block/mangrove_planks"
-  }
-}

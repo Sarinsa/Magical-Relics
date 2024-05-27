@@ -35,7 +35,7 @@ import java.util.List;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD, modid = MagicalRelics.MODID)
 public class ClientRegister {
 
-    @SuppressWarnings("removal")
+
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(new ClientEventListener());

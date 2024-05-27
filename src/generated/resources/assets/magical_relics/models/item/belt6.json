@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "magical_relics:item/belt/belt6",
-    "layer1": "magical_relics:item/belt/belt6_overlay"
-  }
-}

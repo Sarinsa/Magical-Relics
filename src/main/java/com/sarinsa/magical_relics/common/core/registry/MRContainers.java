@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.common.core.registry;
 
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -14,6 +15,6 @@ public class MRContainers {
 
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> register(String name, MenuType.MenuSupplier<T> factory) {
-        return CONTAINERS.register(name, () -> new MenuType<>(factory));
+        return CONTAINERS.register(name, () -> new MenuType<>(factory, FeatureFlags.VANILLA_SET));
     }
 }

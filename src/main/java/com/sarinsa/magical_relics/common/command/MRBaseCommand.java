@@ -47,11 +47,9 @@ import java.util.Map;
 public class MRBaseCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        CommandBuildContext buildContext = new CommandBuildContext(RegistryAccess.BUILTIN.get());
-
         dispatcher.register(Commands.literal("magicalrelics")
-                .then(ArtifactBaseCommand.register(buildContext))
-                .then(AbilityBaseCommand.register(buildContext)));
+                .then(ArtifactBaseCommand.register())
+                .then(AbilityBaseCommand.register()));
     }
 
 
@@ -60,21 +58,21 @@ public class MRBaseCommand {
      */
     private static class AbilityBaseCommand {
 
-        private static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext buildContext) {
+        private static ArgumentBuilder<CommandSourceStack, ?> register() {
             return Commands.literal("ability")
                     .requires((source) -> source.hasPermission(3))
-                    .then(cmdApply(buildContext))
-                    .then(cmdRemove(buildContext));
+                    .then(cmdApply())
+                    .then(cmdRemove());
         }
 
-        private static ArgumentBuilder<CommandSourceStack, ?> cmdApply(CommandBuildContext buildContext) {
+        private static ArgumentBuilder<CommandSourceStack, ?> cmdApply() {
             return Commands.literal("apply")
                     .then(Commands.argument("ability", AbilityArgument.ability())
                             .then(Commands.argument("trigger_type", TriggerTypeArgument.triggerType())
                                     .executes((context) -> applyAbility(context.getSource(), AbilityArgument.getAbility(context, "ability"), TriggerTypeArgument.getTriggerType(context, "trigger_type")))));
         }
 
-        private static ArgumentBuilder<CommandSourceStack, ?> cmdRemove(CommandBuildContext buildContext) {
+        private static ArgumentBuilder<CommandSourceStack, ?> cmdRemove() {
             return Commands.literal("remove")
                     .then(Commands.argument("ability", AbilityArgument.ability())
                             .executes((context) -> removeAbility(context.getSource(), AbilityArgument.getAbility(context, "ability"))));
@@ -169,7 +167,7 @@ public class MRBaseCommand {
             ServerPlayer player = source.getPlayer();
 
             if (ArtifactUtils.removeAbility(player.getItemBySlot(EquipmentSlot.MAINHAND), ability)) {
-                source.sendSuccess(Component.translatable(References.ABILITY_REMOVE_CMD, abilityId), false);
+                source.sendSuccess(() -> Component.translatable(References.ABILITY_REMOVE_CMD, abilityId), false);
                 return 1;
             }
             source.sendFailure(Component.translatable(References.ABILITY_REMOVE_ERROR_0, abilityId));
@@ -182,13 +180,13 @@ public class MRBaseCommand {
      */
     private static class ArtifactBaseCommand {
 
-        private static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext buildContext) {
+        private static ArgumentBuilder<CommandSourceStack, ?> register() {
             return Commands.literal("artifact")
                     .requires((source) -> source.hasPermission(3))
-                    .then(cmdCreate(buildContext));
+                    .then(cmdCreate());
         }
 
-        private static ArgumentBuilder<CommandSourceStack, ?> cmdCreate(CommandBuildContext buildContext) {
+        private static ArgumentBuilder<CommandSourceStack, ?> cmdCreate() {
             return Commands.literal("create")
                     .then(Commands.argument("category", ArtifactCategoryArgument.artifactCategory())
                             .then(Commands.argument("variant", IntegerArgumentType.integer(1, 100)).executes((context) -> createArtifact(context.getSource(), ArtifactCategoryArgument.getCategory(context, "category"), IntegerArgumentType.getInteger(context, "variant")))));
@@ -220,10 +218,10 @@ public class MRBaseCommand {
 
                 if (itemEntity != null) {
                     itemEntity.setNoPickUpDelay();
-                    itemEntity.setOwner(player.getUUID());
+                    itemEntity.setThrower(player.getUUID());
                 }
             }
-            source.sendSystemMessage(Component.translatable(References.ARTIFACT_CREATE_CMD, category.getName()));
+            source.sendSuccess(() -> Component.translatable(References.ARTIFACT_CREATE_CMD, category.getName()), false);
             return 1;
         }
     }

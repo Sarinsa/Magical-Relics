@@ -1,6 +1,5 @@
 package com.sarinsa.magical_relics.common.item;
 
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
@@ -18,7 +17,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
@@ -26,7 +28,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
     }
 
     @Override
-    public ArtifactCategory getType() {
+    public ArtifactCategory getCategory() {
         return artifactCategory;
     }
 
@@ -102,7 +103,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
         if (enchantment == Enchantments.MENDING)
             return false;
 
-        if (getType() == ArtifactCategory.SWORD || getType() == ArtifactCategory.DAGGER) {
+        if (getCategory() == ArtifactCategory.SWORD || getCategory() == ArtifactCategory.DAGGER) {
             return enchantment.category == EnchantmentCategory.WEAPON;
         }
         return super.canApplyAtEnchantingTable(stack, enchantment);
@@ -120,7 +121,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
 
     @Override
     public boolean hurtEnemy(ItemStack itemStack, LivingEntity attacked, LivingEntity attacker) {
-        if (getType() == ArtifactCategory.SWORD || getType() == ArtifactCategory.DAGGER)
+        if (getCategory() == ArtifactCategory.SWORD || getCategory() == ArtifactCategory.DAGGER)
         itemStack.hurtAndBreak(1, attacker, (entity) -> {
             entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
         });
@@ -140,10 +141,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
             if (state.is(Blocks.COBWEB)) {
                 return 15.0F;
             }
-            else {
-                Material material = state.getMaterial();
-                return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && !state.is(BlockTags.LEAVES) && material != Material.VEGETABLE ? 1.0F : 1.5F;
-            }
+            return state.is(BlockTags.SWORD_EFFICIENT) ? 1.0F : 1.5F;
         }
         return super.getDestroySpeed(itemStack, state);
     }

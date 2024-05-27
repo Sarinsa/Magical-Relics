@@ -32,7 +32,6 @@ import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -45,7 +44,7 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
 
 
     public CamoDispenserBlock() {
-        super(BlockBehaviour.Properties.of(Material.STONE)
+        super(BlockBehaviour.Properties.of()
                 .sound(SoundType.STONE)
                 .requiresCorrectToolForDrops()
                 .strength(1.5F, 1.0F));
@@ -101,7 +100,7 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
 
         if (slot < 0) {
             serverLevel.levelEvent(1001, pos, 0);
-            serverLevel.gameEvent(null, GameEvent.DISPENSE_FAIL, pos);
+            serverLevel.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
         }
         else {
             ItemStack itemStack = dispenser.getItem(slot);

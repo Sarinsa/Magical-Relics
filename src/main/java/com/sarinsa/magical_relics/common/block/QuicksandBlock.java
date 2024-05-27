@@ -1,38 +1,31 @@
 package com.sarinsa.magical_relics.common.block;
 
+import com.sarinsa.magical_relics.common.core.registry.MRDamageTypes;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.util.DirectionUtil;
-import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.level.material.WaterFluid;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -41,7 +34,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 public class QuicksandBlock extends Block {
@@ -75,7 +67,8 @@ public class QuicksandBlock extends Block {
 
 
     public QuicksandBlock() {
-        super(BlockBehaviour.Properties.of(Material.DIRT, MaterialColor.RAW_IRON)
+        super(BlockBehaviour.Properties.of()
+                .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(0.8F, 1.0F)
                 .sound(SoundType.PACKED_MUD)
                 .noLootTable()
@@ -96,10 +89,10 @@ public class QuicksandBlock extends Block {
         entity.makeStuckInBlock(state, new Vec3(0.5D, 0.2D, 0.5D));
 
         if (entity instanceof LivingEntity livingEntity) {
-            BlockPos eyePos = new BlockPos(livingEntity.getX(), livingEntity.getEyeY(), livingEntity.getZ());
+            BlockPos eyePos = new BlockPos((int) livingEntity.getX(), (int) livingEntity.getEyeY(), (int) livingEntity.getZ());
 
             if (level.getBlockState(eyePos).is(this)) {
-                livingEntity.hurt(MRDamageSources.QUICKSAND, 1.0F);
+                livingEntity.hurt(MRDamageTypes.of(level, MRDamageTypes.QUICKSAND), 1.0F);
             }
         }
     }
@@ -173,7 +166,7 @@ public class QuicksandBlock extends Block {
         BlockState belowState = level.getBlockState(belowPos);
 
         // Try flowing down all at once, if the block below is replaceable or air
-        if (belowState.getMaterial().isReplaceable()) {
+        if (belowState.canBeReplaced()) {
             level.setBlock(belowPos, defaultBlockState().setValue(LAYERS, state.getValue(LAYERS)), Block.UPDATE_ALL);
             level.scheduleTick(belowPos, this, TICK_DELAY);
             level.removeBlock(pos, false);
@@ -217,7 +210,7 @@ public class QuicksandBlock extends Block {
             BlockPos neighborPos = pos.relative(dir);
             BlockState neighborState = level.getBlockState(neighborPos);
 
-            if (neighborState.getMaterial().isReplaceable()) {
+            if (neighborState.canBeReplaced()) {
                 level.setBlock(neighborPos, defaultBlockState().setValue(LAYERS, MAX_FLOW_AMOUNT), Block.UPDATE_ALL);
                 flowCapacity -= MAX_FLOW_AMOUNT;
                 flowed = true;

@@ -10,9 +10,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 @Mod.EventBusSubscriber(modid = MagicalRelics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ServerWork {
@@ -32,7 +34,7 @@ public class ServerWork {
 
         if (player == null) return;
 
-        ServerLevel level = player.getLevel();
+        ServerLevel level = player.serverLevel();
 
         BlockEntity blockEntity = level.getBlockEntity(message.blockEntityPos);
 

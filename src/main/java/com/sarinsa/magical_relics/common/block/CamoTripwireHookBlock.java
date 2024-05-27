@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -39,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 public class CamoTripwireHookBlock extends TripWireHookBlock implements EntityBlock, CamoBlock {
 
     public CamoTripwireHookBlock() {
-        super(BlockBehaviour.Properties.of(Material.STONE)
+        super(BlockBehaviour.Properties.of()
                 .sound(SoundType.STONE)
                 .strength(1.5F, 1.0F));
 

@@ -94,7 +94,7 @@ public class ArtifactUtils {
 
         List<BaseArtifactAbility> allAbilities = Lists.newArrayList(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues());
         // Filter out abilities that are not applicable to the Artifact's category.
-        allAbilities.removeIf((ability) -> !ability.getCompatibleTypes().contains(((ItemArtifact) artifactItem).getType()));
+        allAbilities.removeIf((ability) -> !ability.getCompatibleTypes().contains(((ItemArtifact) artifactItem).getCategory()));
         // Make sure we don't try to apply the empty ability
         allAbilities.remove(MRArtifactAbilities.EMPTY.get());
 
@@ -123,7 +123,7 @@ public class ArtifactUtils {
             EnchantmentHelper.enchantItem(random, artifactStack, 20 + random.nextInt(11), false);
         }
         // Apply some stock attribute mods for daggers and swords and whatnot
-        applyMandatoryAttributeMods(artifactStack, ((ItemArtifact) artifactItem).getType(), random);
+        applyMandatoryAttributeMods(artifactStack, ((ItemArtifact) artifactItem).getCategory(), random);
 
         // Create a custom display name for the ItemStack, picking random
         // prefixes and suffixes from successfully applied abilities

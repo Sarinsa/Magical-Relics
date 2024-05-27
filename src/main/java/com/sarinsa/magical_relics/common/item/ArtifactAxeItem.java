@@ -38,7 +38,7 @@ public class ArtifactAxeItem extends AxeItem implements ItemArtifact {
     }
 
     @Override
-    public ArtifactCategory getType() {
+    public ArtifactCategory getCategory() {
         return ArtifactCategory.AXE;
     }
 

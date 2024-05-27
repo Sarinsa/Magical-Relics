@@ -206,10 +206,14 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onMobGrief(EntityMobGriefingEvent event) {
-        if (effectiveArea == null || event.getEntity().getLevel() != level)
+        if (effectiveArea == null || event.getEntity().level() != level)
             return;
 
-        checkAndCancel(event, event.getEntity().blockPosition());
+        BlockPos pos = event.getEntity().blockPosition();
+
+        if (effectiveArea.contains(pos.getX(), pos.getY(), pos.getZ())) {
+            event.setResult(Event.Result.DENY);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

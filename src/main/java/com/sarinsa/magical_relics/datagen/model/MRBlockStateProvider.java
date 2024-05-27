@@ -21,7 +21,7 @@ import java.util.Objects;
 public class MRBlockStateProvider extends BlockStateProvider {
 
     public MRBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
-        super(gen, MagicalRelics.MODID, exFileHelper);
+        super(gen.getPackOutput(), MagicalRelics.MODID, exFileHelper);
     }
 
     @Override

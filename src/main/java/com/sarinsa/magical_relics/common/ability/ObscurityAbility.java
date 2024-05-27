@@ -51,7 +51,7 @@ public class ObscurityAbility extends BaseArtifactAbility {
         if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
             artifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
 
-            if (!player.level.isClientSide)
+            if (!player.level().isClientSide)
                 player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, EFFECT_DURATION));
 
             ArtifactUtils.setAbilityCooldown(artifact, this, 400);
@@ -63,14 +63,14 @@ public class ObscurityAbility extends BaseArtifactAbility {
     @Override
     public void onUserDamaged(Level level, Player player, DamageSource damageSource, ItemStack artifact) {
         artifact.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
-        if (!player.level.isClientSide)
+        if (!player.level().isClientSide)
             player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, EFFECT_DURATION));
     }
 
     @Override
     public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
         artifact.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
-        if (!player.level.isClientSide)
+        if (!player.level().isClientSide)
             player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, EFFECT_DURATION));
     }
 

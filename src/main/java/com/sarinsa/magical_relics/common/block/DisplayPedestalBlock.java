@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -50,8 +49,9 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
 
 
     public DisplayPedestalBlock() {
-        super(BlockBehaviour.Properties.of(Material.GLASS)
+        super(BlockBehaviour.Properties.of()
                 .strength(1.0F, 0.5F)
+                .noOcclusion()
                 .requiresCorrectToolForDrops()
                 .sound(SoundType.STONE));
 

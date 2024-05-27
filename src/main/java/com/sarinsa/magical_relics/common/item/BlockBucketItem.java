@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.item;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -30,10 +31,10 @@ public class BlockBucketItem extends Item {
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
         BlockPos placePos = hitResult.getBlockPos();
 
-        if (!level.getBlockState(hitResult.getBlockPos()).getMaterial().isReplaceable()) {
+        if (!level.getBlockState(hitResult.getBlockPos()).is(BlockTags.REPLACEABLE)) {
             placePos = null;
 
-            if (level.getBlockState(hitResult.getBlockPos().relative(hitResult.getDirection())).getMaterial().isReplaceable())
+            if (level.getBlockState(hitResult.getBlockPos().relative(hitResult.getDirection())).is(BlockTags.REPLACEABLE))
                 placePos = hitResult.getBlockPos().relative(hitResult.getDirection());
         }
 

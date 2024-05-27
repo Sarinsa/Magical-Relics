@@ -6,6 +6,7 @@ import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.RandomSource;
@@ -58,22 +59,22 @@ public class CustomAgingProcessor extends StructureProcessor {
         this.oldness = oldness;
     }
 
-    @SuppressWarnings({"unchecked", "ConstantConditions", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Nullable
     public StructureTemplate.StructureBlockInfo process(LevelReader level, BlockPos p_74017_, BlockPos p_74018_, StructureTemplate.StructureBlockInfo p_74019_, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template) {
-        RandomSource random = structureSettings.getRandom(blockInfo.pos);
-        BlockState blockState = blockInfo.state;
-        BlockPos blockpos = blockInfo.pos;
+        RandomSource random = structureSettings.getRandom(blockInfo.pos());
+        BlockState blockState = blockInfo.state();
+        BlockPos blockpos = blockInfo.pos();
         BlockState newState = null;
 
         if (blockState.getBlock() instanceof CamoBlock) {
-            CompoundTag blockEntityTag = blockInfo.nbt;
+            CompoundTag blockEntityTag = blockInfo.nbt();
 
             // Don't bother checking for camo blocks
             // that don't have an existing camo.
             if (blockEntityTag != null && random.nextFloat() < oldness) {
                 CompoundTag camoTag = blockEntityTag.getCompound("CamoState");
-                BlockState nbtBlockState = NbtUtils.readBlockState(camoTag);
+                BlockState nbtBlockState = NbtUtils.readBlockState(level.holderLookup(Registries.BLOCK), camoTag);
 
                 if (nbtBlockState.is(Blocks.COBBLESTONE)) {
                     writeToCamo(blockEntityTag, Blocks.MOSSY_COBBLESTONE.defaultBlockState());
@@ -84,7 +85,7 @@ public class CustomAgingProcessor extends StructureProcessor {
             }
         }
         else {
-            if (REPLACEMENTS.containsKey(blockInfo.state.getBlock())) {
+            if (REPLACEMENTS.containsKey(blockInfo.state().getBlock())) {
                 if (random.nextFloat() < oldness) {
                     newState = REPLACEMENTS.get(blockState.getBlock()).defaultBlockState();
 
@@ -99,7 +100,7 @@ public class CustomAgingProcessor extends StructureProcessor {
                 }
             }
         }
-        return newState != null ? new StructureTemplate.StructureBlockInfo(blockpos, newState, blockInfo.nbt) : blockInfo;
+        return newState != null ? new StructureTemplate.StructureBlockInfo(blockpos, newState, blockInfo.nbt()) : blockInfo;
     }
 
     private static void writeToCamo(CompoundTag tag, BlockState state) {

@@ -6,6 +6,7 @@ import com.sarinsa.magical_relics.common.worldgen.processor.CustomAgingProcessor
 import com.sarinsa.magical_relics.common.worldgen.processor.DisplayPedestalProcessor;
 import com.sarinsa.magical_relics.common.worldgen.processor.NoWaterloggingProcessor;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -13,7 +14,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class MRStructureProcessors {
 
-    public static final DeferredRegister<StructureProcessorType<?>> PROCESSORS = DeferredRegister.create(Registry.STRUCTURE_PROCESSOR_REGISTRY, MagicalRelics.MODID);
+    public static final DeferredRegister<StructureProcessorType<?>> PROCESSORS = DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, MagicalRelics.MODID);
 
 
     public static final RegistryObject<StructureProcessorType<DisplayPedestalProcessor>> DISPLAY_PEDESTAL = PROCESSORS.register("display_pedestal", () -> type(DisplayPedestalProcessor.CODEC));

@@ -1,14 +1,16 @@
 package com.sarinsa.magical_relics.client.screen.widget;
 
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.MutableComponent;
 
 import javax.annotation.Nullable;
 
 public class IntegerTextField extends AbstractTextField<Integer> {
 
-    public IntegerTextField(Font fontRenderer, Integer defaultValue, Integer minValue, Integer maxValue, int x, int y, int width, int height, @Nullable MutableComponent descriptor, @Nullable Button.OnTooltip tooltip) {
+    public IntegerTextField(Font fontRenderer, Integer defaultValue, Integer minValue, Integer maxValue, int x, int y, int width, int height, @Nullable MutableComponent descriptor, @Nullable Tooltip tooltip) {
         super(fontRenderer, defaultValue, minValue, maxValue, x, y, width, height, descriptor, tooltip);
     }
 

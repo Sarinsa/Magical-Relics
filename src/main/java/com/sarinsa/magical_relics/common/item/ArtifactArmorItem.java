@@ -19,13 +19,13 @@ public class ArtifactArmorItem extends ArmorItem implements ItemArtifact {
 
     private final ArtifactCategory type;
 
-    public ArtifactArmorItem(ArmorMaterial armorMaterial, ArtifactCategory type, EquipmentSlot equipmentSlot, Properties properties) {
-        super(armorMaterial, equipmentSlot, properties.rarity(ArtifactUtils.MAGICAL));
+    public ArtifactArmorItem(ArmorMaterial armorMaterial, ArtifactCategory type, ArmorItem.Type armorType, Properties properties) {
+        super(armorMaterial, armorType, properties.rarity(ArtifactUtils.MAGICAL));
         this.type = type;
     }
 
     @Override
-    public ArtifactCategory getType() {
+    public ArtifactCategory getCategory() {
         return type;
     }
 
@@ -35,6 +35,7 @@ public class ArtifactArmorItem extends ArmorItem implements ItemArtifact {
 
         ArtifactUtils.addDescriptionsToTooltip(itemStack, level, components, flag);
     }
+
 
     @Override
     public void onArmorTick(ItemStack stack, Level level, Player player) {

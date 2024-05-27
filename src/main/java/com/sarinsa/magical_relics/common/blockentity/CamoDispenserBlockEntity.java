@@ -34,6 +34,7 @@ public class CamoDispenserBlockEntity extends DispenserBlockEntity implements Ca
     @Override
     public void setCamoState(@Nullable BlockState state) {
         this.camoState = state;
+        setChanged();
     }
 
     @Override

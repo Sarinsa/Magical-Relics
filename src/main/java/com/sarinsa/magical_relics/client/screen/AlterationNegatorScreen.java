@@ -9,8 +9,10 @@ import com.sarinsa.magical_relics.common.network.NetworkHelper;
 import com.sarinsa.magical_relics.common.util.References;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.StructureBlockEditScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -66,8 +68,6 @@ public class AlterationNegatorScreen extends Screen {
 
     @Override
     protected void init() {
-        minecraft.keyboardHandler.setSendRepeatsToGui(true);
-
         xSizeEdit = new IntegerTextField(
                 font,
                 (int) antiBuilder.getEffectiveArea().maxX - pos.getX(),
@@ -108,22 +108,33 @@ public class AlterationNegatorScreen extends Screen {
         addRenderableWidget(ySizeEdit);
         addRenderableWidget(zSizeEdit);
 
-        doneButton = addRenderableWidget(new Button(width / 2 - 4 - 150, 210, 150, 20, CommonComponents.GUI_DONE, (button) -> {
+        // Done button
+        Button.Builder doneButton = new Button.Builder(CommonComponents.GUI_DONE, (button) -> {
             onDone();
-        }));
-        addRenderableWidget(new Button(width / 2 + 4, 210, 150, 20, CommonComponents.GUI_CANCEL, (button) -> {
+        });
+        doneButton.pos(width / 2 - 154, 210);
+        doneButton.size(150, 20);
+        this.doneButton = doneButton.build();
+        addRenderableWidget(this.doneButton);
+
+        // Cancel button
+        Button.Builder cancelButton = new Button.Builder(CommonComponents.GUI_CANCEL, (button) -> {
             onCancel();
-        }));
+        });
+        cancelButton.pos(width / 2 + 4, 210);
+        cancelButton.size(150, 20);
+        addRenderableWidget(cancelButton.build());
+
         setInitialFocus(xSizeEdit);
     }
 
     @Override
-    public void resize(Minecraft minecraft, int p_98961_, int p_98962_) {
+    public void resize(Minecraft minecraft, int width, int height) {
         String xValue = xSizeEdit.getValue();
         String yValue = ySizeEdit.getValue();
         String zValue = zSizeEdit.getValue();
 
-        init(minecraft, p_98961_, p_98962_);
+        init(minecraft, width, height);
 
         xSizeEdit.setValue(xValue);
         ySizeEdit.setValue(yValue);
@@ -131,16 +142,11 @@ public class AlterationNegatorScreen extends Screen {
     }
 
     @Override
-    public void removed() {
-        minecraft.keyboardHandler.setSendRepeatsToGui(false);
-    }
-
-    @Override
-    public boolean keyPressed(int p_98951_, int p_98952_, int p_98953_) {
-        if (super.keyPressed(p_98951_, p_98952_, p_98953_)) {
+    public boolean keyPressed(int key, int scancode, int mods) {
+        if (super.keyPressed(key, scancode, mods)) {
             return true;
         }
-        else if (!doneButton.active || p_98951_ != 257 && p_98951_ != 335) {
+        else if (!doneButton.active || key != 257 && key != 335) {
             return false;
         }
         else {
@@ -150,25 +156,24 @@ public class AlterationNegatorScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(poseStack);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(guiGraphics);
 
-        drawCenteredString(poseStack, font, Component.translatable(MRBlocks.ANTI_BUILDER.get().getDescriptionId()), width / 2, height / 2 - 90, DEFAULT_TEXT_COLOR);
+        guiGraphics.drawCenteredString(font, Component.translatable(MRBlocks.ANTI_BUILDER.get().getDescriptionId()), width / 2, height / 2 - 90, DEFAULT_TEXT_COLOR);
 
         try {
-            drawString(poseStack, font, References.ALTNEG_X_SIZE, width / 2 - 40, height / 2 - 55, DEFAULT_TEXT_COLOR);
-            xSizeEdit.render(poseStack, mouseX, mouseY, partialTicks);
+            guiGraphics.drawString(font, References.ALTNEG_X_SIZE, width / 2 - 40, height / 2 - 55, DEFAULT_TEXT_COLOR);
+            xSizeEdit.render(guiGraphics, mouseX, mouseY, partialTicks);
 
-            drawString(poseStack, font, References.ALTNEG_Y_SIZE, width / 2 - 40, height / 2 - 25, DEFAULT_TEXT_COLOR);
-            ySizeEdit.render(poseStack, mouseX, mouseY, partialTicks);
+            guiGraphics.drawString(font, References.ALTNEG_Y_SIZE, width / 2 - 40, height / 2 - 25, DEFAULT_TEXT_COLOR);
+            ySizeEdit.render(guiGraphics, mouseX, mouseY, partialTicks);
 
-            drawString(poseStack, font, References.ALTNEG_Z_SIZE, width / 2 - 40, height / 2 + 5, DEFAULT_TEXT_COLOR);
-            zSizeEdit.render(poseStack, mouseX, mouseY, partialTicks);
+            guiGraphics.drawString(font, References.ALTNEG_Z_SIZE, width / 2 - 40, height / 2 + 5, DEFAULT_TEXT_COLOR);
+            zSizeEdit.render(guiGraphics, mouseX, mouseY, partialTicks);
         }
-        catch (Exception e) {
+        catch (Exception ignored) {
 
         }
-
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 }

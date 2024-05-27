@@ -81,7 +81,7 @@ public class JumpBoostAbility extends BaseArtifactAbility {
         if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
             artifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
 
-            if (!player.level.isClientSide)
+            if (!player.level().isClientSide)
                 player.addEffect(new MobEffectInstance(MobEffects.JUMP, USE_EFFECT_DURATION, getEffectMultiplier(artifact)));
 
             ArtifactUtils.setAbilityCooldown(artifact, this, 400);
@@ -92,7 +92,7 @@ public class JumpBoostAbility extends BaseArtifactAbility {
 
     @Override
     public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
-        if (!player.level.isClientSide)
+        if (!player.level().isClientSide)
             player.addEffect(new MobEffectInstance(MobEffects.JUMP, ATTACK_EFFECT_DURATION, getEffectMultiplier(artifact)));
     }
 

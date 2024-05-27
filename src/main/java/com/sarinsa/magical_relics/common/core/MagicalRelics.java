@@ -7,7 +7,6 @@ import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.network.PacketHandler;
 import com.sarinsa.magical_relics.common.tag.MRBlockTags;
-import com.sarinsa.magical_relics.common.util.MRDamageSources;
 import com.sarinsa.magical_relics.common.worldgen.WorldgenHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
@@ -49,20 +48,22 @@ public class MagicalRelics {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modBus.addListener(this::onCommonSetup);
+        modBus.addListener(MRItems::onCreativeTabPopulate);
 
         MinecraftForge.EVENT_BUS.register(new MREventListener());
         MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
 
-        MRDamageSources.init();
         MRBlockTags.init();
 
         PacketHandler.registerMessages();
 
         MRBlocks.BLOCKS.register(modBus);
         MRItems.ITEMS.register(modBus);
+        MRCreativeTabs.CREATIVE_TABS.register(modBus);
         MRBlockEntities.BLOCK_ENTITIES.register(modBus);
         MREntities.ENTITIES.register(modBus);
         MRContainers.CONTAINERS.register(modBus);
+        MRDamageTypes.DAMAGE_TYPES.register(modBus);
         MRArtifactAbilities.ARTIFACT_ABILITIES.register(modBus);
         MRLootItemFunctions.LOOT_ITEM_FUNCTIONS.register(modBus);
         MRStructureTypes.STRUCTURES.register(modBus);

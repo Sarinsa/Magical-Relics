@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.tag;
 
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
@@ -25,7 +26,7 @@ public class MRBiomeTags {
     }
 
     private static TagKey<Biome> create(ResourceLocation resourceLocation) {
-        return TagKey.create(Registry.BIOME_REGISTRY, resourceLocation);
+        return TagKey.create(Registries.BIOME, resourceLocation);
     }
 
     public static void init() {}

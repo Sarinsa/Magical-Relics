@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -30,8 +29,12 @@ import java.util.List;
 public class IlluminationBlock extends Block {
 
     public IlluminationBlock() {
-        super(BlockBehaviour.Properties.of(Material.AIR)
-                .lightLevel((state) -> 15));
+        super(BlockBehaviour.Properties.of()
+                .lightLevel((state) -> 15)
+                .noCollission()
+                .noOcclusion()
+                .noParticlesOnBreak()
+        );
     }
 
     @SuppressWarnings("deprecation")

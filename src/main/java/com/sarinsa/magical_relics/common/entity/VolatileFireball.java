@@ -32,9 +32,9 @@ public class VolatileFireball extends LargeFireball {
         super.tick();
 
         if (--timeUntilDetonation <= 0) {
-            if (!level.isClientSide) {
-                boolean allowGriefing = ForgeEventFactory.getMobGriefingEvent(level, getOwner());
-                level.explode(null, getX(), getY(), getZ(), explosionPower, allowGriefing, allowGriefing ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+            if (!level().isClientSide) {
+                boolean allowGriefing = ForgeEventFactory.getMobGriefingEvent(level(), getOwner());
+                level().explode(null, getX(), getY(), getZ(), explosionPower, allowGriefing, allowGriefing ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE);
                 discard();
             }
         }
@@ -46,10 +46,10 @@ public class VolatileFireball extends LargeFireball {
             return false;
         }
         else {
-            if (!level.isClientSide) {
-                boolean allowGriefing = ForgeEventFactory.getMobGriefingEvent(level, getOwner());
+            if (!level().isClientSide) {
+                boolean allowGriefing = ForgeEventFactory.getMobGriefingEvent(level(), getOwner());
                 discard();
-                level.explode(null, getX(), getY(), getZ(), explosionPower, allowGriefing, allowGriefing ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+                level().explode(null, getX(), getY(), getZ(), explosionPower, allowGriefing, allowGriefing ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE);
             }
             return true;
         }

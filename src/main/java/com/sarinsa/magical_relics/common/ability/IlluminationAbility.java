@@ -9,6 +9,7 @@ import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -55,11 +56,11 @@ public class IlluminationAbility extends BaseArtifactAbility {
         boolean shouldIlluminate = level.getBrightness(LightLayer.BLOCK, pos) < 3;
 
         if (shouldIlluminate) {
-            if (level.getFluidState(pos).isEmpty() && level.getBlockState(pos).getMaterial().isReplaceable()) {
+            if (level.getFluidState(pos).isEmpty() && level.getBlockState(pos).is(BlockTags.REPLACEABLE)) {
                 level.setBlock(pos, MRBlocks.ILLUMINATION_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
             }
             else {
-                if (level.getFluidState(pos.above()).isEmpty() && level.getBlockState(pos.above()).getMaterial().isReplaceable()) {
+                if (level.getFluidState(pos.above()).isEmpty() && level.getBlockState(pos.above()).is(BlockTags.REPLACEABLE)) {
                     level.setBlock(pos.above(), MRBlocks.ILLUMINATION_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
                 }
             }

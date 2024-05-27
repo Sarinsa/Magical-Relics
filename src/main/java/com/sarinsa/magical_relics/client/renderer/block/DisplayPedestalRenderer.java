@@ -1,7 +1,7 @@
 package com.sarinsa.magical_relics.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import net.minecraft.client.Minecraft;
@@ -11,9 +11,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.TintedGlassBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -31,11 +30,11 @@ public class DisplayPedestalRenderer implements BlockEntityRenderer<DisplayPedes
         float rotation = direction.toYRot();
 
         poseStack.translate(0.5D, 0.7F, 0.5D);
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(-rotation));
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-rotation));
+        poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         poseStack.scale(0.5F, 0.5F, 0.5F);
 
         ItemStack artifact = displayPedestal.getArtifact();
-        Minecraft.getInstance().getItemRenderer().renderStatic(artifact, ItemTransforms.TransformType.FIXED, packedLight, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, (int) displayPedestal.getBlockPos().asLong());
+        Minecraft.getInstance().getItemRenderer().renderStatic(artifact, ItemDisplayContext.FIXED, packedLight, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, displayPedestal.getLevel(), (int) displayPedestal.getBlockPos().asLong());
     }
 }

@@ -34,6 +34,8 @@ public abstract class BaseCamoBlockEntity extends BlockEntity implements CamoBlo
 
     @Override
     public void setCamoState(@Nullable BlockState state) {
+        if (camoState != state)
+
         camoState = state;
     }
 

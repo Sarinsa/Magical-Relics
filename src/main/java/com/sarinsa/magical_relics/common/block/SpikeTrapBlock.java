@@ -1,9 +1,8 @@
 package com.sarinsa.magical_relics.common.block;
 
-import com.sarinsa.magical_relics.common.util.MRDamageSources;
+import com.sarinsa.magical_relics.common.core.registry.MRDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -30,7 +28,7 @@ public class SpikeTrapBlock extends Block {
     private static final VoxelShape collisionShape = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D);
 
     public SpikeTrapBlock() {
-        super(BlockBehaviour.Properties.of(Material.METAL)
+        super(BlockBehaviour.Properties.of()
                 .sound(SoundType.METAL)
                 .strength(1.2F, 1.0F)
                 .requiresCorrectToolForDrops()
@@ -51,7 +49,7 @@ public class SpikeTrapBlock extends Block {
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (entity instanceof LivingEntity livingEntity) {
-            entity.hurt(MRDamageSources.SPIKES, 2.0F);
+            entity.hurt(MRDamageTypes.of(level, MRDamageTypes.SPIKES), 2.0F);
         }
     }
 

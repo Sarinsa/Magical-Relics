@@ -39,10 +39,10 @@ public class ClientWork {
         else {
             if (record != null) {
                 levelRenderer.playStreamingMusic(record.getSound(), pos, record);
-                RandomSource random = player.level.getRandom();
+                RandomSource random = player.level().getRandom();
 
                 for (int i = 0; i < 10; i++) {
-                    player.level.addParticle(
+                    player.level().addParticle(
                             ParticleTypes.NOTE,
                             (player.getX() + 0.5D) + (random.nextGaussian() / 2),
                             (player.getY() + 1.2D) + (random.nextGaussian() / 4),
@@ -61,7 +61,7 @@ public class ClientWork {
 
         if (screenType == 0) {
             BlockPos blockPos = new BlockPos(message.x, message.y, message.z);
-            BlockEntity blockEntity = player.level.getExistingBlockEntity(blockPos);
+            BlockEntity blockEntity = player.level().getExistingBlockEntity(blockPos);
 
             if (blockEntity instanceof AntiBuilderBlockEntity antiBuilder) {
                 Minecraft.getInstance().setScreen(new AlterationNegatorScreen(blockPos, antiBuilder));
