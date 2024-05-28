@@ -141,7 +141,7 @@
   "magical_relics.artifact_ability.magical_relics.health_boost.description": "Passively boosts max health",
   "magical_relics.artifact_ability.magical_relics.speed_boost.description.armor_tick": "Boosts speed while equipped",
   "magical_relics.artifact_ability.magical_relics.speed_boost.description.held": "Boosts speed when held",
-  "magical_relics.artifact_ability.magical_relics.air_sneak.description": "Allows standing on air when sneaking while held",
+  "magical_relics.artifact_ability.magical_relics.air_sneak.description": "Allows sneaking on air while held",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.inventory_tick": "Grants Night Vision",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.armor_tick": "Grants Night Vision while equipped",
   "magical_relics.artifact_ability.magical_relics.night_vision.description.use": "Grants temporary Night Vision for %1$s minutes when used",
