@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -60,15 +61,15 @@ public class JumpBoostAbility extends BaseArtifactAbility {
         CompoundTag modDataTag = artifact.getOrCreateTag().getCompound(ArtifactUtils.MOD_DATA_KEY);
         int multiplier = randomSource.nextInt(3);
 
-        CompoundTag abilityData = new CompoundTag();
-        abilityData.putInt("EffectMultiplier", multiplier);
+        CompoundTag abilityDataTag = new CompoundTag();
+        abilityDataTag.putInt("EffectMultiplier", multiplier);
 
-        modDataTag.put("JumpBoostAbilityData", abilityData);
+        modDataTag.put("JumpBoostAbilityData", abilityDataTag);
     }
 
     private int getEffectMultiplier(ItemStack artifact) {
         CompoundTag modDataTag = artifact.getOrCreateTag().getCompound(ArtifactUtils.MOD_DATA_KEY);
-        CompoundTag abilityDataTag = modDataTag.getCompound("JukeboxAbilityData");
+        CompoundTag abilityDataTag = modDataTag.getCompound("JumpBoostAbilityData");
 
         if (abilityDataTag.contains("EffectMultiplier", Tag.TAG_INT)) {
             return Math.max(0, abilityDataTag.getInt("EffectMultiplier"));
@@ -146,14 +147,15 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     @Override
     public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         TriggerType triggerType = ArtifactUtils.getTriggerFromStack(artifact, this);
+        Component potionLevel = Component.translatable("enchantment.level." + getEffectMultiplier(artifact));
 
         if (triggerType == null) return null;
 
         return switch (triggerType) {
             default -> null;
-            case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.use", USE_EFFECT_DURATION / 20);
-            case USER_ATTACKING -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.user_attacking", ATTACK_EFFECT_DURATION / 20);
-            case INVENTORY_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.inventory_tick", PASSIVE_EFFECT_DURATION / 20);
+            case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.use", USE_EFFECT_DURATION / 20, potionLevel.getString());
+            case USER_ATTACKING -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.user_attacking", ATTACK_EFFECT_DURATION / 20, potionLevel.getString());
+            case INVENTORY_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.inventory_tick", PASSIVE_EFFECT_DURATION / 20, potionLevel.getString());
         };
     }
 }
