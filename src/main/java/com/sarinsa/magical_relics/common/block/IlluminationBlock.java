@@ -31,6 +31,7 @@ public class IlluminationBlock extends Block {
     public IlluminationBlock() {
         super(BlockBehaviour.Properties.of()
                 .lightLevel((state) -> 15)
+                .replaceable()
                 .noCollission()
                 .noOcclusion()
                 .noParticlesOnBreak()

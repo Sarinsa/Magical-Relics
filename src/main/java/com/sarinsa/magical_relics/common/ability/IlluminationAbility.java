@@ -17,6 +17,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,20 +52,27 @@ public class IlluminationAbility extends BaseArtifactAbility {
 
     @Override
     public void onArmorTick(ItemStack artifact, Level level, Player player) {
-        BlockPos pos = player.blockPosition();
+        if (!level.isClientSide) {
+            BlockPos pos = player.blockPosition();
 
-        boolean shouldIlluminate = level.getBrightness(LightLayer.BLOCK, pos) < 3;
+            boolean shouldIlluminate = level.getBrightness(LightLayer.BLOCK, pos) < 3;
 
-        if (shouldIlluminate) {
-            if (level.getFluidState(pos).isEmpty() && level.getBlockState(pos).is(BlockTags.REPLACEABLE)) {
-                level.setBlock(pos, MRBlocks.ILLUMINATION_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
-            }
-            else {
-                if (level.getFluidState(pos.above()).isEmpty() && level.getBlockState(pos.above()).is(BlockTags.REPLACEABLE)) {
-                    level.setBlock(pos.above(), MRBlocks.ILLUMINATION_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+            if (shouldIlluminate) {
+                if (isPosForIllumination(level, pos)) {
+                    level.setBlock(pos, MRBlocks.ILLUMINATION_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+                }
+                else {
+                    if (isPosForIllumination(level, pos.above()) && !level.getBlockState(pos).is(MRBlocks.ILLUMINATION_BLOCK.get())) {
+                        level.setBlock(pos.above(), MRBlocks.ILLUMINATION_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+                    }
                 }
             }
         }
+    }
+
+    private boolean isPosForIllumination(Level level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        return state.getFluidState().isEmpty() && state.is(BlockTags.REPLACEABLE) && !state.is(MRBlocks.ILLUMINATION_BLOCK.get());
     }
 
     @Override
