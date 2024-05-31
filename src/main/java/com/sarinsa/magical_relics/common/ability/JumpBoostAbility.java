@@ -147,7 +147,7 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     @Override
     public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         TriggerType triggerType = ArtifactUtils.getTriggerFromStack(artifact, this);
-        Component potionLevel = Component.translatable("enchantment.level." + getEffectMultiplier(artifact));
+        Component potionLevel = Component.translatable("enchantment.level." + (getEffectMultiplier(artifact) + 1));
 
         if (triggerType == null) return null;
 
