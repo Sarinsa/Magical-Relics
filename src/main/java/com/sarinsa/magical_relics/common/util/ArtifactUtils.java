@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.util;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -387,7 +388,10 @@ public class ArtifactUtils {
     @Nonnull
     public static Map<BaseArtifactAbility, TriggerType> getAllAbilities(ItemStack itemStack) {
         Map<BaseArtifactAbility, TriggerType> abilities = new HashMap<>();
-        CompoundTag stackTag = itemStack.getOrCreateTag();
+        CompoundTag stackTag = itemStack.getTag();
+
+        if (stackTag == null)
+            return ImmutableMap.of();
 
         if (!stackTag.contains(MOD_DATA_KEY) || !stackTag.getCompound(MOD_DATA_KEY).contains(ABILITY_KEY)) return abilities;
 
@@ -456,12 +460,19 @@ public class ArtifactUtils {
      */
     public static void tickAbilityCooldowns(Player player, int decrement) {
         for (ItemStack itemStack : player.getInventory().items) {
-            CompoundTag cooldownData = itemStack.getOrCreateTag().getCompound(MOD_DATA_KEY).getCompound(ABILITY_COOLDOWNS_KEY);
+            CompoundTag tag = itemStack.getTag();
 
-            for (String key : cooldownData.getAllKeys()) {
-                cooldownData.putInt(key, cooldownData.getInt(key) - decrement);
+            if (tag == null)
+                continue;
+
+            if (tag.contains(MOD_DATA_KEY, Tag.TAG_COMPOUND) && tag.getCompound(MOD_DATA_KEY).contains(ABILITY_COOLDOWNS_KEY, Tag.TAG_COMPOUND)) {
+                CompoundTag cooldownTag = tag.getCompound(MOD_DATA_KEY).getCompound(ABILITY_COOLDOWNS_KEY);
+
+                for (String key : cooldownTag.getAllKeys()) {
+                    cooldownTag.putInt(key, cooldownTag.getInt(key) - decrement);
+                }
+                cooldownTag.getAllKeys().removeIf(key -> cooldownTag.getInt(key) <= 0);
             }
-            cooldownData.getAllKeys().removeIf(key -> cooldownData.getInt(key) <= 0);
         }
     }
 }
