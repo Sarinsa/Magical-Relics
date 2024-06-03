@@ -23,6 +23,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import top.theillusivec4.curios.api.SlotContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,6 +86,14 @@ public abstract class BaseArtifactAbility {
      * Can be used to write additional data to the ItemStack's NBT and whatnot.
      */
     public void onAbilityAttached(ItemStack artifact, RandomSource randomSource) {
+
+    }
+
+    /**
+     * Only relevant for when an ability is attached to an artifact that is an instance of {@link com.sarinsa.magical_relics.common.item.ArtifactItem}.<br><br>
+     * This is called whenever an artifact item that can be equipped in a Curio slot is unequipped.
+     */
+    public void onUnequipped(SlotContext slotContext, ItemStack artifact) {
 
     }
 

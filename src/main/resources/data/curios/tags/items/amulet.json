@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "magical_relics:wood_amulet_artifact",
+    "magical_relics:stone_amulet_artifact",
+    "magical_relics:iron_amulet_artifact",
+    "magical_relics:gold_amulet_artifact",
+    "magical_relics:diamond_amulet_artifact"
+  ]
+}

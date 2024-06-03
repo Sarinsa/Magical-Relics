@@ -15,6 +15,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 import java.util.UUID;
@@ -73,6 +74,11 @@ public class HealthBoostAbility extends BaseArtifactAbility {
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
         return isArmor ? TriggerType.ARMOR_TICK : TriggerType.INVENTORY_TICK;
+    }
+
+    @Override
+    public void onUnequipped(SlotContext slotContext, ItemStack artifact) {
+
     }
 
     @NotNull

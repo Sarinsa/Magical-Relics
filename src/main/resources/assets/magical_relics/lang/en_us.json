@@ -295,5 +295,8 @@
   "magical_relics.artifact_ability.magical_relics.tnt.prefix.explosive": "Explosive",
   "magical_relics.artifact_ability.magical_relics.tnt.suffix.booms": "of Booms",
   "magical_relics.artifact_ability.magical_relics.tnt.suffix.combusting": "of Combusting",
-  "magical_relics.artifact_ability.magical_relics.tnt.suffix.explotando": "of Explotando"
+  "magical_relics.artifact_ability.magical_relics.tnt.suffix.explotando": "of Explotando",
+
+  "curios.identifier.amulet": "Amulet",
+  "curios.modifiers.amulet": "When worn as amulet"
 }

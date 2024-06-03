@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.item;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
@@ -29,10 +30,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotContext;
+import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-public class ArtifactItem extends TieredItem implements ItemArtifact {
+public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem {
 
     private final ArtifactCategory artifactCategory;
 
@@ -83,6 +89,15 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
     }
 
     @Override
+    public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
+        Map<BaseArtifactAbility, TriggerType> allAbilities = ArtifactUtils.getAllAbilities(stack);
+
+        for (BaseArtifactAbility ability : allAbilities.keySet()) {
+            ability.onUnequipped(slotContext, stack);
+        }
+    }
+
+    @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
         super.appendHoverText(itemStack, level, components, flag);
 
@@ -117,6 +132,16 @@ public class ArtifactItem extends TieredItem implements ItemArtifact {
             return artifactModifiers;
         }
         return super.getAttributeModifiers(slot, stack);
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack);
+
+        if (artifactModifiers != null) {
+            return artifactModifiers;
+        }
+        return ImmutableMultimap.of();
     }
 
     @Override

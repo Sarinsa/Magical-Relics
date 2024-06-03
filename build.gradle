@@ -81,6 +81,10 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        name = "Illusive Soulworks maven"
+        url = "https://maven.theillusivec4.top/"
+    }
 }
 
 dependencies {
@@ -89,11 +93,12 @@ dependencies {
     runtimeOnly fg.deobf("com.telepathicgrunt:StructureVoidToggle-Forge:${structurevt_version}+${mc_version}")
     implementation fg.deobf("curse.maven:worldedit-225608:${we_version}")
 
-    // compile against the JEI API but do not include it at runtime
     compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
-    // at runtime, use the full JEI jar for Forge
     runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
+
+    compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${mc_version}:api"))
+    runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${mc_version}"))
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
