@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.util;
 
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -20,7 +21,7 @@ public class NbtHelper {
      * registry lookup is done with the Forge block registry to avoid needing a level object.
      */
     public static BlockState readBlockState(CompoundTag compoundTag) {
-        if (!compoundTag.contains("Name", 8)) {
+        if (!compoundTag.contains("Name", CompoundTag.TAG_STRING)) {
             return Blocks.AIR.defaultBlockState();
         }
         else {
@@ -33,7 +34,7 @@ public class NbtHelper {
             else {
                 BlockState state = block.defaultBlockState();
 
-                if (compoundTag.contains("Properties", 10)) {
+                if (compoundTag.contains("Properties", Tag.TAG_COMPOUND)) {
                     CompoundTag propertiesTag = compoundTag.getCompound("Properties");
                     StateDefinition<Block, BlockState> stateDefinition = block.getStateDefinition();
 

@@ -1,0 +1,8 @@
+{
+  "parent": "magical_relics:block/template/layer_cube",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "crumble": "minecraft:block/destroy_stage_4",
+    "texture": "minecraft:block/cobblestone"
+  }
+}

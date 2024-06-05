@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "magical_relics:item/ring/ring14",
+    "layer1": "magical_relics:item/ring/ring14_overlay"
+  }
+}

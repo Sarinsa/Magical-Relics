@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "magical_relics:item/sword/sword14",
+    "layer1": "magical_relics:item/sword/sword14_overlay"
+  }
+}

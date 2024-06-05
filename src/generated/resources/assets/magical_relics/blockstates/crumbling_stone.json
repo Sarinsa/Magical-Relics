@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "crumbling=false": {
+      "model": "magical_relics:block/crumbling_stone"
+    },
+    "crumbling=true": {
+      "model": "magical_relics:block/crumbling_stone_crumbling"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "forge:nuggets/gold"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "magical_relics:raw_manaessence"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "item": "magical_relics:iron_manaessence"
+  }
+}

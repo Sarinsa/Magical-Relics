@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "magical_relics:item/trinket/trinket13",
+    "layer1": "magical_relics:item/trinket/trinket13_overlay"
+  }
+}
