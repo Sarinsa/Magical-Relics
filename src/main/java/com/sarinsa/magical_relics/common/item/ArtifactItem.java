@@ -173,6 +173,11 @@ public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem
     }
 
     @Override
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        return !newStack.is(oldStack.getItem());
+    }
+
+    @Override
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         if (book.getEnchantmentLevel(Enchantments.MENDING) > 0)
             return false;

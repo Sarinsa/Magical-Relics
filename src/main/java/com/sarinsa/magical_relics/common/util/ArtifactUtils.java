@@ -37,12 +37,21 @@ import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotResult;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
 public class ArtifactUtils {
+
+    public static final String[] CURIO_SLOTS = {
+            "belt",
+            "ring",
+            "amulet"
+    };
 
     public static final Rarity COMMON_ABILITY = Rarity.create(MagicalRelics.resLoc("common_ability").toString(), ChatFormatting.GRAY);
     public static final Rarity MAGICAL = Rarity.create(MagicalRelics.resLoc("magical").toString(), ChatFormatting.GREEN);
@@ -68,6 +77,14 @@ public class ArtifactUtils {
             0x84BF4E, 0x6B75BC, 0xD8D8D8
     };
 
+    /**
+     * @param artifactItem The artifact item to use for this item stack. Should normally be an instance of
+     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactArmorItem}, {@link com.sarinsa.magical_relics.common.item.ArtifactItem} or
+     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactAxeItem}.
+     * @param variant An integer corresponding to a specific texture variant of the artifact item.
+     * <br><br>
+     * @return An item stack with all the necessary NBT tags for ability data.
+     */
     public static ItemStack createBlankArtifact(Item artifactItem, int variant, RandomSource randomSource) {
         ItemStack artifactStack = new ItemStack(artifactItem);
 
@@ -476,7 +493,9 @@ public class ArtifactUtils {
     /**
      * Decrements all ability cooldowns on the ItemStack by the given number.
      */
+    @SuppressWarnings("ConstantConditions")
     public static void tickAbilityCooldowns(Player player, int decrement) {
+        // Tick player inventory
         for (ItemStack itemStack : player.getInventory().items) {
             CompoundTag tag = itemStack.getTag();
 
@@ -490,6 +509,26 @@ public class ArtifactUtils {
                     cooldownTag.putInt(key, cooldownTag.getInt(key) - decrement);
                 }
                 cooldownTag.getAllKeys().removeIf(key -> cooldownTag.getInt(key) <= 0);
+            }
+        }
+        // Tick curio artifacts on the player
+        ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory(player).orElse(null);
+
+        if (curiosInventory != null) {
+            for (SlotResult slotResult : curiosInventory.findCurios(CURIO_SLOTS)) {
+                CompoundTag tag = slotResult.stack().getTag();
+
+                if (tag == null)
+                    continue;
+
+                if (tag.contains(MOD_DATA_KEY, Tag.TAG_COMPOUND) && tag.getCompound(MOD_DATA_KEY).contains(ABILITY_COOLDOWNS_KEY, Tag.TAG_COMPOUND)) {
+                    CompoundTag cooldownTag = tag.getCompound(MOD_DATA_KEY).getCompound(ABILITY_COOLDOWNS_KEY);
+
+                    for (String key : cooldownTag.getAllKeys()) {
+                        cooldownTag.putInt(key, cooldownTag.getInt(key) - decrement);
+                    }
+                    cooldownTag.getAllKeys().removeIf(key -> cooldownTag.getInt(key) <= 0);
+                }
             }
         }
     }

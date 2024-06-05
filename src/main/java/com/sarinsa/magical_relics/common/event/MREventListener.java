@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -85,7 +86,7 @@ public class MREventListener {
         ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory(player).orElse(null);
 
         if (curiosInventory != null) {
-            for (SlotResult slotResult : curiosInventory.findCurios("ring", "belt", "amulet")) {
+            for (SlotResult slotResult : curiosInventory.findCurios(ArtifactUtils.CURIO_SLOTS)) {
                 ItemStack curioStack = slotResult.stack();
                 BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.CURIO_TICK, curioStack);
 
@@ -132,7 +133,7 @@ public class MREventListener {
             ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory(player).orElse(null);
 
             if (curiosInventory != null) {
-                for (SlotResult slotResult : curiosInventory.findCurios("ring", "belt", "amulet")) {
+                for (SlotResult slotResult : curiosInventory.findCurios(ArtifactUtils.CURIO_SLOTS)) {
                     ItemStack curioArtifact = slotResult.stack();
                     BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.ON_DEATH, curioArtifact);
 

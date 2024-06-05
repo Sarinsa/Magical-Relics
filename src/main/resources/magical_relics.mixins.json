@@ -5,11 +5,14 @@
   "minVersion": "0.8",
   "refmap": "magical_relics.mixins.refmap.json",
   "mixins": [
-    "common.StructureProcessorAccessor",
-    "common.StructureTemplateMixin"
+    "StructureProcessorAccessor",
+    "StructureTemplateMixin"
   ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "MultiPlayerGameModeMixin"
+  ]
 }

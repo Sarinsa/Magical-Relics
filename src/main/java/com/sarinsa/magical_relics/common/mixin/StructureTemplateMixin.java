@@ -1,4 +1,4 @@
-package com.sarinsa.magical_relics.common.mixin.common;
+package com.sarinsa.magical_relics.common.mixin;
 
 import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
 import net.minecraft.core.BlockPos;

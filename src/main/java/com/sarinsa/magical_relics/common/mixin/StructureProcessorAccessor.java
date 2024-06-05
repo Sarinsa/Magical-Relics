@@ -1,4 +1,4 @@
-package com.sarinsa.magical_relics.common.mixin.common;
+package com.sarinsa.magical_relics.common.mixin;
 
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
