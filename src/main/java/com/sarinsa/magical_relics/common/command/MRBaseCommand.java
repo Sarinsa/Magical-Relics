@@ -140,11 +140,11 @@ public class MRBaseCommand {
 
                 attributeMod.putString("AttributeId", attributeId);
                 attributeMod.put("AttributeMod", new AttributeModifier(
-                        boost.modifierUUID(),
                         boost.name(),
                         boost.valueProvider().getRangedValue(random),
                         boost.operation()
                 ).save());
+                attributeMod.putString("ActiveType", boost.activeType().getName());
                 modDataTag.getList(ArtifactUtils.ATTRIBUTE_MODS_KEY, Tag.TAG_COMPOUND).add(attributeMod);
             }
             List<BaseArtifactAbility> allAbilities = new ArrayList<>(currentAbilities.keySet());

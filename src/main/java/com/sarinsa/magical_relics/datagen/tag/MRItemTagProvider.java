@@ -25,11 +25,16 @@ public class MRItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         IntrinsicTagAppender<Item> artifactsTag = tag(MRItemTags.ARTIFACTS);
+        IntrinsicTagAppender<Item> artifactCuriosTag = tag(MRItemTags.ARTIFACT_CURIOS);
 
         for (List<RegistryObject<? extends Item>> artifactList : MRItems.ARTIFACTS_BY_CATEGORY.values()) {
             for (RegistryObject<? extends Item> regObj : artifactList) {
                 artifactsTag.add(regObj.get());
             }
         }
+
+        MRItems.RINGS.dataStructure().forEach((regObj) -> artifactCuriosTag.add(regObj.get()));
+        MRItems.AMULETS.dataStructure().forEach((regObj) -> artifactCuriosTag.add(regObj.get()));
+        MRItems.BELTS.dataStructure().forEach((regObj) -> artifactCuriosTag.add(regObj.get()));
     }
 }

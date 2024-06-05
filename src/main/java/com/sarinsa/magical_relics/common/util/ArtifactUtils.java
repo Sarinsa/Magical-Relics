@@ -13,6 +13,7 @@ import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
 import com.sarinsa.magical_relics.common.item.ItemArtifact;
+import com.sarinsa.magical_relics.common.tag.MRItemTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -186,6 +187,7 @@ public class ArtifactUtils {
                     (double) ((TieredItem) itemStack.getItem()).getTier().getAttackDamageBonus() + 3.0D + (double) (random.nextInt(3)),
                     AttributeModifier.Operation.ADDITION
             ).save());
+            attackDmgMod.putString("ActiveType", AttributeBoost.ActiveType.HELD.getName());
 
             // Attack damage
             CompoundTag attackSpeed = new CompoundTag();
@@ -196,6 +198,7 @@ public class ArtifactUtils {
                     category == ArtifactCategory.DAGGER ? -1.8D  : -2.4D,
                     AttributeModifier.Operation.ADDITION
             ).save());
+            attackSpeed.putString("ActiveType", AttributeBoost.ActiveType.HELD.getName());
 
             modDataTag.getList(ATTRIBUTE_MODS_KEY, Tag.TAG_COMPOUND).add(attackDmgMod);
             modDataTag.getList(ATTRIBUTE_MODS_KEY, Tag.TAG_COMPOUND).add(attackSpeed);
@@ -203,7 +206,7 @@ public class ArtifactUtils {
     }
 
     @Nullable
-    public static Multimap<Attribute, AttributeModifier> getAttributeMods(ItemStack itemStack) {
+    public static Multimap<Attribute, AttributeModifier> getAttributeMods(ItemStack itemStack, @Nullable AttributeBoost.ActiveType activeType) {
         CompoundTag stackTag = itemStack.getOrCreateTag();
 
         if (stackTag.contains(MOD_DATA_KEY, Tag.TAG_COMPOUND) && stackTag.getCompound(MOD_DATA_KEY).contains(ATTRIBUTE_MODS_KEY, Tag.TAG_LIST)) {
@@ -215,9 +218,24 @@ public class ArtifactUtils {
 
                 Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.tryParse(attributeTag.getString("AttributeId")));
                 AttributeModifier modifier = AttributeModifier.load(attributeTag.getCompound("AttributeMod"));
+                AttributeBoost.ActiveType modActiveType = AttributeBoost.ActiveType.getFromName(attributeTag.getString("ActiveType"));
+                boolean canApply = false;
 
-                if (attribute != null && modifier != null)
+                if (activeType == null) {
+                    canApply = true;
+                }
+                else if (activeType == AttributeBoost.ActiveType.HELD_OR_EQUIPPED || modActiveType == AttributeBoost.ActiveType.HELD_OR_EQUIPPED) {
+                    canApply = true;
+                }
+                else {
+                    if (activeType == modActiveType) {
+                        canApply = true;
+                    }
+                }
+
+                if (attribute != null && modifier != null && canApply) {
                     builder.put(attribute, modifier);
+                }
             }
             return builder.build();
         }
@@ -270,7 +288,7 @@ public class ArtifactUtils {
             if (currentAbilities.containsKey(nextToApply)) continue;
 
             // TODO - Don't forget about changing this once armor is incorporated into this whole thingamajig
-            TriggerType randomTrigger = nextToApply.getRandomTrigger(random, false);
+            TriggerType randomTrigger = nextToApply.getRandomTrigger(random, false, itemStack.is(MRItemTags.ARTIFACT_CURIOS));
 
             // No suitable trigger found, skip to next ability
             if (randomTrigger == null) continue;
@@ -304,11 +322,11 @@ public class ArtifactUtils {
 
                 attributeMod.putString("AttributeId", attributeId);
                 attributeMod.put("AttributeMod", new AttributeModifier(
-                        boost.modifierUUID(),
                         boost.name(),
                         boost.valueProvider().getRangedValue(random),
                         boost.operation()
                 ).save());
+                attributeMod.putString("ActiveType", boost.activeType().getName());
                 modDataTag.getList(ATTRIBUTE_MODS_KEY, Tag.TAG_COMPOUND).add(attributeMod);
             }
         }

@@ -7,6 +7,7 @@ import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -42,8 +43,8 @@ public class SailorAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public void onArmorTick(ItemStack artifact, Level level, Player player) {
-        super.onArmorTick(artifact, level, player);
+    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
+        super.onArmorTick(artifact, level, player, slot);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class SailorAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
         return isArmor ? TriggerType.ARMOR_TICK : null;
     }
 

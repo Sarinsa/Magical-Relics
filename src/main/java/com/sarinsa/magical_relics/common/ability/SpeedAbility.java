@@ -55,9 +55,9 @@ public class SpeedAbility extends BaseArtifactAbility {
     private static final AttributeBoost SPEED_BOOST = new AttributeBoost(
             () -> Attributes.MOVEMENT_SPEED,
             "MRSpeedBoost",
-            UUID.fromString("fd3d9614-7433-4314-8ad0-83ea10c6bc0b"),
             AttributeModifier.Operation.MULTIPLY_BASE,
-            (random) -> (4.0D + random.nextInt(12)) / 100
+            (random) -> (4.0D + random.nextInt(12)) / 100,
+            AttributeBoost.ActiveType.HELD_OR_EQUIPPED
     );
 
 
@@ -81,7 +81,7 @@ public class SpeedAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
         return isArmor ? TriggerType.ARMOR_TICK : TriggerType.HELD;
     }
 

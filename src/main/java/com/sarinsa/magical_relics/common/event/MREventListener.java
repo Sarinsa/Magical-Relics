@@ -15,6 +15,11 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotResult;
+import top.theillusivec4.curios.api.event.CurioAttributeModifierEvent;
+import top.theillusivec4.curios.api.type.ISlotType;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 public class MREventListener {
 
@@ -67,14 +72,27 @@ public class MREventListener {
     }
 
     @SubscribeEvent
+    @SuppressWarnings("ConstantConditions")
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         Level level = player.level();
-        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.HELD, heldItem);
+        BaseArtifactAbility heldAbility = ArtifactUtils.getAbilityWithTrigger(TriggerType.HELD, heldItem);
 
-        if (ability != null) {
-            ability.onHeld(level, player, heldItem);
+        if (heldAbility != null) {
+            heldAbility.onHeld(level, player, heldItem, EquipmentSlot.MAINHAND);
+        }
+        ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory(player).orElse(null);
+
+        if (curiosInventory != null) {
+            for (SlotResult slotResult : curiosInventory.findCurios("ring", "belt", "amulet")) {
+                ItemStack curioStack = slotResult.stack();
+                BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.CURIO_TICK, curioStack);
+
+                if (ability != null) {
+                    ability.onCurioTick(curioStack, level, player, slotResult.slotContext());
+                }
+            }
         }
     }
 
@@ -101,6 +119,7 @@ public class MREventListener {
     }
 
     @SubscribeEvent
+    @SuppressWarnings("ConstantConditions")
     public void onLivingDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof Player player) {
             for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -108,7 +127,19 @@ public class MREventListener {
                 BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.ON_DEATH, artifact);
 
                 if (ability != null)
-                    ability.onDeath(player.level(), player, slot, artifact, event);
+                    ability.onDeath(player.level(), player, slot, null, artifact, event);
+            }
+            ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory(player).orElse(null);
+
+            if (curiosInventory != null) {
+                for (SlotResult slotResult : curiosInventory.findCurios("ring", "belt", "amulet")) {
+                    ItemStack curioArtifact = slotResult.stack();
+                    BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.ON_DEATH, curioArtifact);
+
+                    if (ability != null) {
+                        ability.onDeath(player.level(), player, null, slotResult.slotContext(), curioArtifact, event);
+                    }
+                }
             }
         }
     }

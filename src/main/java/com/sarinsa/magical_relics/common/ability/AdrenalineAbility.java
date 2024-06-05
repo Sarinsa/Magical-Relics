@@ -74,7 +74,7 @@ public class AdrenalineAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
         return isArmor ? TriggerType.ARMOR_TICK : null;
     }
 

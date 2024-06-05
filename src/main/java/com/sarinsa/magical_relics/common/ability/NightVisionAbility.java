@@ -11,6 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SculkSensorBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class NightVisionAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK, TriggerType.INVENTORY_TICK, TriggerType.USE, TriggerType.HELD
+            TriggerType.ARMOR_TICK, TriggerType.INVENTORY_TICK, TriggerType.USE, TriggerType.HELD, TriggerType.CURIO_TICK
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
@@ -73,9 +75,14 @@ public class NightVisionAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public void onHeld(Level level, Player player, ItemStack artifact) {
+    public void onHeld(Level level, Player player, ItemStack artifact, EquipmentSlot slot) {
         if (!player.level().isClientSide)
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, PASSIVE_EFFECT_DURATION));
+    }
+
+    @Override
+    public void onCurioTick(ItemStack artifact, Level level, Player player, SlotContext slotContext) {
+        onArmorTick(artifact, level, player, null);
     }
 
     @Override
@@ -86,7 +93,7 @@ public class NightVisionAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level level, Player player) {
+    public void onArmorTick(ItemStack stack, Level level, Player player, EquipmentSlot slot) {
         if (!level.isClientSide) {
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, PASSIVE_EFFECT_DURATION));
         }
@@ -108,7 +115,8 @@ public class NightVisionAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+        if (isCurio) return TriggerType.CURIO_TICK;
         if (isArmor) return TriggerType.ARMOR_TICK;
 
         return switch (random.nextInt(3)) {
@@ -140,6 +148,7 @@ public class NightVisionAbility extends BaseArtifactAbility {
             case ARMOR_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.armor_tick");
             case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.use", (USE_EFFECT_DURATION / 20) / 60);
             case HELD -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.held");
+            case CURIO_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.curio");
         };
     }
 }

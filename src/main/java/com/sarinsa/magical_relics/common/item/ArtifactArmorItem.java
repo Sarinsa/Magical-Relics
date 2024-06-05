@@ -37,12 +37,13 @@ public class ArtifactArmorItem extends ArmorItem implements ItemArtifact {
     }
 
 
+    @SuppressWarnings("removal")
     @Override
     public void onArmorTick(ItemStack stack, Level level, Player player) {
         BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.ARMOR_TICK, stack);
 
         if (ability != null)
-            ability.onArmorTick(stack, level, player);
+            ability.onArmorTick(stack, level, player, getEquipmentSlot());
     }
 
     @Override

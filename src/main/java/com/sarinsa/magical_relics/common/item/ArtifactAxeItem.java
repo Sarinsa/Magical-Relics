@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
@@ -96,7 +97,7 @@ public class ArtifactAxeItem extends AxeItem implements ItemArtifact {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack);
+        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack, AttributeBoost.ActiveType.HELD);
 
         if (artifactModifiers != null && slot == EquipmentSlot.MAINHAND) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> attribs = ImmutableMultimap.builder();

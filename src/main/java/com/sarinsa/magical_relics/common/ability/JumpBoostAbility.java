@@ -24,6 +24,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK, TriggerType.USE, TriggerType.USER_ATTACKING, TriggerType.INVENTORY_TICK
+            TriggerType.ARMOR_TICK, TriggerType.USE, TriggerType.USER_ATTACKING, TriggerType.INVENTORY_TICK, TriggerType.CURIO_TICK
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
@@ -107,6 +108,11 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     }
 
     @Override
+    public void onCurioTick(ItemStack artifact, Level level, Player player, SlotContext slotContext) {
+        onInventoryTick(artifact, level, player, 0, false);
+    }
+
+    @Override
     public Rarity getRarity() {
         return Rarity.RARE;
     }
@@ -123,8 +129,10 @@ public class JumpBoostAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
         if (isArmor) return TriggerType.ARMOR_TICK;
+
+        if (isCurio) return TriggerType.CURIO_TICK;
 
         return switch (random.nextInt(3)) {
             default -> TriggerType.USE;
@@ -156,6 +164,7 @@ public class JumpBoostAbility extends BaseArtifactAbility {
             case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.use", USE_EFFECT_DURATION / 20, potionLevel.getString());
             case USER_ATTACKING -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.user_attacking", ATTACK_EFFECT_DURATION / 20, potionLevel.getString());
             case INVENTORY_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.inventory_tick", PASSIVE_EFFECT_DURATION / 20, potionLevel.getString());
+            case CURIO_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.curio", USE_EFFECT_DURATION / 20, potionLevel.getString());
         };
     }
 }

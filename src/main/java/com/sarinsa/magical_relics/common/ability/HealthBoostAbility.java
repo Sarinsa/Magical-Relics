@@ -10,6 +10,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -45,9 +46,9 @@ public class HealthBoostAbility extends BaseArtifactAbility {
     private static final AttributeBoost HEALTH_BOOST = new AttributeBoost(
             () -> Attributes.MAX_HEALTH,
             "MRHealthBoost",
-            UUID.fromString("e3182201-176b-4f62-837d-694251c8f97d"),
             AttributeModifier.Operation.ADDITION,
-            (random) -> 1.0D + random.nextInt(3)
+            (random) -> 1.0D + random.nextInt(3),
+            AttributeBoost.ActiveType.EQUIPPED
     );
 
 
@@ -72,13 +73,17 @@ public class HealthBoostAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
         return isArmor ? TriggerType.ARMOR_TICK : TriggerType.INVENTORY_TICK;
     }
 
     @Override
     public void onUnequipped(SlotContext slotContext, ItemStack artifact) {
-
+        if (slotContext.entity() instanceof Player player) {
+            if (player.getHealth() > player.getMaxHealth()) {
+                player.setHealth(player.getMaxHealth());
+            }
+        }
     }
 
     @NotNull

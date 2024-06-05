@@ -12,6 +12,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +38,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK, TriggerType.USER_DAMAGED, TriggerType.USE, TriggerType.HELD, TriggerType.USER_ATTACKING
+            TriggerType.ARMOR_TICK, TriggerType.USER_DAMAGED, TriggerType.USE, TriggerType.HELD, TriggerType.USER_ATTACKING, TriggerType.CURIO_TICK
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
@@ -76,8 +77,8 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public void onArmorTick(ItemStack artifact, Level level, Player player) {
-        this.onHeld(level, player, artifact);
+    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
+        this.onHeld(level, player, artifact, slot);
     }
 
     @Override
@@ -95,7 +96,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public void onHeld(Level level, Player player, ItemStack artifact) {
+    public void onHeld(Level level, Player player, ItemStack artifact, EquipmentSlot slot) {
         if (!player.level().isClientSide)
             player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, PASSIVE_EFFECT_DURATION));
     }
@@ -112,9 +113,9 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
-        if (isArmor)
-            return random.nextInt(2) == 0 ? TriggerType.ARMOR_TICK : TriggerType.USER_DAMAGED;
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+        if (isCurio) return random.nextBoolean() ? TriggerType.CURIO_TICK : TriggerType.USER_DAMAGED;
+        if (isArmor) return random.nextInt(2) == 0 ? TriggerType.ARMOR_TICK : TriggerType.USER_DAMAGED;
 
         return switch (random.nextInt(3)) {
             default -> TriggerType.USE;
@@ -146,9 +147,9 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
         if (type == null) return null;
 
         return switch (type) {
-            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.held", PASSIVE_EFFECT_DURATION / 20);
+            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.held");
             case USER_DAMAGED -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.user_damaged", DROWN_EFFECT_DURATION / 20);
-            case ARMOR_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.armor_tick", PASSIVE_EFFECT_DURATION / 20);
+            case ARMOR_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.armor_tick");
             case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.use", (USE_EFFECT_DURATION / 20) / 60);
             case USER_ATTACKING -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.user_attacking", ATTACK_EFFECT_DURATION / 20);
         };

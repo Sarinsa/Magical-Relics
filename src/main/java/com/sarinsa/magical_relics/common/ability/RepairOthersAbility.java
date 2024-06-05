@@ -20,6 +20,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK, TriggerType.HELD, TriggerType.USE
+            TriggerType.ARMOR_TICK, TriggerType.HELD, TriggerType.USE, TriggerType.CURIO_TICK
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
@@ -73,12 +75,7 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public void onArmorTick(ItemStack artifact, Level level, Player player) {
-        this.onHeld(level, player, artifact);
-    }
-
-    @Override
-    public void onHeld(Level level, Player player, ItemStack artifact) {
+    public void onHeld(Level level, Player player, ItemStack artifact, EquipmentSlot slot) {
         if (MREventListener.getRepairTick() % 200 == 0) {
             ItemStack stackToRepair = ItemStack.EMPTY;
 
@@ -93,10 +90,37 @@ public class RepairOthersAbility extends BaseArtifactAbility {
 
             if (!stackToRepair.isEmpty()) {
                 stackToRepair.hurt(-1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null);
-                artifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                artifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(slot));
             }
         }
     }
+
+    @Override
+    public void onCurioTick(ItemStack artifact, Level level, Player player, SlotContext slotContext) {
+        if (MREventListener.getRepairTick() % 200 == 0) {
+            ItemStack stackToRepair = ItemStack.EMPTY;
+
+            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                ItemStack checkedStack = player.getInventory().getItem(i);
+
+                if (!(checkedStack.getItem() instanceof ItemArtifact) && checkedStack.getDamageValue() > 0) {
+                    stackToRepair = player.getInventory().getItem(i);
+                    break;
+                }
+            }
+
+            if (!stackToRepair.isEmpty()) {
+                stackToRepair.hurt(-1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null);
+                artifact.hurtAndBreak(1, player, (p) -> CuriosApi.broadcastCurioBreakEvent(slotContext));
+            }
+        }
+    }
+
+    @Override
+    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
+        onHeld(level, player, artifact, slot);
+    }
+
 
     @Override
     public String[] getPrefixes() {
@@ -110,10 +134,10 @@ public class RepairOthersAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
-        if(isArmor) {
-            return TriggerType.ARMOR_TICK;
-        }
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+        if(isArmor) return TriggerType.ARMOR_TICK;
+        if (isCurio) return TriggerType.CURIO_TICK;
+
         return random.nextInt(2) == 0 ? TriggerType.USE : TriggerType.HELD;
     }
 
@@ -138,6 +162,7 @@ public class RepairOthersAbility extends BaseArtifactAbility {
             default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.armor_tick");
             case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.use");
             case HELD -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.held");
+            case CURIO_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.curio");
         };
     }
 }

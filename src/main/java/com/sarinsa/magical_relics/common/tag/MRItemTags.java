@@ -12,6 +12,7 @@ public class MRItemTags {
 
 
     public static final TagKey<Item> ARTIFACTS = modTag("artifacts");
+    public static final TagKey<Item> ARTIFACT_CURIOS = modTag("artifact_curios");
 
 
     private static TagKey<Item> modTag(String name) {

@@ -29,7 +29,7 @@ public class EmptyAbility extends BaseArtifactAbility {
 
 
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
         return TriggerType.HELD;
     }
 

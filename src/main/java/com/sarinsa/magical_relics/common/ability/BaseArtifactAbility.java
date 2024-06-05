@@ -6,7 +6,6 @@ import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
@@ -60,7 +59,7 @@ public abstract class BaseArtifactAbility {
      *         artifact item stack.
      */
     @Nullable
-    public abstract TriggerType getRandomTrigger(RandomSource random, boolean isArmor);
+    public abstract TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio);
 
     /**
      * @return A List of trigger types supported by this ability. This is not super
@@ -105,7 +104,7 @@ public abstract class BaseArtifactAbility {
         return false;
     }
 
-    public void onHeld(Level level, Player player, ItemStack artifact) {
+    public void onHeld(Level level, Player player, ItemStack artifact, EquipmentSlot slot) {
     }
 
     public boolean onDropped(Level level, ItemEntity itemEntity, Player player) {
@@ -120,7 +119,13 @@ public abstract class BaseArtifactAbility {
 
     }
 
-    public void onDeath(Level level, Player player, EquipmentSlot slot, ItemStack artifact, LivingDeathEvent event) {
+    /**
+     * Called when the player dies (only for held artifact items, armor and curio artifact items)<br><br>
+     *
+     * @param slot The equipment slot of the artifact item. This will be null if the artifact item is equipped in a curio slot.
+     * @param slotContext The Curios slot context of the artifact item. This will be null if the artifact item is equipped in any vanilla slots.
+     */
+    public void onDeath(Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext, ItemStack artifact, LivingDeathEvent event) {
 
     }
 
@@ -128,7 +133,11 @@ public abstract class BaseArtifactAbility {
 
     }
 
-    public void onArmorTick(ItemStack artifact, Level level, Player player) {
+    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
+
+    }
+
+    public void onCurioTick(ItemStack artifact, Level level, Player player, SlotContext slotContext) {
 
     }
 

@@ -20,6 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
@@ -50,11 +52,19 @@ public class ResurrectAbility extends BaseArtifactAbility {
 
 
     @Override
-    public void onDeath(Level level, Player player, EquipmentSlot slot, ItemStack artifact, LivingDeathEvent event) {
+    public void onDeath(Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext, ItemStack artifact, LivingDeathEvent event) {
+        // Don't do stuff if the event is already canceled
+        if (event.isCanceled()) return;
+
         if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
             ArtifactUtils.setAbilityCooldown(artifact, this, 6000);
 
-            artifact.hurtAndBreak(artifact.getMaxDamage() / 5, player, (p) -> p.broadcastBreakEvent(slot));
+            if (slotContext != null) {
+                artifact.hurtAndBreak(artifact.getMaxDamage() / 4, player, (p) -> CuriosApi.broadcastCurioBreakEvent(slotContext));
+            }
+            else if (slot != null) {
+                artifact.hurtAndBreak(artifact.getMaxDamage() / 4, player, (p) -> p.broadcastBreakEvent(slot));
+            }
 
             event.setCanceled(true);
             player.setHealth(Math.min(10.0F, player.getMaxHealth()));
@@ -77,7 +87,7 @@ public class ResurrectAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
         return TriggerType.ON_DEATH;
     }
 

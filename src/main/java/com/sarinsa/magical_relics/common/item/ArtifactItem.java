@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
@@ -126,9 +127,9 @@ public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack);
+        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack, AttributeBoost.ActiveType.HELD);
 
-        if (artifactModifiers != null && slot == EquipmentSlot.MAINHAND) {
+        if (artifactModifiers != null && (slot == EquipmentSlot.MAINHAND)) {
             return artifactModifiers;
         }
         return super.getAttributeModifiers(slot, stack);
@@ -136,7 +137,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack);
+        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack, AttributeBoost.ActiveType.EQUIPPED);
 
         if (artifactModifiers != null) {
             return artifactModifiers;

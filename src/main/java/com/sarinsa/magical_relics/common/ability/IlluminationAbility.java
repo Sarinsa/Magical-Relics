@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class IlluminationAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK, TriggerType.HELD
+            TriggerType.ARMOR_TICK, TriggerType.HELD, TriggerType.CURIO_TICK
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
@@ -51,7 +53,7 @@ public class IlluminationAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public void onArmorTick(ItemStack artifact, Level level, Player player) {
+    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
         if (!level.isClientSide) {
             BlockPos pos = player.blockPosition();
 
@@ -76,8 +78,13 @@ public class IlluminationAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public void onHeld(Level level, Player player, ItemStack artifact) {
-        this.onArmorTick(artifact, level, player);
+    public void onCurioTick(ItemStack artifact, Level level, Player player, SlotContext slotContext) {
+        onArmorTick(artifact, level, player, null);
+    }
+
+    @Override
+    public void onHeld(Level level, Player player, ItemStack artifact, EquipmentSlot slot) {
+        onArmorTick(artifact, level, player, slot);
     }
 
     @Override
@@ -92,7 +99,9 @@ public class IlluminationAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+        if (isCurio) return TriggerType.CURIO_TICK;
+
         return isArmor ? TriggerType.ARMOR_TICK : TriggerType.HELD;
     }
 
@@ -109,9 +118,15 @@ public class IlluminationAbility extends BaseArtifactAbility {
 
     @Override
     public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        if (ArtifactUtils.getTriggerFromStack(artifact, this) == TriggerType.ARMOR_TICK) {
-            return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.illumination.description.armor_tick");
-        }
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.illumination.description.held");
+        TriggerType triggerType = ArtifactUtils.getTriggerFromStack(artifact, this);
+
+        if (triggerType == null) return null;
+
+        return switch (triggerType) {
+            default -> null;
+            case ARMOR_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.illumination.description.armor_tick");
+            case HELD -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.illumination.description.held");
+            case CURIO_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.illumination.description.curio");
+        };
     }
 }

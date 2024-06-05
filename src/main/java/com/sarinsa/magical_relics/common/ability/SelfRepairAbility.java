@@ -10,6 +10,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -58,12 +59,12 @@ public class SelfRepairAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public void onArmorTick(ItemStack artifact, Level level, Player player) {
+    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
         handleRepair(artifact, level, player);
     }
 
     @Override
-    public void onHeld(Level level, Player player, ItemStack artifact) {
+    public void onHeld(Level level, Player player, ItemStack artifact, EquipmentSlot slot) {
         handleRepair(artifact, level, player);
     }
 
@@ -89,7 +90,7 @@ public class SelfRepairAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor) {
+    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
         if(isArmor) {
             return random.nextInt(2) == 0 ? TriggerType.ARMOR_TICK : TriggerType.HELD;
         }
