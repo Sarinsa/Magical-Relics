@@ -458,10 +458,16 @@ public class ArtifactUtils {
                 MutableComponent description = ability.getAbilityDescription(itemStack, level, flag);
 
                 if (description != null) {
-                    MutableComponent baseComponent = Component.translatable(isAbilityOnCooldown(itemStack, ability) ? "❄ " : "").setStyle(Style.EMPTY.withColor(0xA3EFFF));
-                    description.setStyle(ability.getRarity().getStyleModifier().apply(description.getStyle()));
-                    baseComponent.append(description);
-                    components.add(baseComponent);
+                    if (ability.showCooldownSymbol()) {
+                        MutableComponent cooldownComponent = Component.translatable(isAbilityOnCooldown(itemStack, ability) ? "❄ " : "").setStyle(Style.EMPTY.withColor(0xA3EFFF));
+                        description.setStyle(ability.getRarity().getStyleModifier().apply(description.getStyle()));
+                        cooldownComponent.append(description);
+                        components.add(cooldownComponent);
+                    }
+                    else {
+                        description.setStyle(ability.getRarity().getStyleModifier().apply(description.getStyle()));
+                        components.add(description);
+                    }
                 }
             }
             components.add(Component.literal(" "));

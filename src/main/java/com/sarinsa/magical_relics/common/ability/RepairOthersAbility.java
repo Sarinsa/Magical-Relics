@@ -153,6 +153,11 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     }
 
     @Override
+    public boolean showCooldownSymbol() {
+        return false;
+    }
+
+    @Override
     public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         TriggerType triggerType = ArtifactUtils.getTriggerFromStack(artifact, this);
 

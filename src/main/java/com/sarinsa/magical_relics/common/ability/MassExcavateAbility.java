@@ -161,6 +161,11 @@ public class MassExcavateAbility extends BaseArtifactAbility {
     }
 
     @Override
+    public boolean showCooldownSymbol() {
+        return false;
+    }
+
+    @Override
     public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.mass_excavate.description");
     }

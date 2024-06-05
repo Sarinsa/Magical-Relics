@@ -74,6 +74,14 @@ public abstract class BaseArtifactAbility {
     public abstract List<ArtifactCategory> getCompatibleTypes();
 
     /**
+     * @return True if a "snowflake" symbol should be prepended to this ability's description
+     *         when it is on cooldown.
+     */
+    public boolean showCooldownSymbol() {
+        return true;
+    }
+
+    /**
      * @return A description of this ability that will be added to the artifact item stack's tooltip.
      */
     public abstract MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag);
