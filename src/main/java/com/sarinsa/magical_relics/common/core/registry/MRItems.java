@@ -6,6 +6,8 @@ import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
 import com.sarinsa.magical_relics.common.item.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -33,7 +35,7 @@ public class MRItems {
     }
 
     public static final RegistryObject<Item> RANDOM_ARTIFACT = register("random_artifact", () -> new RandomArtifactItem(new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> QUICKSAND_BUCKET = register("quicksand_bucket", () -> new BlockBucketItem(MRBlocks.QUICKSAND, new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> QUICKSAND_BUCKET = register("quicksand_bucket", () -> new SolidBucketItem(MRBlocks.QUICKSAND.get(), SoundEvents.MUD_PLACE, new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
     public static final RegistryObject<Item> THICK_TRIPWIRE = register("thick_tripwire", () -> new BlockItem(MRBlocks.THICK_TRIPWIRE.get(), new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
     public static final RegistryObject<Item> RAW_MANAESSENCE = register("raw_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
     public static final RegistryObject<Item> WOOD_MANAESSENCE = register("wood_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
