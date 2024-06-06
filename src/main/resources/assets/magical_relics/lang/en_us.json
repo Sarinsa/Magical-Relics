@@ -180,6 +180,8 @@
   "magical_relics.artifact_ability.magical_relics.repair_others.description.held": "Slowly repairs other non-artifacts when held",
   "magical_relics.artifact_ability.magical_relics.repair_others.description.curio": "Slowly repairs other non-artifacts when equipped",
   "magical_relics.artifact_ability.magical_relics.tnt.description": "Summons an explosive when right-clicking a block",
+  "magical_relics.artifact_ability.magical_relics.reach_boost.description.armor_tick": "Passively boosts reach when equipped",
+  "magical_relics.artifact_ability.magical_relics.reach_boost.description.held": "Passively boosts reach when held or equipped",
 
 
   "magical_relics.ability.mundane_prefix": "Mundane",
@@ -302,6 +304,12 @@
   "magical_relics.artifact_ability.magical_relics.tnt.suffix.booms": "of Booms",
   "magical_relics.artifact_ability.magical_relics.tnt.suffix.combusting": "of Combusting",
   "magical_relics.artifact_ability.magical_relics.tnt.suffix.explotando": "of Explotando",
+
+  "magical_relics.artifact_ability.magical_relics.reach_boost.prefix.lengthy": "Lengthy",
+  "magical_relics.artifact_ability.magical_relics.reach_boost.prefix.extending": "Extending",
+  "magical_relics.artifact_ability.magical_relics.reach_boost.suffix.stretching": "of Stretching",
+  "magical_relics.artifact_ability.magical_relics.reach_boost.suffix.reaching": "of Reaching",
+
 
   "curios.identifier.amulet": "Amulet",
   "curios.modifiers.amulet": "When worn as amulet"

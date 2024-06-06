@@ -63,7 +63,7 @@ public class AdrenalineAbility extends BaseArtifactAbility {
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 100, 1));
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 2));
 
-            ArtifactUtils.setAbilityCooldown(artifact, this, 300);
+            ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
         }
     }
 

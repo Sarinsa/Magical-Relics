@@ -40,6 +40,7 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> SELF_REPAIR = register("self_repair", SelfRepairAbility::new);
     public static final RegistryObject<BaseArtifactAbility> REPAIR_OTHERS = register("repair_others", RepairOthersAbility::new);
     public static final RegistryObject<BaseArtifactAbility> TNT = register("tnt", TntAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> REACH_BOOST = register("reach_boost", ReachBoostAbility::new);
 
 
     private static RegistryObject<BaseArtifactAbility> register(String name, Supplier<BaseArtifactAbility> supplier) {

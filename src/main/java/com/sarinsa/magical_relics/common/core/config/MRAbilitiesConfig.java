@@ -7,8 +7,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.lang.annotation.AnnotationTypeMismatchException;
-import java.lang.annotation.IncompleteAnnotationException;
 import java.lang.reflect.Method;
 
 public class MRAbilitiesConfig {
@@ -42,7 +40,8 @@ public class MRAbilitiesConfig {
          *
          * - Extend {@link com.sarinsa.magical_relics.common.ability.BaseArtifactAbility}<br>
          * - Contain a public static void method with the name 'buildEntries'<br>
-         * - Said method must have a single parameter of type {@link ForgeConfigSpec.Builder}
+         * - Said method must have a single parameter of type {@link ForgeConfigSpec.Builder}<br>
+         * - Said method must be annotated with the {@link AbilityConfig} annotation
          */
         private void constructAbilityEntries(ForgeConfigSpec.Builder configBuilder) {
             ModList.get().getAllScanData().forEach(scanData -> {
