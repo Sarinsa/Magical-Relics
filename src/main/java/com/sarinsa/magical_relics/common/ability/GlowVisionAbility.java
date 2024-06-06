@@ -4,7 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.MRAbilitiesConfig;
+import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -18,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,16 +48,28 @@ public class GlowVisionAbility extends BaseArtifactAbility {
             ArtifactCategory.TRINKET, ArtifactCategory.STAFF, ArtifactCategory.WAND, ArtifactCategory.DAGGER, ArtifactCategory.SWORD
     );
 
+    private static ForgeConfigSpec.IntValue range;
+    private static ForgeConfigSpec.IntValue cooldown;
+
 
     public GlowVisionAbility() {
 
+    }
+
+    @AbilityConfig(abilityId = "magical_relics:glow_vision")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        range = configBuilder.comment("The range in blocks that this ability will look for mobs to make glow")
+                .defineInRange("range", 30, 0, 100);
+
+        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
+                .defineInRange("cooldown", 400, 5, 100000);
     }
 
 
     @Override
     public boolean onUse(Level level, Player player, ItemStack artifact) {
         if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-            List<LivingEntity> nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(30, 30, 30));
+            List<LivingEntity> nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(range.get(), range.get(), range.get()));
 
             if (!nearbyEntities.isEmpty()) {
                 nearbyEntities.remove(player);
@@ -64,7 +80,7 @@ public class GlowVisionAbility extends BaseArtifactAbility {
                 level.playSound(null, player.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.PLAYERS, 1.0F, 0.9F + (level.random.nextFloat() / 3));
                 artifact.hurtAndBreak(3, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
-            ArtifactUtils.setAbilityCooldown(artifact, this, 400);
+            ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
             return true;
         }
         return false;

@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SculkSensorBlockEntity;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
@@ -56,10 +58,18 @@ public class NightVisionAbility extends BaseArtifactAbility {
     private static final int USE_EFFECT_DURATION = 2400;
     private static final int PASSIVE_EFFECT_DURATION = 310;
 
+    private static ForgeConfigSpec.IntValue cooldown;
+
 
     public NightVisionAbility() {
     }
 
+
+    @AbilityConfig(abilityId = "magical_relics:night_vision")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
+                .defineInRange("cooldown", USE_EFFECT_DURATION, 5, 100000);
+    }
 
     @Override
     public boolean onUse(Level level, Player player, ItemStack itemStack) {
@@ -68,7 +78,7 @@ public class NightVisionAbility extends BaseArtifactAbility {
 
             itemStack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
 
-            ArtifactUtils.setAbilityCooldown(itemStack, this, USE_EFFECT_DURATION);
+            ArtifactUtils.setAbilityCooldown(itemStack, this, cooldown.get());
             return true;
         }
         return false;

@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,8 +51,17 @@ public class BakerAbility extends BaseArtifactAbility {
             ArtifactCategory.AMULET, ArtifactCategory.STAFF, ArtifactCategory.TRINKET, ArtifactCategory.FIGURINE, ArtifactCategory.WAND
     );
 
+    private static ForgeConfigSpec.IntValue cooldown;
+
 
     public BakerAbility() {
+    }
+
+
+    @AbilityConfig(abilityId = "magical_relics:baker")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
+                .defineInRange("cooldown", 20, 5, 100000);
     }
 
 
@@ -66,7 +77,7 @@ public class BakerAbility extends BaseArtifactAbility {
 
         if (currentStateAt.isAir() && Blocks.CAKE.defaultBlockState().canSurvive(level, toPlacePos)) {
             level.setBlock(toPlacePos, Blocks.CAKE.defaultBlockState(), Block.UPDATE_ALL);
-            ArtifactUtils.setAbilityCooldown(itemStack, this, 20);
+            ArtifactUtils.setAbilityCooldown(itemStack, this, cooldown.get());
 
             itemStack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
 
@@ -109,11 +120,6 @@ public class BakerAbility extends BaseArtifactAbility {
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
-    }
-
-    @Override
-    public boolean showCooldownSymbol() {
-        return false;
     }
 
     @Override

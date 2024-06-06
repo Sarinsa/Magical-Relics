@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,13 +45,21 @@ public class StunAbility extends BaseArtifactAbility {
             ArtifactCategory.AXE
     );
 
-    private static final int EFFECT_DURATION = 100;
+    private static final int EFFECT_DURATION = 120;
+
+    private static ForgeConfigSpec.IntValue cooldown;
 
 
     public StunAbility() {
 
     }
 
+
+    @AbilityConfig(abilityId = "magical_relics:stun")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been activated")
+                .defineInRange("cooldown", 500, 5, 100000);
+    }
 
     @Override
     public boolean onDropped(Level level, ItemEntity itemEntity, Player player) {
@@ -60,7 +70,7 @@ public class StunAbility extends BaseArtifactAbility {
             for (LivingEntity entity : nearbyEntities) {
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, EFFECT_DURATION, 1));
             }
-            ArtifactUtils.setAbilityCooldown(itemEntity.getItem(), this, 500);
+            ArtifactUtils.setAbilityCooldown(itemEntity.getItem(), this, cooldown.get());
         }
         return false;
     }

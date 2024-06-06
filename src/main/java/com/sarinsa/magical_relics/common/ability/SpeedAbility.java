@@ -6,6 +6,7 @@ import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,14 +58,25 @@ public class SpeedAbility extends BaseArtifactAbility {
             () -> Attributes.MOVEMENT_SPEED,
             "MRSpeedBoost",
             AttributeModifier.Operation.MULTIPLY_BASE,
-            (random) -> (4.0D + random.nextInt(12)) / 100,
+            (random) -> ((double) SpeedAbility.minBoost.get() + random.nextInt(SpeedAbility.maxAdditionalBoost.get() + 1)) / 100,
             AttributeBoost.ActiveType.HELD_OR_EQUIPPED
     );
+
+    private static ForgeConfigSpec.IntValue minBoost;
+    private static ForgeConfigSpec.IntValue maxAdditionalBoost;
 
 
     public SpeedAbility() {
     }
 
+    @AbilityConfig(abilityId = "magical_relics:speed_boost")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        minBoost = configBuilder.comment("The minimum amount of movement speed increase the boost of this ability can grant, in percentage. When this ability is applied to an artifact, the total boost equals minBoost + a random value between 0 and maxAdditionalBoost.")
+                .defineInRange("minBoost", 4, 1, 100000);
+
+        maxAdditionalBoost = configBuilder.comment("The maximum amount of additional movement speed increase the boost of this ability can grant, in percentage. When this ability is applied to an artifact, the total boost equals minBoost + a random value between 0 and maxAdditionalBoost.")
+                .defineInRange("maxAdditionalBoost", 12, 0, 100000);
+    }
 
     @Override
     public AttributeBoost getAttributeWithBoost() {

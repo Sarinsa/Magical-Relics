@@ -3,6 +3,7 @@ package com.sarinsa.magical_relics.common.core;
 import com.mojang.brigadier.CommandDispatcher;
 import com.sarinsa.magical_relics.common.block.CamoDispenserBlock;
 import com.sarinsa.magical_relics.common.command.MRBaseCommand;
+import com.sarinsa.magical_relics.common.core.config.MRAbilitiesConfig;
 import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.network.PacketHandler;
@@ -14,7 +15,9 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -71,6 +74,8 @@ public class MagicalRelics {
         MRConfiguredFeatures.CF_REGISTRY.register(modBus);
         MRConfiguredFeatures.P_REGISTRY.register(modBus);
         MRArgumentTypes.ARGUMENT_TYPES.register(modBus);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MRAbilitiesConfig.CONFIG_SPEC, "magical_relics/ability-properties.toml");
     }
 
 

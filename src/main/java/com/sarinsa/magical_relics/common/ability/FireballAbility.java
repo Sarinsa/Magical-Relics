@@ -6,6 +6,7 @@ import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.entity.VolatileFireball;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,15 +48,27 @@ public class FireballAbility extends BaseArtifactAbility {
             ArtifactCategory.AXE
     );
 
+    private static ForgeConfigSpec.IntValue explosionPower;
+    private static ForgeConfigSpec.IntValue cooldown;
+
 
     public FireballAbility() {}
 
+
+    @AbilityConfig(abilityId = "magical_relics:fireball")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        explosionPower = configBuilder.comment("The explosion power of the fireballs summoned by this ability. Be a bit careful with larger numbers, since the fireballs explode automatically after having traveled a good distance")
+                .defineInRange("explosionPower", 1, 1, 20);
+
+        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
+                .defineInRange("cooldown", 20, 5, 100000);
+    }
 
     @Override
     public boolean onUse(Level level, Player player, ItemStack itemStack) {
         if (!ArtifactUtils.isAbilityOnCooldown(itemStack, this)) {
             Vec3 viewVec = player.getViewVector(1.0F);
-            VolatileFireball fireball = new VolatileFireball(level, player, 0.0D, 0.0D, 0.0D, 1);
+            VolatileFireball fireball = new VolatileFireball(level, player, 0.0D, 0.0D, 0.0D, explosionPower.get());
             fireball.setPos(player.getX() + viewVec.x * 2.0D, player.getY(0.5D) + 0.25D, fireball.getZ() + viewVec.z * 2.0D);
             fireball.shootFromRotation(player, player.getXRot(), player.getYRot(), 2.5F, 2.5F, 2.5F);
             level.addFreshEntity(fireball);
@@ -65,7 +79,7 @@ public class FireballAbility extends BaseArtifactAbility {
             }
             itemStack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
 
-            ArtifactUtils.setAbilityCooldown(itemStack, this, 20);
+            ArtifactUtils.setAbilityCooldown(itemStack, this, cooldown.get());
             return true;
         }
         return false;

@@ -6,6 +6,7 @@ import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.item.ArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,10 +48,19 @@ public class ResurrectAbility extends BaseArtifactAbility {
             ArtifactCategory.HELMET, ArtifactCategory.CHESTPLATE, ArtifactCategory.BELT, ArtifactCategory.FIGURINE
     );
 
+    private static ForgeConfigSpec.IntValue cooldown;
+
+
     public ResurrectAbility() {
 
     }
 
+
+    @AbilityConfig(abilityId = "magical_relics:resurrect")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been activated")
+                .defineInRange("cooldown", 6000, 5, 100000);
+    }
 
     @Override
     public void onDeath(Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext, ItemStack artifact, LivingDeathEvent event) {
@@ -57,7 +68,7 @@ public class ResurrectAbility extends BaseArtifactAbility {
         if (event.isCanceled()) return;
 
         if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-            ArtifactUtils.setAbilityCooldown(artifact, this, 6000);
+            ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
 
             if (slotContext != null) {
                 artifact.hurtAndBreak(artifact.getMaxDamage() / 4, player, (p) -> CuriosApi.broadcastCurioBreakEvent(slotContext));

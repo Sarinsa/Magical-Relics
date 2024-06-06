@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,9 +50,18 @@ public class SelfRepairAbility extends BaseArtifactAbility {
             ArtifactCategory.AXE
     );
 
+    private static ForgeConfigSpec.IntValue cooldown;
+
 
     public SelfRepairAbility() {
 
+    }
+
+
+    @AbilityConfig(abilityId = "magical_relics:self_repair")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        cooldown = configBuilder.comment("How many ticks of cooldown must pass before the next time this ability can restore a point of durability")
+                .defineInRange("cooldown", 120, 5, 100000);
     }
 
     @Override
@@ -73,7 +84,7 @@ public class SelfRepairAbility extends BaseArtifactAbility {
             if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
                 artifact.hurt(-1, level.random, entity instanceof ServerPlayer serverPlayer ? serverPlayer : null);
 
-                ArtifactUtils.setAbilityCooldown(artifact, this, 120);
+                ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
             }
         }
     }

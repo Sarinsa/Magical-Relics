@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,11 +51,23 @@ public class TntAbility extends BaseArtifactAbility {
             ArtifactCategory.STAFF
     );
 
+    private static ForgeConfigSpec.IntValue cooldown;
+    private static ForgeConfigSpec.IntValue fuse;
+
 
     public TntAbility() {
 
     }
 
+
+    @AbilityConfig(abilityId = "magical_relics:tnt")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
+                .defineInRange("cooldown", 400, 5, 100000);
+
+        fuse = configBuilder.comment("How long it takes before the TNT actually explodes after being summoned (in ticks)")
+                .defineInRange("fuse", 80, 1, 100000);
+    }
 
     @Override
     public boolean onClickBlock(Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player) {
@@ -63,13 +77,14 @@ public class TntAbility extends BaseArtifactAbility {
 
             if (relativeState.getCollisionShape(level, relativePos).isEmpty()) {
                 PrimedTnt tnt = new PrimedTnt(level, relativePos.getX() + 0.5D, relativePos.getY(), relativePos.getZ() + 0.5D, player);
+                tnt.setFuse(fuse.get());
                 level.addFreshEntity(tnt);
 
                 if (!level.isClientSide) {
                     level.playSound(null, relativePos, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F);
                 }
                 artifact.hurtAndBreak(2, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                ArtifactUtils.setAbilityCooldown(artifact, this, 400);
+                ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
                 return true;
             }
         }

@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
@@ -52,15 +54,28 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     private static final int ATTACK_EFFECT_DURATION = 125;
     private static final int PASSIVE_EFFECT_DURATION = 310;
 
+    private static ForgeConfigSpec.IntValue maxAmplifier;
+    private static ForgeConfigSpec.IntValue cooldown;
+
 
     public JumpBoostAbility() {
 
     }
 
+
+    @AbilityConfig(abilityId = "magical_relics:jump_boost")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        maxAmplifier = configBuilder.comment("The maximum possible potion amplifier that can be applied to this ability.")
+                .defineInRange("maxAmplifier", 2, 0, 10);
+
+        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
+                .defineInRange("cooldown", USE_EFFECT_DURATION, 20, 100000);
+    }
+
     @Override
     public void onAbilityAttached(ItemStack artifact, RandomSource randomSource) {
         CompoundTag modDataTag = artifact.getOrCreateTag().getCompound(ArtifactUtils.MOD_DATA_KEY);
-        int multiplier = randomSource.nextInt(3);
+        int multiplier = randomSource.nextInt(maxAmplifier.get() + 1);
 
         CompoundTag abilityDataTag = new CompoundTag();
         abilityDataTag.putInt("EffectMultiplier", multiplier);
@@ -86,7 +101,7 @@ public class JumpBoostAbility extends BaseArtifactAbility {
             if (!player.level().isClientSide)
                 player.addEffect(new MobEffectInstance(MobEffects.JUMP, USE_EFFECT_DURATION, getEffectMultiplier(artifact)));
 
-            ArtifactUtils.setAbilityCooldown(artifact, this, 400);
+            ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
             return true;
         }
         return false;

@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,11 +53,19 @@ public class MassExcavateAbility extends BaseArtifactAbility {
             ArtifactCategory.WAND
     );
 
+    private static ForgeConfigSpec.IntValue cooldown;
+
 
     public MassExcavateAbility() {
 
     }
 
+
+    @AbilityConfig(abilityId = "magical_relics:mass_excavate")
+    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
+        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
+                .defineInRange("cooldown", 20, 5, 100000);
+    }
 
     @Override
     public String[] getPrefixes() {
@@ -113,7 +123,7 @@ public class MassExcavateAbility extends BaseArtifactAbility {
                 }
                 if (destroyedAnyBlocks) {
                     artifact.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
-                    ArtifactUtils.setAbilityCooldown(artifact, this, 20);
+                    ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
                     return true;
                 }
             }
