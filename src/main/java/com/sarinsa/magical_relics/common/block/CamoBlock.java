@@ -45,7 +45,6 @@ public interface CamoBlock {
             if (handStack.getItem() instanceof BlockItem blockItem) {
                 Block block = blockItem.getBlock();
 
-                // This can be null, IntelliJ is lying >:(
                 if (block == null) return InteractionResult.PASS;
 
                 BlockState camoState = block.getStateForPlacement(new BlockPlaceContext(player, hand, handStack, Item.getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE)));

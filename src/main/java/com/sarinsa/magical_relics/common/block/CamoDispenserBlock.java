@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.block;
 
+import com.sarinsa.magical_relics.common.blockentity.CamoBlockEntity;
 import com.sarinsa.magical_relics.common.blockentity.CamoDispenserBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.entity.SwungSword;
@@ -134,7 +135,7 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         CamoDispenserBlockEntity arrowTrap = new CamoDispenserBlockEntity(pos, state);
-        arrowTrap.setCamoState(Blocks.STONE_BRICKS.defaultBlockState());
+        arrowTrap.setCamoState(CamoBlockEntity.defaultCamoState.get());
         return arrowTrap;
     }
 

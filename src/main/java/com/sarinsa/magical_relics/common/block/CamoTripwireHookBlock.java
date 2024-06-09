@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.block;
 
 import com.google.common.base.MoreObjects;
 import com.sarinsa.magical_relics.common.blockentity.BaseCamoBlockEntity;
+import com.sarinsa.magical_relics.common.blockentity.CamoBlockEntity;
 import com.sarinsa.magical_relics.common.blockentity.CamoDispenserBlockEntity;
 import com.sarinsa.magical_relics.common.blockentity.CamoTripwireBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
@@ -49,7 +50,7 @@ public class CamoTripwireHookBlock extends TripWireHookBlock implements EntityBl
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         CamoTripwireBlockEntity be = new CamoTripwireBlockEntity(pos, state);
-        be.setCamoState(Blocks.STONE_BRICKS.defaultBlockState());
+        be.setCamoState(CamoBlockEntity.defaultCamoState.get());
         return be;
     }
 
