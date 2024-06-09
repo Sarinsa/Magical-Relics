@@ -38,7 +38,6 @@ public class MRAbilitiesConfig {
          * attempts to invoke them.<br><br>
          * Valid target classes must:<br><br>
          *
-         * - Extend {@link com.sarinsa.magical_relics.common.ability.BaseArtifactAbility}<br>
          * - Contain a public static void method with the name 'buildEntries'<br>
          * - Said method must have a single parameter of type {@link ForgeConfigSpec.Builder}<br>
          * - Said method must be annotated with the {@link AbilityConfig} annotation
@@ -51,22 +50,16 @@ public class MRAbilitiesConfig {
                     if (annotationData.annotationType().getClassName().equals(AbilityConfig.class.getName())) {
                         try {
                             Class<?> clazz = Class.forName(annotationData.clazz().getClassName());
+                            String abilityId = (String) annotationData.annotationData().getOrDefault("abilityId", "");
 
-                            if (BaseArtifactAbility.class.isAssignableFrom(clazz)) {
-                                String abilityId = (String) annotationData.annotationData().getOrDefault("abilityId", "");
-
-                                if (abilityId == null || abilityId.isEmpty()) {
-                                    MagicalRelics.LOG.error("Failed to construct annotated ability config entry in {} due to lacking ability ID in the annotation", annotationData.clazz().getClassName());
-                                }
-                                Method configBuildMethod = clazz.getMethod("buildEntries", ForgeConfigSpec.Builder.class);
-
-                                configBuilder.push(abilityId);
-                                configBuildMethod.invoke(null, configBuilder);
-                                configBuilder.pop();
+                            if (abilityId == null || abilityId.isEmpty()) {
+                                MagicalRelics.LOG.error("Failed to construct annotated ability config entry in {} due to lacking ability ID in the annotation", annotationData.clazz().getClassName());
                             }
-                            else {
-                                MagicalRelics.LOG.error("Found ability config builder method in non-ability class {}, skipping", clazz.getName());
-                            }
+                            Method configBuildMethod = clazz.getMethod("buildEntries", ForgeConfigSpec.Builder.class);
+
+                            configBuilder.push(abilityId);
+                            configBuildMethod.invoke(null, configBuilder);
+                            configBuilder.pop();
                         }
                         catch (Exception e) {
                             MagicalRelics.LOG.error("Failed to construct annotated ability config entry in {}", annotationData.clazz().getClassName());
