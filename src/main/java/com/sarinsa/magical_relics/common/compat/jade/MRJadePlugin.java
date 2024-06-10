@@ -1,13 +1,17 @@
 package com.sarinsa.magical_relics.common.compat.jade;
 
 import com.sarinsa.magical_relics.common.blockentity.CamoBlockEntity;
-import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
+import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import snownee.jade.api.*;
+import snownee.jade.api.config.IWailaConfig;
 
 @WailaPlugin
 public class MRJadePlugin implements IWailaPlugin {
+
+    private static final ResourceLocation displayCamosId = MagicalRelics.resLoc("display_camos");
 
 
     @Override
@@ -16,6 +20,9 @@ public class MRJadePlugin implements IWailaPlugin {
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
+        registration.addConfig(displayCamosId, true);
+        registration.markAsClientFeature(displayCamosId);
+
         // Solid air and illumination block should be hidden
         registration.hideTarget(MRBlocks.ILLUMINATION_BLOCK.get());
         registration.hideTarget(MRBlocks.SOLID_AIR.get());
@@ -23,10 +30,11 @@ public class MRJadePlugin implements IWailaPlugin {
         // Make camo blocks appear as what they are disguised as
         registration.addRayTraceCallback((hitResult, accessor, originalAccessor) -> {
             if (accessor instanceof BlockAccessor blockAccessor) {
-                if (blockAccessor.getLevel().getExistingBlockEntity(blockAccessor.getPosition()) instanceof CamoBlockEntity camoBlockEntity) {
+                if (blockAccessor.getBlockEntity() instanceof CamoBlockEntity camoBlockEntity) {
                     BlockState camoState = camoBlockEntity.getCamoState();
-                    if (camoState != null && camoState != CamoBlockEntity.defaultCamoState.get()) {
+                    if (IWailaConfig.get().getPlugin().get(displayCamosId) && camoState != null && camoState != CamoBlockEntity.defaultCamoState.get()) {
                         return registration.blockAccessor().from(blockAccessor)
+                                .blockEntity(() -> null)
                                 .blockState(camoBlockEntity.getCamoState())
                                 .build();
                     }

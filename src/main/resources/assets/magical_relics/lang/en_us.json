@@ -314,5 +314,8 @@
 
 
   "curios.identifier.amulet": "Amulet",
-  "curios.modifiers.amulet": "When worn as amulet"
+  "curios.modifiers.amulet": "When worn as amulet",
+
+
+  "config.jade.plugin_magical_relics.display_camos": "Display Block Camos"
 }
