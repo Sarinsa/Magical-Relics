@@ -410,10 +410,34 @@ public class ArtifactUtils {
         return null;
     }
 
+    /**
+     * @return True if the given item stack has the specified ability attached to it.
+     */
     public static boolean hasAbility(ItemStack itemStack, BaseArtifactAbility ability) {
         Map<BaseArtifactAbility, TriggerType> abilities = getAllAbilities(itemStack);
         if (abilities.isEmpty()) return false;
         return abilities.containsKey(ability);
+    }
+
+    /**
+     * Loops through the given player's curio inventory and checks if
+     * the specified ability is present on any item stacks. Note that only
+     * the curio slots with the identifiers in {@link ArtifactUtils#CURIO_SLOTS}
+     * are checked.
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static boolean hasAbilityOnCurio(Player player, BaseArtifactAbility ability) {
+        ICuriosItemHandler curioInventory = CuriosApi.getCuriosInventory(player).orElse(null);
+
+        if (curioInventory != null) {
+            List<SlotResult> slotResults = curioInventory.findCurios(CURIO_SLOTS);
+
+            for (SlotResult slotResult : slotResults) {
+                if (hasAbility(slotResult.stack(), ability))
+                    return true;
+            }
+        }
+        return false;
     }
 
     /**

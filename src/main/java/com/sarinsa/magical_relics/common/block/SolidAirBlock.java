@@ -77,13 +77,14 @@ public class SolidAirBlock extends AirBlock {
 
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        List<Player> abovePlayers = level.getEntitiesOfClass(Player.class, new AABB(pos.above()));
+        List<Player> abovePlayers = level.getEntitiesOfClass(Player.class, new AABB(pos.above()).deflate(0.3D, 0.0D, 0.3D));
 
         if (!abovePlayers.isEmpty()) {
             boolean presentAirSneaker = false;
 
             for (Player player : abovePlayers) {
-                if (ArtifactUtils.hasAbility(player.getItemInHand(InteractionHand.MAIN_HAND), MRArtifactAbilities.AIR_SNEAK.get())) {
+                if (ArtifactUtils.hasAbility(player.getItemInHand(InteractionHand.MAIN_HAND), MRArtifactAbilities.AIR_SNEAK.get())
+                        || ArtifactUtils.hasAbilityOnCurio(player, MRArtifactAbilities.AIR_SNEAK.get())) {
                     presentAirSneaker = true;
                     break;
                 }
