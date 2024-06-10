@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.blockentity;
 
+import com.sarinsa.magical_relics.common.block.CamoBlock;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.util.References;
@@ -158,6 +159,9 @@ public class AntiBuilderBlockEntity extends BlockEntity {
         BlockPos pos = event.getHitVec().getBlockPos();
 
         if (effectiveArea.contains(pos.getX(), pos.getY(), pos.getZ())) {
+            if (event.getLevel().getBlockState(event.getPos()).getBlock() instanceof CamoBlock) {
+                event.setUseBlock(Event.Result.DENY);
+            }
             event.setUseItem(Event.Result.DENY);
             event.getEntity().displayClientMessage(References.ALTNEG_BLOCK_MESSAGE, true);
         }

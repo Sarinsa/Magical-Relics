@@ -17,6 +17,10 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
@@ -47,7 +51,9 @@ public interface CamoBlock {
 
                 if (block == null) return InteractionResult.PASS;
 
-                BlockState camoState = block.getStateForPlacement(new BlockPlaceContext(player, hand, handStack, Item.getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE)));
+                BlockHitResult result = Item.getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
+                BlockState camoState = block.getStateForPlacement(new BlockPlaceContext(player, hand, handStack, result));
+
                 if (camoState == null) return InteractionResult.PASS;
 
                 if (camoState.isSolidRender(level, pos) && !(camoState.getBlock() instanceof CamoBlock)) {
@@ -56,6 +62,7 @@ public interface CamoBlock {
                     // Makes placing blocks around the camo block easier
                     if (camoBlockEntity.getCamoState() != null && camoBlockEntity.getCamoState() == camoState)
                         return InteractionResult.PASS;
+
                     camoBlockEntity.setCamoState(camoState);
 
                     // Force light update in case the camo state is a light source
