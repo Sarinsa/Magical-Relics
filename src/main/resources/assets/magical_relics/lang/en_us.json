@@ -2,6 +2,7 @@
   "itemGroup.magical_relics.all": "Magical Relics",
 
   "item.magical_relics.quicksand_bucket": "Bucket of Quicksand",
+  "item.magical_relics.pedestal_key": "Pedestal Key",
   "item.magical_relics.raw_manaessence": "Raw Manaessence",
   "item.magical_relics.wood_manaessence": "Wooden Manaessence",
   "item.magical_relics.leather_manaessence": "Leathery Manaessence",
@@ -133,6 +134,7 @@
 
 
   "magical_relics.anti_builder.blocked_message": "A powerful spell protects this land",
+  "magical_relics.display_pedestal.locked_message": "It appears to be locked...",
   "magical_relics.anti_builder.screen.x_size": "X Size",
   "magical_relics.anti_builder.screen.y_size": "Y Size",
   "magical_relics.anti_builder.screen.z_size": "Z Size",

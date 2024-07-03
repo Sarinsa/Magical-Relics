@@ -37,6 +37,7 @@ public class MRItems {
     public static final RegistryObject<Item> RANDOM_ARTIFACT = register("random_artifact", () -> new RandomArtifactItem(new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
     public static final RegistryObject<Item> QUICKSAND_BUCKET = register("quicksand_bucket", () -> new SolidBucketItem(MRBlocks.QUICKSAND.get(), SoundEvents.MUD_PLACE, new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
     public static final RegistryObject<Item> THICK_TRIPWIRE = register("thick_tripwire", () -> new BlockItem(MRBlocks.THICK_TRIPWIRE.get(), new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> PEDESTAL_KEY = register("pedestal_key", () -> new Item(new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
     public static final RegistryObject<Item> RAW_MANAESSENCE = register("raw_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
     public static final RegistryObject<Item> WOOD_MANAESSENCE = register("wood_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
     public static final RegistryObject<Item> LEATHER_MANAESSENCE = register("leather_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());

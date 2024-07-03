@@ -5,13 +5,16 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class References {
 
-    // TRANSLATION KEYS
+    // STATIC CHAT COMPONENTS
     public static final MutableComponent ALTNEG_BLOCK_MESSAGE = Component.translatable("magical_relics.anti_builder.blocked_message");
 
     public static final MutableComponent ALTNEG_X_SIZE = Component.translatable("magical_relics.anti_builder.screen.x_size");
     public static final MutableComponent ALTNEG_Y_SIZE = Component.translatable("magical_relics.anti_builder.screen.y_size");
     public static final MutableComponent ALTNEG_Z_SIZE = Component.translatable("magical_relics.anti_builder.screen.z_size");
 
+    public static final MutableComponent PEDESTAL_LOCKED = Component.translatable("magical_relics.display_pedestal.locked_message");
+
+    // TRANSLATION KEYS
     public static final String ARTIFACT_CREATE_CMD = "magical_relics.command.artifact.create.message";
     public static final String ARTIFACT_CREATE_ERROR_0 = "magical_relics.command.artifact.create.error.invalid_variation";
     public static final String ABILITY_APPLY_ERROR_0 = "magical_relics.command.ability.apply.error.already_exists";

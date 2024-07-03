@@ -1,11 +1,14 @@
 package com.sarinsa.magical_relics.common.block;
 
 import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
+import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.References;
 import net.minecraft.client.renderer.blockentity.CampfireRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -41,6 +44,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final BooleanProperty LOCKED = BooleanProperty.create("locked");
 
     private static final VoxelShape shape = Shapes.or(Shapes.or(
             Block.box(3.0F, 0.0F, 3.0F, 13.0F, 2.0F, 13.0F),
@@ -55,7 +59,11 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
                 .requiresCorrectToolForDrops()
                 .sound(SoundType.STONE));
 
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
+        registerDefaultState(stateDefinition.any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(POWERED, false)
+                .setValue(LOCKED, false)
+        );
     }
 
     @Override
@@ -64,7 +72,21 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
         BlockEntity blockEntity = level.getExistingBlockEntity(pos);
 
         if (blockEntity instanceof DisplayPedestalBlockEntity displayPedestal) {
-            if (!player.isShiftKeyDown()) {
+            // Check if the pedestal is locked
+            if (state.getValue(LOCKED)) {
+                if (player.getItemInHand(hand).getItem() == MRItems.PEDESTAL_KEY.get()) {
+                    level.setBlock(pos, state.setValue(LOCKED, false), Block.UPDATE_CLIENTS);
+                    level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.MASTER, 1.0F, 0.8F);
+                    player.getItemInHand(hand).shrink(1);
+                }
+                else {
+                    player.playSound(SoundEvents.ARMOR_EQUIP_CHAIN);
+                    player.displayClientMessage(References.PEDESTAL_LOCKED, true);
+                }
+            }
+            // Any other interactions only happen if the player is sneaking
+            else if (!player.isShiftKeyDown()) {
+                // Pop the contained item, if not empty
                 if (!displayPedestal.getArtifact().isEmpty()) {
                     Block.popResourceFromFace(level, pos, Direction.UP, displayPedestal.getArtifact());
                     displayPedestal.setArtifact(ItemStack.EMPTY);
@@ -77,6 +99,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
                     }
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
+                // If empty, try and place the held item into the pedestal
                 else {
                     if (!player.getItemInHand(hand).isEmpty()) {
                         displayPedestal.setArtifact(player.getItemInHand(hand));
@@ -168,6 +191,6 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FACING, POWERED);
+        stateBuilder.add(FACING, POWERED, LOCKED);
     }
 }
