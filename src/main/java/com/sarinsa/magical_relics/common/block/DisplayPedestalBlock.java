@@ -77,12 +77,16 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
                 if (player.getItemInHand(hand).getItem() == MRItems.PEDESTAL_KEY.get()) {
                     level.setBlock(pos, state.setValue(LOCKED, false), Block.UPDATE_CLIENTS);
                     level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.MASTER, 1.0F, 0.8F);
-                    player.getItemInHand(hand).shrink(1);
+
+                    if (!player.isCreative()) {
+                        player.getItemInHand(hand).shrink(1);
+                    }
                 }
                 else {
                     player.playSound(SoundEvents.ARMOR_EQUIP_CHAIN);
                     player.displayClientMessage(References.PEDESTAL_LOCKED, true);
                 }
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
             // Any other interactions only happen if the player is sneaking
             else if (!player.isShiftKeyDown()) {
