@@ -1,30 +1,47 @@
 package com.sarinsa.magical_relics.common.block;
 
 import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
+import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.util.References;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.blockentity.CampfireRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.obfuscate.DontObfuscate;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -32,12 +49,20 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.api.distmarker.OnlyIns;
+import net.minecraftforge.items.wrapper.ShulkerItemStackInvWrapper;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.text.html.HTML;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class DisplayPedestalBlock extends Block implements EntityBlock {
@@ -45,6 +70,9 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty LOCKED = BooleanProperty.create("locked");
+
+    private static final ResourceLocation CONTAINED_ITEM = MagicalRelics.resLoc("display_pedestal_item");
+
 
     private static final VoxelShape shape = Shapes.or(Shapes.or(
             Block.box(3.0F, 0.0F, 3.0F, 13.0F, 2.0F, 13.0F),
@@ -122,6 +150,29 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
     }
 
     @Override
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+
+        if (blockEntity instanceof DisplayPedestalBlockEntity displayPedestal && state.getValue(LOCKED)) {
+            if (!level.isClientSide && !player.isCreative()) {
+                ItemStack itemStack = new ItemStack(MRBlocks.DISPLAY_PEDESTAL.get());
+                displayPedestal.saveToItem(itemStack);
+
+                ItemEntity droppedItem = new ItemEntity(
+                        level,
+                        (double) pos.getX() + 0.5D,
+                        (double) pos.getY() + 0.5D,
+                        (double) pos.getZ() + 0.5D,
+                        itemStack
+                );
+                droppedItem.setDefaultPickUpDelay();
+                level.addFreshEntity(droppedItem);
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (state.getValue(POWERED))
             level.setBlock(pos, state.setValue(POWERED, false), Block.UPDATE_ALL);
@@ -148,7 +199,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
         if (!state.is(newState.getBlock())) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
 
-            if (blockEntity instanceof DisplayPedestalBlockEntity displayPedestal) {
+            if (blockEntity instanceof DisplayPedestalBlockEntity displayPedestal && !state.getValue(LOCKED)) {
                 if (level instanceof ServerLevel && !displayPedestal.getArtifact().isEmpty()) {
                     Block.popResource(level, pos, displayPedestal.getArtifact());
                 }
@@ -173,6 +224,30 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext useContext) {
         return defaultBlockState().setValue(FACING, useContext.getHorizontalDirection());
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+        BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+
+        if (blockEntity instanceof DisplayPedestalBlockEntity && state.getValue(LOCKED)) {
+            return List.of();
+        }
+        return super.getDrops(state, builder);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemStack, @Nullable BlockGetter level, List<Component> components, TooltipFlag tooltipFlag) {
+        super.appendHoverText(itemStack, level, components, tooltipFlag);
+        CompoundTag blockEntityData = BlockItem.getBlockEntityData(itemStack);
+
+        if (blockEntityData != null) {
+            if (blockEntityData.contains(DisplayPedestalBlockEntity.LOCKED_KEY, Tag.TAG_BYTE)) {
+                if (blockEntityData.getBoolean(DisplayPedestalBlockEntity.LOCKED_KEY)) {
+                    components.add(Component.translatable(References.PEDESTAL_LOCKED_TOOLTIP).withStyle(ChatFormatting.GRAY));
+                }
+            }
+        }
     }
 
     @Override

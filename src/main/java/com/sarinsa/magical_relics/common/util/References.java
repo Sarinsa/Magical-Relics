@@ -29,4 +29,6 @@ public class References {
     public static final String ERROR_INVALID_TRIGGER = "magical_relics.command.argument.trigger_type.error.invalid_trigger";
 
     public static final String MUNDANE_ABILITY_PREFIX = "magical_relics.ability.mundane_prefix";
+
+    public static final String PEDESTAL_LOCKED_TOOLTIP = "magical_relics.display_pedestal.locked_tooltip";
 }

@@ -12,6 +12,7 @@ import com.sarinsa.magical_relics.common.worldgen.WorldgenHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -28,19 +29,11 @@ public class MagicalRelics {
 
     // TODO LIST
     //
-    // - Add thick fog to ObscurityAbility (maybe also de-aggro all aggroed mobs?)
+    // - Add thick fog to ObscurityAbility (maybe also de-aggro all aggroed mobs somehow?)
     //
-    // - Make separate models for Thick Tripwire (consider a slightly different THICCER texture as well?)
+    // - Make separate models for Thick Tripwire (consider a slightly different THICCER texture as well?
     //
-    // - Make a lock function and key for the Display Pedestal, preventing looting unless a key is found first
-    //
-    // - Improve cleanup of solid air blocks placed by air sneak ability
-    //
-    // - Curios integration
-    //
-    // - More configurability for the anti-builder (specific blocked actions, blocked abilities etc.)
-    //
-    // - Revisit attribute mods provided by abilities (might be broken in some cases)
+    // - More configurability for the anti-builder (specific blocked actions?)
     //
 
     public static final String MODID = "magical_relics";

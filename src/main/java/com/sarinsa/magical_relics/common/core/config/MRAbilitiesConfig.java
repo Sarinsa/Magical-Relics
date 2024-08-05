@@ -1,6 +1,5 @@
 package com.sarinsa.magical_relics.common.core.config;
 
-import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraftforge.common.ForgeConfigSpec;

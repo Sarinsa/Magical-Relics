@@ -59,15 +59,16 @@ public class CustomAgingProcessor extends StructureProcessor {
         this.oldness = oldness;
     }
 
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Nullable
     public StructureTemplate.StructureBlockInfo process(LevelReader level, BlockPos p_74017_, BlockPos p_74018_, StructureTemplate.StructureBlockInfo p_74019_, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template) {
         RandomSource random = structureSettings.getRandom(blockInfo.pos());
-        BlockState blockState = blockInfo.state();
+        BlockState state = blockInfo.state();
         BlockPos blockpos = blockInfo.pos();
         BlockState newState = null;
 
-        if (blockState.getBlock() instanceof CamoBlock) {
+        if (state.getBlock() instanceof CamoBlock) {
             CompoundTag blockEntityTag = blockInfo.nbt();
 
             // Don't bother checking for camo blocks
@@ -87,15 +88,15 @@ public class CustomAgingProcessor extends StructureProcessor {
         else {
             if (REPLACEMENTS.containsKey(blockInfo.state().getBlock())) {
                 if (random.nextFloat() < oldness) {
-                    newState = REPLACEMENTS.get(blockState.getBlock()).defaultBlockState();
+                    newState = REPLACEMENTS.get(state.getBlock()).defaultBlockState();
 
                     try {
-                        for (Property property : blockState.getProperties()) {
-                            newState = newState.setValue(property, blockState.getValue(property));
+                        for (Property property : state.getProperties()) {
+                            newState = newState.setValue(property, state.getValue(property));
                         }
                     }
                     catch (Exception e) {
-                        MagicalRelics.LOG.error("Aging processor failed to copy block state properties from state '" + blockState + "' to state '" + newState + "'");
+                        MagicalRelics.LOG.error("Aging processor failed to copy block state properties from state '" + state + "' to state '" + newState + "'");
                     }
                 }
             }

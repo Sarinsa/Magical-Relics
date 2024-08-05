@@ -18,6 +18,81 @@
           },
           {
             "processor_type": "magical_relics:no_waterlogging"
+          },
+          {
+            "processor_type": "magical_relics:pot_plant"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "magical_relics:medium_wizard_tower/medium_wizard_tower_1",
+        "processors": [
+          {
+            "processor_type": "magical_relics:display_pedestal",
+            "legendary_chance": 0.05
+          },
+          {
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
+          },
+          {
+            "processor_type": "magical_relics:pot_plant"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "magical_relics:medium_wizard_tower/medium_wizard_tower_2",
+        "processors": [
+          {
+            "processor_type": "magical_relics:display_pedestal",
+            "legendary_chance": 0.05
+          },
+          {
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.35
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
+          },
+          {
+            "processor_type": "magical_relics:pot_plant"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "magical_relics:medium_wizard_tower/medium_wizard_tower_3",
+        "processors": [
+          {
+            "processor_type": "magical_relics:display_pedestal",
+            "legendary_chance": 0.5
+          },
+          {
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
+          },
+          {
+            "processor_type": "magical_relics:pot_plant"
           }
         ],
         "projection": "rigid",

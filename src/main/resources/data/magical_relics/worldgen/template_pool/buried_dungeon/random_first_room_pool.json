@@ -18,6 +18,14 @@
           },
           {
             "processor_type": "magical_relics:no_waterlogging"
+          },
+          {
+            "processor_type": "magical_relics:spawner_type",
+            "possible_types": [
+              "minecraft:zombie",
+              "minecraft:skeleton",
+              "minecraft:cave_spider"
+            ]
           }
         ],
         "projection": "rigid",

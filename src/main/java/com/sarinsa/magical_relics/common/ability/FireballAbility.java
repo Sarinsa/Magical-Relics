@@ -67,22 +67,26 @@ public class FireballAbility extends BaseArtifactAbility {
     @Override
     public boolean onUse(Level level, Player player, ItemStack itemStack) {
         if (!ArtifactUtils.isAbilityOnCooldown(itemStack, this)) {
-            Vec3 viewVec = player.getViewVector(1.0F);
-            VolatileFireball fireball = new VolatileFireball(level, player, 0.0D, 0.0D, 0.0D, explosionPower.get());
-            fireball.setPos(player.getX() + viewVec.x * 2.0D, player.getY(0.5D) + 0.25D, fireball.getZ() + viewVec.z * 2.0D);
-            fireball.shootFromRotation(player, player.getXRot(), player.getYRot(), 2.5F, 2.5F, 2.5F);
-            level.addFreshEntity(fireball);
-
-            if (!level.isClientSide) {
-                RandomSource random = level.random;
-                level.playSound(null, player.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0F, (random.nextFloat() -random.nextFloat()) * 0.2F + 1.0F);
-            }
+            shootFireball(level, player);
             itemStack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
 
             ArtifactUtils.setAbilityCooldown(itemStack, this, cooldown.get());
             return true;
         }
         return false;
+    }
+
+    private void shootFireball(Level level, Player player) {
+        Vec3 viewVec = player.getViewVector(1.0F);
+        VolatileFireball fireball = new VolatileFireball(level, player, 0.0D, 0.0D, 0.0D, explosionPower.get());
+        fireball.setPos(player.getX() + viewVec.x * 2.0D, player.getY(0.5D) + 0.25D, fireball.getZ() + viewVec.z * 2.0D);
+        fireball.shootFromRotation(player, player.getXRot(), player.getYRot(), 2.5F, 2.5F, 2.5F);
+        level.addFreshEntity(fireball);
+
+        if (!level.isClientSide) {
+            RandomSource random = level.random;
+            level.playSound(null, player.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0F, (random.nextFloat() -random.nextFloat()) * 0.2F + 1.0F);
+        }
     }
 
     @Override

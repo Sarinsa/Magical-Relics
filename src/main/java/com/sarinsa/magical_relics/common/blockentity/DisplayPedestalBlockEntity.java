@@ -1,6 +1,8 @@
 package com.sarinsa.magical_relics.common.blockentity;
 
+import com.sarinsa.magical_relics.common.block.DisplayPedestalBlock;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
+import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +12,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -19,9 +22,11 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
 
     public static final String GENERATE_KEY = "GenerateArtifact";
     public static final String ITEM_KEY = "ArtifactItem";
+    public static final String LOCKED_KEY = "Locked";
 
 
     private ItemStack artifact;
+  
 
     public DisplayPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(MRBlockEntities.DISPLAY_PEDESTAL.get(), pos, state);
@@ -41,6 +46,11 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
         super.saveAdditional(compoundTag);
         writeUpdateData(compoundTag);
         compoundTag.remove(GENERATE_KEY);
+
+
+        if (getBlockState().is(MRBlocks.DISPLAY_PEDESTAL.get())) {
+            compoundTag.putBoolean(LOCKED_KEY, getBlockState().getValue(DisplayPedestalBlock.LOCKED));
+        }
     }
 
     @Override
@@ -51,6 +61,12 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
         if (compoundTag.contains(GENERATE_KEY, Tag.TAG_BYTE)) {
             if (compoundTag.getBoolean(GENERATE_KEY) && level != null && !level.isClientSide) {
                 setArtifact(ArtifactUtils.generateRandomArtifact(level.random, false));
+            }
+        }
+
+        if (hasLevel()) {
+            if (compoundTag.contains(LOCKED_KEY, Tag.TAG_BYTE)) {
+                level.setBlock(getBlockPos(), getBlockState().setValue(DisplayPedestalBlock.LOCKED, compoundTag.getBoolean(LOCKED_KEY)), Block.UPDATE_CLIENTS);
             }
         }
     }
@@ -98,10 +114,5 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
 
             readArtifactItem(compoundTag);
         }
-    }
-
-    @Override
-    public boolean onlyOpCanSetNbt() {
-        return true;
     }
 }

@@ -1,0 +1,32 @@
+{
+  "name": "magical_relics:medium_wizard_tower/cellar_pool",
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "magical_relics:medium_wizard_tower/cellar",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
+          },
+          {
+            "processor_type": "magical_relics:spawner_type",
+            "possible_types": [
+              "minecraft:slime",
+              "minecraft:skeleton",
+              "minecraft:cave_spider"
+            ]
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "magical_relics:small_wizard_tower/bottom_pool",
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+      "weight": 100,
+      "element": {
+        "location": "magical_relics:small_wizard_tower/bottom",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

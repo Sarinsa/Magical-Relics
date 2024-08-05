@@ -32,14 +32,13 @@ public class DisplayPedestalProcessor extends StructureProcessor {
     }
 
 
-    @SuppressWarnings("ConstantConditions")
     @Nullable
     public StructureTemplate.StructureBlockInfo process(LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template) {
         RandomSource random = structureSettings.getRandom(blockInfo.pos());
-        BlockState blockstate = blockInfo.state();
+        BlockState state = blockInfo.state();
         BlockPos blockpos = blockInfo.pos();
 
-        boolean isDisplayPedestal = blockstate.is(MRBlocks.DISPLAY_PEDESTAL.get());
+        boolean isDisplayPedestal = state.is(MRBlocks.DISPLAY_PEDESTAL.get());
         CompoundTag tag = blockInfo.nbt();
 
         if (isDisplayPedestal) {
@@ -50,7 +49,7 @@ public class DisplayPedestalProcessor extends StructureProcessor {
 
             tag.put(DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag);
         }
-        return isDisplayPedestal ? new StructureTemplate.StructureBlockInfo(blockpos, blockstate, tag) : blockInfo;
+        return isDisplayPedestal ? new StructureTemplate.StructureBlockInfo(blockpos, state, tag) : blockInfo;
     }
 
     @Override
