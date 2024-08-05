@@ -42,31 +42,29 @@ public class MRAbilitiesConfig {
          * - Said method must be annotated with the {@link AbilityConfig} annotation
          */
         private void constructAbilityEntries(ForgeConfigSpec.Builder configBuilder) {
-            ModList.get().getAllScanData().forEach(scanData -> {
-                scanData.getAnnotations().forEach(annotationData -> {
+            ModList.get().getAllScanData().forEach(scanData -> scanData.getAnnotations().forEach(annotationData -> {
 
-                    // Look for classes annotated with @AbilityConfig
-                    if (annotationData.annotationType().getClassName().equals(AbilityConfig.class.getName())) {
-                        try {
-                            Class<?> clazz = Class.forName(annotationData.clazz().getClassName());
-                            String abilityId = (String) annotationData.annotationData().getOrDefault("abilityId", "");
+                // Look for classes annotated with @AbilityConfig
+                if (annotationData.annotationType().getClassName().equals(AbilityConfig.class.getName())) {
+                    try {
+                        Class<?> clazz = Class.forName(annotationData.clazz().getClassName());
+                        String abilityId = (String) annotationData.annotationData().getOrDefault("abilityId", "");
 
-                            if (abilityId == null || abilityId.isEmpty()) {
-                                MagicalRelics.LOG.error("Failed to construct annotated ability config entry in {} due to lacking ability ID in the annotation", annotationData.clazz().getClassName());
-                            }
-                            Method configBuildMethod = clazz.getMethod("buildEntries", ForgeConfigSpec.Builder.class);
-
-                            configBuilder.push(abilityId);
-                            configBuildMethod.invoke(null, configBuilder);
-                            configBuilder.pop();
+                        if (abilityId == null || abilityId.isEmpty()) {
+                            MagicalRelics.LOG.error("Failed to construct annotated ability config entry in {} due to lacking ability ID in the annotation", annotationData.clazz().getClassName());
                         }
-                        catch (Exception e) {
-                            MagicalRelics.LOG.error("Failed to construct annotated ability config entry in {}", annotationData.clazz().getClassName());
-                            e.printStackTrace();
-                        }
+                        Method configBuildMethod = clazz.getMethod("buildEntries", ForgeConfigSpec.Builder.class);
+
+                        configBuilder.push(abilityId);
+                        configBuildMethod.invoke(null, configBuilder);
+                        configBuilder.pop();
                     }
-                });
-            });
+                    catch (Exception e) {
+                        MagicalRelics.LOG.error("Failed to construct annotated ability config entry in {}", annotationData.clazz().getClassName());
+                        e.printStackTrace();
+                    }
+                }
+            }));
         }
     }
 }

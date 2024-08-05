@@ -53,6 +53,7 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void load(CompoundTag compoundTag) {
         super.load(compoundTag);
@@ -102,6 +103,7 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
         super.handleUpdateTag(tag);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         if(level.isClientSide) {

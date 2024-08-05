@@ -1,12 +1,8 @@
 package com.sarinsa.magical_relics.common.worldgen.processor;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.ListCodec;
-import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
-import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -14,9 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.InclusiveRange;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.SpawnData;
 import net.minecraft.world.level.block.Blocks;

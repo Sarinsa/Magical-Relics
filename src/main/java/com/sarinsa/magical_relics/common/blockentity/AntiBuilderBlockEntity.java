@@ -28,7 +28,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 
 public class AntiBuilderBlockEntity extends BlockEntity {
