@@ -18,7 +18,7 @@
           {
             "processor_type": "magical_relics:spawner_type",
             "possible_types": [
-              "minecraft:slime",
+              "minecraft:silverfish",
               "minecraft:skeleton",
               "minecraft:cave_spider"
             ]

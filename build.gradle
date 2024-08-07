@@ -21,7 +21,7 @@ mixin {
 }
 
 version = "${mc_version}-${mod_version}"
-group = 'com.sarinsa.magical_relics' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = 'com.sarinsa.magical_relics'
 archivesBaseName = 'Magical-Relics'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)

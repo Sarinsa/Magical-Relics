@@ -3,7 +3,9 @@ package com.sarinsa.magical_relics.common.core;
 import com.mojang.brigadier.CommandDispatcher;
 import com.sarinsa.magical_relics.common.block.CamoDispenserBlock;
 import com.sarinsa.magical_relics.common.command.MRBaseCommand;
+import com.sarinsa.magical_relics.common.core.config.ConfigReloadListener;
 import com.sarinsa.magical_relics.common.core.config.MRAbilitiesConfig;
+import com.sarinsa.magical_relics.common.core.config.MRGeneralConfig;
 import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.network.PacketHandler;
@@ -26,6 +28,8 @@ import org.apache.logging.log4j.Logger;
 public class MagicalRelics {
 
     // TODO LIST
+    //
+    // - Make it so slimes can spawn from spawner blocks regardless of vanilla spawn rules
     //
     // - Add thick fog to ObscurityAbility (maybe also de-aggro all aggroed mobs somehow?)
     //
@@ -67,6 +71,9 @@ public class MagicalRelics {
         MRArgumentTypes.ARGUMENT_TYPES.register(modBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MRAbilitiesConfig.CONFIG_SPEC, "magical_relics/ability-properties.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MRGeneralConfig.CONFIG_SPEC, "magical_relics/general.toml");
+
+        modBus.register(new ConfigReloadListener());
     }
 
 

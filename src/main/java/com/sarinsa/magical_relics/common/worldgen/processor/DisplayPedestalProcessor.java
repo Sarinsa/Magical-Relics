@@ -7,16 +7,22 @@ import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DisplayPedestalProcessor extends StructureProcessor {
 
@@ -24,6 +30,11 @@ public class DisplayPedestalProcessor extends StructureProcessor {
             .xmap(DisplayPedestalProcessor::new, (processor) -> processor.legendaryChance)
             .codec();
 
+    /**
+     * Public and modifiable, but only really supposed
+     * to be modified by {@link }
+     */
+    public static final List<Item> WIZARD_FAVORITES = new ArrayList<>();
 
     private final float legendaryChance;
 
@@ -43,11 +54,20 @@ public class DisplayPedestalProcessor extends StructureProcessor {
 
         if (isDisplayPedestal) {
             if (tag == null) tag = new CompoundTag();
-            CompoundTag itemStackTag = new CompoundTag();
-            ItemStack itemStack = ArtifactUtils.generateRandomArtifact(random, random.nextFloat() < legendaryChance);
-            itemStack.save(itemStackTag);
 
-            tag.put(DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag);
+            if (tag.contains(DisplayPedestalBlockEntity.WIZARDS_FAVORITE_KEY, Tag.TAG_BYTE) && tag.getBoolean(DisplayPedestalBlockEntity.WIZARDS_FAVORITE_KEY)) {
+                CompoundTag itemStackTag = new CompoundTag();
+                ItemStack itemStack = getRandomItem(random);
+                itemStack.save(itemStackTag);
+                tag.put(DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag);
+            }
+            else {
+                CompoundTag itemStackTag = new CompoundTag();
+                ItemStack itemStack = ArtifactUtils.generateRandomArtifact(random, random.nextFloat() < legendaryChance);
+                itemStack.save(itemStackTag);
+
+                tag.put(DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag);
+            }
         }
         return isDisplayPedestal ? new StructureTemplate.StructureBlockInfo(blockpos, state, tag) : blockInfo;
     }
@@ -55,5 +75,9 @@ public class DisplayPedestalProcessor extends StructureProcessor {
     @Override
     protected StructureProcessorType<?> getType() {
         return MRStructureProcessors.DISPLAY_PEDESTAL.get();
+    }
+
+    private static ItemStack getRandomItem(RandomSource random) {
+        return new ItemStack(WIZARD_FAVORITES.get(random.nextInt(WIZARD_FAVORITES.size())));
     }
 }

@@ -74,18 +74,20 @@ public class NormalDungeonsStructure extends Structure {
         ChunkPos chunkpos = context.chunkPos();
 
         if (!canGenerateInWater) {
-            // Don't generate in water
-            BlockPos centerOfChunk = chunkpos.getMiddleBlockPosition(0);
-            int landHeight = context.chunkGenerator().getFirstOccupiedHeight(centerOfChunk.getX(), centerOfChunk.getZ(), Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState());
-            NoiseColumn columnOfBlocks = context.chunkGenerator().getBaseColumn(centerOfChunk.getX(), centerOfChunk.getZ(), context.heightAccessor(), context.randomState());
-            BlockState topBlock = columnOfBlocks.getBlock(centerOfChunk.getY() + landHeight);
+            // Don't generate in water. Checks middle of chunk and all corners.
+            BlockPos middle = chunkpos.getMiddleBlockPosition(0);
 
-            if (!topBlock.getFluidState().isEmpty()) {
+            if (isWaterAt(context, middle.getX(), middle.getY()) ||
+                    isWaterAt(context, chunkpos.getMinBlockX(), chunkpos.getMinBlockZ()) ||
+                    isWaterAt(context, chunkpos.getMinBlockX(), chunkpos.getMaxBlockZ()) ||
+                    isWaterAt(context, chunkpos.getMaxBlockX(), chunkpos.getMinBlockZ()) ||
+                    isWaterAt(context, chunkpos.getMaxBlockX(), chunkpos.getMaxBlockZ()))
+            {
                 return false;
             }
         }
 
-        // Do not generate at Y 150 or above
+        // Altitude limitation
         return context.chunkGenerator().getFirstOccupiedHeight(
                 chunkpos.getMinBlockX(),
                 chunkpos.getMinBlockZ(),
@@ -93,6 +95,17 @@ public class NormalDungeonsStructure extends Structure {
                 context.heightAccessor(),
                 context.randomState()) <= maxY;
 
+    }
+
+    /**
+     * Checks if the top block at the given X and Z coordinates is a fluid, using WORLD_SURFACE_WG heightmap.
+     */
+    private static boolean isWaterAt(Structure.GenerationContext context, int x, int z) {
+        int landHeight = context.chunkGenerator().getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState());
+        NoiseColumn columnOfBlocks = context.chunkGenerator().getBaseColumn(x, z, context.heightAccessor(), context.randomState());
+        BlockState topBlock = columnOfBlocks.getBlock(landHeight);
+
+        return !topBlock.getFluidState().isEmpty();
     }
 
     @Override

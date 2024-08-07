@@ -24,7 +24,7 @@
             "possible_types": [
               "minecraft:zombie",
               "minecraft:skeleton",
-              "minecraft:cave_spider"
+              "minecraft:creeper"
             ]
           }
         ],

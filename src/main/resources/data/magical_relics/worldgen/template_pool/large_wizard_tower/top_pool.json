@@ -1,0 +1,58 @@
+{
+  "name": "magical_relics:large_wizard_tower/top_pool",
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "magical_relics:large_wizard_tower/top_1",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.1
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "magical_relics:large_wizard_tower/top_2",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.1
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "magical_relics:large_wizard_tower/top_3",
+        "processors": [
+          {
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.1
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

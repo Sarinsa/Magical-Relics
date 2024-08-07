@@ -32,7 +32,8 @@ public class MRBiomeTagProvider extends BiomeTagsProvider {
 
         tag(MRBiomeTags.HAS_WIZARD_TOWERS).addTags(
                 BiomeTags.IS_HILL,
-                BiomeTags.IS_MOUNTAIN
+                BiomeTags.IS_MOUNTAIN,
+                Tags.Biomes.IS_SWAMP
         );
 
         tag(MRBiomeTags.HAS_BURIED_DUNGEONS).addTags(
