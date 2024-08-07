@@ -22,7 +22,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,7 +135,10 @@ public class MassExcavateAbility extends BaseArtifactAbility {
     }
 
     private boolean checkAndMineBlock(ServerLevel level, BlockPos pos, Player player) {
-        if (ForgeEventFactory.getMobGriefingEvent(level, player)) {
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
+        MinecraftForge.EVENT_BUS.post(event);
+
+        if (!event.isCanceled()) {
             BlockState state = level.getBlockState(pos);
 
             if (state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
