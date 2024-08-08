@@ -1,0 +1,9 @@
+{
+  "type": "magical_relics:add_artifact",
+  "addChance": 0.5,
+  "conditions": [],
+  "legendaryChance": 0.2,
+  "lootTable": "minecraft:chests/jungle_temple",
+  "maxCount": 2,
+  "minCount": 2
+}

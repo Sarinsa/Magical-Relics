@@ -3,6 +3,8 @@ package com.sarinsa.magical_relics.datagen;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRConfiguredFeatures;
 import com.sarinsa.magical_relics.common.core.registry.MRDamageTypes;
+import com.sarinsa.magical_relics.common.core.registry.MRGlobalLootMods;
+import com.sarinsa.magical_relics.datagen.loot.MRLootModProvider;
 import com.sarinsa.magical_relics.datagen.loot.MRLootProvider;
 import com.sarinsa.magical_relics.datagen.model.MRBlockStateProvider;
 import com.sarinsa.magical_relics.datagen.model.MRItemModelProvider;
@@ -51,6 +53,7 @@ public class GatherDataListener {
         generator.addProvider(event.includeServer(), new MRItemTagProvider(generator, lookupProvider, blockTagProvider.contentsGetter(), fileHelper));
         generator.addProvider(event.includeServer(), new MRBiomeTagProvider(generator, lookupProvider, fileHelper));
         generator.addProvider(event.includeServer(), new MRLootProvider(generator));
+        generator.addProvider(event.includeServer(), new MRLootModProvider(generator));
         generator.addProvider(event.includeServer(), new MRRecipeProvider(generator));
     }
 }

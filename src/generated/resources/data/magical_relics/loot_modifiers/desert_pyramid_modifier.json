@@ -1,0 +1,9 @@
+{
+  "type": "magical_relics:add_artifact",
+  "addChance": 0.3,
+  "conditions": [],
+  "legendaryChance": 0.4,
+  "lootTable": "minecraft:chests/desert_pyramid",
+  "maxCount": 1,
+  "minCount": 1
+}

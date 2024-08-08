@@ -64,6 +64,7 @@ public class MagicalRelics {
         MRDamageTypes.DAMAGE_TYPES.register(modBus);
         MRArtifactAbilities.ARTIFACT_ABILITIES.register(modBus);
         MRLootItemFunctions.LOOT_ITEM_FUNCTIONS.register(modBus);
+        MRGlobalLootMods.GLOBAL_LOOT_MODS.register(modBus);
         MRStructureTypes.STRUCTURES.register(modBus);
         MRStructureProcessors.PROCESSORS.register(modBus);
         MRConfiguredFeatures.CF_REGISTRY.register(modBus);

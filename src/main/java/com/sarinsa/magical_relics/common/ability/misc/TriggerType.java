@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
  */
 public enum TriggerType {
     RIGHT_CLICK_BLOCK("right_click_block", false), // Activates when the player right-clicks a block with the artifact
-    USE("use", false), // Activates when the player right-clicks with the artifact
+    USE("use", false), // Activates when the player right-clicks with the artifact without targeting a block
     HELD("held", false), // Activates every tick while the artifact is held in main hand
     CURIO_TICK("curio", false), // Activates every tick when the artifact is equipped as a curio
     USER_DAMAGED("user_damaged", true), // Activates when the player takes damage
@@ -34,6 +34,7 @@ public enum TriggerType {
         return name;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean canStack() {
         return canStack;
     }

@@ -1,0 +1,9 @@
+{
+  "type": "magical_relics:add_artifact",
+  "addChance": 0.5,
+  "conditions": [],
+  "legendaryChance": 0.15,
+  "lootTable": "minecraft:chests/simple_dungeon",
+  "maxCount": 2,
+  "minCount": 1
+}

@@ -1,0 +1,8 @@
+{
+  "entries": [
+    "magical_relics:simple_dungeon_modifier",
+    "magical_relics:desert_pyramid_modifier",
+    "magical_relics:jungle_temple_modifier"
+  ],
+  "replace": false
+}

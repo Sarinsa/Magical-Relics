@@ -16,7 +16,7 @@ public @interface AbilityConfig {
      * @return A String representing the ID of this ability in the abilities-config.<br><br>
      *
      *         ID does not need to exactly match the registry ID of the ability object for this config entry,
-     *         but probably should anyways since the ID needs to be unique in order to not accidentally override
+     *         but probably should anyway since the ID needs to be unique in order to not accidentally override
      *         any other entries in the config.
      */
     String abilityId();
