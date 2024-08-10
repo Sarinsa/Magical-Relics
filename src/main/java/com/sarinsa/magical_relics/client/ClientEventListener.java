@@ -2,7 +2,9 @@ package com.sarinsa.magical_relics.client;
 
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.client.event.RenderHighlightEvent;
+import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ClientEventListener {
@@ -14,5 +16,10 @@ public class ClientEventListener {
         // Don't render block outline for solid air
         if (Minecraft.getInstance().level.getBlockState(event.getTarget().getBlockPos()).is(MRBlocks.SOLID_AIR.get()))
             event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onRenderFog(ViewportEvent.RenderFog event) {
+
     }
 }

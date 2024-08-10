@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.block;
 
+import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRDamageTypes;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.util.DirectionUtil;
@@ -7,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -20,6 +22,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.PowderSnowBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -88,12 +91,8 @@ public class QuicksandBlock extends Block {
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         entity.makeStuckInBlock(state, new Vec3(0.5D, 0.2D, 0.5D));
 
-        if (entity instanceof LivingEntity livingEntity) {
-            BlockPos eyePos = new BlockPos((int) livingEntity.getX(), (int) livingEntity.getEyeY(), (int) livingEntity.getZ());
-
-            if (level.getBlockState(eyePos).is(this)) {
-                livingEntity.hurt(MRDamageTypes.of(level, MRDamageTypes.QUICKSAND), 1.0F);
-            }
+        if (entity instanceof LivingEntity livingEntity && areEyesInQuicksand(livingEntity)) {
+            livingEntity.hurt(MRDamageTypes.of(level, MRDamageTypes.QUICKSAND), 1.0F);
         }
     }
 
@@ -235,5 +234,18 @@ public class QuicksandBlock extends Block {
 
     private static boolean canFlow(BlockState state) {
         return state.getValue(LAYERS) > 2;
+    }
+
+    /**
+     * Checks if the given entity's eyes are in quicksand.
+     */
+    public static boolean areEyesInQuicksand(LivingEntity livingEntity) {
+        Level level = livingEntity.level();
+        double eyeY = livingEntity.getEyeY();
+        double partialEyeY = eyeY - Mth.floor(eyeY);
+        BlockPos eyePos = new BlockPos(Mth.floor(livingEntity.getX()), Mth.floor(eyeY), Mth.floor(livingEntity.getZ()));
+        BlockState stateAtEye = level.getBlockState(eyePos);
+
+        return level.getBlockState(eyePos).is(MRBlocks.QUICKSAND.get()) && (partialEyeY <= (1.0D / MAX_HEIGHT) * stateAtEye.getValue(LAYERS));
     }
 }
