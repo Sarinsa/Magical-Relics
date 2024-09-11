@@ -53,8 +53,6 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty LOCKED = BooleanProperty.create("locked");
 
-    private static final ResourceLocation CONTAINED_ITEM = MagicalRelics.resLoc("display_pedestal_item");
-
 
     private static final VoxelShape shape = Shapes.or(Shapes.or(
             Block.box(3.0F, 0.0F, 3.0F, 13.0F, 2.0F, 13.0F),

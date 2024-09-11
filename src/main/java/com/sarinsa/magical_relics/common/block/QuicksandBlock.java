@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PowderSnowBlock;
+import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -84,6 +85,24 @@ public class QuicksandBlock extends Block {
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE_BY_LAYER[state.getValue(LAYERS)];
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return SHAPE_BY_LAYER[state.getValue(LAYERS)];
+    }
+
+    @Deprecated
+    @SuppressWarnings("deprecation")
+    public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE_BY_LAYER[state.getValue(LAYERS)];
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean useShapeForLightOcclusion(BlockState state) {
+        return true;
     }
 
     @Override
@@ -231,6 +250,7 @@ public class QuicksandBlock extends Block {
                 level.scheduleTick(pos, this, TICK_DELAY);
         }
     }
+
 
     private static boolean canFlow(BlockState state) {
         return state.getValue(LAYERS) > 2;
