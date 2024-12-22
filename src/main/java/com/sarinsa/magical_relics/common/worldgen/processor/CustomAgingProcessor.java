@@ -92,7 +92,7 @@ public class CustomAgingProcessor extends StructureProcessor {
 
                     try {
                         for (Property property : state.getProperties()) {
-                            newState = newState.setValue(property, state.getValue(property));
+                            newState = newState.trySetValue(property, state.getValue(property));
                         }
                     }
                     catch (Exception e) {

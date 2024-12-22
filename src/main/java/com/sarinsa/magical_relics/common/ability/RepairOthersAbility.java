@@ -135,7 +135,7 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     @Nullable
     @Override
     public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
-        if(isArmor) return TriggerType.ARMOR_TICK;
+        if (isArmor) return TriggerType.ARMOR_TICK;
         if (isCurio) return TriggerType.CURIO_TICK;
 
         return random.nextInt(2) == 0 ? TriggerType.USE : TriggerType.HELD;

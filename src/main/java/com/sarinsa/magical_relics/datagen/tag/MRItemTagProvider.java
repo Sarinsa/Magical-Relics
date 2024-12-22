@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -26,12 +27,18 @@ public class MRItemTagProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         IntrinsicTagAppender<Item> artifactsTag = tag(MRItemTags.ARTIFACTS);
         IntrinsicTagAppender<Item> artifactCuriosTag = tag(MRItemTags.ARTIFACT_CURIOS);
+        IntrinsicTagAppender<Item> trimmableArmorTag = tag(ItemTags.TRIMMABLE_ARMOR);
 
         for (List<RegistryObject<? extends Item>> artifactList : MRItems.ARTIFACTS_BY_CATEGORY.values()) {
             for (RegistryObject<? extends Item> regObj : artifactList) {
                 artifactsTag.add(regObj.get());
             }
         }
+
+        MRItems.DIAMOND_ARTIFACT_ARMOR.forEach((slot, item) -> trimmableArmorTag.add(item.get()));
+        MRItems.IRON_ARTIFACT_ARMOR.forEach((slot, item) -> trimmableArmorTag.add(item.get()));
+        MRItems.GOLD_ARTIFACT_ARMOR.forEach((slot, item) -> trimmableArmorTag.add(item.get()));
+        MRItems.LEATHER_ARTIFACT_ARMOR.forEach((slot, item) -> trimmableArmorTag.add(item.get()));
 
         MRItems.RINGS.dataStructure().forEach((regObj) -> artifactCuriosTag.add(regObj.get()));
         MRItems.AMULETS.dataStructure().forEach((regObj) -> artifactCuriosTag.add(regObj.get()));

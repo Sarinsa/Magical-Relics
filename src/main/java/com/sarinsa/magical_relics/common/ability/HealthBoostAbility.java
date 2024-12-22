@@ -42,7 +42,7 @@ public class HealthBoostAbility extends BaseArtifactAbility {
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.AMULET, ArtifactCategory.RING, ArtifactCategory.BELT, ArtifactCategory.CHESTPLATE, ArtifactCategory.LEGGINGS, ArtifactCategory.HELMET
+            ArtifactCategory.AMULET, ArtifactCategory.RING, ArtifactCategory.BELT
     );
 
     private static final AttributeBoost HEALTH_BOOST = new AttributeBoost(

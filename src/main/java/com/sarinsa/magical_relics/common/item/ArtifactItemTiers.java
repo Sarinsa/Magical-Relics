@@ -15,22 +15,23 @@ import java.util.function.Supplier;
 
 public enum ArtifactItemTiers implements Tier {
 
-    WOOD(0, 59, 2.0F, 0.0F, 15, () -> {
+    WOOD("wood", 0, 59, 2.0F, 0.0F, 15, () -> {
         return Ingredient.of(MRItems.WOOD_MANAESSENCE.get());
     }),
-    STONE(1, 131, 4.0F, 1.0F, 5, () -> {
+    STONE("stone", 1, 131, 4.0F, 1.0F, 5, () -> {
         return Ingredient.of(MRItems.STONE_MANAESSENCE.get());
     }),
-    IRON(2, 250, 6.0F, 2.0F, 14, () -> {
+    IRON("iron", 2, 250, 6.0F, 2.0F, 14, () -> {
         return Ingredient.of(MRItems.IRON_MANAESSENCE.get());
     }),
-    DIAMOND(3, 1561, 8.0F, 3.0F, 10, () -> {
+    DIAMOND("diamond", 3, 1561, 8.0F, 3.0F, 10, () -> {
         return Ingredient.of(MRItems.DIAMOND_MANAESSENCE.get());
     }),
-    GOLD(0, 32, 12.0F, 0.0F, 22, () -> {
+    GOLD("gold", 0, 32, 12.0F, 0.0F, 22, () -> {
         return Ingredient.of(MRItems.GOLD_MANAESSENCE.get());
     });
 
+    private final String materialName;
     private final int level;
     private final int uses;
     private final float speed;
@@ -38,13 +39,18 @@ public enum ArtifactItemTiers implements Tier {
     private final int enchantmentValue;
     private final Supplier<Ingredient> repairIngredient;
 
-    ArtifactItemTiers(int level, int uses, float speed, float damage, int enchantmentValue, Supplier<Ingredient> repairIngredient) {
+    ArtifactItemTiers(String materialName, int level, int uses, float speed, float damage, int enchantmentValue, Supplier<Ingredient> repairIngredient) {
+        this.materialName = materialName;
         this.level = level;
         this.uses = uses;
         this.speed = speed;
         this.damage = damage;
         this.enchantmentValue = enchantmentValue;
         this.repairIngredient = repairIngredient;
+    }
+
+    public String getMaterialName() {
+        return materialName;
     }
 
     @Override

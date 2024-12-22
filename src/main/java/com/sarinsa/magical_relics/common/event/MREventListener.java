@@ -3,6 +3,7 @@ package com.sarinsa.magical_relics.common.event;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,6 +16,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
@@ -22,7 +25,11 @@ import top.theillusivec4.curios.api.event.CurioAttributeModifierEvent;
 import top.theillusivec4.curios.api.type.ISlotType;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
+import javax.annotation.Nullable;
+
 public class MREventListener {
+
+    private static MinecraftServer serverInstance;
 
     private static int timeNextServerTick = 0;
     private static final int serverTickDelay = 10;
@@ -32,6 +39,17 @@ public class MREventListener {
 
     public static int getRepairTick() {
         return repairTick;
+    }
+
+
+    @SubscribeEvent
+    public void onServerStarted(ServerStartedEvent event) {
+        serverInstance = event.getServer();
+    }
+
+    @SubscribeEvent
+    public void onServerStopped(ServerStoppedEvent event) {
+        serverInstance = null;
     }
 
 
@@ -143,5 +161,10 @@ public class MREventListener {
                 }
             }
         }
+    }
+
+    @Nullable
+    public static MinecraftServer getCurrentServer() {
+        return serverInstance;
     }
 }

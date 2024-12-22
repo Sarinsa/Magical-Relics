@@ -12,9 +12,13 @@ import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
+import com.sarinsa.magical_relics.common.item.ArtifactArmorItem;
 import com.sarinsa.magical_relics.common.item.ItemArtifact;
 import com.sarinsa.magical_relics.common.tag.MRItemTags;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -30,10 +34,15 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.armortrim.ArmorTrim;
+import net.minecraft.world.item.armortrim.TrimMaterial;
+import net.minecraft.world.item.armortrim.TrimPattern;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -86,6 +95,8 @@ public class ArtifactUtils {
      * @return An item stack with all the necessary NBT tags for ability data.
      */
     public static ItemStack createBlankArtifact(Item artifactItem, int variant, RandomSource randomSource) {
+
+
         ItemStack artifactStack = new ItemStack(artifactItem);
 
         // Create necessary tags needed later
@@ -106,10 +117,14 @@ public class ArtifactUtils {
      * <br><br>
      * @return The randomly generated artifact ItemStack.
      */
-    public static ItemStack generateRandomArtifact(RandomSource random, boolean legendary) {
-        ArtifactSet<List<RegistryObject<Item>>> artifactSet = MRItems.ALL_ARTIFACTS.get(random.nextInt(MRItems.ALL_ARTIFACTS.size()));
-        Item artifactItem = artifactSet.dataStructure().get(random.nextInt(artifactSet.dataStructure().size())).get();
-        ItemStack artifactStack = createBlankArtifact(artifactItem, random.nextInt(artifactSet.category().getVariations()), random);
+    public static ItemStack generateRandomArtifact(LevelReader level, RandomSource random, boolean legendary) {
+        ArtifactCategory category = ArtifactCategory.values()[random.nextInt(ArtifactCategory.values().length)];
+        List<RegistryObject<? extends Item>> artifactList = MRItems.ARTIFACTS_BY_CATEGORY.get(category);
+
+        Item artifactItem = artifactList.get(random.nextInt(artifactList.size())).get();
+        ItemStack artifactStack = createBlankArtifact(artifactItem, random.nextInt(category.getVariations()), random);
+
+        applyRandomArmorTrim(level, random, artifactStack);
 
         List<BaseArtifactAbility> allAbilities = Lists.newArrayList(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues());
         // Filter out abilities that are not applicable to the Artifact's category.
@@ -120,7 +135,7 @@ public class ArtifactUtils {
         BaseArtifactAbility[] abilitiesToApply;
         BaseArtifactAbility[] appliedAbilities = {};
         // We might get unlucky RNG here and there,
-        // so try 10 times before giving up (10 times should be sufficient)
+        // so try 10 times before giving up
         for (int i = 0; i < 10; i++) {
             Collections.shuffle(allAbilities);
 
@@ -181,6 +196,29 @@ public class ArtifactUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * Tries to apply a random armor trim to the given ItemStack,
+     * if the item is not an instance of {@link ArmorItem}.
+     */
+    public static void applyRandomArmorTrim(LevelReader level, RandomSource random, ItemStack itemStack) {
+        if (!(itemStack.getItem() instanceof ArmorItem)) return;
+
+        try {
+            Registry<TrimPattern> patterns = level.registryAccess().registryOrThrow(Registries.TRIM_PATTERN);
+            Registry<TrimMaterial> materials = level.registryAccess().registryOrThrow(Registries.TRIM_MATERIAL);
+
+            Holder.Reference<TrimPattern> randomPattern = patterns.getRandom(random).orElseThrow();
+            Holder.Reference<TrimMaterial> randomMaterial = materials.getRandom(random).orElseThrow();
+
+            ArmorTrim trim = new ArmorTrim(materials.wrapAsHolder(randomMaterial.get()), patterns.wrapAsHolder(randomPattern.get()));
+
+            ArmorTrim.setTrim(level.registryAccess(), itemStack, trim);
+        }
+        catch (Exception e) {
+            MagicalRelics.LOG.error("Failed to apply random armor trim to artifact armor!");
+        }
     }
 
     /**
@@ -304,8 +342,7 @@ public class ArtifactUtils {
             // Skip if the item already has the ability
             if (currentAbilities.containsKey(nextToApply)) continue;
 
-            // TODO - Don't forget about changing this once armor is incorporated into this whole thingamajig
-            TriggerType randomTrigger = nextToApply.getRandomTrigger(random, false, itemStack.is(MRItemTags.ARTIFACT_CURIOS));
+            TriggerType randomTrigger = nextToApply.getRandomTrigger(random, itemStack.getItem() instanceof ArmorItem, itemStack.is(MRItemTags.ARTIFACT_CURIOS));
 
             // No suitable trigger found, skip to next ability
             if (randomTrigger == null) continue;

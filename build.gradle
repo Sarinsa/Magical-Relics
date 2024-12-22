@@ -12,6 +12,7 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'maven-publish'
+    id 'idea'
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
@@ -138,4 +139,11 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
 }

@@ -25,7 +25,6 @@ public class MRItems {
 
     public static final Map<ResourceKey<CreativeModeTab>, List<RegistryObject<? extends Item>>> TAB_ITEMS = new HashMap<>();
 
-    public static final List<ArtifactSet<List<RegistryObject<Item>>>> ALL_ARTIFACTS = new ArrayList<>();
     public static final Map<ArtifactCategory, List<RegistryObject<? extends Item>>> ARTIFACTS_BY_CATEGORY = new HashMap<>();
 
     static {
@@ -46,61 +45,72 @@ public class MRItems {
     public static final RegistryObject<Item> GOLD_MANAESSENCE = register("gold_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
     public static final RegistryObject<Item> DIAMOND_MANAESSENCE = register("diamond_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
 
-    public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> LEATHER_ARTIFACT_ARMOR = artifactArmorSet("leather", ArtifactArmorMaterials.LEATHER);
-    public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> IRON_ARTIFACT_ARMOR = artifactArmorSet("iron", ArtifactArmorMaterials.IRON);
-    public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> GOLD_ARTIFACT_ARMOR = artifactArmorSet("gold", ArtifactArmorMaterials.GOLD);
-    public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> DIAMOND_ARTIFACT_ARMOR = artifactArmorSet("diamond", ArtifactArmorMaterials.DIAMOND);
+    public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> LEATHER_ARTIFACT_ARMOR = artifactArmorSet("leather", ArtifactArmorMaterials.LEATHER, true);
+    public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> IRON_ARTIFACT_ARMOR = artifactArmorSet("iron", ArtifactArmorMaterials.IRON, false);
+    public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> GOLD_ARTIFACT_ARMOR = artifactArmorSet("gold", ArtifactArmorMaterials.GOLD, false);
+    public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> DIAMOND_ARTIFACT_ARMOR = artifactArmorSet("diamond", ArtifactArmorMaterials.DIAMOND, false);
 
-    public static final ArtifactSet<List<RegistryObject<Item>>> AMULETS = artifactSet(ArtifactCategory.AMULET);
-    public static final ArtifactSet<List<RegistryObject<Item>>> BELTS = artifactSet(ArtifactCategory.BELT);
-    public static final ArtifactSet<List<RegistryObject<Item>>> DAGGERS = artifactSet(ArtifactCategory.DAGGER);
-    public static final ArtifactSet<List<RegistryObject<Item>>> FIGURINES = artifactSet(ArtifactCategory.FIGURINE);
-    public static final ArtifactSet<List<RegistryObject<Item>>> RINGS = artifactSet(ArtifactCategory.RING);
-    public static final ArtifactSet<List<RegistryObject<Item>>> STAFFS = artifactSet(ArtifactCategory.STAFF);
-    public static final ArtifactSet<List<RegistryObject<Item>>> SWORDS = artifactSet(ArtifactCategory.SWORD);
-    public static final ArtifactSet<List<RegistryObject<Item>>> TRINKETS = artifactSet(ArtifactCategory.TRINKET);
-    public static final ArtifactSet<List<RegistryObject<Item>>> WANDS = artifactSet(ArtifactCategory.WAND);
-    public static final ArtifactSet<List<RegistryObject<Item>>> AXES = axeSet();
+    public static final ArtifactSet<List<RegistryObject<? extends Item>>> AMULETS = artifactSet(ArtifactCategory.AMULET);
+    public static final ArtifactSet<List<RegistryObject<? extends Item>>> BELTS = artifactSet(ArtifactCategory.BELT);
+    public static final ArtifactSet<List<RegistryObject<? extends Item>>> DAGGERS = artifactSet(ArtifactCategory.DAGGER);
+    public static final ArtifactSet<List<RegistryObject<? extends Item>>> FIGURINES = artifactSet(ArtifactCategory.FIGURINE);
+    public static final ArtifactSet<List<RegistryObject<? extends Item>>> RINGS = artifactSet(ArtifactCategory.RING);
+    public static final ArtifactSet<List<RegistryObject<? extends Item>>> STAFFS = artifactSet(ArtifactCategory.STAFF);
+    public static final ArtifactSet<List<RegistryObject<? extends Item>>> SWORDS = artifactSet(ArtifactCategory.SWORD);
+    public static final ArtifactSet<List<RegistryObject<? extends Item>>> TRINKETS = artifactSet(ArtifactCategory.TRINKET);
+    public static final ArtifactSet<List<RegistryObject<? extends Item>>> WANDS = artifactSet(ArtifactCategory.WAND);
+    public static final ArtifactSet<List<RegistryObject<? extends Item>>> AXES = axeSet();
 
 
-    private static ArtifactSet<List<RegistryObject<Item>>> artifactSet(ArtifactCategory category) {
-        ArtifactSet<List<RegistryObject<Item>>> artifactSet = new ArtifactSet<>(category, new ArrayList<>());
+    private static  ArtifactSet<List<RegistryObject<? extends Item>>> artifactSet(ArtifactCategory category) {
+        ArtifactSet<List<RegistryObject<? extends Item>>> artifactSet = new ArtifactSet<>(category, new ArrayList<>());
         artifactSet.dataStructure().add(ITEMS.register("wood_" + category.getName() + "_artifact", () -> new ArtifactItem(ArtifactItemTiers.WOOD, category)));
         artifactSet.dataStructure().add(ITEMS.register("stone_" + category.getName() + "_artifact", () -> new ArtifactItem(ArtifactItemTiers.STONE, category)));
         artifactSet.dataStructure().add(ITEMS.register("iron_" + category.getName() + "_artifact", () -> new ArtifactItem(ArtifactItemTiers.IRON, category)));
         artifactSet.dataStructure().add(ITEMS.register("gold_" + category.getName() + "_artifact", () -> new ArtifactItem(ArtifactItemTiers.GOLD, category)));
         artifactSet.dataStructure().add(ITEMS.register("diamond_" + category.getName() + "_artifact", () -> new ArtifactItem(ArtifactItemTiers.DIAMOND, category)));
-        ALL_ARTIFACTS.add(artifactSet);
+
         ARTIFACTS_BY_CATEGORY.get(category).addAll(artifactSet.dataStructure());
         return artifactSet;
     }
 
-    private static ArtifactSet<List<RegistryObject<Item>>> axeSet() {
+    private static ArtifactSet<List<RegistryObject<? extends Item>>> axeSet() {
         ArtifactCategory category = ArtifactCategory.AXE;
 
-        ArtifactSet<List<RegistryObject<Item>>> artifactSet = new ArtifactSet<>(category, new ArrayList<>());
+        ArtifactSet<List<RegistryObject<? extends Item>>> artifactSet = new ArtifactSet<>(category, new ArrayList<>());
         artifactSet.dataStructure().add(ITEMS.register("wood_" + category.getName() + "_artifact", () -> new ArtifactAxeItem(ArtifactItemTiers.WOOD, 6.0F, -3.2F)));
         artifactSet.dataStructure().add(ITEMS.register("stone_" + category.getName() + "_artifact", () -> new ArtifactAxeItem(ArtifactItemTiers.STONE, 7.0F, -3.2F)));
         artifactSet.dataStructure().add(ITEMS.register("iron_" + category.getName() + "_artifact", () -> new ArtifactAxeItem(ArtifactItemTiers.IRON, 6.0F, -3.1F)));
         artifactSet.dataStructure().add(ITEMS.register("gold_" + category.getName() + "_artifact", () -> new ArtifactAxeItem(ArtifactItemTiers.GOLD, 6.0F, -3.0F)));
         artifactSet.dataStructure().add(ITEMS.register("diamond_" + category.getName() + "_artifact", () -> new ArtifactAxeItem(ArtifactItemTiers.DIAMOND, 5.0F, -3.0F)));
-        ALL_ARTIFACTS.add(artifactSet);
+
         ARTIFACTS_BY_CATEGORY.get(category).addAll(artifactSet.dataStructure());
         return artifactSet;
     }
 
-    private static Map<EquipmentSlot, RegistryObject<ArmorItem>> artifactArmorSet(String name, ArmorMaterial material) {
+    private static Map<EquipmentSlot, RegistryObject<ArmorItem>> artifactArmorSet(String name, ArmorMaterial material, boolean dyeable) {
         Map<EquipmentSlot, RegistryObject<ArmorItem>> armorSet = new HashMap<>();
-        armorSet.put(EquipmentSlot.FEET, register(name + "_boots_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.BOOTS, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1))));
-        armorSet.put(EquipmentSlot.LEGS, register(name + "_leggings_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.LEGGINGS, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1))));
-        armorSet.put(EquipmentSlot.CHEST, register(name + "_chestplate_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.CHESTPLATE, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1))));
-        armorSet.put(EquipmentSlot.HEAD, register(name + "_helmet_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.HELMET, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1))));
+
+        if (dyeable) {
+            armorSet.put(EquipmentSlot.FEET, register(name + "_boots_artifact", () -> new DyableArtifactArmorItem(material, ArtifactCategory.BOOTS, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1))));
+            armorSet.put(EquipmentSlot.LEGS, register(name + "_leggings_artifact", () -> new DyableArtifactArmorItem(material, ArtifactCategory.LEGGINGS, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1))));
+            armorSet.put(EquipmentSlot.CHEST, register(name + "_chestplate_artifact", () -> new DyableArtifactArmorItem(material, ArtifactCategory.CHESTPLATE, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1))));
+            armorSet.put(EquipmentSlot.HEAD, register(name + "_helmet_artifact", () -> new DyableArtifactArmorItem(material, ArtifactCategory.HELMET, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1))));
+        }
+        else {
+            armorSet.put(EquipmentSlot.FEET, register(name + "_boots_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.BOOTS, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1))));
+            armorSet.put(EquipmentSlot.LEGS, register(name + "_leggings_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.LEGGINGS, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1))));
+            armorSet.put(EquipmentSlot.CHEST, register(name + "_chestplate_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.CHESTPLATE, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1))));
+            armorSet.put(EquipmentSlot.HEAD, register(name + "_helmet_artifact", () -> new ArtifactArmorItem(material, ArtifactCategory.HELMET, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1))));
+        }
         ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.BOOTS).add(armorSet.get(EquipmentSlot.FEET));
         ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.LEGGINGS).add(armorSet.get(EquipmentSlot.LEGS));
         ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.CHESTPLATE).add(armorSet.get(EquipmentSlot.CHEST));
         ARTIFACTS_BY_CATEGORY.get(ArtifactCategory.HELMET).add(armorSet.get(EquipmentSlot.HEAD));
+
         return armorSet;
     }
+
 
     @SafeVarargs
     protected static <T extends Item> RegistryObject<T> register(String name, Supplier<T> item, ResourceKey<CreativeModeTab>... creativeTabs) {

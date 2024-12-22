@@ -65,7 +65,7 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
 
         if (compoundTag.contains(GENERATE_ARTIFACT_KEY, Tag.TAG_BYTE)) {
             if (compoundTag.getBoolean(GENERATE_ARTIFACT_KEY) && level != null && !level.isClientSide) {
-                setArtifact(ArtifactUtils.generateRandomArtifact(level.random, false));
+                setArtifact(ArtifactUtils.generateRandomArtifact(level, level.random, false));
             }
         }
 

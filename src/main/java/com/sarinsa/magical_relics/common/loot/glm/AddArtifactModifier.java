@@ -75,7 +75,7 @@ public class AddArtifactModifier extends LootModifier {
                         : (minArtifacts + (random.nextInt(1 + maxArtifacts - minArtifacts)));
 
                 for (int i = 0; i < totalArtifacts; i++) {
-                    ItemStack artifact = ArtifactUtils.generateRandomArtifact(random, random.nextFloat() <= legendaryChance);
+                    ItemStack artifact = ArtifactUtils.generateRandomArtifact(context.getLevel(), random, random.nextFloat() <= legendaryChance);
                     generatedLoot.add(artifact);
                 }
             }

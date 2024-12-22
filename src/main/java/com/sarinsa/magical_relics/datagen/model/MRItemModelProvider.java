@@ -6,6 +6,7 @@ import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
@@ -23,13 +24,15 @@ public class MRItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        MRItems.ALL_ARTIFACTS.forEach(this::artifactSet);
+        MRItems.ARTIFACTS_BY_CATEGORY.forEach(this::artifactSet);
     }
 
-    private void artifactSet(ArtifactSet<List<RegistryObject<Item>>> artifactSet) {
-        for (RegistryObject<Item> regObj : artifactSet.dataStructure()) {
+    private void artifactSet(ArtifactCategory category, List<RegistryObject<? extends Item>> artifactSet) {
+        for (RegistryObject<? extends Item> regObj : artifactSet) {
+            // TODO - skip armor for now. We don't have variants, just trims
+            if (regObj.get() instanceof ArmorItem) continue;
+
             ResourceLocation itemId = regObj.getId();
-            ArtifactCategory category = artifactSet.category();
             String categoryName = category.getName();
             String parentModel = "item/generated";
 
@@ -41,7 +44,7 @@ public class MRItemModelProvider extends ItemModelProvider {
                     .parent(new ModelFile.UncheckedModelFile(parentModel))
                     .texture("layer0", modArtifactTexture(categoryName, categoryName + "1"));
 
-            for (int i = 1; i < artifactSet.category().getVariations() + 1; ++i) {
+            for (int i = 1; i < category.getVariations() + 1; ++i) {
                 ItemModelBuilder subModelBuilder = getBuilder(MagicalRelics.MODID + ":" + categoryName + i)
                         .parent(new ModelFile.UncheckedModelFile(parentModel))
                         .texture("layer0", modArtifactTexture(categoryName, categoryName + i))

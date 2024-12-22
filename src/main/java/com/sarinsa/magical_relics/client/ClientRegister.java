@@ -19,7 +19,9 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -30,6 +32,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.Collection;
 import java.util.List;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD, modid = MagicalRelics.MODID)
@@ -59,8 +62,8 @@ public class ClientRegister {
     @SubscribeEvent
     public static void onItemColors(RegisterColorHandlersEvent.Item event) {
         // All artifact items (including armor)
-        for (ArtifactSet<List<RegistryObject<Item>>> artifactSet : MRItems.ALL_ARTIFACTS) {
-            for (RegistryObject<Item> regObj : artifactSet.dataStructure()) {
+        for (List<RegistryObject<? extends Item>> list : MRItems.ARTIFACTS_BY_CATEGORY.values()) {
+            for (RegistryObject<? extends Item> regObj : list) {
                 event.register((itemStack, index) -> {
                     if (index > 0) {
                         CompoundTag stackTag = itemStack.getOrCreateTag();
@@ -71,6 +74,15 @@ public class ClientRegister {
                     }
                     return -1;
                 }, regObj.get());
+            }
+        }
+
+        // Dyable leather items
+        for (RegistryObject<Item> regObj : MRItems.ITEMS.getEntries()) {
+            Item item = regObj.get();
+
+            if (item instanceof DyeableLeatherItem dyableItem) {
+                event.register((itemStack, index) -> index > 0 ? -1 : dyableItem.getColor(itemStack), regObj.get());
             }
         }
     }

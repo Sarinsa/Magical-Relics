@@ -20,7 +20,7 @@ public class RandomArtifactItem extends Item {
             if (!player.isCreative())
                 player.setItemInHand(hand, ItemStack.EMPTY);
 
-            ItemStack randomArtifact = ArtifactUtils.generateRandomArtifact(level.random, level.random.nextFloat() < 0.1F);
+            ItemStack randomArtifact = ArtifactUtils.generateRandomArtifact(level, level.random, level.random.nextFloat() < 0.1F);
             player.getInventory().add(randomArtifact);
         }
         return InteractionResultHolder.success(player.getItemInHand(hand));

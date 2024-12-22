@@ -63,7 +63,7 @@ public class DisplayPedestalProcessor extends StructureProcessor {
             }
             else {
                 CompoundTag itemStackTag = new CompoundTag();
-                ItemStack itemStack = ArtifactUtils.generateRandomArtifact(random, random.nextFloat() < legendaryChance);
+                ItemStack itemStack = ArtifactUtils.generateRandomArtifact(level, random, random.nextFloat() < legendaryChance);
                 itemStack.save(itemStackTag);
 
                 tag.put(DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag);
