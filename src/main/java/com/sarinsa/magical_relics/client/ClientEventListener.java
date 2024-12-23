@@ -1,10 +1,12 @@
 package com.sarinsa.magical_relics.client;
 
+import com.sarinsa.magical_relics.common.ability.OreRadarAbility;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRParticles;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -47,11 +49,12 @@ public class ClientEventListener {
 
                 // Make sure the player has the ore radar ability
                 if (ArtifactUtils.hasAbility(player.getItemBySlot(EquipmentSlot.HEAD), MRArtifactAbilities.ORE_RADAR.get())) {
+                    final int scanRange = OreRadarAbility.scanRange.get();
 
                     for (BlockPos pos : BlockPos.betweenClosed(
-                            playerPos.offset(5, 5, 5),
-                            playerPos.offset(-5, -5, -5))) {
-                        if (level.getBlockState(pos).is(Tags.Blocks.ORES)) {
+                            playerPos.offset(scanRange, scanRange, scanRange),
+                            playerPos.offset(-scanRange, -scanRange, -scanRange))) {
+                        if (level.hasChunkAt(pos) && level.getBlockState(pos).is(Tags.Blocks.ORES)) {
                             level.addParticle(MRParticles.ORE_PING.get(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 0.0F, 0.0F, 0.0F);
                         }
                     }

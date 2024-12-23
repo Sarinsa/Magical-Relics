@@ -1,11 +1,12 @@
 package com.sarinsa.magical_relics.client.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.sarinsa.magical_relics.client.ClientRegister;
 import com.sarinsa.magical_relics.client.ParticleRenderTypes;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -16,11 +17,11 @@ public class OrePingParticle extends TextureSheetParticle {
 
     private final SpriteSet sprites;
 
-    public OrePingParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet animatedSprite) {
+    public OrePingParticle(ClientLevel level, double x, double y, double z, SpriteSet animatedSprite) {
         super(level, x, y, z, 0.0D, 0.0D, 0.0D);
         sprites = animatedSprite;
         quadSize *= 2.0F;
-        lifetime = 40;
+        lifetime = 30;
         hasPhysics = false;
 
         float f4 = (float) random.nextDouble() * 0.2F + 0.3F;
@@ -49,6 +50,12 @@ public class OrePingParticle extends TextureSheetParticle {
         else {
             setSpriteFromAge(sprites);
         }
+    }
+
+    @Override
+    protected int getLightColor(float f) {
+        BlockPos pos = BlockPos.containing(x, y, z);
+        return level.hasChunkAt(pos) ? 15728640 : 0;
     }
 
     @Override
@@ -103,7 +110,7 @@ public class OrePingParticle extends TextureSheetParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new OrePingParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, sprites);
+            return new OrePingParticle(level, x, y, z, sprites);
         }
     }
 }
