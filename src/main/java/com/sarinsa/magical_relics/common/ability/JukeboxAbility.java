@@ -45,7 +45,12 @@ public class JukeboxAbility extends BaseArtifactAbility {
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.AMULET, ArtifactCategory.TRINKET, ArtifactCategory.STAFF, ArtifactCategory.WAND, ArtifactCategory.FIGURINE, ArtifactCategory.RING
+            ArtifactCategory.AMULET,
+            ArtifactCategory.TRINKET,
+            ArtifactCategory.STAFF,
+            ArtifactCategory.WAND,
+            ArtifactCategory.FIGURINE,
+            ArtifactCategory.RING
     );
 
 

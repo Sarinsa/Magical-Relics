@@ -37,6 +37,9 @@ public class MagicalRelics {
     //
     // - More configurability for the anti-builder (specific blocked actions?)
     //
+    // - Properly implement Ore Radar ability
+    //
+    // - Figure out the sailor ability (might be kinda sucky to make)
 
     public static final String MODID = "magical_relics";
     public static final Logger LOG = LogManager.getLogger(MODID);
@@ -60,6 +63,7 @@ public class MagicalRelics {
         MRCreativeTabs.CREATIVE_TABS.register(modBus);
         MRBlockEntities.BLOCK_ENTITIES.register(modBus);
         MREntities.ENTITIES.register(modBus);
+        MRParticles.PARTICLES.register(modBus);
         MRContainers.CONTAINERS.register(modBus);
         MRDamageTypes.DAMAGE_TYPES.register(modBus);
         MRArtifactAbilities.ARTIFACT_ABILITIES.register(modBus);

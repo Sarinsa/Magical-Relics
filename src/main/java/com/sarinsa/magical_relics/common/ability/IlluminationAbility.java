@@ -42,11 +42,20 @@ public class IlluminationAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK, TriggerType.HELD, TriggerType.CURIO_TICK
+            TriggerType.ARMOR_TICK,
+            TriggerType.HELD,
+            TriggerType.CURIO_TICK
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.AMULET, ArtifactCategory.TRINKET, ArtifactCategory.STAFF, ArtifactCategory.WAND, ArtifactCategory.FIGURINE, ArtifactCategory.RING, ArtifactCategory.WAND, ArtifactCategory.HELMET
+            ArtifactCategory.AMULET,
+            ArtifactCategory.TRINKET,
+            ArtifactCategory.STAFF,
+            ArtifactCategory.WAND,
+            ArtifactCategory.FIGURINE,
+            ArtifactCategory.RING,
+            ArtifactCategory.WAND,
+            ArtifactCategory.HELMET
     );
 
 

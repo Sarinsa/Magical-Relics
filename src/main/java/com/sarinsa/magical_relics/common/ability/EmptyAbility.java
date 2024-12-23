@@ -18,7 +18,6 @@ public class EmptyAbility extends BaseArtifactAbility {
 
     private static final String[] NO_PREFIXES = {""};
     private static final String[] NO_SUFFIXES = {""};
-    private static final List<ArtifactCategory> TYPES = ImmutableList.copyOf(ArtifactCategory.values());
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.copyOf(
             TriggerType.values()
@@ -41,7 +40,7 @@ public class EmptyAbility extends BaseArtifactAbility {
 
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
-        return TYPES;
+        return ArtifactCategory.ALL;
     }
 
     @Override

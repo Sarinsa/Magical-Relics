@@ -40,7 +40,11 @@ public class NightVisionAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK, TriggerType.INVENTORY_TICK, TriggerType.USE, TriggerType.HELD, TriggerType.CURIO_TICK
+            TriggerType.ARMOR_TICK,
+            TriggerType.INVENTORY_TICK,
+            TriggerType.USE,
+            TriggerType.HELD,
+            TriggerType.CURIO_TICK
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(

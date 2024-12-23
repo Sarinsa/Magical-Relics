@@ -1,38 +1,29 @@
 package com.sarinsa.magical_relics.client;
 
+import com.sarinsa.magical_relics.client.particle.OrePingParticle;
 import com.sarinsa.magical_relics.client.renderer.block.CamoTrapRenderer;
 import com.sarinsa.magical_relics.client.renderer.block.DisplayPedestalRenderer;
 import com.sarinsa.magical_relics.client.renderer.entity.SwungSwordRenderer;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
-import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
-import com.sarinsa.magical_relics.common.core.registry.MREntities;
-import com.sarinsa.magical_relics.common.core.registry.MRItems;
-import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
-import com.sarinsa.magical_relics.common.entity.SwungSword;
+import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.DragonFireballRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.Collection;
 import java.util.List;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD, modid = MagicalRelics.MODID)
@@ -57,6 +48,11 @@ public class ClientRegister {
 
         event.registerEntityRenderer(MREntities.VOLATILE_FIREBALL.get(), (context) -> new ThrownItemRenderer<>(context, 3.0F, true));
         event.registerEntityRenderer(MREntities.SWUNG_SWORD.get(), SwungSwordRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(MRParticles.ORE_PING.get(), OrePingParticle.Factory::new);
     }
 
     @SubscribeEvent

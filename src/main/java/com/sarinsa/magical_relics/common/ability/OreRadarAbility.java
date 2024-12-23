@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +19,16 @@ import java.util.List;
 
 public class OreRadarAbility extends BaseArtifactAbility {
 
+
+    private static final String[] PREFIXES = {
+            createPrefix("ore_radar", "revealing"),
+    };
+
+    private static final String[] SUFFIXES = {
+            createSuffix("ore_radar", "sensing"),
+            createSuffix("ore_radar", "dowsing"),
+    };
+
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(ArtifactCategory.HELMET);
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
@@ -25,18 +36,21 @@ public class OreRadarAbility extends BaseArtifactAbility {
     );
 
 
-    public OreRadarAbility(String abilityName) {
-    }
+    public OreRadarAbility() { }
 
+    @Override
+    public Rarity getRarity() {
+        return Rarity.UNCOMMON;
+    }
 
     @Override
     public String[] getPrefixes() {
-        return new String[0];
+        return PREFIXES;
     }
 
     @Override
     public String[] getSuffixes() {
-        return new String[0];
+        return SUFFIXES;
     }
 
 

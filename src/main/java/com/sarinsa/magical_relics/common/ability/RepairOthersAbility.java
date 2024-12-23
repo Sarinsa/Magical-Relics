@@ -38,11 +38,19 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK, TriggerType.HELD, TriggerType.USE, TriggerType.CURIO_TICK
+            TriggerType.ARMOR_TICK,
+            TriggerType.HELD,
+            TriggerType.USE,
+            TriggerType.CURIO_TICK
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.WAND, ArtifactCategory.BELT, ArtifactCategory.STAFF, ArtifactCategory.TRINKET, ArtifactCategory.CHESTPLATE, ArtifactCategory.HELMET
+            ArtifactCategory.WAND,
+            ArtifactCategory.BELT,
+            ArtifactCategory.STAFF,
+            ArtifactCategory.TRINKET,
+            ArtifactCategory.CHESTPLATE,
+            ArtifactCategory.HELMET
     );
 
 

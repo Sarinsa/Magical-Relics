@@ -45,7 +45,11 @@ public class GlowVisionAbility extends BaseArtifactAbility {
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.TRINKET, ArtifactCategory.STAFF, ArtifactCategory.WAND, ArtifactCategory.DAGGER, ArtifactCategory.SWORD
+            ArtifactCategory.TRINKET,
+            ArtifactCategory.STAFF,
+            ArtifactCategory.WAND,
+            ArtifactCategory.DAGGER,
+            ArtifactCategory.SWORD
     );
 
     private static ForgeConfigSpec.IntValue range;

@@ -45,7 +45,10 @@ public class ResurrectAbility extends BaseArtifactAbility {
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.HELMET, ArtifactCategory.CHESTPLATE, ArtifactCategory.BELT, ArtifactCategory.FIGURINE
+            ArtifactCategory.HELMET,
+            ArtifactCategory.CHESTPLATE,
+            ArtifactCategory.BELT,
+            ArtifactCategory.FIGURINE
     );
 
     private static ForgeConfigSpec.IntValue cooldown;

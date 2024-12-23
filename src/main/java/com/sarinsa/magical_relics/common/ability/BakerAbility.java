@@ -48,7 +48,11 @@ public class BakerAbility extends BaseArtifactAbility {
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.AMULET, ArtifactCategory.STAFF, ArtifactCategory.TRINKET, ArtifactCategory.FIGURINE, ArtifactCategory.WAND
+            ArtifactCategory.AMULET,
+            ArtifactCategory.STAFF,
+            ArtifactCategory.TRINKET,
+            ArtifactCategory.FIGURINE,
+            ArtifactCategory.WAND
     );
 
     private static ForgeConfigSpec.IntValue cooldown;

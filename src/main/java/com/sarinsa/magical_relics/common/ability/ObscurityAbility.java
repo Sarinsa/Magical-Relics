@@ -38,7 +38,9 @@ public class ObscurityAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.USER_DAMAGED, TriggerType.USER_ATTACKING, TriggerType.USE
+            TriggerType.USER_DAMAGED,
+            TriggerType.USER_ATTACKING,
+            TriggerType.USE
     );
 
     private static final int EFFECT_DURATION = 610;

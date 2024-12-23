@@ -43,11 +43,20 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK, TriggerType.USE, TriggerType.USER_ATTACKING, TriggerType.INVENTORY_TICK, TriggerType.CURIO_TICK
+            TriggerType.ARMOR_TICK,
+            TriggerType.USE,
+            TriggerType.USER_ATTACKING,
+            TriggerType.INVENTORY_TICK,
+            TriggerType.CURIO_TICK
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
-            ArtifactCategory.AMULET, ArtifactCategory.RING, ArtifactCategory.BELT, ArtifactCategory.LEGGINGS, ArtifactCategory.STAFF, ArtifactCategory.TRINKET
+            ArtifactCategory.AMULET,
+            ArtifactCategory.RING,
+            ArtifactCategory.BELT,
+            ArtifactCategory.LEGGINGS,
+            ArtifactCategory.STAFF,
+            ArtifactCategory.TRINKET
     );
 
     private static final int USE_EFFECT_DURATION = 900;
