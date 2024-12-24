@@ -155,9 +155,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem
     @Override
     public boolean hurtEnemy(ItemStack itemStack, LivingEntity attacked, LivingEntity attacker) {
         if (getCategory() == ArtifactCategory.SWORD || getCategory() == ArtifactCategory.DAGGER)
-        itemStack.hurtAndBreak(1, attacker, (entity) -> {
-            entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-        });
+            itemStack.hurtAndBreak(1, attacker, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         return true;
     }
 

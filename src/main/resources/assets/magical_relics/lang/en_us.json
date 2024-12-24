@@ -189,6 +189,7 @@
   "magical_relics.artifact_ability.magical_relics.reach_boost.description.armor_tick": "Passively boosts reach when equipped",
   "magical_relics.artifact_ability.magical_relics.reach_boost.description.held": "Passively boosts reach when held or equipped",
   "magical_relics.artifact_ability.magical_relics.ore_radar.description": "Reveals nearby ores",
+  "magical_relics.artifact_ability.magical_relics.terrain_walker.description": "Grants increased step height",
 
 
   "magical_relics.ability.mundane_prefix": "Mundane",
@@ -320,6 +321,12 @@
   "magical_relics.artifact_ability.magical_relics.ore_radar.prefix.revealing": "Revealing",
   "magical_relics.artifact_ability.magical_relics.ore_radar.suffix.sensing": "of Sensing",
   "magical_relics.artifact_ability.magical_relics.ore_radar.suffix.dowsing": "of Dowsing",
+
+  "magical_relics.artifact_ability.magical_relics.terrain_walker.prefix.long_legs": "Long-legs",
+  "magical_relics.artifact_ability.magical_relics.terrain_walker.prefix.mountain_goat": "Mountain Goat's",
+  "magical_relics.artifact_ability.magical_relics.terrain_walker.suffix.traversal": "of Traversal",
+  "magical_relics.artifact_ability.magical_relics.terrain_walker.suffix.long_steps": "of Long Steps",
+
 
 
   "curios.identifier.amulet": "Amulet",

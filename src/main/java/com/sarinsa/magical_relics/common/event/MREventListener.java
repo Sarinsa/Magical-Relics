@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.common.event;
 
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.server.MinecraftServer;
@@ -16,6 +17,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,6 +29,7 @@ import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Map;
 
 public class MREventListener {
 
@@ -179,6 +182,30 @@ public class MREventListener {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onPlayerEquipmentChange(LivingEquipmentChangeEvent event) {
+        /*
+        EquipmentSlot slot = event.getSlot();
+        ItemStack previousItem = event.getFrom();
+        ItemStack nowItem = event.getTo();
+
+        Map<BaseArtifactAbility, TriggerType> previousAbilities = ArtifactUtils.getAllAbilities(previousItem);
+        Map<BaseArtifactAbility, TriggerType> nowAbilities = ArtifactUtils.getAllAbilities(nowItem);
+
+        for (BaseArtifactAbility ability : previousAbilities.keySet()) {
+            if (ability.getAttributeWithBoost() != null) {
+                AttributeBoost attributeBoost = ability.getAttributeWithBoost();
+                event.getEntity().getAttribute(attributeBoost.attribute().get()).removeModifier(attributeBoost.);
+            }
+        }
+
+        for (BaseArtifactAbility ability : nowAbilities.keySet()) {
+
+        }
+
+         */
     }
 
     @Nullable

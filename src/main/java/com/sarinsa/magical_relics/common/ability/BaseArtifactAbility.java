@@ -158,6 +158,7 @@ public abstract class BaseArtifactAbility {
         return ArtifactUtils.COMMON_ABILITY;
     }
 
+    @Nullable
     public AttributeBoost getAttributeWithBoost() {
         return null;
     }
