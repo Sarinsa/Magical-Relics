@@ -99,7 +99,7 @@ public class AdrenalineAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.adrenaline.description");
     }
 }

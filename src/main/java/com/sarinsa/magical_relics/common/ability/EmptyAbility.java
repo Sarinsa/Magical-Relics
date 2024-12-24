@@ -44,7 +44,7 @@ public class EmptyAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         return null;
     }
 

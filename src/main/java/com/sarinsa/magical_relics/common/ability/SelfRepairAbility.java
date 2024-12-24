@@ -125,15 +125,13 @@ public class SelfRepairAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        TriggerType triggerType = ArtifactUtils.getTriggerFromStack(artifact, this);
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+        if (type == null) return null;
 
-        if (triggerType == null) return null;
-
-        return switch (triggerType) {
-            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.armor_tick");
+        return switch (type) {
             case INVENTORY_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.inventory_tick");
             case HELD -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.held");
+            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.armor_tick");
         };
     }
 }

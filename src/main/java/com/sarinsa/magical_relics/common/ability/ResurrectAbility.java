@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.item.ArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.network.chat.Component;
@@ -12,7 +11,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -117,7 +115,7 @@ public class ResurrectAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.resurrect.description");
     }
 }

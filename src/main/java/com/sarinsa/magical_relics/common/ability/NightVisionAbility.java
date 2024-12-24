@@ -152,17 +152,15 @@ public class NightVisionAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        TriggerType type = ArtifactUtils.getTriggerFromStack(artifact, this);
-
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         if (type == null) return null;
 
         return switch (type) {
-            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.inventory_tick");
             case ARMOR_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.armor_tick");
             case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.use", (USE_EFFECT_DURATION / 20) / 60);
             case HELD -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.held");
             case CURIO_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.curio");
+            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.inventory_tick");
         };
     }
 }

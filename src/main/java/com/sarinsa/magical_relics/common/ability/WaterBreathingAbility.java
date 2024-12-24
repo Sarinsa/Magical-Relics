@@ -150,17 +150,15 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        TriggerType type = ArtifactUtils.getTriggerFromStack(artifact, this);
-
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         if (type == null) return null;
 
         return switch (type) {
-            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.held");
             case USER_DAMAGED -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.user_damaged", DROWN_EFFECT_DURATION / 20);
             case ARMOR_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.armor_tick");
             case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.use", (USE_EFFECT_DURATION / 20) / 60);
             case USER_ATTACKING -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.user_attacking", ATTACK_EFFECT_DURATION / 20);
+            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.held");
         };
     }
 }

@@ -97,7 +97,7 @@ public class ReachBoostAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         TriggerType triggerType = ArtifactUtils.getTriggerFromStack(artifact, this);
 
         if (triggerType == TriggerType.ARMOR_TICK) {

@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import top.theillusivec4.curios.api.SlotContext;
@@ -84,10 +85,10 @@ public abstract class BaseArtifactAbility {
     /**
      * @return A description of this ability that will be added to the artifact item stack's tooltip.
      */
-    public abstract MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag);
+    public abstract MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag);
 
     /**
-     * Called from {@link ArtifactUtils#generateRandomArtifact(RandomSource, boolean)} when the ability
+     * Called from {@link ArtifactUtils#generateRandomArtifact(LevelReader, RandomSource, boolean)} when the ability
      * is applied to an artifact item.
      * <br><br>
      * Can be used to write additional data to the ItemStack's NBT and whatnot.

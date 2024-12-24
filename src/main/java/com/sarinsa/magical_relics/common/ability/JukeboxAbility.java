@@ -142,8 +142,8 @@ public class JukeboxAbility extends BaseArtifactAbility {
 
     @Override
     @SuppressWarnings("ConstantConditions")
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        CompoundTag modDataTag = artifact.getOrCreateTag().getCompound(ArtifactUtils.MOD_DATA_KEY);
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+        CompoundTag modDataTag = artifact.getTag().getCompound(ArtifactUtils.MOD_DATA_KEY);
         ResourceLocation recordId = ResourceLocation.tryParse(modDataTag.getString("JUKEBOXMusicDiscId"));
 
         String recordDesc = "missingno :(";

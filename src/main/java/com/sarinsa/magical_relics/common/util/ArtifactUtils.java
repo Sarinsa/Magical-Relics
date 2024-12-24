@@ -520,7 +520,7 @@ public class ArtifactUtils {
             components.add(Component.literal(" "));
             
             for (BaseArtifactAbility ability : abilities.keySet()) {
-                MutableComponent description = ability.getAbilityDescription(itemStack, level, flag);
+                MutableComponent description = ability.getAbilityDescription(getTriggerFromStack(itemStack, ability), itemStack, level, flag);
 
                 if (description != null) {
                     if (ability.showCooldownSymbol()) {

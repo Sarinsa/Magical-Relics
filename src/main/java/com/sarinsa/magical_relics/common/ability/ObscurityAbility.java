@@ -125,15 +125,13 @@ public class ObscurityAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        TriggerType type = ArtifactUtils.getTriggerFromStack(artifact, this);
-
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
         if (type == null) return null;
 
         return switch (type) {
-            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.obscurity.description.use", EFFECT_DURATION / 20);
             case USER_DAMAGED -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.obscurity.description.user_damaged", EFFECT_DURATION / 20);
             case USER_ATTACKING -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.obscurity.description.user_attacking", EFFECT_DURATION / 20);
+            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.obscurity.description.use", EFFECT_DURATION / 20);
         };
     }
 }

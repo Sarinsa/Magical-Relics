@@ -108,12 +108,10 @@ public class SpeedAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        TriggerType triggerType = ArtifactUtils.getTriggerFromStack(artifact, this);
-
-        if (triggerType == TriggerType.ARMOR_TICK)
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+        if (type == TriggerType.ARMOR_TICK)
             return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.speed_boost.description.armor_tick");
-        else if (triggerType == TriggerType.HELD)
+        else if (type == TriggerType.HELD)
             return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.speed_boost.description.held");
 
         return null;

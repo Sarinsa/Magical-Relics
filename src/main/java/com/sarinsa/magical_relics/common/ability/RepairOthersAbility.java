@@ -166,16 +166,14 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public MutableComponent getAbilityDescription(ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        TriggerType triggerType = ArtifactUtils.getTriggerFromStack(artifact, this);
+    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+        if (type == null) return null;
 
-        if (triggerType == null) return null;
-
-        return switch (triggerType) {
-            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.armor_tick");
+        return switch (type) {
             case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.use");
             case HELD -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.held");
             case CURIO_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.curio");
+            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.armor_tick");
         };
     }
 }
