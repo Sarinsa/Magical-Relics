@@ -39,16 +39,19 @@ public class ClientEventListener {
 
     }
 
+    /**
+     * Handles spawning ore-ping particles around the player
+     */
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.START) {
             if (--timeNextOrePing <= 0) {
                 Player player = event.player;
-                Level level = player.level();
-                BlockPos playerPos = player.blockPosition();
 
                 // Make sure the player has the ore radar ability
                 if (ArtifactUtils.hasAbility(player.getItemBySlot(EquipmentSlot.HEAD), MRArtifactAbilities.ORE_RADAR.get())) {
+                    Level level = player.level();
+                    BlockPos playerPos = player.blockPosition();
                     final int scanRange = OreRadarAbility.scanRange.get();
 
                     for (BlockPos pos : BlockPos.betweenClosed(
@@ -62,5 +65,9 @@ public class ClientEventListener {
                 timeNextOrePing = 120;
             }
         }
+    }
+
+    public void onRenderBlockOverlay(RenderBlockScreenEffectEvent event) {
+
     }
 }

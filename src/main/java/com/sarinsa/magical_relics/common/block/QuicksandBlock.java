@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.block;
 
+import com.sarinsa.magical_relics.client.ClientUtils;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRDamageTypes;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
@@ -38,6 +39,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.util.LogicalSidedProvider;
+import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 public class QuicksandBlock extends Block {
@@ -77,6 +80,9 @@ public class QuicksandBlock extends Block {
                 .sound(SoundType.PACKED_MUD)
                 .noLootTable()
                 .noCollission()
+                .isViewBlocking((state, level, pos)
+                        -> LogicalSidedProvider.CLIENTWORLD.get(LogicalSide.CLIENT).isEmpty() || ClientUtils.isQuicksandViewBlocking()
+                )
         );
         registerDefaultState(stateDefinition.any().setValue(LAYERS, MAX_HEIGHT));
     }
