@@ -47,7 +47,7 @@ public class OreRadarAbility extends BaseArtifactAbility {
     public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
         scanRange = configBuilder.comment("The scan range of the ore radar. A range of 5 equals a search area of 5x5x5 blocks around the player." +
                         "Note that larger values may cause poor performance on clients.")
-                .defineInRange("scanRange", 5, 1, 50);
+                .defineInRange("scanRange", 7, 1, 50);
     }
 
     @Override

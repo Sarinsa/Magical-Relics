@@ -15,6 +15,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -137,6 +138,11 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     }
 
     @Override
+    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
+        onInventoryTick(artifact, level, player, 0, true);
+    }
+
+    @Override
     public Rarity getRarity() {
         return Rarity.RARE;
     }
@@ -184,7 +190,7 @@ public class JumpBoostAbility extends BaseArtifactAbility {
         if (triggerType == null) return null;
 
         return switch (triggerType) {
-            default -> null;
+            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.armor_tick", PASSIVE_EFFECT_DURATION / 20, potionLevel.getString());
             case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.use", USE_EFFECT_DURATION / 20, potionLevel.getString());
             case USER_ATTACKING -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.user_attacking", ATTACK_EFFECT_DURATION / 20, potionLevel.getString());
             case INVENTORY_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.inventory_tick", PASSIVE_EFFECT_DURATION / 20, potionLevel.getString());

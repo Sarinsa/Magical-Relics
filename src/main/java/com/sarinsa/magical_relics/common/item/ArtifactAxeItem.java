@@ -34,10 +34,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.level.BlockEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class ArtifactAxeItem extends AxeItem implements ItemArtifact {
 
@@ -53,11 +50,13 @@ public class ArtifactAxeItem extends AxeItem implements ItemArtifact {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
-        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.USE, heldItem);
+        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.USE, heldItem);
 
-        if (ability != null) {
-            if (ability.onUse(level, player, heldItem)) {
-                return InteractionResultHolder.success(heldItem);
+        if (!abilities.isEmpty()) {
+            for (BaseArtifactAbility ability : abilities) {
+                if (ability.onUse(level, player, heldItem)) {
+                    return InteractionResultHolder.success(heldItem);
+                }
             }
         }
         return InteractionResultHolder.pass(heldItem);
@@ -70,7 +69,7 @@ public class ArtifactAxeItem extends AxeItem implements ItemArtifact {
         BlockPos pos = context.getClickedPos();
         BlockState clickedState = level.getBlockState(pos);
         Player player = context.getPlayer();
-        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.RIGHT_CLICK_BLOCK, heldItem);
+        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.RIGHT_CLICK_BLOCK, heldItem);
 
         // Help prevent stupid things from happening
         // when holding a potentially dangerous artifact
@@ -79,9 +78,11 @@ public class ArtifactAxeItem extends AxeItem implements ItemArtifact {
         // go bye bye and turns into cake.
         if (clickedState.hasBlockEntity()) return InteractionResult.PASS;
 
-        if (ability != null) {
-            if (ability.onClickBlock(level, heldItem, pos, level.getBlockState(pos), context.getClickedFace(), player))
-                return InteractionResult.SUCCESS;
+        if (!abilities.isEmpty()) {
+            for (BaseArtifactAbility ability : abilities) {
+                if (ability.onClickBlock(level, heldItem, pos, level.getBlockState(pos), context.getClickedFace(), player))
+                    return InteractionResult.SUCCESS;
+            }
         }
         return super.useOn(context);
     }
@@ -95,10 +96,12 @@ public class ArtifactAxeItem extends AxeItem implements ItemArtifact {
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem) {
-        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.INVENTORY_TICK, itemStack);
+        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.INVENTORY_TICK, itemStack);
 
-        if (ability != null) {
-            ability.onInventoryTick(itemStack, level, entity, slot, isSelectedItem);
+        if (!abilities.isEmpty()) {
+            for (BaseArtifactAbility ability : abilities) {
+                ability.onInventoryTick(itemStack, level, entity, slot, isSelectedItem);
+            }
         }
     }
 

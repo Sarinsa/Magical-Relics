@@ -31,6 +31,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.TropicalFish;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potions;
@@ -430,21 +431,24 @@ public class ArtifactUtils {
     }
 
     /**
-     * @return All abilities on the artifact item stack with the given TriggerType
+     * @return A List of all abilities on the artifact item stack with the given TriggerType.
+     *         Will not be null, but may be empty.
      */
-    @Nullable
-    public static BaseArtifactAbility getAbilityWithTrigger(TriggerType type, ItemStack itemStack) {
-        if (itemStack.isEmpty()) return null;
+    @Nonnull
+    public static Collection<BaseArtifactAbility> getAbilitiesWithTrigger(TriggerType type, ItemStack itemStack) {
+        List<BaseArtifactAbility> list = new ArrayList<>();
+
+        if (itemStack.isEmpty()) return list;
 
         Map<BaseArtifactAbility, TriggerType> abilities = getAllAbilities(itemStack);
 
-        if (abilities.isEmpty()) return null;
+        if (abilities.isEmpty()) return list;
 
         for (BaseArtifactAbility ability : abilities.keySet()) {
             if (abilities.get(ability) == type)
-                return ability;
+                list.add(ability);
         }
-        return null;
+        return list;
     }
 
     /**

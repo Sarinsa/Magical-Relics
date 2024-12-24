@@ -12,6 +12,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 
 public class DyableArtifactArmorItem extends ArmorItem implements ItemArtifact, DyeableLeatherItem {
@@ -39,10 +40,13 @@ public class DyableArtifactArmorItem extends ArmorItem implements ItemArtifact, 
     @SuppressWarnings("removal")
     @Override
     public void onArmorTick(ItemStack stack, Level level, Player player) {
-        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.ARMOR_TICK, stack);
+        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.ARMOR_TICK, stack);
 
-        if (ability != null)
-            ability.onArmorTick(stack, level, player, getEquipmentSlot());
+        if (!abilities.isEmpty()) {
+            for (BaseArtifactAbility ability : abilities) {
+                ability.onArmorTick(stack, level, player, getEquipmentSlot());
+            }
+        }
     }
 
     @Override

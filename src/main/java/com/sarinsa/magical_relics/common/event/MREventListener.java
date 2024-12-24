@@ -26,6 +26,7 @@ import top.theillusivec4.curios.api.type.ISlotType;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 public class MREventListener {
 
@@ -81,11 +82,13 @@ public class MREventListener {
         ItemEntity tossedItem = event.getEntity();
         Level level = event.getEntity().level();
         Player player = event.getPlayer();
-        BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.DROPPED, tossedItem.getItem());
+        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.DROPPED, tossedItem.getItem());
 
-        if (ability != null) {
-            if (ability.onDropped(level, tossedItem, player)) {
-                event.setCanceled(true);
+        if (!abilities.isEmpty()) {
+            for (BaseArtifactAbility ability : abilities) {
+                if (ability.onDropped(level, tossedItem, player)) {
+                    event.setCanceled(true);
+                }
             }
         }
     }
@@ -96,20 +99,24 @@ public class MREventListener {
         Player player = event.player;
         ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         Level level = player.level();
-        BaseArtifactAbility heldAbility = ArtifactUtils.getAbilityWithTrigger(TriggerType.HELD, heldItem);
+        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.HELD, heldItem);
 
-        if (heldAbility != null) {
-            heldAbility.onHeld(level, player, heldItem, EquipmentSlot.MAINHAND);
+        if (!abilities.isEmpty()) {
+            for (BaseArtifactAbility ability : abilities) {
+                ability.onHeld(level, player, heldItem, EquipmentSlot.MAINHAND);
+            }
         }
         ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory(player).orElse(null);
 
         if (curiosInventory != null) {
             for (SlotResult slotResult : curiosInventory.findCurios(ArtifactUtils.CURIO_SLOTS)) {
                 ItemStack curioStack = slotResult.stack();
-                BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.CURIO_TICK, curioStack);
+                Collection<BaseArtifactAbility> curioAbilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.CURIO_TICK, curioStack);
 
-                if (ability != null) {
-                    ability.onCurioTick(curioStack, level, player, slotResult.slotContext());
+                if (!abilities.isEmpty()) {
+                    for (BaseArtifactAbility ability : curioAbilities) {
+                        ability.onCurioTick(curioStack, level, player, slotResult.slotContext());
+                    }
                 }
             }
         }
@@ -120,19 +127,25 @@ public class MREventListener {
         if (event.getSource().getDirectEntity() instanceof Player player) {
             for (EquipmentSlot slot : EquipmentSlot.values()) {
                 ItemStack artifact = player.getItemBySlot(slot);
-                BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.USER_ATTACKING, artifact);
+                Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.USER_ATTACKING, artifact);
 
-                if (ability != null)
-                    ability.onDamageMob(artifact, player, event.getEntity());
+                if (!abilities.isEmpty()) {
+                    for (BaseArtifactAbility ability : abilities) {
+                        ability.onDamageMob(artifact, player, event.getEntity());
+                    }
+                }
             }
         }
         else if (event.getEntity() instanceof Player player) {
             for (EquipmentSlot slot : EquipmentSlot.values()) {
                 ItemStack artifact = player.getItemBySlot(slot);
-                BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.USER_DAMAGED, artifact);
+                Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.USER_DAMAGED, artifact);
 
-                if (ability != null)
-                    ability.onUserDamaged(player.level(), player, event.getSource(), artifact);
+                if (!abilities.isEmpty()) {
+                    for (BaseArtifactAbility ability : abilities) {
+                        ability.onUserDamaged(player.level(), player, event.getSource(), artifact);
+                    }
+                }
             }
         }
     }
@@ -143,20 +156,25 @@ public class MREventListener {
         if (event.getEntity() instanceof Player player) {
             for (EquipmentSlot slot : EquipmentSlot.values()) {
                 ItemStack artifact = player.getItemBySlot(slot);
-                BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.ON_DEATH, artifact);
+                Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.ON_DEATH, artifact);
 
-                if (ability != null)
-                    ability.onDeath(player.level(), player, slot, null, artifact, event);
+                if (!abilities.isEmpty()) {
+                    for (BaseArtifactAbility ability : abilities) {
+                        ability.onDeath(player.level(), player, slot, null, artifact, event);
+                    }
+                }
             }
             ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory(player).orElse(null);
 
             if (curiosInventory != null) {
                 for (SlotResult slotResult : curiosInventory.findCurios(ArtifactUtils.CURIO_SLOTS)) {
                     ItemStack curioArtifact = slotResult.stack();
-                    BaseArtifactAbility ability = ArtifactUtils.getAbilityWithTrigger(TriggerType.ON_DEATH, curioArtifact);
+                    Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.ON_DEATH, curioArtifact);
 
-                    if (ability != null) {
-                        ability.onDeath(player.level(), player, null, slotResult.slotContext(), curioArtifact, event);
+                    if (!abilities.isEmpty()) {
+                        for (BaseArtifactAbility ability : abilities) {
+                            ability.onDeath(player.level(), player, null, slotResult.slotContext(), curioArtifact, event);
+                        }
                     }
                 }
             }

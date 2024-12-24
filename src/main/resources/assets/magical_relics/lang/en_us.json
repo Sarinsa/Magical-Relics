@@ -172,6 +172,7 @@
   "magical_relics.artifact_ability.magical_relics.illumination.description.held": "Provides illumination while held",
   "magical_relics.artifact_ability.magical_relics.illumination.description.curio": "Provides illumination while equipped",
   "magical_relics.artifact_ability.magical_relics.glow_vision.description": "Makes nearby creatures glow when used",
+  "magical_relics.artifact_ability.magical_relics.jump_boost.description.armor_tick": "Grants Jump Boost %2$s when equipped",
   "magical_relics.artifact_ability.magical_relics.jump_boost.description.use": "Grants Jump Boost %2$s for %1$s seconds when used",
   "magical_relics.artifact_ability.magical_relics.jump_boost.description.user_attacking": "Grants Jump Boost %2$s for %1$s seconds when dealing damage",
   "magical_relics.artifact_ability.magical_relics.jump_boost.description.inventory_tick": "Grants Jump Boost %2$s",
