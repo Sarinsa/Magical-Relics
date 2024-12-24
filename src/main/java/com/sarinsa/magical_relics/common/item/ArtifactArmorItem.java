@@ -1,11 +1,16 @@
 package com.sarinsa.magical_relics.common.item;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -48,6 +53,19 @@ public class ArtifactArmorItem extends ArmorItem implements ItemArtifact {
                 ability.onArmorTick(stack, level, player, getEquipmentSlot());
             }
         }
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack, AttributeBoost.ActiveType.EQUIPPED);
+
+        if (artifactModifiers != null && slot == getEquipmentSlot()) {
+            ImmutableMultimap.Builder<Attribute, AttributeModifier> attribs = ImmutableMultimap.builder();
+            attribs.putAll(artifactModifiers);
+            attribs.putAll(getDefaultAttributeModifiers(slot));
+            return attribs.build();
+        }
+        return super.getAttributeModifiers(slot, stack);
     }
 
     @Override
