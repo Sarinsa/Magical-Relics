@@ -43,6 +43,7 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> REACH_BOOST = register("reach_boost", ReachBoostAbility::new);
     public static final RegistryObject<BaseArtifactAbility> ORE_RADAR = register("ore_radar", OreRadarAbility::new);
     public static final RegistryObject<BaseArtifactAbility> TERRAIN_WALKER = register("terrain_walker", TerrainWalkerAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> SLOW_FALLING = register("slow_falling", SlowFallingAbility::new);
 
 
     private static RegistryObject<BaseArtifactAbility> register(String name, Supplier<BaseArtifactAbility> supplier) {

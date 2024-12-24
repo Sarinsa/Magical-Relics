@@ -190,6 +190,11 @@
   "magical_relics.artifact_ability.magical_relics.reach_boost.description.held": "Passively boosts reach when held or equipped",
   "magical_relics.artifact_ability.magical_relics.ore_radar.description": "Reveals nearby ores",
   "magical_relics.artifact_ability.magical_relics.terrain_walker.description": "Grants increased step height",
+  "magical_relics.artifact_ability.magical_relics.slow_falling.description.inventory_tick": "Grants Slow Falling",
+  "magical_relics.artifact_ability.magical_relics.slow_falling.description.armor_tick": "Grants Slow Falling while equipped",
+  "magical_relics.artifact_ability.magical_relics.slow_falling.description.use": "Grants temporary Slow Falling for %1$s minutes when used",
+  "magical_relics.artifact_ability.magical_relics.slow_falling.description.held": "Grants Slow Falling when held",
+  "magical_relics.artifact_ability.magical_relics.slow_falling.description.curio": "Grants Slow Falling while equipped",
 
 
   "magical_relics.ability.mundane_prefix": "Mundane",
@@ -326,6 +331,11 @@
   "magical_relics.artifact_ability.magical_relics.terrain_walker.prefix.mountain_goat": "Mountain Goat's",
   "magical_relics.artifact_ability.magical_relics.terrain_walker.suffix.traversal": "of Traversal",
   "magical_relics.artifact_ability.magical_relics.terrain_walker.suffix.long_steps": "of Long Steps",
+
+  "magical_relics.artifact_ability.magical_relics.slow_falling.prefix.gauzy": "Gauzy",
+  "magical_relics.artifact_ability.magical_relics.slow_falling.prefix.balloon": "Balloon",
+  "magical_relics.artifact_ability.magical_relics.slow_falling.suffix.helium": "of Helium",
+  "magical_relics.artifact_ability.magical_relics.slow_falling.suffix.slow_descent": "of Slow Descent",
 
 
 
