@@ -197,6 +197,7 @@
   "magical_relics.artifact_ability.magical_relics.slow_falling.description.use": "Grants temporary Slow Falling for %1$s minutes when used",
   "magical_relics.artifact_ability.magical_relics.slow_falling.description.held": "Grants Slow Falling when held",
   "magical_relics.artifact_ability.magical_relics.slow_falling.description.curio": "Grants Slow Falling while equipped",
+  "magical_relics.artifact_ability.magical_relics.spider.description.armor_tick": "Lets you climb up walls",
 
 
   "magical_relics.ability.mundane_prefix": "Mundane",
@@ -338,6 +339,11 @@
   "magical_relics.artifact_ability.magical_relics.slow_falling.prefix.balloon": "Balloon",
   "magical_relics.artifact_ability.magical_relics.slow_falling.suffix.helium": "of Helium",
   "magical_relics.artifact_ability.magical_relics.slow_falling.suffix.slow_descent": "of Slow Descent",
+
+  "magical_relics.artifact_ability.magical_relics.spider.prefix.arachnid": "Arachnid's",
+  "magical_relics.artifact_ability.magical_relics.spider.prefix.climber": "Climber's",
+  "magical_relics.artifact_ability.magical_relics.spider.suffix.bouldering": "of Bouldering",
+  "magical_relics.artifact_ability.magical_relics.spider.suffix.scrabbling": "of Scrabbling",
 
 
 

@@ -28,6 +28,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -61,6 +62,13 @@ public class ArtifactUtils {
             "belt",
             "ring",
             "amulet"
+    };
+
+    public static final EquipmentSlot[] ARMOR_SLOTS = {
+            EquipmentSlot.HEAD,
+            EquipmentSlot.CHEST,
+            EquipmentSlot.LEGS,
+            EquipmentSlot.FEET
     };
 
     public static final Rarity COMMON_ABILITY = Rarity.create(MagicalRelics.resLoc("common_ability").toString(), ChatFormatting.GRAY);

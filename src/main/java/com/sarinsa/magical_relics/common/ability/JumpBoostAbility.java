@@ -17,6 +17,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -184,12 +185,11 @@ public class JumpBoostAbility extends BaseArtifactAbility {
 
     @Override
     public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        TriggerType triggerType = ArtifactUtils.getTriggerFromStack(artifact, this);
         Component potionLevel = Component.translatable("enchantment.level." + (getEffectMultiplier(artifact) + 1));
 
-        if (triggerType == null) return null;
+        if (type == null) return null;
 
-        return switch (triggerType) {
+        return switch (type) {
             default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.armor_tick", PASSIVE_EFFECT_DURATION / 20, potionLevel.getString());
             case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.use", USE_EFFECT_DURATION / 20, potionLevel.getString());
             case USER_ATTACKING -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.user_attacking", ATTACK_EFFECT_DURATION / 20, potionLevel.getString());
