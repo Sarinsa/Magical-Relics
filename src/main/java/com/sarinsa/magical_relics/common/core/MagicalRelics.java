@@ -31,13 +31,11 @@ public class MagicalRelics {
     //
     // - Make it so slimes can spawn from spawner blocks regardless of vanilla spawn rules
     //
-    // - Add thick fog to ObscurityAbility (maybe also de-aggro all aggroed mobs somehow?)
+    // - Add thick fog or something to ObscurityAbility (maybe also de-aggro all aggroed mobs somehow?)
     //
     // - Make separate models for Thick Tripwire (consider a slightly different THICCER texture as well?
     //
     // - More configurability for the anti-builder (specific blocked actions?)
-    //
-    // - Properly implement Ore Radar ability
     //
     // - Figure out the sailor ability (might be kinda sucky to make)
 
@@ -65,6 +63,7 @@ public class MagicalRelics {
         MREntities.ENTITIES.register(modBus);
         MRParticles.PARTICLES.register(modBus);
         MRContainers.CONTAINERS.register(modBus);
+        MRMobEffects.MOB_EFFECTS.register(modBus);
         MRDamageTypes.DAMAGE_TYPES.register(modBus);
         MRArtifactAbilities.ARTIFACT_ABILITIES.register(modBus);
         MRLootItemFunctions.LOOT_ITEM_FUNCTIONS.register(modBus);

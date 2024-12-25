@@ -108,6 +108,8 @@
   "block.magical_relics.crumbling_stone_bricks": "Crumbling Stone Bricks",
   "block.magical_relics.crumbling_mossy_stone_bricks": "Crumbling Mossy Stone Bricks",
 
+  "effect.magical_relics.cloudy_vision": "Cloudy Vision",
+
   "magical_relics.command.artifact.create.message": "Created artifact of type %1$s",
   "magical_relics.command.artifact.create.error.invalid_variation": "Specified artifact category only has %1$s variations",
   "magical_relics.command.ability.apply.error.already_exists": "Item already possesses this ability",
@@ -161,7 +163,7 @@
   "magical_relics.artifact_ability.magical_relics.water_breathing.description.user_damaged": "Grants Water Breathing for %1$s seconds when drowning",
   "magical_relics.artifact_ability.magical_relics.water_breathing.description.armor_tick": "Grants Water Breathing while equipped",
   "magical_relics.artifact_ability.magical_relics.water_breathing.description.user_attacking": "Grants Water Breathing for %1$s seconds when dealing damage",
-  "magical_relics.artifact_ability.magical_relics.obscurity.description.use": "Cloaks the user and grants Invisibility for %1$s seconds when used",
+  "magical_relics.artifact_ability.magical_relics.obscurity.description.use": "Cloaks the user and grants Invisibility for %1$s seconds and momentarily erases your presence when used",
   "magical_relics.artifact_ability.magical_relics.obscurity.description.user_damaged": "Cloaks the user and grants Invisibility for %1$s seconds when you get hurt",
   "magical_relics.artifact_ability.magical_relics.obscurity.description.user_attacking": "Cloaks the user and grants Invisibility for %1$s seconds when dealing damage",
   "magical_relics.artifact_ability.magical_relics.sailor.description": "Increased paddling speed while equipped",
