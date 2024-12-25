@@ -36,13 +36,16 @@ public class StunAbility extends BaseArtifactAbility {
     };
 
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.DROPPED
+            TriggerType.DROPPED,
+            TriggerType.USER_ATTACKING
     );
 
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.FIGURINE,
             ArtifactCategory.TRINKET,
-            ArtifactCategory.AXE
+            ArtifactCategory.AXE,
+            ArtifactCategory.SWORD,
+            ArtifactCategory.DAGGER
     );
 
     private static final int EFFECT_DURATION = 120;
@@ -76,6 +79,14 @@ public class StunAbility extends BaseArtifactAbility {
     }
 
     @Override
+    public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
+        if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
+            attackedMob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, EFFECT_DURATION, 1));
+            ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
+        }
+    }
+
+    @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
@@ -87,8 +98,10 @@ public class StunAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
-        return isArmor ? null : TriggerType.DROPPED;
+    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
+        if (isArmor) return null;
+
+        return random.nextBoolean() ? TriggerType.USER_ATTACKING : TriggerType.DROPPED;
     }
 
     @NotNull
@@ -104,6 +117,8 @@ public class StunAbility extends BaseArtifactAbility {
 
     @Override
     public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.stun.description", EFFECT_DURATION / 20);
+        return type == TriggerType.USER_ATTACKING
+                ? Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.stun.description.user_attacking", EFFECT_DURATION / 20)
+                : Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.stun.description.dropped", EFFECT_DURATION / 20);
     }
 }
