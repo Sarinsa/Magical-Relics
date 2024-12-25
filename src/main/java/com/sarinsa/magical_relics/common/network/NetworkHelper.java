@@ -22,7 +22,8 @@ public class NetworkHelper {
         PacketHandler.sendToClient(new S2COpenBEScreen(pos.getX(), pos.getY(), pos.getZ(), screenId), player);
     }
 
-    public static void sendSaveALTNEGData(@Nonnull Player player, BlockPos pos, int xSize, int ySize, int zSize) {
+    public static void sendSaveAltNegData(@Nonnull Player player, BlockPos pos, int xSize, int ySize, int zSize) {
+        Objects.requireNonNull(player);
         PacketHandler.CHANNEL.sendToServer(new C2SSaveALTNEGData(player.getUUID(), pos, xSize, ySize, zSize));
     }
 }

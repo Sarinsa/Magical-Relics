@@ -4,16 +4,20 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.registry.MRMobEffects;
+import com.sarinsa.magical_relics.common.network.NetworkHelper;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -64,9 +68,22 @@ public class ObscurityAbility extends BaseArtifactAbility {
         if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
             artifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
 
-            if (!player.level().isClientSide)
+            if (!player.level().isClientSide) {
                 player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, EFFECT_DURATION));
+                player.addEffect(new MobEffectInstance(MRMobEffects.CLOUDY_VISION.get(), EFFECT_DURATION));
 
+                for (PathfinderMob pathfinderMob : level.getEntitiesOfClass(PathfinderMob.class, player.getBoundingBox().inflate(30.0D, 30.0D, 30.0D))) {
+                    if (pathfinderMob.getTarget() == player || pathfinderMob.getLastHurtByMob() == player) {
+                        try {
+                            pathfinderMob.setTarget(null);
+                            pathfinderMob.setLastHurtByMob(null);
+                        }
+                        catch (Exception ignored) {
+
+                        }
+                    }
+                }
+            }
             ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
             return true;
         }
@@ -76,15 +93,19 @@ public class ObscurityAbility extends BaseArtifactAbility {
     @Override
     public void onUserDamaged(Level level, Player player, DamageSource damageSource, ItemStack artifact) {
         artifact.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
-        if (!player.level().isClientSide)
+        if (!player.level().isClientSide) {
             player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, EFFECT_DURATION));
+            player.addEffect(new MobEffectInstance(MRMobEffects.CLOUDY_VISION.get(), EFFECT_DURATION));
+        }
     }
 
     @Override
     public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
         artifact.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
-        if (!player.level().isClientSide)
+        if (!player.level().isClientSide) {
             player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, EFFECT_DURATION));
+            player.addEffect(new MobEffectInstance(MRMobEffects.CLOUDY_VISION.get(), EFFECT_DURATION));
+        }
     }
 
     @Override

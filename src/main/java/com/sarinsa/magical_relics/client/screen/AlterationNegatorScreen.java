@@ -59,7 +59,7 @@ public class AlterationNegatorScreen extends Screen {
 
     private void sendNBTToServer() {
         if (minecraft.player != null)
-            NetworkHelper.sendSaveALTNEGData(minecraft.player, pos, xSizeEdit.getCurrentValue() - 1, ySizeEdit.getCurrentValue() - 1, zSizeEdit.getCurrentValue() - 1);
+            NetworkHelper.sendSaveAltNegData(minecraft.player, pos, xSizeEdit.getCurrentValue() - 1, ySizeEdit.getCurrentValue() - 1, zSizeEdit.getCurrentValue() - 1);
     }
 
     public void onClose() {
