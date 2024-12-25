@@ -67,7 +67,7 @@ public class OreRadarAbility extends BaseArtifactAbility {
 
 
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
         return isArmor ? TriggerType.ARMOR_TICK : null;
     }
 

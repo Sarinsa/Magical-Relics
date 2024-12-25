@@ -125,7 +125,7 @@ public class JukeboxAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
         return isArmor ? null : TriggerType.USE;
     }
 

@@ -351,7 +351,7 @@ public class ArtifactUtils {
             // Skip if the item already has the ability
             if (currentAbilities.containsKey(nextToApply)) continue;
 
-            TriggerType randomTrigger = nextToApply.getRandomTrigger(random, itemStack.getItem() instanceof ArmorItem, itemStack.is(MRItemTags.ARTIFACT_CURIOS));
+            TriggerType randomTrigger = nextToApply.getRandomTrigger(itemStack, random, itemStack.getItem() instanceof ArmorItem, itemStack.is(MRItemTags.ARTIFACT_CURIOS));
 
             // No suitable trigger found, skip to next ability
             if (randomTrigger == null) continue;

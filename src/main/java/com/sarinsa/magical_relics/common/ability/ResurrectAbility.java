@@ -99,7 +99,7 @@ public class ResurrectAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
         return TriggerType.ON_DEATH;
     }
 

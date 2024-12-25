@@ -60,7 +60,7 @@ public abstract class BaseArtifactAbility {
      *         artifact item stack.
      */
     @Nullable
-    public abstract TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio);
+    public abstract TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio);
 
     /**
      * @return A List of trigger types supported by this ability. This is not super

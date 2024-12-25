@@ -103,7 +103,7 @@ public class TntAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
         return isArmor ? null : TriggerType.RIGHT_CLICK_BLOCK;
     }
 

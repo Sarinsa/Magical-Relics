@@ -101,7 +101,7 @@ public class SelfRepairAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
         if(isArmor) {
             return random.nextInt(2) == 0 ? TriggerType.ARMOR_TICK : TriggerType.HELD;
         }

@@ -110,7 +110,7 @@ public class IlluminationAbility extends BaseArtifactAbility {
 
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
         if (isCurio) return TriggerType.CURIO_TICK;
 
         return isArmor ? TriggerType.ARMOR_TICK : TriggerType.HELD;

@@ -109,7 +109,7 @@ public class AirSneakAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public TriggerType getRandomTrigger(RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
         if (isCurio) {
             return random.nextBoolean() ? TriggerType.HELD : TriggerType.CURIO_TICK;
         }
