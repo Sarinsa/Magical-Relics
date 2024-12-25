@@ -1,5 +1,7 @@
 {
   "entries": [
+    "magical_relics:wizard_tower_chest_modifier",
+    "magical_relics:wizard_tower_dispenser_modifier",
     "magical_relics:simple_dungeon_modifier",
     "magical_relics:desert_pyramid_modifier",
     "magical_relics:jungle_temple_modifier"

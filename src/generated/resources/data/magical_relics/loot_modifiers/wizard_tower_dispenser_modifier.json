@@ -1,0 +1,9 @@
+{
+  "type": "magical_relics:add_artifact",
+  "addChance": 0.7,
+  "conditions": [],
+  "legendaryChance": 0.15,
+  "lootTable": "magical_relics:chests/wizard_tower_dispenser_artifact",
+  "maxCount": 2,
+  "minCount": 1
+}

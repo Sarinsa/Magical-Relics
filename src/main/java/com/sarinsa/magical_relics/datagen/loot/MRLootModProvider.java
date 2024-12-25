@@ -41,5 +41,23 @@ public class MRLootModProvider extends GlobalLootModifierProvider {
                 2,
                 new ResourceLocation("chests/jungle_temple")
         ));
+
+        add("wizard_tower_chest_modifier", new AddArtifactModifier(
+                new LootItemCondition[]{},
+                0.8F,
+                0.2F,
+                3,
+                1,
+                MagicalRelics.resLoc("chests/wizard_tower_artifact")
+        ));
+
+        add("wizard_tower_dispenser_modifier", new AddArtifactModifier(
+                new LootItemCondition[]{},
+                0.7F,
+                0.15F,
+                2,
+                1,
+                MagicalRelics.resLoc("chests/wizard_tower_dispenser_artifact")
+        ));
     }
 }
