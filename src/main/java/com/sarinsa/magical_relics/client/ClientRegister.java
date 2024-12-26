@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
@@ -57,12 +58,16 @@ public class ClientRegister {
 
     @SubscribeEvent
     public static void onItemColors(RegisterColorHandlersEvent.Item event) {
-        // All artifact items (including armor)
+        // All artifact items (excluding armor)
         for (List<RegistryObject<? extends Item>> list : MRItems.ARTIFACTS_BY_CATEGORY.values()) {
             for (RegistryObject<? extends Item> regObj : list) {
+                if (regObj.get() instanceof ArmorItem) continue;
+
                 event.register((itemStack, index) -> {
                     if (index > 0) {
-                        CompoundTag stackTag = itemStack.getOrCreateTag();
+                        CompoundTag stackTag = itemStack.getTag();
+
+                        if (stackTag == null) return -1;
 
                         if (stackTag.contains(ArtifactUtils.MOD_DATA_KEY, Tag.TAG_COMPOUND) && stackTag.getCompound(ArtifactUtils.MOD_DATA_KEY).contains(ArtifactUtils.ITEM_COLOR_KEY)) {
                             return stackTag.getCompound(ArtifactUtils.MOD_DATA_KEY).getInt(ArtifactUtils.ITEM_COLOR_KEY);

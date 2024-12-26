@@ -9,7 +9,7 @@ import net.minecraft.util.Mth;
 public class ItemModelProps {
 
     protected static void register() {
-        // ItemArtifact Items
+        // Artifacts
         MRItems.ARTIFACTS_BY_CATEGORY.forEach((category, list) -> {
             ItemProperties.registerGeneric(MagicalRelics.resLoc(category.getName() + "_variant"),
                     (itemStack, level, livingEntity, seed) -> (float) Mth.clamp(ArtifactUtils.getVariant(itemStack), 1, category.getVariations()));
