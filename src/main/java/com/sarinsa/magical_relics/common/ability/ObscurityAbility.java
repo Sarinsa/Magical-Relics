@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.registry.MREntities;
 import com.sarinsa.magical_relics.common.core.registry.MRMobEffects;
+import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.network.NetworkHelper;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
@@ -71,18 +73,7 @@ public class ObscurityAbility extends BaseArtifactAbility {
             if (!player.level().isClientSide) {
                 player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, EFFECT_DURATION));
                 player.addEffect(new MobEffectInstance(MRMobEffects.CLOUDY_VISION.get(), EFFECT_DURATION));
-
-                for (PathfinderMob pathfinderMob : level.getEntitiesOfClass(PathfinderMob.class, player.getBoundingBox().inflate(30.0D, 30.0D, 30.0D))) {
-                    if (pathfinderMob.getTarget() == player || pathfinderMob.getLastHurtByMob() == player) {
-                        try {
-                            pathfinderMob.setTarget(null);
-                            pathfinderMob.setLastHurtByMob(null);
-                        }
-                        catch (Exception ignored) {
-
-                        }
-                    }
-                }
+                MREventListener.queuePlayerForDeaggro(player);
             }
             ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
             return true;

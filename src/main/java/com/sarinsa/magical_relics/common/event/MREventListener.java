@@ -3,11 +3,13 @@ package com.sarinsa.magical_relics.common.event;
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,9 +29,9 @@ import top.theillusivec4.curios.api.event.CurioAttributeModifierEvent;
 import top.theillusivec4.curios.api.type.ISlotType;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 public class MREventListener {
 
@@ -39,6 +41,8 @@ public class MREventListener {
     private static final int serverTickDelay = 10;
 
     private static int repairTick;
+
+    private static final List<Player> aggroClearingList = new ArrayList<>();
 
 
     public static int getRepairTick() {
@@ -68,14 +72,33 @@ public class MREventListener {
             if (timeNextServerTick >= serverTickDelay) {
                 timeNextServerTick = 0;
 
+                // Tick ability cooldowns
                 for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
                     try {
                         ArtifactUtils.tickAbilityCooldowns(player, serverTickDelay);
                     }
                     catch (Exception e) {
+                        MagicalRelics.LOG.error("Failed to tick ability cooldowns for player {}!", player.getName());
                         e.printStackTrace();
                     }
                 }
+
+                // Go through the aggro clearing list
+                aggroClearingList.removeIf((player) -> {
+                    if (player.isAlive()) {
+                        Level level = player.level();
+
+                        if (level.isLoaded(player.blockPosition())) {
+                            for (PathfinderMob pathfinderMob : level.getEntitiesOfClass(PathfinderMob.class, player.getBoundingBox().inflate(30.0D, 30.0D, 30.0D))) {
+                                if (pathfinderMob.getTarget() == player || pathfinderMob.getLastHurtByMob() == player) {
+                                    pathfinderMob.setTarget(null);
+                                    pathfinderMob.setLastHurtByMob(null);
+                                }
+                            }
+                        }
+                    }
+                    return true;
+                });
             }
         }
     }
@@ -186,30 +209,18 @@ public class MREventListener {
 
     @SubscribeEvent
     public void onPlayerEquipmentChange(LivingEquipmentChangeEvent event) {
-        /*
-        EquipmentSlot slot = event.getSlot();
-        ItemStack previousItem = event.getFrom();
-        ItemStack nowItem = event.getTo();
 
-        Map<BaseArtifactAbility, TriggerType> previousAbilities = ArtifactUtils.getAllAbilities(previousItem);
-        Map<BaseArtifactAbility, TriggerType> nowAbilities = ArtifactUtils.getAllAbilities(nowItem);
-
-        for (BaseArtifactAbility ability : previousAbilities.keySet()) {
-            if (ability.getAttributeWithBoost() != null) {
-                AttributeBoost attributeBoost = ability.getAttributeWithBoost();
-                event.getEntity().getAttribute(attributeBoost.attribute().get()).removeModifier(attributeBoost.);
-            }
-        }
-
-        for (BaseArtifactAbility ability : nowAbilities.keySet()) {
-
-        }
-
-         */
     }
 
     @Nullable
     public static MinecraftServer getCurrentServer() {
         return serverInstance;
+    }
+
+    public static void queuePlayerForDeaggro(@Nonnull Player player) {
+        Objects.requireNonNull(player);
+
+        if (!aggroClearingList.contains(player))
+            aggroClearingList.add(player);
     }
 }
