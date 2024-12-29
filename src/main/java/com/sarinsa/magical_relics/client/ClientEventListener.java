@@ -29,9 +29,6 @@ public class ClientEventListener {
 
     private static int timeNextOrePing = 120;
 
-    private static int timeObscuredVision = 0;
-
-
     @SuppressWarnings("ConstantConditions")
     @SubscribeEvent
     public void onBlockOutlineRender(RenderHighlightEvent.Block event) {
@@ -58,11 +55,6 @@ public class ClientEventListener {
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.START) {
-            // Obscurity fog timer tick
-            if (timeObscuredVision > 0) {
-                --timeObscuredVision;
-            }
-
             // Ore ping particle spawning
             if (--timeNextOrePing <= 0) {
                 Player player = event.player;
@@ -84,10 +76,5 @@ public class ClientEventListener {
                 timeNextOrePing = 120;
             }
         }
-    }
-
-    public static void setTimeObscuredVision(int ticks) {
-        // Do not allow negative values
-        timeObscuredVision = Math.max(0, ticks);
     }
 }
