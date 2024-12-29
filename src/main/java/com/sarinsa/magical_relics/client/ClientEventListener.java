@@ -47,7 +47,7 @@ public class ClientEventListener {
 
             if (player.hasEffect(MRMobEffects.CLOUDY_VISION.get()) && !player.hasEffect(MobEffects.BLINDNESS)) {
                 event.setFogShape(FogShape.SPHERE);
-                event.setNearPlaneDistance(10.0F);
+                event.setNearPlaneDistance(5.0F);
                 event.setFarPlaneDistance(20.0F);
                 event.setCanceled(true);
             }
