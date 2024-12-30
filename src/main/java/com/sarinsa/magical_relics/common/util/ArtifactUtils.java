@@ -1,6 +1,5 @@
 package com.sarinsa.magical_relics.common.util;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -11,8 +10,6 @@ import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
-import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
-import com.sarinsa.magical_relics.common.item.ArtifactArmorItem;
 import com.sarinsa.magical_relics.common.item.ItemArtifact;
 import com.sarinsa.magical_relics.common.tag.MRItemTags;
 import net.minecraft.ChatFormatting;
@@ -25,27 +22,20 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.TropicalFish;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.minecraft.world.item.armortrim.TrimPattern;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
-import net.minecraftforge.common.util.LogicalSidedProvider;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -71,6 +61,7 @@ public class ArtifactUtils {
             EquipmentSlot.FEET
     };
 
+    /** Very cool and awesome custom rarities. **/
     public static final Rarity COMMON_ABILITY = Rarity.create(MagicalRelics.resLoc("common_ability").toString(), ChatFormatting.GRAY);
     public static final Rarity MAGICAL = Rarity.create(MagicalRelics.resLoc("magical").toString(), ChatFormatting.GREEN);
 
@@ -96,16 +87,21 @@ public class ArtifactUtils {
     };
 
     /**
-     * @param artifactItem The artifact item to use for this item stack. Should normally be an instance of
-     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactArmorItem}, {@link com.sarinsa.magical_relics.common.item.ArtifactItem} or
+     * @param artifactItem The artifact item to use for this item stack.<br><br>
+     *                     Should normally be an instance of the following:
+     *                     <br>
+     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactArmorItem}
+     *                     <br>
+     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactItem}
+     *                     <br>
      *                     {@link com.sarinsa.magical_relics.common.item.ArtifactAxeItem}.
-     * @param variant An integer corresponding to a specific texture variant of the artifact item.
-     * <br><br>
+     *                     <br>
+     *                     {@link com.sarinsa.magical_relics.common.item.DyableArtifactArmorItem}.
+     *      *              <br>
+     * @param variant An integer corresponding to a specific texture variant of the artifact item.<br>
      * @return An item stack with all the necessary NBT tags for ability data.
      */
     public static ItemStack createBlankArtifact(Item artifactItem, int variant, RandomSource randomSource) {
-
-
         ItemStack artifactStack = new ItemStack(artifactItem);
 
         // Create necessary tags needed later
@@ -122,7 +118,7 @@ public class ArtifactUtils {
         return artifactStack;
     }
     /**
-     * Generates an artifact with randomized abilities, type and overlay color. Neat!
+     * Generates an artifact item with randomized abilities, variant and overlay color. Neat!
      * <br><br>
      * @return The randomly generated artifact ItemStack.
      */
@@ -133,6 +129,7 @@ public class ArtifactUtils {
         Item artifactItem = artifactList.get(random.nextInt(artifactList.size())).get();
         ItemStack artifactStack = createBlankArtifact(artifactItem, random.nextInt(category.getVariations()), random);
 
+        // Apply a random trim if the artifact is an armor piece
         applyRandomArmorTrim(level, random, artifactStack);
 
         List<BaseArtifactAbility> allAbilities = Lists.newArrayList(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues());
@@ -209,7 +206,7 @@ public class ArtifactUtils {
 
     /**
      * Tries to apply a random armor trim to the given ItemStack,
-     * if the item is not an instance of {@link ArmorItem}.
+     * if the item is an instance of {@link ArmorItem}.
      */
     public static void applyRandomArmorTrim(LevelReader level, RandomSource random, ItemStack itemStack) {
         if (!(itemStack.getItem() instanceof ArmorItem)) return;
@@ -232,7 +229,8 @@ public class ArtifactUtils {
 
     /**
      * Applies "mandatory" attribute modifiers to artifacts of
-     * a certain artifact category.
+     * a certain artifact category, like randomized damage bonuses for
+     * artifact swords and daggers.
      */
     @SuppressWarnings("ConstantConditions")
     public static void applyMandatoryAttributeMods(ItemStack itemStack, ArtifactCategory category, RandomSource random) {
@@ -246,20 +244,20 @@ public class ArtifactUtils {
             CompoundTag attackDmgMod = new CompoundTag();
             attackDmgMod.putString("AttributeId", attackDmgId);
             attackDmgMod.put("AttributeMod", new AttributeModifier(
-                    UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF"),
-                    "Weapon modifier",
+                    Item.BASE_ATTACK_DAMAGE_UUID,
+                    "Weapon attack dmg",
                     (double) ((TieredItem) itemStack.getItem()).getTier().getAttackDamageBonus() + 3.0D + (double) (random.nextInt(3)),
                     AttributeModifier.Operation.ADDITION
             ).save());
             attackDmgMod.putString("ActiveType", AttributeBoost.ActiveType.HELD.getName());
 
-            // Attack damage
+            // Attack speed
             CompoundTag attackSpeed = new CompoundTag();
             attackSpeed.putString("AttributeId", attackSpeedId);
             attackSpeed.put("AttributeMod", new AttributeModifier(
-                    UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3"),
-                    "Weapon modifier",
-                    category == ArtifactCategory.DAGGER ? -1.8D  : -2.4D,
+                    Item.BASE_ATTACK_SPEED_UUID,
+                    "Weapon attack speed",
+                    category == ArtifactCategory.DAGGER ? -1.8D : -2.4D,
                     AttributeModifier.Operation.ADDITION
             ).save());
             attackSpeed.putString("ActiveType", AttributeBoost.ActiveType.HELD.getName());
@@ -269,6 +267,9 @@ public class ArtifactUtils {
         }
     }
 
+    /**
+     * @return a Multimap containing any additional attribute modifiers applied by artifact abilities.
+     */
     @Nullable
     public static Multimap<Attribute, AttributeModifier> getAttributeMods(ItemStack itemStack, @Nullable AttributeBoost.ActiveType activeType) {
         CompoundTag stackTag = itemStack.getOrCreateTag();
@@ -306,6 +307,9 @@ public class ArtifactUtils {
         return null;
     }
 
+    /**
+     * @return An integer representing the texture variant of the given artifact item stack.
+     */
     public static int getVariant(ItemStack itemStack) {
         CompoundTag stackTag = itemStack.getOrCreateTag();
 
@@ -315,17 +319,17 @@ public class ArtifactUtils {
         return stackTag.getCompound(MOD_DATA_KEY).getInt(VARIANT_KEY);
     }
 
+
     /**
-     * Attempts to apply the given artifact abilities to an ItemStack.
+     * Attempts to apply the given artifact ability instances to the given item stack.
      * <br><br>
-     * @param itemStack The ItemStack to put the abilities on.
-     * @param toApply The artifact ability instances to apply to the ItemStack.
-     * <br><br>
-     * @return An array containing the abilities that were successfully applied.
+     * @param itemStack The item stack to apply the abilities to.
+     * @param toApply The ability instances to apply to the given item stack.
+     *
+     * @return An array of abilities that were successfully applied. Can be empty!
      */
-    @SuppressWarnings("ConstantConditions")
     public static BaseArtifactAbility[] tryApplyAbilities(ItemStack itemStack, RandomSource random, BaseArtifactAbility... toApply) {
-        if (toApply.length <= 0)
+        if (toApply.length == 0)
             return new BaseArtifactAbility[0];
 
         Map<BaseArtifactAbility, TriggerType> currentAbilities = getAllAbilities(itemStack);
@@ -362,8 +366,7 @@ public class ArtifactUtils {
 
             // Make sure the ability actually exists in the registry before applying
             if (abilityId == null) {
-                MagicalRelics.LOG.warn("Attempted applying an ability with no ID to an artifact");
-                MagicalRelics.LOG.warn("Problematic ability: " + nextToApply);
+                MagicalRelics.LOG.warn("Attempted applying an ability with no ID to an artifact. Problematic ability: {}", nextToApply);
                 continue;
             }
 
@@ -490,8 +493,8 @@ public class ArtifactUtils {
     }
 
     /**
-     * @return A List of all artifact abilities the given ItemStack has. Will never
-     *         return null, but will return an empty List if no abilities are found.
+     * @return A Map of all artifact abilities the given ItemStack has, with their respective TriggerType.
+     * Returns an empty Map if no abilities are found.
      */
     @Nonnull
     public static Map<BaseArtifactAbility, TriggerType> getAllAbilities(ItemStack itemStack) {
@@ -499,7 +502,7 @@ public class ArtifactUtils {
         CompoundTag stackTag = itemStack.getTag();
 
         if (stackTag == null)
-            return ImmutableMap.of();
+            return abilities;
 
         if (!stackTag.contains(MOD_DATA_KEY) || !stackTag.getCompound(MOD_DATA_KEY).contains(ABILITY_KEY)) return abilities;
 
@@ -517,9 +520,15 @@ public class ArtifactUtils {
     }
 
     /**
-     * Adds the description of every ability on an artifact item stack to its tooltip.
-     * Called from {@link com.sarinsa.magical_relics.common.item.ArtifactItem#appendHoverText(ItemStack, Level, List, TooltipFlag)} and
+     * Adds the description of every ability on an artifact item stack to its tooltip.<br><br>
+     * Called from:<br><br>
+     * {@link com.sarinsa.magical_relics.common.item.ArtifactItem#appendHoverText(ItemStack, Level, List, TooltipFlag)}
+     * <br><br>
      * {@link com.sarinsa.magical_relics.common.item.ArtifactArmorItem#appendHoverText(ItemStack, Level, List, TooltipFlag)}
+     * <br><br>
+     * {@link com.sarinsa.magical_relics.common.item.ArtifactAxeItem#appendHoverText(ItemStack, Level, List, TooltipFlag)}
+     * <br><br>
+     * {@link com.sarinsa.magical_relics.common.item.DyableArtifactArmorItem#appendHoverText(ItemStack, Level, List, TooltipFlag)}
      */
     public static void addDescriptionsToTooltip(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
         Map<BaseArtifactAbility, TriggerType> abilities = ArtifactUtils.getAllAbilities(itemStack);
