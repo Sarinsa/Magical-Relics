@@ -139,6 +139,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem
         return super.getAttributeModifiers(slot, stack);
     }
 
+    // For Curios!
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack, AttributeBoost.ActiveType.EQUIPPED);

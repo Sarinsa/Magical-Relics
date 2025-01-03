@@ -1,7 +1,5 @@
 package com.sarinsa.magical_relics.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.sarinsa.magical_relics.client.screen.widget.AbstractTextField;
 import com.sarinsa.magical_relics.client.screen.widget.IntegerTextField;
 import com.sarinsa.magical_relics.common.blockentity.AntiBuilderBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
@@ -12,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.StructureBlockEditScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;

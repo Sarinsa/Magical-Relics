@@ -4,7 +4,7 @@ import com.sarinsa.magical_relics.client.ClientUtils;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRDamageTypes;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
-import com.sarinsa.magical_relics.common.util.DirectionUtil;
+import com.sarinsa.magical_relics.common.util.DirectionUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -23,8 +23,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.PowderSnowBlock;
-import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -227,7 +225,7 @@ public class QuicksandBlock extends Block {
         boolean flowed = false;
         int flowCapacity = state.getValue(LAYERS);
 
-        for (Direction dir : DirectionUtil.HORIZONTAL) {
+        for (Direction dir : DirectionUtils.HORIZONTAL) {
             if (flowCapacity - MAX_FLOW_AMOUNT <= 0)
                 break;
 

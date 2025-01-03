@@ -36,6 +36,7 @@ import net.minecraft.world.item.armortrim.TrimPattern;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -282,7 +283,7 @@ public class ArtifactUtils {
                 CompoundTag attributeTag = attributeModsTag.getCompound(i);
 
                 Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.tryParse(attributeTag.getString("AttributeId")));
-                AttributeModifier modifier = AttributeModifier.load(attributeTag.getCompound("AttributeMod"));
+                AttributeModifier modifier = AttributeUtils.loadUUIDSensitive(attributeTag.getCompound("AttributeMod"));
                 AttributeBoost.ActiveType modActiveType = AttributeBoost.ActiveType.getFromName(attributeTag.getString("ActiveType"));
                 boolean canApply = false;
 
@@ -579,7 +580,8 @@ public class ArtifactUtils {
     }
 
     /**
-     * Decrements all ability cooldowns on the ItemStack by the given number.
+     * Decrements all ability cooldowns on the ItemStack by the given number.<br>
+     * Called from {@link com.sarinsa.magical_relics.common.event.MREventListener#onServerTick(TickEvent.ServerTickEvent)}
      */
     @SuppressWarnings("ConstantConditions")
     public static void tickAbilityCooldowns(Player player, int decrement) {

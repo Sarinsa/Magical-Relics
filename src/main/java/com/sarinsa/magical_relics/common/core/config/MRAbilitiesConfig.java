@@ -35,11 +35,11 @@ public class MRAbilitiesConfig {
         /**
          * Looks for classes that contain a valid ability config entries builder method and
          * attempts to invoke them.<br><br>
-         * Valid target classes must:<br><br>
+         * Valid target methods must:<br><br>
          *
-         * - Contain a public static void method with the name 'buildEntries'<br>
-         * - Said method must have a single parameter of type {@link ForgeConfigSpec.Builder}<br>
-         * - Said method must be annotated with the {@link AbilityConfig} annotation
+         * - Have public static void signature and be named 'buildEntries'<br>
+         * - Must have a single parameter of type {@link ForgeConfigSpec.Builder}<br>
+         * - Must be annotated with the {@link AbilityConfig} annotation
          */
         private void constructAbilityEntries(ForgeConfigSpec.Builder configBuilder) {
             ModList.get().getAllScanData().forEach(scanData -> scanData.getAnnotations().forEach(annotationData -> {
