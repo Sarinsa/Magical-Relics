@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.common.blockentity;
 
 import com.sarinsa.magical_relics.common.block.CamoBlock;
+import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.util.References;
@@ -11,6 +12,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -19,7 +21,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityMobGriefingEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
@@ -83,16 +88,16 @@ public class AntiBuilderBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
-        saveBoundData(compoundTag);
+        saveBoundsData(compoundTag);
     }
 
     @Override
     public void load(CompoundTag compoundTag) {
         super.load(compoundTag);
-        readBoundData(compoundTag);
+        readBoundsData(compoundTag);
     }
 
-    private void saveBoundData(CompoundTag tag) {
+    private void saveBoundsData(CompoundTag tag) {
         if (getEffectiveArea() != null) {
             int xSize = (int) effectiveArea.maxX - getBlockPos().getX();
             int ySize = (int) effectiveArea.maxY - getBlockPos().getY();
@@ -104,7 +109,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
         }
     }
 
-    private void readBoundData(CompoundTag tag) {
+    private void readBoundsData(CompoundTag tag) {
         if (tag.contains("effectiveAreaBounds", Tag.TAG_INT_ARRAY)) {
             try {
                 int[] bounds = tag.getIntArray("effectiveAreaBounds");
@@ -121,7 +126,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag updateTag = new CompoundTag();
-        saveBoundData(updateTag);
+        saveBoundsData(updateTag);
         return updateTag;
     }
 
@@ -132,7 +137,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @Override
     public void handleUpdateTag(CompoundTag tag) {
-        readBoundData(tag);
+        readBoundsData(tag);
     }
 
 
@@ -151,7 +156,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
         Item item = event.getItemStack().getItem();
 
-        if (item == MRBlocks.ANTI_BUILDER.get().asItem() || item == Blocks.AIR.asItem())
+        if (item == Blocks.AIR.asItem())
             return;
 
         BlockPos pos = event.getHitVec().getBlockPos();
@@ -181,6 +186,18 @@ public class AntiBuilderBlockEntity extends BlockEntity {
             event.setUseItem(Event.Result.DENY);
             event.getEntity().displayClientMessage(References.ALTNEG_BLOCK_MESSAGE, true);
         }
+    }
+
+    @SubscribeEvent
+    public void onPlayerInteractEntity(PlayerInteractEvent.EntityInteract event) {
+        if (effectiveArea == null || event.getLevel() != level)
+            return;
+    }
+
+    @SubscribeEvent
+    public void onPlayerInteractEntity(LivingAttackEvent event) {
+        if (effectiveArea == null || event.getEntity().level() != level)
+            return;
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
