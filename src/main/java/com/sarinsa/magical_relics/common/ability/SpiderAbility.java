@@ -45,11 +45,6 @@ public class SpiderAbility extends BaseArtifactAbility {
     }
 
     @Override
-    public Rarity getRarity() {
-        return Rarity.RARE;
-    }
-
-    @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }

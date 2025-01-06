@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.common.event;
 
 import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.LightningAbility;
 import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
@@ -9,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -210,6 +213,19 @@ public class MREventListener {
     @SubscribeEvent
     public void onPlayerEquipmentChange(LivingEquipmentChangeEvent event) {
 
+    }
+
+    @SubscribeEvent
+    public void onEntityStruckByLightning(EntityStruckByLightningEvent event) {
+        // If enabled in config, cancel lightning strike damage for players
+        // if the lightning was summoned by an artifact.
+        if (event.getEntity() instanceof Player player) {
+            UUID uuid = LightningAbility.getSummonerId(event.getLightning());
+
+            if (uuid != null && uuid.equals(player.getUUID())) {
+                event.setCanceled(true);
+            }
+        }
     }
 
     @Nullable

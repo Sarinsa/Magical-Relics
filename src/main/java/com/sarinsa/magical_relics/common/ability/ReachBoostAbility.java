@@ -98,15 +98,13 @@ public class ReachBoostAbility extends BaseArtifactAbility {
 
     @Override
     public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        TriggerType triggerType = ArtifactUtils.getTriggerFromStack(artifact, this);
 
-        if (triggerType == TriggerType.ARMOR_TICK) {
+        if (type == TriggerType.ARMOR_TICK) {
             return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.reach_boost.description.armor_tick");
         }
-        else if (triggerType == TriggerType.HELD) {
+        else if (type == TriggerType.HELD) {
             return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.reach_boost.description.held");
         }
-
         return null;
     }
 }
