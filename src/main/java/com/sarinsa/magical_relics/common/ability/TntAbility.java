@@ -48,7 +48,8 @@ public class TntAbility extends BaseArtifactAbility {
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.TRINKET,
             ArtifactCategory.WAND,
-            ArtifactCategory.STAFF
+            ArtifactCategory.STAFF,
+            ArtifactCategory.SWORD
     );
 
     private static ForgeConfigSpec.IntValue cooldown;
