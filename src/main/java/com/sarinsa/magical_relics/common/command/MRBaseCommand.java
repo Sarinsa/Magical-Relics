@@ -78,9 +78,7 @@ public class MRBaseCommand {
                             .executes((context) -> removeAbility(context.getSource(), AbilityArgument.getAbility(context, "ability"))));
         }
 
-        //TODO - Instead of having 2 ugly blocks of code in two different classes that almost does the same thing,
-        //       lets consider making a more generalized method in ArtifactUtils that handles both random AND manual
-        //       artifact creation, cause we all know I will forget and everything will explode at some point.
+        //TODO - don't forget this exists, lol
         private static int applyAbility(CommandSourceStack source, BaseArtifactAbility ability, TriggerType triggerType) {
             if (source.getPlayer() == null) {
                 source.sendFailure(Component.translatable(References.PLAYER_ONLY_CMD));

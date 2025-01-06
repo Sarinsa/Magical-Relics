@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.core.config;
 
+import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.worldgen.processor.DisplayPedestalProcessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -11,6 +12,7 @@ public class ConfigReloadListener {
     @SubscribeEvent
     public void onConfigLoad(ModConfigEvent.Loading event) {
         if (event.getConfig().getFileName().equals("magical_relics/general.toml")) {
+            // Wiz' favorite item thingy
             DisplayPedestalProcessor.WIZARD_FAVORITES.clear();
             DisplayPedestalProcessor.WIZARD_FAVORITES.addAll(ForgeRegistries.ITEMS.getValues());
 
@@ -21,6 +23,9 @@ public class ConfigReloadListener {
                     DisplayPedestalProcessor.WIZARD_FAVORITES.remove(ForgeRegistries.ITEMS.getValue(id));
                 }
             }
+
+            // Refresh obtainable abilities
+            ArtifactUtils.refreshObtainableAbilities();
         }
     }
 

@@ -8,10 +8,13 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.MRAbilitiesConfig;
+import com.sarinsa.magical_relics.common.core.config.MRGeneralConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.item.ItemArtifact;
 import com.sarinsa.magical_relics.common.tag.MRItemTags;
+import com.sarinsa.magical_relics.common.worldgen.processor.DisplayPedestalProcessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -87,6 +90,11 @@ public class ArtifactUtils {
             0x84BF4E, 0x6B75BC, 0xD8D8D8
     };
 
+    /** Contains all abilities that CAN be applied when a random artifact is generated. */
+    private static final List<BaseArtifactAbility> OBTAINABLE_ABILITIES = new ArrayList<>();
+
+
+
     /**
      * @param artifactItem The artifact item to use for this item stack.<br><br>
      *                     Should normally be an instance of the following:
@@ -95,10 +103,10 @@ public class ArtifactUtils {
      *                     <br>
      *                     {@link com.sarinsa.magical_relics.common.item.ArtifactItem}
      *                     <br>
-     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactAxeItem}.
+     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactAxeItem}
      *                     <br>
-     *                     {@link com.sarinsa.magical_relics.common.item.DyableArtifactArmorItem}.
-     *      *              <br>
+     *                     {@link com.sarinsa.magical_relics.common.item.DyableArtifactArmorItem}
+     *                     <br>
      * @param variant An integer corresponding to a specific texture variant of the artifact item.<br>
      * @return An item stack with all the necessary NBT tags for ability data.
      */
@@ -112,7 +120,7 @@ public class ArtifactUtils {
         modDataTag.putInt(VARIANT_KEY, variant);
         modDataTag.putInt(ITEM_COLOR_KEY, ARTIFACT_COLORS[randomSource.nextInt(ARTIFACT_COLORS.length)]);
         modDataTag.put(ABILITY_COOLDOWNS_KEY, new CompoundTag());
-        modDataTag.putString(PREFIX_KEY, "");
+        modDataTag.putString(PREFIX_KEY, References.MUNDANE_ABILITY_PREFIX);
         modDataTag.putString(SUFFIX_KEY, "");
         tag.put(MOD_DATA_KEY, modDataTag);
 
@@ -133,7 +141,7 @@ public class ArtifactUtils {
         // Apply a random trim if the artifact is an armor piece
         applyRandomArmorTrim(level, random, artifactStack);
 
-        List<BaseArtifactAbility> allAbilities = Lists.newArrayList(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues());
+        List<BaseArtifactAbility> allAbilities = new ArrayList<>(OBTAINABLE_ABILITIES);
         // Filter out abilities that are not applicable to the Artifact's category.
         allAbilities.removeIf((ability) -> !ability.getCompatibleTypes().contains(((ItemArtifact) artifactItem).getCategory()));
         // Make sure we don't try to apply the empty ability
@@ -620,6 +628,22 @@ public class ArtifactUtils {
                     cooldownTag.getAllKeys().removeIf(key -> cooldownTag.getInt(key) <= 0);
                 }
             }
+        }
+    }
+
+    public static void refreshObtainableAbilities() {
+        List<? extends String> ids = MRGeneralConfig.CONFIG.unobtainableAbilities.get();
+        OBTAINABLE_ABILITIES.clear();
+
+        if (ids.isEmpty()) {
+            OBTAINABLE_ABILITIES.addAll(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues());
+            return;
+        }
+
+        for (BaseArtifactAbility ability : MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues()) {
+            if (ids.contains(MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey(ability).toString())) continue;
+
+            OBTAINABLE_ABILITIES.add(ability);
         }
     }
 }

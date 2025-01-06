@@ -22,9 +22,14 @@ public class MRGeneralConfig {
 
     public static final class Config {
 
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> unobtainableAbilities;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> wizardFavoriteBlacklist;
 
         private Config(ForgeConfigSpec.Builder configBuilder) {
+            unobtainableAbilities = configBuilder.comment("A list of artifact abilities that should be unobtainable (essentially disabled). Abilities will still function, " +
+                    "but will not be applied to artifacts when artifacts are generated. Changes do not apply until game has been restarted.")
+                    .defineListAllowEmpty("unobtainableAbilities", List.of(), ConfigUtil.IS_RESOURCE_LOCATION);
+
             wizardFavoriteBlacklist = configBuilder.comment("This is a list of IDs for items that should not be chosen as a random 'Wizard's Favorite' item. When certain wizard towers generate in the world, " +
                             "a display pedestal can be found in the structure containing a completely random item (the Wiz' favorite item). Changes do not apply until game has been restarted.")
                     .defineListAllowEmpty("wizardFavoriteBlacklist", Config::wizardFavoriteBlacklistDefaults, ConfigUtil.IS_RESOURCE_LOCATION);
