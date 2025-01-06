@@ -142,7 +142,7 @@ public class MREventListener {
                 ItemStack curioStack = slotResult.stack();
                 Collection<BaseArtifactAbility> curioAbilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.CURIO_TICK, curioStack);
 
-                if (!abilities.isEmpty()) {
+                if (!curioAbilities.isEmpty()) {
                     for (BaseArtifactAbility ability : curioAbilities) {
                         ability.onCurioTick(curioStack, level, player, slotResult.slotContext());
                     }
