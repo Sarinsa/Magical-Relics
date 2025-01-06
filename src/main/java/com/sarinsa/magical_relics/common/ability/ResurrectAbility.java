@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -66,7 +67,7 @@ public class ResurrectAbility extends BaseArtifactAbility {
     @Override
     public void onDeath(Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext, ItemStack artifact, LivingDeathEvent event) {
         // Don't do stuff if the event is already canceled
-        if (event.isCanceled()) return;
+        if (event.isCanceled() || event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
 
         if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
             ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
