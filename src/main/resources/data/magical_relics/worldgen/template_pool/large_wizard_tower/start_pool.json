@@ -23,6 +23,27 @@
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
       }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "magical_relics:large_wizard_tower/start_1",
+        "processors": [
+          {
+            "processor_type": "magical_relics:display_pedestal",
+            "legendary_chance": 0.1
+          },
+          {
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.1
+          },
+          {
+            "processor_type": "magical_relics:pot_plant"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
     }
   ]
 }
