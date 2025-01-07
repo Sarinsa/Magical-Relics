@@ -20,6 +20,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Looks for empty plant pots and selects a random potted plant to replace it with.
+ */
 public class PotPlantProcessor extends StructureProcessor {
 
     public static final Codec<PotPlantProcessor> CODEC = Codec.unit(PotPlantProcessor::new);

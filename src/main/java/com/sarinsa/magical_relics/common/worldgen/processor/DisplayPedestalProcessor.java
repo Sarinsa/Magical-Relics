@@ -24,6 +24,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Looks for empty Display Pedestals and either puts random artifacts in them
+ * or a "Wizard's Favorite" item, depending on processor config.
+ */
 public class DisplayPedestalProcessor extends StructureProcessor {
 
     public static final Codec<DisplayPedestalProcessor> CODEC = Codec.FLOAT.fieldOf("legendary_chance")
@@ -32,7 +36,7 @@ public class DisplayPedestalProcessor extends StructureProcessor {
 
     /**
      * Public and modifiable, but only really supposed
-     * to be modified by {@link }
+     * to be modified by {@link com.sarinsa.magical_relics.common.core.config.ConfigReloadListener}
      */
     public static final List<Item> WIZARD_FAVORITES = new ArrayList<>();
 

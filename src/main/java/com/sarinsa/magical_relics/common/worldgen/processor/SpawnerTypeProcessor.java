@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Looks for spawner blocks and picks a new random mob type for each spawner.
+ * Possible types depend on processor config.
+ */
 public class SpawnerTypeProcessor extends StructureProcessor {
 
     public static final Codec<SpawnerTypeProcessor> CODEC = Codec.list(ResourceLocation.CODEC).fieldOf("possible_types")
