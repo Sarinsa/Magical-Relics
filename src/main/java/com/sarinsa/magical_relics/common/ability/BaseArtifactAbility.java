@@ -105,25 +105,49 @@ public abstract class BaseArtifactAbility {
 
     }
 
+    /**
+     * Called when the player right-clicks air while holding the artifact.
+     * <br><br>
+     * @return True if the ability successfully did what it was supposed to.
+     */
     public boolean onUse(Level level, Player player, ItemStack artifact) {
         return false;
     }
 
+    /**
+     * Called when the player right-clicks a block while holding the artifact.
+     *
+     * @return True if the ability successfully did what it was supposed to.
+     */
     public boolean onClickBlock(Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player) {
         return false;
     }
 
+    /**
+     * Called each tick while the artifact is held by the player.
+     */
     public void onHeld(Level level, Player player, ItemStack artifact, EquipmentSlot slot) {
     }
 
+    /**
+     * Called when an artifact is dropped and becomes an ItemEntity.
+     *
+     * @return True if the item entity should be consumed/despawned.
+     */
     public boolean onDropped(Level level, ItemEntity itemEntity, Player player) {
         return false;
     }
 
+    /**
+     * Called when the player attacks an entity with a held artifact.
+     */
     public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
 
     }
 
+    /**
+     * Called when the player is hurt, regardless of damage source.
+     */
     public void onUserDamaged(Level level, Player player, DamageSource damageSource, ItemStack artifact) {
 
     }
@@ -138,14 +162,23 @@ public abstract class BaseArtifactAbility {
 
     }
 
+    /**
+     * Called every tick for artifacts that exist in either the player inventory or hotbar (armor and curio slots are excluded).
+     */
     public void onInventoryTick(ItemStack artifact, Level level, Entity entity, int slot, boolean isSelectedItem) {
 
     }
 
+    /**
+     * Called every tick for artifacts that are equipped in armor slots.
+     */
     public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
 
     }
 
+    /**
+     * Called every tick for artifacts that are equipped in curio slots.
+     */
     public void onCurioTick(ItemStack artifact, Level level, Player player, SlotContext slotContext) {
 
     }
@@ -158,6 +191,11 @@ public abstract class BaseArtifactAbility {
         return ArtifactUtils.COMMON_ABILITY;
     }
 
+    /**
+     * Used by abilities that are effectively just attribute modifiers.<br><br>
+     *
+     * @return An AttributeBoost instance to be granted by this ability.
+     */
     @Nullable
     public AttributeBoost getAttributeWithBoost() {
         return null;
