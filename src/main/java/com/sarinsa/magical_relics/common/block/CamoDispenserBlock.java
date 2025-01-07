@@ -3,6 +3,7 @@ package com.sarinsa.magical_relics.common.block;
 import com.sarinsa.magical_relics.common.blockentity.CamoBlockEntity;
 import com.sarinsa.magical_relics.common.blockentity.CamoDispenserBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
+import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.entity.SwungSword;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -17,9 +18,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -43,6 +42,25 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
     /** The vanilla dispenser behavior registry is copied over to this one during {@link net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent} */
     private static Object2ObjectOpenHashMap<Item, DispenseItemBehavior> DISPENSER_BEHAVIORS;
 
+    /** Default dispense behavior for instances of DispensibleContainerItems. */
+    private static final DispenseItemBehavior defaultDispensibleBehavior = new DefaultDispenseItemBehavior() {
+        private final DefaultDispenseItemBehavior defaultBehavior = new DefaultDispenseItemBehavior();
+
+        public ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+            DispensibleContainerItem dispensibleItem = (DispensibleContainerItem) itemStack.getItem();
+            BlockPos pos = blockSource.getPos().relative(blockSource.getBlockState().getValue(DispenserBlock.FACING));
+            Level level = blockSource.getLevel();
+
+            if (dispensibleItem.emptyContents(null, level, pos, null, itemStack)) {
+                dispensibleItem.checkExtraContent(null, level, itemStack, pos);
+                return new ItemStack(Items.BUCKET);
+            }
+            else {
+                return defaultBehavior.dispense(blockSource, itemStack);
+            }
+        }
+    };
+
 
     public CamoDispenserBlock() {
         super(BlockBehaviour.Properties.of()
@@ -54,6 +72,9 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
     }
 
     public static void setupBehaviors() {
+        // New behaviors also meant for the vanilla dispenser
+        DispenserBlock.registerBehavior(MRItems.QUICKSAND_BUCKET.get(), defaultDispensibleBehavior);
+
         // Copy vanilla behavior first
         DISPENSER_BEHAVIORS = new Object2ObjectOpenHashMap<>(DispenserBlock.DISPENSER_REGISTRY);
         DISPENSER_BEHAVIORS.defaultReturnValue(new DefaultDispenseItemBehavior());
