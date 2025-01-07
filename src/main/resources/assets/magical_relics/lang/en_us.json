@@ -201,6 +201,10 @@
   "magical_relics.artifact_ability.magical_relics.spider.description.armor_tick": "Lets you climb up walls",
   "magical_relics.artifact_ability.magical_relics.lightning.description.right_click_block": "Causes lightning to strike when right-clicking a block",
   "magical_relics.artifact_ability.magical_relics.lightning.description.user_attacking": "Causes lightning to strike when attacking",
+  "magical_relics.artifact_ability.magical_relics.foodie.description.use": "Restores a drumstick of hunger when used",
+  "magical_relics.artifact_ability.magical_relics.foodie.description.user_attacking": "Occasionally restores a pinch of hunger when attacking",
+  "magical_relics.artifact_ability.magical_relics.foodie.description.curio": "Prevents hunger from dropping below half while equipped",
+  "magical_relics.artifact_ability.magical_relics.foodie.description.armor_tick": "Prevents hunger from dropping below half while equipped",
 
 
   "magical_relics.ability.mundane_prefix": "Mundane",
@@ -354,6 +358,13 @@
   "magical_relics.artifact_ability.magical_relics.lightning.prefix.conductive": "Conductive",
   "magical_relics.artifact_ability.magical_relics.lightning.suffix.thunder": "of Thunder",
   "magical_relics.artifact_ability.magical_relics.lightning.suffix.lightning": "of Lightning",
+
+  "magical_relics.artifact_ability.magical_relics.foodie.prefix.well_fed": "Well Fed",
+  "magical_relics.artifact_ability.magical_relics.foodie.prefix.porky": "Porky",
+  "magical_relics.artifact_ability.magical_relics.foodie.prefix.gluttonous": "Gluttonous",
+  "magical_relics.artifact_ability.magical_relics.foodie.suffix.saturation": "of Saturation",
+  "magical_relics.artifact_ability.magical_relics.foodie.suffix.noms": "of Noms",
+  "magical_relics.artifact_ability.magical_relics.foodie.suffix.munching": "of Munching",
 
 
 

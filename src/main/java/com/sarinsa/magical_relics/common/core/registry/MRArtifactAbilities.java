@@ -46,6 +46,7 @@ public class MRArtifactAbilities {
     public static final RegistryObject<BaseArtifactAbility> SLOW_FALLING = register("slow_falling", SlowFallingAbility::new);
     public static final RegistryObject<BaseArtifactAbility> SPIDER = register("spider", SpiderAbility::new);
     public static final RegistryObject<BaseArtifactAbility> LIGHTNING = register("lightning", LightningAbility::new);
+    public static final RegistryObject<BaseArtifactAbility> FOODIE = register("foodie", FoodieAbility::new);
 
 
     private static RegistryObject<BaseArtifactAbility> register(String name, Supplier<BaseArtifactAbility> supplier) {
