@@ -18,6 +18,10 @@
           },
           {
             "processor_type": "magical_relics:pot_plant"
+          },
+          {
+            "processor_type": "magical_relics:chiseled_bookshelf",
+            "enchanted_chance": 0.33
           }
         ],
         "projection": "rigid",
@@ -39,6 +43,10 @@
           },
           {
             "processor_type": "magical_relics:pot_plant"
+          },
+          {
+            "processor_type": "magical_relics:chiseled_bookshelf",
+            "enchanted_chance": 0.33
           }
         ],
         "projection": "rigid",
