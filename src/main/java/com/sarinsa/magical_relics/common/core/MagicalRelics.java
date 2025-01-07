@@ -35,15 +35,14 @@ public class MagicalRelics {
     // - Make separate models for Thick Tripwire (consider a slightly different THICCER texture as well?
     //
     // - More configurability for the anti-builder (specific blocked actions?)
-    //
-    // - Figure out the sailor ability (might be kinda sucky to make)
+
 
     public static final String MODID = "magical_relics";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
 
-    public MagicalRelics() {
-        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public MagicalRelics(FMLJavaModLoadingContext context) {
+        IEventBus modBus = context.getModEventBus();
 
         modBus.addListener(this::onCommonSetup);
         modBus.addListener(MRItems::onCreativeTabPopulate);
@@ -73,8 +72,8 @@ public class MagicalRelics {
         MRConfiguredFeatures.P_REGISTRY.register(modBus);
         MRArgumentTypes.ARGUMENT_TYPES.register(modBus);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MRAbilitiesConfig.CONFIG_SPEC, "magical_relics/ability-properties.toml");
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MRGeneralConfig.CONFIG_SPEC, "magical_relics/general.toml");
+        context.registerConfig(ModConfig.Type.COMMON, MRAbilitiesConfig.CONFIG_SPEC, "magical_relics/ability-properties.toml");
+        context.registerConfig(ModConfig.Type.COMMON, MRGeneralConfig.CONFIG_SPEC, "magical_relics/general.toml");
 
         modBus.register(new ConfigReloadListener());
     }
