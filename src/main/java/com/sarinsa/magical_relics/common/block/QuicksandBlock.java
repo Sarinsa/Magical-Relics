@@ -8,6 +8,7 @@ import com.sarinsa.magical_relics.common.util.DirectionUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -23,6 +24,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,7 +44,9 @@ import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
-public class QuicksandBlock extends Block {
+import java.util.Optional;
+
+public class QuicksandBlock extends Block implements BucketPickup {
 
     public static final int MAX_HEIGHT = 16;
     private static final int MAX_FLOW_AMOUNT = 2;
@@ -117,28 +122,6 @@ public class QuicksandBlock extends Block {
         if (entity instanceof LivingEntity livingEntity && areEyesInQuicksand(livingEntity)) {
             livingEntity.hurt(MRDamageTypes.of(level, MRDamageTypes.QUICKSAND), 1.0F);
         }
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (hitResult.getType() == HitResult.Type.BLOCK && player.getItemInHand(hand).getItem() == Items.BUCKET) {
-            if (state.getValue(LAYERS) == MAX_HEIGHT) {
-                ItemStack stack = new ItemStack(MRItems.QUICKSAND_BUCKET.get());
-
-                if (player.isCreative()) {
-                    if (!player.getInventory().contains(stack))
-                        player.addItem(stack);
-                }
-                else {
-                    player.setItemInHand(hand, stack);
-                }
-                player.playSound(SoundEvents.PACKED_MUD_BREAK, 1.0F, 1.0F);
-                level.removeBlock(pos, false);
-                return InteractionResult.SUCCESS;
-            }
-        }
-        return super.use(state, level, pos, player, hand, hitResult);
     }
 
     @Override
@@ -271,5 +254,19 @@ public class QuicksandBlock extends Block {
         BlockState stateAtEye = level.getBlockState(eyePos);
 
         return level.getBlockState(eyePos).is(MRBlocks.QUICKSAND.get()) && (partialEyeY <= (1.0D / MAX_HEIGHT) * stateAtEye.getValue(LAYERS));
+    }
+
+    @Override
+    public ItemStack pickupBlock(LevelAccessor level, BlockPos pos, BlockState state) {
+        if (state.getValue(LAYERS) == MAX_HEIGHT) {
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
+            return new ItemStack(MRItems.QUICKSAND_BUCKET.get());
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public Optional<SoundEvent> getPickupSound() {
+        return Optional.of(SoundEvents.PACKED_MUD_BREAK);
     }
 }
