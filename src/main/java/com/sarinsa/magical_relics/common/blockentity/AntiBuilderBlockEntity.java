@@ -204,7 +204,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockEvent.BreakEvent event) {
-        if (effectiveArea == null || event.getLevel() != level)
+        if (!MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level)
             return;
 
         if (event.getState().getBlock() == MRBlocks.ANTI_BUILDER.get())
@@ -215,7 +215,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onExplodeEvent(ExplosionEvent.Detonate event) {
-        if (effectiveArea == null || event.getLevel() != level)
+        if (!MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level)
             return;
 
         Vec3 pos = event.getExplosion().getPosition();
@@ -227,7 +227,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onMobGrief(EntityMobGriefingEvent event) {
-        if (effectiveArea == null || event.getEntity().level() != level)
+        if (!MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getEntity().level() != level)
             return;
 
         BlockPos pos = event.getEntity().blockPosition();
@@ -239,7 +239,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        if (effectiveArea == null || event.getLevel() != level)
+        if (!MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level)
             return;
 
         if (event.getState().getBlock() == MRBlocks.ANTI_BUILDER.get())
@@ -250,7 +250,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBlockMultiPlace(BlockEvent.EntityMultiPlaceEvent event) {
-        if (effectiveArea == null || event.getLevel() != level)
+        if (!MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level)
             return;
 
         checkAndCancelPlayer(event, event.getPos(), event.getEntity() instanceof Player player ? player : null);
@@ -258,7 +258,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onFluidPlaceBlock(BlockEvent.FluidPlaceBlockEvent event) {
-        if (effectiveArea == null || event.getLevel() != level)
+        if (!MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level)
             return;
 
         checkAndCancel(event, event.getPos());
@@ -266,7 +266,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPortalSpawn(BlockEvent.PortalSpawnEvent event) {
-        if (effectiveArea == null || event.getLevel() != level)
+        if (!MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level)
             return;
 
         checkAndCancel(event, event.getPos());
@@ -274,7 +274,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onToolModification(BlockEvent.BlockToolModificationEvent event) {
-        if (effectiveArea == null || event.getLevel() != level)
+        if (!MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level)
             return;
 
         checkAndCancelPlayer(event, event.getPos(), event.getPlayer());
