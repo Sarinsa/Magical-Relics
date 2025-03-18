@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.common.blockentity;
 
 import com.sarinsa.magical_relics.common.block.CamoBlock;
+import com.sarinsa.magical_relics.common.core.config.MRGeneralConfig;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
@@ -37,9 +38,10 @@ import javax.annotation.Nullable;
 
 public class AntiBuilderBlockEntity extends BlockEntity {
 
+    private static final int RADIUS = MRGeneralConfig.CONFIG.effectiveAreaRadius.get();
     private AABB effectiveArea = new AABB(
-            getBlockPos().offset(-20, -20, -20),
-            getBlockPos().offset(20, 20, 20)
+            getBlockPos().offset(-RADIUS, -RADIUS, -RADIUS),
+            getBlockPos().offset(RADIUS, RADIUS, RADIUS)
     );
     private boolean registeredListener = false;
 
@@ -151,7 +153,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level)
+        if (!MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level)
             return;
 
         Item item = event.getItemStack().getItem();
@@ -172,7 +174,7 @@ public class AntiBuilderBlockEntity extends BlockEntity {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level)
+        if (!MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level)
             return;
 
         BlockState blockState = event.getLevel().getBlockState(event.getPos());
