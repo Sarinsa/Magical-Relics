@@ -38,10 +38,9 @@ import javax.annotation.Nullable;
 
 public class AntiBuilderBlockEntity extends BlockEntity {
 
-    private static final int RADIUS = MRGeneralConfig.CONFIG.effectiveAreaRadius.get();
     private AABB effectiveArea = new AABB(
-            getBlockPos().offset(-RADIUS, -RADIUS, -RADIUS),
-            getBlockPos().offset(RADIUS, RADIUS, RADIUS)
+            getBlockPos().offset(-10, -10, -10),
+            getBlockPos().offset(10, 10, 10)
     );
     private boolean registeredListener = false;
 

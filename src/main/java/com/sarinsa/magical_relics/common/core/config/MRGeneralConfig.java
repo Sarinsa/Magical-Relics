@@ -25,7 +25,6 @@ public class MRGeneralConfig {
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> unobtainableAbilities;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> wizardFavoriteBlacklist;
         public final ForgeConfigSpec.ConfigValue<Boolean> enableAntiBuilderBlock;
-        public final ForgeConfigSpec.ConfigValue<Integer> effectiveAreaRadius;
 
 
         private Config(ForgeConfigSpec.Builder configBuilder) {
@@ -39,9 +38,6 @@ public class MRGeneralConfig {
 
             enableAntiBuilderBlock = configBuilder.comment("Enable or disable the AntiBuilderBlock feature. (Default true)")
                     .define("enableAntiBuilderBlock", true);
-
-            effectiveAreaRadius = configBuilder.comment("The radius (in blocks) of the effective area of the AntiBuilderBlock. (Default 20)")
-                    .defineInRange("effectiveAreaRadius", 20, 1, 100);
         }
 
         @SuppressWarnings("all")
