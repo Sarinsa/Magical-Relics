@@ -24,6 +24,9 @@ public class MRGeneralConfig {
 
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> unobtainableAbilities;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> wizardFavoriteBlacklist;
+        public final ForgeConfigSpec.ConfigValue<Boolean> enableAntiBuilderBlock;
+        public final ForgeConfigSpec.ConfigValue<Integer> effectiveAreaRadius;
+
 
         private Config(ForgeConfigSpec.Builder configBuilder) {
             unobtainableAbilities = configBuilder.comment("A list of artifact abilities that should be unobtainable (essentially disabled). Abilities will still function, " +
@@ -33,6 +36,12 @@ public class MRGeneralConfig {
             wizardFavoriteBlacklist = configBuilder.comment("This is a list of IDs for items that should not be chosen as a random 'Wizard's Favorite' item. When certain wizard towers generate in the world, " +
                             "a display pedestal can be found in the structure containing a completely random item (the Wiz' favorite item). Changes do not apply until game has been restarted.")
                     .defineListAllowEmpty("wizardFavoriteBlacklist", Config::wizardFavoriteBlacklistDefaults, ConfigUtil.IS_RESOURCE_LOCATION);
+
+            enableAntiBuilderBlock = configBuilder.comment("Enable or disable the AntiBuilderBlock feature. (Default true)")
+                    .define("enableAntiBuilderBlock", true);
+
+            effectiveAreaRadius = configBuilder.comment("The radius (in blocks) of the effective area of the AntiBuilderBlock. (Default 20)")
+                    .defineInRange("effectiveAreaRadius", 20, 1, 100);
         }
 
         @SuppressWarnings("all")
