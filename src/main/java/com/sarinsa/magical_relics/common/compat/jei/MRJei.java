@@ -17,8 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.RegistryObject;
-import top.theillusivec4.curios.api.CuriosApi;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +31,14 @@ public class MRJei implements IModPlugin {
     private static final ResourceLocation ID = MagicalRelics.resLoc("magical_relics_jei");
 
 
+    @Nonnull
     @Override
     public ResourceLocation getPluginUid() {
         return ID;
     }
 
     @Override
-    public void registerRecipes(IRecipeRegistration registration) {
-
+    public void registerRecipes(@Nonnull IRecipeRegistration registration) {
         // Anvil repair for artifact items
         artifactAnvilRecipes(registration);
     }
@@ -79,8 +79,7 @@ public class MRJei implements IModPlugin {
 
                     IJeiAnvilRecipe recipe = registration.getVanillaRecipeFactory().createAnvilRecipe(inputs, List.of(ingredient.getItems()), outputs);
 
-                    if (recipe != null)
-                        recipes.add(recipe);
+                    recipes.add(recipe);
                 }
                 else if (item instanceof ArmorItem armorItem) {
                     Ingredient ingredient = armorItem.getMaterial().getRepairIngredient();
@@ -91,8 +90,7 @@ public class MRJei implements IModPlugin {
 
                     IJeiAnvilRecipe recipe = registration.getVanillaRecipeFactory().createAnvilRecipe(input, List.of(ingredient.getItems()), List.of(result));
 
-                    if (recipe != null)
-                        recipes.add(recipe);
+                    recipes.add(recipe);
                 }
             }
         }
