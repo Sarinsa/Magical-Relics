@@ -40,7 +40,7 @@ public class MRBlocks {
     public static final RegistryObject<SpikeTrapBlock> SPIKE_TRAP = register("spike_trap", MRCreativeTabs.MOD_TAB.getKey(), SpikeTrapBlock::new, BlockTags.MINEABLE_WITH_PICKAXE);
     public static final RegistryObject<QuicksandBlock> QUICKSAND = register("quicksand", MRCreativeTabs.MOD_TAB.getKey(), QuicksandBlock::new, BlockTags.MINEABLE_WITH_SHOVEL);
     public static final RegistryObject<CamoDispenserBlock> CAMO_DISPENSER = register("camo_dispenser", MRCreativeTabs.MOD_TAB.getKey(), CamoDispenserBlock::new, BlockTags.MINEABLE_WITH_PICKAXE);
-    public static final RegistryObject<CamoTripwireHookBlock> CAMO_TRIPWIRE_HOOK = register("camo_tripwire_hook", MRCreativeTabs.MOD_TAB.getKey(), CamoTripwireHookBlock::new);
+    public static final RegistryObject<CamoTripwireHookBlock> CAMO_TRIPWIRE_HOOK = register("camo_tripwire_hook", MRCreativeTabs.MOD_TAB.getKey(), CamoTripwireHookBlock::new, BlockTags.MINEABLE_WITH_PICKAXE);
     public static final RegistryObject<TripWireBlock> THICK_TRIPWIRE = registerNoItem("thick_tripwire", () -> new ThickTripwireBlock(CAMO_TRIPWIRE_HOOK.get(), BlockBehaviour.Properties.copy(Blocks.TRIPWIRE)));
     public static final RegistryObject<IllusionaryBlock> ILLUSIONARY_BLOCK = register("illusionary_block", MRCreativeTabs.MOD_TAB.getKey(), () -> new IllusionaryBlock(BlockBehaviour.Properties.of().strength(0.8F).noLootTable().noOcclusion().isViewBlocking((state, level, pos) -> false)));
     public static final RegistryObject<DisplayPedestalBlock> DISPLAY_PEDESTAL = register("display_pedestal", MRCreativeTabs.MOD_TAB.getKey(), DisplayPedestalBlock::new, BlockTags.MINEABLE_WITH_PICKAXE);
