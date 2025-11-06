@@ -5,11 +5,11 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 public class MRBaseCommand {
-
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("magicalrelics")
-                .then(DebugBaseCommand.register())
-                .then(ArtifactBaseCommand.register())
-                .then(AbilityBaseCommand.register()));
+    
+    public static void register( CommandDispatcher<CommandSourceStack> dispatcher ) {
+        dispatcher.register( Commands.literal( "magicalrelics" )
+                .then( DebugBaseCommand.register() )
+                .then( ArtifactBaseCommand.register() )
+                .then( AbilityBaseCommand.register() ) );
     }
 }

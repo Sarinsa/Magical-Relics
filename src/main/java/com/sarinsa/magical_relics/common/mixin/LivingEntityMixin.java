@@ -11,15 +11,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(LivingEntity.class)
+@Mixin( LivingEntity.class )
 public abstract class LivingEntityMixin extends Entity implements Attackable {
-
-    protected LivingEntityMixin(EntityType<? extends LivingEntity> type, Level level) {
-        super(type, level);
+    
+    protected LivingEntityMixin( EntityType<? extends LivingEntity> type, Level level ) {
+        super( type, level );
     }
-
-    @Inject(method = "onClimbable", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;blockPosition()Lnet/minecraft/core/BlockPos;"), cancellable = true)
-    public void injectOnClimbable(CallbackInfoReturnable<Boolean> cir) {
-        CommonMixinHooks.injectOnClimbable(cir, (LivingEntity) (Object) this);
+    
+    @Inject( method = "onClimbable", at = @At( value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;blockPosition()Lnet/minecraft/core/BlockPos;" ), cancellable = true )
+    public void injectOnClimbable( CallbackInfoReturnable<Boolean> cir ) {
+        CommonMixinHooks.injectOnClimbable( cir, (LivingEntity) (Object) this );
     }
 }

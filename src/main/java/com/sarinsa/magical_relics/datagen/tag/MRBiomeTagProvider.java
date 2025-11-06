@@ -13,15 +13,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class MRBiomeTagProvider extends BiomeTagsProvider {
-
-    public MRBiomeTagProvider(DataGenerator generator, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper fileHelper) {
-        super(generator.getPackOutput(), lookupProvider, MagicalRelics.MODID, fileHelper);
+    
+    public MRBiomeTagProvider( DataGenerator generator, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper fileHelper ) {
+        super( generator.getPackOutput(), lookupProvider, MagicalRelics.MODID, fileHelper );
     }
-
+    
     @Override
-    @SuppressWarnings("unchecked")
-    protected void addTags(HolderLookup.Provider provider) {
-        tag(MRBiomeTags.CAN_HAVE_QUICKSAND_LAKES).addTags(
+    @SuppressWarnings( "unchecked" )
+    protected void addTags( HolderLookup.Provider provider ) {
+        tag( MRBiomeTags.CAN_HAVE_QUICKSAND_LAKES ).addTags(
                 BiomeTags.IS_FOREST,
                 BiomeTags.IS_JUNGLE,
                 BiomeTags.IS_SAVANNA,
@@ -29,14 +29,14 @@ public class MRBiomeTagProvider extends BiomeTagsProvider {
                 Tags.Biomes.IS_DESERT,
                 Tags.Biomes.IS_PLAINS
         );
-
-        tag(MRBiomeTags.HAS_WIZARD_TOWERS).addTags(
+        
+        tag( MRBiomeTags.HAS_WIZARD_TOWERS ).addTags(
                 BiomeTags.IS_HILL,
                 BiomeTags.IS_MOUNTAIN,
                 Tags.Biomes.IS_SWAMP
         );
-
-        tag(MRBiomeTags.HAS_BURIED_DUNGEONS).addTags(
+        
+        tag( MRBiomeTags.HAS_BURIED_DUNGEONS ).addTags(
                 Tags.Biomes.IS_PLAINS,
                 BiomeTags.IS_FOREST,
                 BiomeTags.IS_JUNGLE,

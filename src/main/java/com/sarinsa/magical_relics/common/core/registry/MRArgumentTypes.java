@@ -15,17 +15,16 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public class MRArgumentTypes {
-
-    public static final DeferredRegister<ArgumentTypeInfo<?, ?>> ARGUMENT_TYPES = DeferredRegister.create(ForgeRegistries.COMMAND_ARGUMENT_TYPES, MagicalRelics.MODID);
-
-
-    public static final RegistryObject<ArgumentTypeInfo<ArtifactCategoryArgument, ?>> ARTIFACT_CATEGORY = register("artifact_category", () -> ArgumentTypeInfos.registerByClass(ArtifactCategoryArgument.class, SingletonArgumentInfo.contextFree(ArtifactCategoryArgument::artifactCategory)));
-    public static final RegistryObject<ArgumentTypeInfo<AbilityArgument, ?>> ABILITY = register("ability", () -> ArgumentTypeInfos.registerByClass(AbilityArgument.class, SingletonArgumentInfo.contextFree(AbilityArgument::ability)));
-    public static final RegistryObject<ArgumentTypeInfo<TriggerTypeArgument, ?>> TRIGGER_TYPE = register("trigger_type", () -> ArgumentTypeInfos.registerByClass(TriggerTypeArgument.class, SingletonArgumentInfo.contextFree(TriggerTypeArgument::triggerType)));
-
-
-
-    private static <T extends ArgumentType<?>> RegistryObject<ArgumentTypeInfo<T, ?>> register(String name, Supplier<ArgumentTypeInfo<T, ?>> supplier) {
-        return ARGUMENT_TYPES.register(name, supplier);
+    
+    public static final DeferredRegister<ArgumentTypeInfo<?, ?>> ARGUMENT_TYPES = DeferredRegister.create( ForgeRegistries.COMMAND_ARGUMENT_TYPES, MagicalRelics.MODID );
+    
+    
+    public static final RegistryObject<ArgumentTypeInfo<ArtifactCategoryArgument, ?>> ARTIFACT_CATEGORY = register( "artifact_category", () -> ArgumentTypeInfos.registerByClass( ArtifactCategoryArgument.class, SingletonArgumentInfo.contextFree( ArtifactCategoryArgument::artifactCategory ) ) );
+    public static final RegistryObject<ArgumentTypeInfo<AbilityArgument, ?>> ABILITY = register( "ability", () -> ArgumentTypeInfos.registerByClass( AbilityArgument.class, SingletonArgumentInfo.contextFree( AbilityArgument::ability ) ) );
+    public static final RegistryObject<ArgumentTypeInfo<TriggerTypeArgument, ?>> TRIGGER_TYPE = register( "trigger_type", () -> ArgumentTypeInfos.registerByClass( TriggerTypeArgument.class, SingletonArgumentInfo.contextFree( TriggerTypeArgument::triggerType ) ) );
+    
+    
+    private static <T extends ArgumentType<?>> RegistryObject<ArgumentTypeInfo<T, ?>> register( String name, Supplier<ArgumentTypeInfo<T, ?>> supplier ) {
+        return ARGUMENT_TYPES.register( name, supplier );
     }
 }

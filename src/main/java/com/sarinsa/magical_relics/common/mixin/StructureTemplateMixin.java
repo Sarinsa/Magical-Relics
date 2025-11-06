@@ -16,20 +16,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * {@link com.sarinsa.magical_relics.common.worldgen.processor.NoWaterloggingProcessor}
  * structure processor. Thanks to TelepathicGrunt!
  */
-@Mixin(StructureTemplate.class)
+@Mixin( StructureTemplate.class )
 public class StructureTemplateMixin {
-
+    
     @Inject(
             method = "placeInWorld(Lnet/minecraft/world/level/ServerLevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;Lnet/minecraft/util/RandomSource;I)Z",
-            at = @At(value = "HEAD")
+            at = @At( value = "HEAD" )
     )
-    private void preventAutoWaterlogging(ServerLevelAccessor serverLevelAccessor, BlockPos blockPos1,
-                                                              BlockPos blockPos2, StructurePlaceSettings structurePlaceSettings,
-                                                              RandomSource random, int flag, CallbackInfoReturnable<Boolean> cir) {
-
-        if(structurePlaceSettings.getProcessors().stream().anyMatch(processor ->
-                ((StructureProcessorAccessor) processor).callGetType() == MRStructureProcessors.NO_WATERLOGGING.get())) {
-            structurePlaceSettings.setKeepLiquids(false);
+    private void preventAutoWaterlogging( ServerLevelAccessor serverLevelAccessor, BlockPos blockPos1,
+                                          BlockPos blockPos2, StructurePlaceSettings structurePlaceSettings,
+                                          RandomSource random, int flag, CallbackInfoReturnable<Boolean> cir ) {
+        
+        if( structurePlaceSettings.getProcessors().stream().anyMatch( processor ->
+                ((StructureProcessorAccessor) processor).callGetType() == MRStructureProcessors.NO_WATERLOGGING.get() ) ) {
+            structurePlaceSettings.setKeepLiquids( false );
         }
     }
 }

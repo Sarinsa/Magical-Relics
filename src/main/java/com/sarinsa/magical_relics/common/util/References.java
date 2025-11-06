@@ -4,16 +4,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class References {
-
+    
     // STATIC CHAT COMPONENTS
-    public static final MutableComponent ALTNEG_BLOCK_MESSAGE = Component.translatable("magical_relics.anti_builder.blocked_message");
-
-    public static final MutableComponent ALTNEG_X_SIZE = Component.translatable("magical_relics.anti_builder.screen.x_size");
-    public static final MutableComponent ALTNEG_Y_SIZE = Component.translatable("magical_relics.anti_builder.screen.y_size");
-    public static final MutableComponent ALTNEG_Z_SIZE = Component.translatable("magical_relics.anti_builder.screen.z_size");
-
-    public static final MutableComponent PEDESTAL_LOCKED = Component.translatable("magical_relics.display_pedestal.locked_message");
-
+    public static final MutableComponent ANTI_BUILDER_BLOCK_MESSAGE = Component.translatable( "magical_relics.anti_builder.blocked_message" );
+    
+    public static final MutableComponent ANTI_BUILDER_MIN_XYZ_SIZE = Component.translatable( "magical_relics.anti_builder.screen.min_xyz" );
+    public static final MutableComponent ANTI_BUILDER_MAX_XYZ_SIZE = Component.translatable( "magical_relics.anti_builder.screen.max_xyz" );
+    
+    
+    public static final MutableComponent PEDESTAL_LOCKED = Component.translatable( "magical_relics.display_pedestal.locked_message" );
+    
     // TRANSLATION KEYS
     public static final String ARTIFACT_CREATE_CMD = "magical_relics.command.artifact.create.message";
     public static final String ARTIFACT_CREATE_ERROR_0 = "magical_relics.command.artifact.create.error.invalid_variation";
@@ -27,8 +27,8 @@ public class References {
     public static final String ERROR_INVALID_CATEGORY = "magical_relics.command.argument.artifact_category.error.invalid_category";
     public static final String ERROR_INVALID_ABILITY = "magical_relics.command.argument.artifact_ability.error.invalid_ability";
     public static final String ERROR_INVALID_TRIGGER = "magical_relics.command.argument.trigger_type.error.invalid_trigger";
-
+    
     public static final String MUNDANE_ABILITY_PREFIX = "magical_relics.ability.mundane_prefix";
-
+    
     public static final String PEDESTAL_LOCKED_TOOLTIP = "magical_relics.display_pedestal.locked_tooltip";
 }

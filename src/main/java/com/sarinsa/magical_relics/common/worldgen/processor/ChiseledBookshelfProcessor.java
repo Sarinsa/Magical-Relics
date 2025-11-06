@@ -12,7 +12,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
@@ -25,46 +24,46 @@ import javax.annotation.Nullable;
  * Looks for Chiseled Bookshelves and fills them with normal and enchanted books.
  */
 public class ChiseledBookshelfProcessor extends StructureProcessor {
-
-    public static final Codec<ChiseledBookshelfProcessor> CODEC = Codec.FLOAT.fieldOf("enchanted_chance")
-            .xmap(ChiseledBookshelfProcessor::new, (processor) -> processor.enchantedChance)
+    
+    public static final Codec<ChiseledBookshelfProcessor> CODEC = Codec.FLOAT.fieldOf( "enchanted_chance" )
+            .xmap( ChiseledBookshelfProcessor::new, ( processor ) -> processor.enchantedChance )
             .codec();
-
-
+    
+    
     private final float enchantedChance;
-
-    public ChiseledBookshelfProcessor(float enchantedChance) {
+    
+    public ChiseledBookshelfProcessor( float enchantedChance ) {
         this.enchantedChance = enchantedChance;
     }
-
-
+    
+    
     @Nullable
-    public StructureTemplate.StructureBlockInfo process(LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template) {
-        RandomSource random = structureSettings.getRandom(blockInfo.pos());
+    public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
+        RandomSource random = structureSettings.getRandom( blockInfo.pos() );
         BlockState state = blockInfo.state();
         BlockPos blockpos = blockInfo.pos();
-
-        boolean isChiseledBookshelf = state.is(Blocks.CHISELED_BOOKSHELF);
+        
+        boolean isChiseledBookshelf = state.is( Blocks.CHISELED_BOOKSHELF );
         CompoundTag tag = blockInfo.nbt();
-
-        if (isChiseledBookshelf) {
-            if (tag == null) tag = new CompoundTag();
-
-            NonNullList<ItemStack> books = NonNullList.withSize(6, ItemStack.EMPTY);
-
-            for (int i = 0; i < books.size(); i++) {
-                ItemStack book = new ItemStack(Items.BOOK);
-
-                if (random.nextFloat() < enchantedChance) {
-                    book = EnchantmentHelper.enchantItem(random, book, random.nextInt(26) + 5, false);
+        
+        if( isChiseledBookshelf ) {
+            if( tag == null ) tag = new CompoundTag();
+            
+            NonNullList<ItemStack> books = NonNullList.withSize( 6, ItemStack.EMPTY );
+            
+            for( int i = 0; i < books.size(); i++ ) {
+                ItemStack book = new ItemStack( Items.BOOK );
+                
+                if( random.nextFloat() < enchantedChance ) {
+                    book = EnchantmentHelper.enchantItem( random, book, random.nextInt( 26 ) + 5, false );
                 }
-                books.set(i, book);
+                books.set( i, book );
             }
-            ContainerHelper.saveAllItems(tag, books);
+            ContainerHelper.saveAllItems( tag, books );
         }
-        return isChiseledBookshelf ? new StructureTemplate.StructureBlockInfo(blockpos, state, tag) : blockInfo;
+        return isChiseledBookshelf ? new StructureTemplate.StructureBlockInfo( blockpos, state, tag ) : blockInfo;
     }
-
+    
     @Override
     protected StructureProcessorType<?> getType() {
         return MRStructureProcessors.CHISELED_BOOKSHELF.get();

@@ -8,9 +8,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class MRMobEffects {
-
-    public static DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MagicalRelics.MODID);
-
-
-    public static final RegistryObject<MobEffect> CLOUDY_VISION = MOB_EFFECTS.register("cloudy_vision", CloudyVisionEffect::new);
+    
+    public static DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create( ForgeRegistries.MOB_EFFECTS, MagicalRelics.MODID );
+    
+    
+    public static final RegistryObject<MobEffect> CLOUDY_VISION = MOB_EFFECTS.register( "cloudy_vision", CloudyVisionEffect::new );
 }

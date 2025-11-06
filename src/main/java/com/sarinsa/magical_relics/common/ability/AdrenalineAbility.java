@@ -18,88 +18,87 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public class AdrenalineAbility extends BaseArtifactAbility {
-
+    
     private static final String[] PREFIXES = {
-            createPrefix("adrenaline", "brawling"),
-            createPrefix("adrenaline", "skirmish")
+            createPrefix( "adrenaline", "brawling" ),
+            createPrefix( "adrenaline", "skirmish" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("adrenaline", "rage"),
-            createSuffix("adrenaline", "fury")
+            createSuffix( "adrenaline", "rage" ),
+            createSuffix( "adrenaline", "fury" )
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.USER_DAMAGED
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.CHESTPLATE
     );
-
+    
     private static ForgeConfigSpec.IntValue cooldown;
-
-
+    
+    
     public AdrenalineAbility() {
     }
-
-    @AbilityConfig(abilityId = "magical_relics:adrenaline")
-    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
-        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
-                .defineInRange("cooldown", 300, 5, 100000);
+    
+    @AbilityConfig( abilityId = "magical_relics:adrenaline" )
+    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
+        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
+                .defineInRange( "cooldown", 300, 5, 100000 );
     }
-
+    
     @Override
-    public void onUserDamaged(Level level, Player player, DamageSource damageSource, ItemStack artifact) {
-        if (damageSource.getEntity() != null && !ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 100, 1));
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 100, 1));
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 2));
-
-            ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
+    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact ) {
+        if( damageSource.getEntity() != null && !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            player.addEffect( new MobEffectInstance( MobEffects.MOVEMENT_SPEED, 100, 1 ) );
+            player.addEffect( new MobEffectInstance( MobEffects.DAMAGE_BOOST, 100, 1 ) );
+            player.addEffect( new MobEffectInstance( MobEffects.DAMAGE_RESISTANCE, 100, 2 ) );
+            
+            ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
         }
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Override
     public Rarity getRarity() {
         return Rarity.RARE;
     }
-
+    
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? TriggerType.ARMOR_TICK : null;
     }
-
+    
     @Override
     @Nonnull
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.adrenaline.description");
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.adrenaline.description" );
     }
 }

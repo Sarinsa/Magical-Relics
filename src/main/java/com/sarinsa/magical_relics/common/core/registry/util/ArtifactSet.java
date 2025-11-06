@@ -6,10 +6,10 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public record ArtifactSet<T>(ArtifactCategory category, T dataStructure) {
-
-    public ArtifactSet(ArtifactCategory category, @Nonnull T dataStructure) {
-        Objects.requireNonNull(dataStructure);
-        Objects.requireNonNull(category);
+    
+    public ArtifactSet( ArtifactCategory category, @Nonnull T dataStructure ) {
+        Objects.requireNonNull( dataStructure );
+        Objects.requireNonNull( category );
         this.category = category;
         this.dataStructure = dataStructure;
     }

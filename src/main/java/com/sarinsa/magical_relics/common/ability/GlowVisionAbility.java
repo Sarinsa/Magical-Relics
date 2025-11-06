@@ -4,8 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.core.config.MRAbilitiesConfig;
-import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
 import net.minecraft.network.chat.Component;
@@ -28,22 +26,22 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GlowVisionAbility extends BaseArtifactAbility {
-
+    
     private static final String[] PREFIXES = {
-            createPrefix("glow_vision", "revealing"),
-            createPrefix("glow_vision", "glowing"),
-            createPrefix("glow_vision", "seekers")
+            createPrefix( "glow_vision", "revealing" ),
+            createPrefix( "glow_vision", "glowing" ),
+            createPrefix( "glow_vision", "seekers" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("glow_vision", "silhouettes"),
-            createSuffix("glow_vision", "spotting"),
+            createSuffix( "glow_vision", "silhouettes" ),
+            createSuffix( "glow_vision", "spotting" ),
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.USE
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.TRINKET,
             ArtifactCategory.STAFF,
@@ -51,74 +49,74 @@ public class GlowVisionAbility extends BaseArtifactAbility {
             ArtifactCategory.DAGGER,
             ArtifactCategory.SWORD
     );
-
+    
     private static ForgeConfigSpec.IntValue range;
     private static ForgeConfigSpec.IntValue cooldown;
-
-
+    
+    
     public GlowVisionAbility() {
-
+    
     }
-
-    @AbilityConfig(abilityId = "magical_relics:glow_vision")
-    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
-        range = configBuilder.comment("The range in blocks that this ability will look for mobs to make glow")
-                .defineInRange("range", 30, 0, 100);
-
-        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
-                .defineInRange("cooldown", 400, 5, 100000);
+    
+    @AbilityConfig( abilityId = "magical_relics:glow_vision" )
+    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
+        range = configBuilder.comment( "The range in blocks that this ability will look for mobs to make glow" )
+                .defineInRange( "range", 30, 0, 100 );
+        
+        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
+                .defineInRange( "cooldown", 400, 5, 100000 );
     }
-
-
+    
+    
     @Override
-    public boolean onUse(Level level, Player player, ItemStack artifact) {
-        if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-            List<LivingEntity> nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(range.get(), range.get(), range.get()));
-
-            if (!nearbyEntities.isEmpty()) {
-                nearbyEntities.remove(player);
-
-                for (LivingEntity livingEntity : nearbyEntities) {
-                    livingEntity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 180));
+    public boolean onUse( Level level, Player player, ItemStack artifact ) {
+        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            List<LivingEntity> nearbyEntities = level.getEntitiesOfClass( LivingEntity.class, player.getBoundingBox().inflate( range.get(), range.get(), range.get() ) );
+            
+            if( !nearbyEntities.isEmpty() ) {
+                nearbyEntities.remove( player );
+                
+                for( LivingEntity livingEntity : nearbyEntities ) {
+                    livingEntity.addEffect( new MobEffectInstance( MobEffects.GLOWING, 180 ) );
                 }
-                level.playSound(null, player.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.PLAYERS, 1.0F, 0.9F + (level.random.nextFloat() / 3));
-                artifact.hurtAndBreak(3, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                level.playSound( null, player.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.PLAYERS, 1.0F, 0.9F + (level.random.nextFloat() / 3) );
+                artifact.hurtAndBreak( 3, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
             }
-            ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
+            ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
             return true;
         }
         return false;
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? null : TriggerType.USE;
     }
-
+    
     @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.glow_vision.description");
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.glow_vision.description" );
     }
 }

@@ -30,23 +30,23 @@ import java.util.List;
 
 
 public class BakerAbility extends BaseArtifactAbility {
-
+    
     private static final String[] PREFIXES = {
-            createPrefix("baker", "bakers"),
-            createPrefix("baker", "confectioners")
+            createPrefix( "baker", "bakers" ),
+            createPrefix( "baker", "confectioners" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("baker", "baking"),
-            createSuffix("baker", "frosting"),
-            createSuffix("baker", "tastiness"),
-            createSuffix("baker", "delight"),
+            createSuffix( "baker", "baking" ),
+            createSuffix( "baker", "frosting" ),
+            createSuffix( "baker", "tastiness" ),
+            createSuffix( "baker", "delight" ),
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.RIGHT_CLICK_BLOCK
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.AMULET,
             ArtifactCategory.STAFF,
@@ -54,80 +54,81 @@ public class BakerAbility extends BaseArtifactAbility {
             ArtifactCategory.FIGURINE,
             ArtifactCategory.WAND
     );
-
+    
     private static ForgeConfigSpec.IntValue cooldown;
-
-
+    
+    
     public BakerAbility() {
     }
-
-
-    @AbilityConfig(abilityId = "magical_relics:baker")
-    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
-        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
-                .defineInRange("cooldown", 20, 5, 100000);
+    
+    
+    @AbilityConfig( abilityId = "magical_relics:baker" )
+    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
+        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
+                .defineInRange( "cooldown", 20, 5, 100000 );
     }
-
-
+    
+    
     @Override
-    public boolean onClickBlock(Level level, ItemStack itemStack, BlockPos pos, BlockState state, Direction face, Player player) {
-        if (ArtifactUtils.isAbilityOnCooldown(itemStack, this)) return false;
-
-        if (face != Direction.UP)
+    public boolean onClickBlock( Level level, ItemStack itemStack, BlockPos pos, BlockState state, Direction face, Player player ) {
+        if( ArtifactUtils.isAbilityOnCooldown( itemStack, this ) ) return false;
+        
+        if( face != Direction.UP )
             return false;
-
-        BlockPos toPlacePos = pos.relative(face);
-        BlockState currentStateAt = level.getBlockState(toPlacePos);
-
-        if (currentStateAt.isAir() && Blocks.CAKE.defaultBlockState().canSurvive(level, toPlacePos)) {
-            level.setBlock(toPlacePos, Blocks.CAKE.defaultBlockState(), Block.UPDATE_ALL);
-            ArtifactUtils.setAbilityCooldown(itemStack, this, cooldown.get());
-
-            itemStack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
-
-            if (!level.isClientSide) {
-                level.playSound(null, toPlacePos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.7F, 1.0F);
+        
+        BlockPos toPlacePos = pos.relative( face );
+        BlockState currentStateAt = level.getBlockState( toPlacePos );
+        
+        if( currentStateAt.isAir() && Blocks.CAKE.defaultBlockState().canSurvive( level, toPlacePos ) ) {
+            level.setBlock( toPlacePos, Blocks.CAKE.defaultBlockState(), Block.UPDATE_ALL );
+            ArtifactUtils.setAbilityCooldown( itemStack, this, cooldown.get() );
+            
+            itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
+            
+            if( !level.isClientSide ) {
+                level.playSound( null, toPlacePos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.7F, 1.0F );
                 double x = toPlacePos.getX() + 0.5D;
                 double y = toPlacePos.getY() + 0.4D;
                 double z = toPlacePos.getZ() + 0.5D;
                 double xSpeed = level.random.nextGaussian() * 0.02D;
                 double ySpeed = level.random.nextGaussian() * 0.02D;
                 double zSpeed = level.random.nextGaussian() * 0.02D;
-                ((ServerLevel) level).sendParticles(ParticleTypes.CLOUD, x, y, z, 5, xSpeed, ySpeed, zSpeed, 0.05D);;
+                ((ServerLevel) level).sendParticles( ParticleTypes.CLOUD, x, y, z, 5, xSpeed, ySpeed, zSpeed, 0.05D );
+                ;
             }
             return true;
         }
         return false;
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? null : TriggerType.RIGHT_CLICK_BLOCK;
     }
-
+    
     @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.baker.description");
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.baker.description" );
     }
 }

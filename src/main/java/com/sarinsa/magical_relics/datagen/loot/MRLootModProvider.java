@@ -8,56 +8,56 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 
 public class MRLootModProvider extends GlobalLootModifierProvider {
-
-    public MRLootModProvider(DataGenerator generator) {
-        super(generator.getPackOutput(), MagicalRelics.MODID);
+    
+    public MRLootModProvider( DataGenerator generator ) {
+        super( generator.getPackOutput(), MagicalRelics.MODID );
     }
-
+    
     @Override
     protected void start() {
-        add("simple_dungeon_modifier", new AddArtifactModifier(
-                new LootItemCondition[]{},
+        add( "simple_dungeon_modifier", new AddArtifactModifier(
+                new LootItemCondition[] {},
                 0.5F,
                 0.15F,
                 2,
                 1,
-                new ResourceLocation("chests/simple_dungeon")
-        ));
-
-        add("desert_pyramid_modifier", new AddArtifactModifier(
-                new LootItemCondition[]{},
+                ResourceLocation.withDefaultNamespace( "chests/simple_dungeon" )
+        ) );
+        
+        add( "desert_pyramid_modifier", new AddArtifactModifier(
+                new LootItemCondition[] {},
                 0.3F,
                 0.4F,
                 1,
                 1,
-                new ResourceLocation("chests/desert_pyramid")
-        ));
-
-        add("jungle_temple_modifier", new AddArtifactModifier(
-                new LootItemCondition[]{},
+                ResourceLocation.withDefaultNamespace( "chests/desert_pyramid" )
+        ) );
+        
+        add( "jungle_temple_modifier", new AddArtifactModifier(
+                new LootItemCondition[] {},
                 0.5F,
                 0.2F,
                 2,
                 2,
-                new ResourceLocation("chests/jungle_temple")
-        ));
-
-        add("wizard_tower_chest_modifier", new AddArtifactModifier(
-                new LootItemCondition[]{},
+                ResourceLocation.withDefaultNamespace( "chests/jungle_temple" )
+        ) );
+        
+        add( "wizard_tower_chest_modifier", new AddArtifactModifier(
+                new LootItemCondition[] {},
                 0.8F,
                 0.2F,
                 3,
                 1,
-                MagicalRelics.resLoc("chests/wizard_tower_artifact")
-        ));
-
-        add("wizard_tower_dispenser_modifier", new AddArtifactModifier(
-                new LootItemCondition[]{},
+                MagicalRelics.rl( "chests/wizard_tower_artifact" )
+        ) );
+        
+        add( "wizard_tower_dispenser_modifier", new AddArtifactModifier(
+                new LootItemCondition[] {},
                 0.7F,
                 0.15F,
                 2,
                 1,
-                MagicalRelics.resLoc("chests/wizard_tower_dispenser_artifact")
-        ));
+                MagicalRelics.rl( "chests/wizard_tower_dispenser_artifact" )
+        ) );
     }
 }

@@ -18,64 +18,64 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SailorAbility extends BaseArtifactAbility {
-
+    
     private static final String[] PREFIXES = {
-            createPrefix("sailor", "sailors"),
-            createPrefix("sailor", "paddling")
+            createPrefix( "sailor", "sailors" ),
+            createPrefix( "sailor", "paddling" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("sailor", "rowing"),
-            createSuffix("sailor", "boating")
+            createSuffix( "sailor", "rowing" ),
+            createSuffix( "sailor", "boating" )
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.ARMOR_TICK
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.CHESTPLATE
     );
-
-
+    
+    
     public SailorAbility() {
-
+    
     }
-
+    
     @Override
-    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
-        super.onArmorTick(artifact, level, player, slot);
+    public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
+        super.onArmorTick( artifact, level, player, slot );
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? TriggerType.ARMOR_TICK : null;
     }
-
+    
     @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.sailor.description");
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.sailor.description" );
     }
 }

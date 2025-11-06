@@ -20,55 +20,55 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class IllusionaryBlock extends Block implements EntityBlock, CamoBlock {
-
-    public static final BooleanProperty HAS_CAMO = BooleanProperty.create("has_camo");
-
-
-    public IllusionaryBlock(Properties properties) {
-        super(properties);
-        registerDefaultState(stateDefinition.any().setValue(HAS_CAMO, false));
+    
+    public static final BooleanProperty HAS_CAMO = BooleanProperty.create( "has_camo" );
+    
+    
+    public IllusionaryBlock( Properties properties ) {
+        super( properties );
+        registerDefaultState( stateDefinition.any().setValue( HAS_CAMO, false ) );
     }
-
+    
     @Override
-    @SuppressWarnings("deprecation")
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    @SuppressWarnings( "deprecation" )
+    public VoxelShape getCollisionShape( BlockState state, BlockGetter level, BlockPos pos, CollisionContext context ) {
         return Shapes.empty();
     }
-
+    
     @Override
-    @SuppressWarnings("deprecation")
-    public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    @SuppressWarnings( "deprecation" )
+    public VoxelShape getVisualShape( BlockState state, BlockGetter level, BlockPos pos, CollisionContext context ) {
         return Shapes.empty();
     }
-
+    
     @Override
-    @SuppressWarnings("deprecation")
-    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
+    @SuppressWarnings( "deprecation" )
+    public VoxelShape getBlockSupportShape( BlockState state, BlockGetter level, BlockPos pos ) {
         return Shapes.block();
     }
-
+    
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new IllusionaryBlockEntity(pos, state);
+    public BlockEntity newBlockEntity( BlockPos pos, BlockState state ) {
+        return new IllusionaryBlockEntity( pos, state );
     }
-
+    
     @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        return getLightEmission(level, pos, super.getLightEmission(state, level, pos));
+    public int getLightEmission( BlockState state, BlockGetter level, BlockPos pos ) {
+        return getLightEmission( level, pos, super.getLightEmission( state, level, pos ) );
     }
-
+    
     @Override
-    @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return use(level, pos, player, hand, (level_, pos_) -> {
-                level_.setBlock(pos, state.setValue(HAS_CAMO, true), Block.UPDATE_CLIENTS);
-            },
-            null);
+    @SuppressWarnings( "deprecation" )
+    public InteractionResult use( BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult ) {
+        return use( level, pos, player, hand, ( level_, pos_ ) -> {
+                    level_.setBlock( pos, state.setValue( HAS_CAMO, true ), Block.UPDATE_CLIENTS );
+                },
+                null );
     }
-
+    
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HAS_CAMO);
+    protected void createBlockStateDefinition( StateDefinition.Builder<Block, BlockState> builder ) {
+        builder.add( HAS_CAMO );
     }
 }

@@ -15,44 +15,44 @@ import java.util.List;
 
 
 public class EmptyAbility extends BaseArtifactAbility {
-
-    private static final String[] NO_PREFIXES = {""};
-    private static final String[] NO_SUFFIXES = {""};
-
+    
+    private static final String[] NO_PREFIXES = { "" };
+    private static final String[] NO_SUFFIXES = { "" };
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.copyOf(
             TriggerType.values()
     );
-
+    
     public EmptyAbility() {
     }
-
-
+    
+    
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return TriggerType.HELD;
     }
-
+    
     @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return ArtifactCategory.ALL;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         return null;
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return NO_PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return NO_SUFFIXES;

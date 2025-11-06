@@ -7,18 +7,19 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 public final class MRBlockTags {
-
-    private static TagKey<Block> modTag(String name) {
-        return BlockTags.create(MagicalRelics.resLoc(name));
+    
+    private static TagKey<Block> modTag( String name ) {
+        return BlockTags.create( MagicalRelics.rl( name ) );
     }
-
-    private static TagKey<Block> forgeTag(String name) {
-        return BlockTags.create(new ResourceLocation("forge", name));
+    
+    private static TagKey<Block> forgeTag( String name ) {
+        return BlockTags.create( ResourceLocation.fromNamespaceAndPath( "forge", name ) );
     }
-
+    
     public static void init() {
         MRBiomeTags.init();
         MRItemTags.init();
     }
-    private MRBlockTags() {}
+    
+    private MRBlockTags() { }
 }

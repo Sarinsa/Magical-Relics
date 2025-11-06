@@ -30,159 +30,161 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class BaseArtifactAbility {
-
+    
     public BaseArtifactAbility() {
-
+    
     }
-
+    
     /** Helper method for creating artifact prefixes. */
-    protected static String createPrefix(String abilityName, String prefix) {
+    protected static String createPrefix( String abilityName, String prefix ) {
         return MagicalRelics.MODID + ".artifact_ability." + MagicalRelics.MODID + "." + abilityName + ".prefix." + prefix;
     }
-
+    
     /** Helper method for creating artifact suffixes. */
-    protected static String createSuffix(String abilityName, String suffix) {
+    protected static String createSuffix( String abilityName, String suffix ) {
         return MagicalRelics.MODID + ".artifact_ability." + MagicalRelics.MODID + "." + abilityName + ".suffix." + suffix;
     }
-
-
+    
+    
     /**
      * @return An array of possible translatable prefixes for this ability.
      */
     public abstract String[] getPrefixes();
-
+    
     /**
      * @return An array of possible translatable suffixes for this ability.
      */
     public abstract String[] getSuffixes();
+    
     /**
      * @return A random TriggerType that should be used for this ability when attached to an
-     *         artifact item stack.
+     * artifact item stack.
      */
     @Nullable
-    public abstract TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio);
-
+    public abstract TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio );
+    
     /**
      * @return A List of trigger types supported by this ability. This is not super
-     *         important; primarily utilized in the "apply ability" command.
+     * important; primarily utilized in the "apply ability" command.
      */
     @Nonnull
     public abstract List<TriggerType> supportedTriggers();
-
+    
     /**
      * @return A List of artifact categories this ability is compatible with.
      */
     public abstract List<ArtifactCategory> getCompatibleTypes();
-
+    
     /**
      * @return True if a "snowflake" symbol should be prepended to this ability's description
-     *         when it is on cooldown.
+     * when it is on cooldown.
      */
     public boolean showCooldownSymbol() {
         return true;
     }
-
+    
     /**
      * @return A description of this ability that will be added to the artifact item stack's tooltip.
      */
-    public abstract MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag);
-
+    public abstract MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag );
+    
     /**
      * Called from {@link ArtifactUtils#generateRandomArtifact(LevelReader, RandomSource, boolean)} when the ability
      * is applied to an artifact item.
      * <br><br>
      * Can be used to write additional data to the ItemStack's NBT and whatnot.
      */
-    public void onAbilityAttached(ItemStack artifact, RandomSource randomSource) {
-
+    public void onAbilityAttached( ItemStack artifact, RandomSource randomSource ) {
+    
     }
-
+    
     /**
      * Only relevant for when an ability is attached to an artifact that is an instance of {@link com.sarinsa.magical_relics.common.item.ArtifactItem}.<br><br>
      * This is called whenever an artifact item that can be equipped in a Curio slot is unequipped.
      */
-    public void onUnequipped(SlotContext slotContext, ItemStack artifact) {
-
+    public void onUnequipped( SlotContext slotContext, ItemStack artifact ) {
+    
     }
-
+    
     /**
      * Called when the player right-clicks air while holding the artifact.
      * <br><br>
+     *
      * @return True if the ability successfully did what it was supposed to.
      */
-    public boolean onUse(Level level, Player player, ItemStack artifact) {
+    public boolean onUse( Level level, Player player, ItemStack artifact ) {
         return false;
     }
-
+    
     /**
      * Called when the player right-clicks a block while holding the artifact.
      *
      * @return True if the ability successfully did what it was supposed to.
      */
-    public boolean onClickBlock(Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player) {
+    public boolean onClickBlock( Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player ) {
         return false;
     }
-
+    
     /**
      * Called each tick while the artifact is held by the player.
      */
-    public void onHeld(Level level, Player player, ItemStack artifact, EquipmentSlot slot) {
+    public void onHeld( Level level, Player player, ItemStack artifact, EquipmentSlot slot ) {
     }
-
+    
     /**
      * Called when an artifact is dropped and becomes an ItemEntity.
      *
      * @return True if the item entity should be consumed/despawned.
      */
-    public boolean onDropped(Level level, ItemEntity itemEntity, Player player) {
+    public boolean onDropped( Level level, ItemEntity itemEntity, Player player ) {
         return false;
     }
-
+    
     /**
      * Called when the player attacks an entity with a held artifact.
      */
-    public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
-
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+    
     }
-
+    
     /**
      * Called when the player is hurt, regardless of damage source.
      */
-    public void onUserDamaged(Level level, Player player, DamageSource damageSource, ItemStack artifact) {
-
+    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact ) {
+    
     }
-
+    
     /**
      * Called when the player dies (only for held artifact items, armor and curio artifact items)<br><br>
      *
-     * @param slot The equipment slot of the artifact item. This will be null if the artifact item is equipped in a curio slot.
+     * @param slot        The equipment slot of the artifact item. This will be null if the artifact item is equipped in a curio slot.
      * @param slotContext The Curios slot context of the artifact item. This will be null if the artifact item is equipped in any vanilla slots.
      */
-    public void onDeath(Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext, ItemStack artifact, LivingDeathEvent event) {
-
+    public void onDeath( Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext, ItemStack artifact, LivingDeathEvent event ) {
+    
     }
-
+    
     /**
      * Called every tick for artifacts that exist in either the player inventory or hotbar (armor and curio slots are excluded).
      */
-    public void onInventoryTick(ItemStack artifact, Level level, Entity entity, int slot, boolean isSelectedItem) {
-
+    public void onInventoryTick( ItemStack artifact, Level level, Entity entity, int slot, boolean isSelectedItem ) {
+    
     }
-
+    
     /**
      * Called every tick for artifacts that are equipped in armor slots.
      */
-    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
-
+    public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
+    
     }
-
+    
     /**
      * Called every tick for artifacts that are equipped in curio slots.
      */
-    public void onCurioTick(ItemStack artifact, Level level, Player player, SlotContext slotContext) {
-
+    public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
+    
     }
-
+    
     /**
      * Primarily used for the ability's description text color when
      * rendering it in item tooltip.
@@ -190,7 +192,7 @@ public abstract class BaseArtifactAbility {
     public Rarity getRarity() {
         return ArtifactUtils.COMMON_ABILITY;
     }
-
+    
     /**
      * Used by abilities that are effectively just attribute modifiers.<br><br>
      *
@@ -200,13 +202,13 @@ public abstract class BaseArtifactAbility {
     public AttributeBoost getAttributeWithBoost() {
         return null;
     }
-
+    
     @Override
     public String toString() {
-        String regName = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().containsValue(this)
-                ? MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey(this).toString()
+        String regName = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().containsValue( this )
+                ? MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( this ).toString()
                 : "null";
-
+        
         return "Registry name: " + regName + ", Instance: " + super.toString();
     }
 }

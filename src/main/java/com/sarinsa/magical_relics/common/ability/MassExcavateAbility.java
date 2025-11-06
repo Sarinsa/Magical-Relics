@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,22 +30,22 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class MassExcavateAbility extends BaseArtifactAbility {
-
+    
     private static final String[] PREFIXES = {
-            createPrefix("mass_excavate", "miners"),
-            createPrefix("mass_excavate", "digging"),
-            createPrefix("mass_excavate", "excavating")
+            createPrefix( "mass_excavate", "miners" ),
+            createPrefix( "mass_excavate", "digging" ),
+            createPrefix( "mass_excavate", "excavating" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("mass_excavate", "drilling"),
-            createSuffix("mass_excavate", "tunneling")
+            createSuffix( "mass_excavate", "drilling" ),
+            createSuffix( "mass_excavate", "tunneling" )
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.RIGHT_CLICK_BLOCK
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.TRINKET,
             ArtifactCategory.FIGURINE,
@@ -54,78 +53,78 @@ public class MassExcavateAbility extends BaseArtifactAbility {
             ArtifactCategory.RING,
             ArtifactCategory.WAND
     );
-
+    
     private static ForgeConfigSpec.IntValue cooldown;
-
-
+    
+    
     public MassExcavateAbility() {
-
+    
     }
-
-
-    @AbilityConfig(abilityId = "magical_relics:mass_excavate")
-    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
-        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
-                .defineInRange("cooldown", 20, 5, 100000);
+    
+    
+    @AbilityConfig( abilityId = "magical_relics:mass_excavate" )
+    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
+        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
+                .defineInRange( "cooldown", 20, 5, 100000 );
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Override
-    public boolean onClickBlock(Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player) {
-        if (level.isClientSide) return false;
-
-        if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-            if (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL)) {
+    public boolean onClickBlock( Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player ) {
+        if( level.isClientSide ) return false;
+        
+        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            if( state.is( BlockTags.MINEABLE_WITH_PICKAXE ) || state.is( BlockTags.MINEABLE_WITH_SHOVEL ) ) {
                 BlockPos pos1;
                 BlockPos pos2;
-
-                switch (face) {
+                
+                switch( face ) {
                     // Up and default
                     default -> {
-                        pos1 = pos.offset(1, 0, 1);
-                        pos2 = pos.offset(-1, -2, -1);
+                        pos1 = pos.offset( 1, 0, 1 );
+                        pos2 = pos.offset( -1, -2, -1 );
                     }
                     case DOWN -> {
-                        pos1 = pos.offset(1, 0, 1);
-                        pos2 = pos.offset(-1,  2, -1);
+                        pos1 = pos.offset( 1, 0, 1 );
+                        pos2 = pos.offset( -1, 2, -1 );
                     }
                     case NORTH -> {
-                        pos1 = pos.offset(1, -1, 0);
-                        pos2 = pos.offset(-1,  1, 2);
+                        pos1 = pos.offset( 1, -1, 0 );
+                        pos2 = pos.offset( -1, 1, 2 );
                     }
                     case SOUTH -> {
-                        pos1 = pos.offset(-1, -1, 1);
-                        pos2 = pos.offset(1,  1, -2);
+                        pos1 = pos.offset( -1, -1, 1 );
+                        pos2 = pos.offset( 1, 1, -2 );
                     }
                     case EAST -> {
-                        pos1 = pos.offset(0, -1, 1);
-                        pos2 = pos.offset(-2,  1, -1);
+                        pos1 = pos.offset( 0, -1, 1 );
+                        pos2 = pos.offset( -2, 1, -1 );
                     }
                     case WEST -> {
-                        pos1 = pos.offset(0, -1, 1);
-                        pos2 = pos.offset(2,  1, -1);
+                        pos1 = pos.offset( 0, -1, 1 );
+                        pos2 = pos.offset( 2, 1, -1 );
                     }
                 }
-
+                
                 boolean destroyedAnyBlocks = false;
-
-                for (BlockPos nextPos : BlockPos.betweenClosed(pos1, pos2)) {
-                    if (checkAndMineBlock((ServerLevel) level, nextPos, player)) {
+                
+                for( BlockPos nextPos : BlockPos.betweenClosed( pos1, pos2 ) ) {
+                    if( checkAndMineBlock( (ServerLevel) level, nextPos, player ) ) {
                         destroyedAnyBlocks = true;
                     }
                 }
-                if (destroyedAnyBlocks) {
-                    artifact.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(player.getUsedItemHand()));
-                    ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
+                if( destroyedAnyBlocks ) {
+                    artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( player.getUsedItemHand() ) );
+                    ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
                     return true;
                 }
             }
@@ -133,55 +132,55 @@ public class MassExcavateAbility extends BaseArtifactAbility {
         }
         return false;
     }
-
-    private boolean checkAndMineBlock(ServerLevel level, BlockPos pos, Player player) {
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
-        MinecraftForge.EVENT_BUS.post(event);
-
-        if (!event.isCanceled()) {
-            BlockState state = level.getBlockState(pos);
-
-            if (state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
-                if (!player.isCreative()) {
-                    Block.dropResources(state, level, pos);
+    
+    private boolean checkAndMineBlock( ServerLevel level, BlockPos pos, Player player ) {
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent( level, pos, level.getBlockState( pos ), player );
+        MinecraftForge.EVENT_BUS.post( event );
+        
+        if( !event.isCanceled() ) {
+            BlockState state = level.getBlockState( pos );
+            
+            if( state.is( BlockTags.MINEABLE_WITH_SHOVEL ) || state.is( BlockTags.MINEABLE_WITH_PICKAXE ) ) {
+                if( !player.isCreative() ) {
+                    Block.dropResources( state, level, pos );
                 }
-                level.playSound(null, pos, state.getSoundType().getBreakSound(), SoundSource.BLOCKS, 0.5F, 1.0F);
-                level.removeBlock(pos, false);
+                level.playSound( null, pos, state.getSoundType().getBreakSound(), SoundSource.BLOCKS, 0.5F, 1.0F );
+                level.removeBlock( pos, false );
                 return true;
             }
         }
         return false;
     }
-
+    
     @Override
     public Rarity getRarity() {
         return Rarity.UNCOMMON;
     }
-
+    
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? null : TriggerType.RIGHT_CLICK_BLOCK;
     }
-
+    
     @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
     public boolean showCooldownSymbol() {
         return false;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.mass_excavate.description");
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.mass_excavate.description" );
     }
 }

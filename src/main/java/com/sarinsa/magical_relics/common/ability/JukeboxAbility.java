@@ -27,23 +27,23 @@ import java.util.List;
 
 
 public class JukeboxAbility extends BaseArtifactAbility {
-
+    
     private static final String[] PREFIXES = {
-            createPrefix("jukebox", "musical"),
-            createPrefix("jukebox", "harmonious"),
-            createPrefix("jukebox", "plonking")
+            createPrefix( "jukebox", "musical" ),
+            createPrefix( "jukebox", "harmonious" ),
+            createPrefix( "jukebox", "plonking" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("jukebox", "tunes"),
-            createSuffix("jukebox", "songs"),
-            createSuffix("jukebox", "notes")
+            createSuffix( "jukebox", "tunes" ),
+            createSuffix( "jukebox", "songs" ),
+            createSuffix( "jukebox", "notes" )
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.USE
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.AMULET,
             ArtifactCategory.TRINKET,
@@ -52,105 +52,105 @@ public class JukeboxAbility extends BaseArtifactAbility {
             ArtifactCategory.FIGURINE,
             ArtifactCategory.RING
     );
-
-
+    
+    
     public JukeboxAbility() {
     }
-
-
+    
+    
     @Override
-    @SuppressWarnings("ConstantConditions")
-    public void onAbilityAttached(ItemStack artifact, RandomSource random) {
-        CompoundTag modDataTag = artifact.getOrCreateTag().getCompound(ArtifactUtils.MOD_DATA_KEY);
+    @SuppressWarnings( "ConstantConditions" )
+    public void onAbilityAttached( ItemStack artifact, RandomSource random ) {
+        CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.MOD_DATA_KEY );
         CompoundTag abilityDataTag = new CompoundTag();
-        abilityDataTag.putInt("x", 0);
-        abilityDataTag.putInt("y", 0);
-        abilityDataTag.putInt("z", 0);
-        abilityDataTag.putBoolean("PlayMusic", true);
-        modDataTag.put("JukeboxAbilityData", abilityDataTag);
-
+        abilityDataTag.putInt( "x", 0 );
+        abilityDataTag.putInt( "y", 0 );
+        abilityDataTag.putInt( "z", 0 );
+        abilityDataTag.putBoolean( "PlayMusic", true );
+        modDataTag.put( "JukeboxAbilityData", abilityDataTag );
+        
         List<RecordItem> records = new ArrayList<>();
-
-        for (Item item : ForgeRegistries.ITEMS.getValues()) {
-            if (item instanceof RecordItem recordItem)
-                records.add(recordItem);
+        
+        for( Item item : ForgeRegistries.ITEMS.getValues() ) {
+            if( item instanceof RecordItem recordItem )
+                records.add( recordItem );
         }
-        RecordItem randomRecord = records.get(random.nextInt(records.size()));
-        String recordId = ForgeRegistries.ITEMS.getKey(randomRecord).toString();
-
-        modDataTag.putString("JUKEBOXMusicDiscId", recordId);
+        RecordItem randomRecord = records.get( random.nextInt( records.size() ) );
+        String recordId = ForgeRegistries.ITEMS.getKey( randomRecord ).toString();
+        
+        modDataTag.putString( "JUKEBOXMusicDiscId", recordId );
     }
-
+    
     @Override
-    public boolean onUse(Level level, Player player, ItemStack artifact) {
-        if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-            CompoundTag modDataTag = artifact.getOrCreateTag().getCompound(ArtifactUtils.MOD_DATA_KEY);
-            CompoundTag abilityDataTag = modDataTag.getCompound("JukeboxAbilityData");
-            RecordItem record = (RecordItem) ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(modDataTag.getString("JUKEBOXMusicDiscId")));
-
+    public boolean onUse( Level level, Player player, ItemStack artifact ) {
+        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.MOD_DATA_KEY );
+            CompoundTag abilityDataTag = modDataTag.getCompound( "JukeboxAbilityData" );
+            RecordItem record = (RecordItem) ForgeRegistries.ITEMS.getValue( ResourceLocation.tryParse( modDataTag.getString( "JUKEBOXMusicDiscId" ) ) );
+            
             // Don't bother trying if for some reason there
             // is no record ID in the NBT. Shouldn't happen, but who knows
-            if (record == null)
+            if( record == null )
                 return false;
-
-            if (!level.isClientSide) {
-                boolean playMusic = abilityDataTag.getBoolean("PlayMusic");
-
+            
+            if( !level.isClientSide ) {
+                boolean playMusic = abilityDataTag.getBoolean( "PlayMusic" );
+                
                 NetworkHelper.sendJukeboxAbilityUse(
                         (ServerPlayer) player,
-                        playMusic ? player.blockPosition().getX() : abilityDataTag.getInt("x"),
-                        playMusic ? player.blockPosition().getY() : abilityDataTag.getInt("y"),
-                        playMusic ? player.blockPosition().getZ() : abilityDataTag.getInt("z"),
+                        playMusic ? player.blockPosition().getX() : abilityDataTag.getInt( "x" ),
+                        playMusic ? player.blockPosition().getY() : abilityDataTag.getInt( "y" ),
+                        playMusic ? player.blockPosition().getZ() : abilityDataTag.getInt( "z" ),
                         playMusic
                 );
             }
-            abilityDataTag.putInt("x", player.getBlockX());
-            abilityDataTag.putInt("y", player.getBlockY());
-            abilityDataTag.putInt("z", player.getBlockZ());
-            abilityDataTag.putBoolean("PlayMusic", !abilityDataTag.getBoolean("PlayMusic"));
-            ArtifactUtils.setAbilityCooldown(artifact, this, 40);
+            abilityDataTag.putInt( "x", player.getBlockX() );
+            abilityDataTag.putInt( "y", player.getBlockY() );
+            abilityDataTag.putInt( "z", player.getBlockZ() );
+            abilityDataTag.putBoolean( "PlayMusic", !abilityDataTag.getBoolean( "PlayMusic" ) );
+            ArtifactUtils.setAbilityCooldown( artifact, this, 40 );
             return true;
         }
         return false;
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? null : TriggerType.USE;
     }
-
+    
     @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
-    @SuppressWarnings("ConstantConditions")
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        CompoundTag modDataTag = artifact.getTag().getCompound(ArtifactUtils.MOD_DATA_KEY);
-        ResourceLocation recordId = ResourceLocation.tryParse(modDataTag.getString("JUKEBOXMusicDiscId"));
-
+    @SuppressWarnings( "ConstantConditions" )
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        CompoundTag modDataTag = artifact.getTag().getCompound( ArtifactUtils.MOD_DATA_KEY );
+        ResourceLocation recordId = ResourceLocation.tryParse( modDataTag.getString( "JUKEBOXMusicDiscId" ) );
+        
         String recordDesc = "missingno :(";
-
-        if (ForgeRegistries.ITEMS.containsKey(recordId))
-            recordDesc = ForgeRegistries.ITEMS.getValue(recordId).getDescriptionId() + ".desc";
-
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.jukebox.description", Component.translatable(recordDesc));
+        
+        if( ForgeRegistries.ITEMS.containsKey( recordId ) )
+            recordDesc = ForgeRegistries.ITEMS.getValue( recordId ).getDescriptionId() + ".desc";
+        
+        return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jukebox.description", Component.translatable( recordDesc ) );
     }
 }

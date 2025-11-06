@@ -5,9 +5,9 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(StructureProcessor.class)
+@Mixin( StructureProcessor.class )
 public interface StructureProcessorAccessor {
-
-    @Invoker("getType")
+    
+    @Invoker( "getType" )
     StructureProcessorType<?> callGetType();
 }

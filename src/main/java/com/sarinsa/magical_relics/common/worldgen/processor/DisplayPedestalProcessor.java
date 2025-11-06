@@ -11,10 +11,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
@@ -29,59 +27,59 @@ import java.util.List;
  * or a "Wizard's Favorite" item, depending on processor config.
  */
 public class DisplayPedestalProcessor extends StructureProcessor {
-
-    public static final Codec<DisplayPedestalProcessor> CODEC = Codec.FLOAT.fieldOf("legendary_chance")
-            .xmap(DisplayPedestalProcessor::new, (processor) -> processor.legendaryChance)
+    
+    public static final Codec<DisplayPedestalProcessor> CODEC = Codec.FLOAT.fieldOf( "legendary_chance" )
+            .xmap( DisplayPedestalProcessor::new, ( processor ) -> processor.legendaryChance )
             .codec();
-
+    
     /**
      * Public and modifiable, but only really supposed
      * to be modified by {@link com.sarinsa.magical_relics.common.core.config.ConfigReloadListener}
      */
     public static final List<Item> WIZARD_FAVORITES = new ArrayList<>();
-
+    
     private final float legendaryChance;
-
-    public DisplayPedestalProcessor(float legendaryChance) {
+    
+    public DisplayPedestalProcessor( float legendaryChance ) {
         this.legendaryChance = legendaryChance;
     }
-
-
+    
+    
     @Nullable
-    public StructureTemplate.StructureBlockInfo process(LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template) {
-        RandomSource random = structureSettings.getRandom(blockInfo.pos());
+    public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
+        RandomSource random = structureSettings.getRandom( blockInfo.pos() );
         BlockState state = blockInfo.state();
         BlockPos blockpos = blockInfo.pos();
-
-        boolean isDisplayPedestal = state.is(MRBlocks.DISPLAY_PEDESTAL.get());
+        
+        boolean isDisplayPedestal = state.is( MRBlocks.DISPLAY_PEDESTAL.get() );
         CompoundTag tag = blockInfo.nbt();
-
-        if (isDisplayPedestal) {
-            if (tag == null) tag = new CompoundTag();
-
-            if (tag.contains(DisplayPedestalBlockEntity.WIZARDS_FAVORITE_KEY, Tag.TAG_BYTE) && tag.getBoolean(DisplayPedestalBlockEntity.WIZARDS_FAVORITE_KEY)) {
+        
+        if( isDisplayPedestal ) {
+            if( tag == null ) tag = new CompoundTag();
+            
+            if( tag.contains( DisplayPedestalBlockEntity.WIZARDS_FAVORITE_KEY, Tag.TAG_BYTE ) && tag.getBoolean( DisplayPedestalBlockEntity.WIZARDS_FAVORITE_KEY ) ) {
                 CompoundTag itemStackTag = new CompoundTag();
-                ItemStack itemStack = getRandomItem(random);
-                itemStack.save(itemStackTag);
-                tag.put(DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag);
+                ItemStack itemStack = getRandomItem( random );
+                itemStack.save( itemStackTag );
+                tag.put( DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag );
             }
             else {
                 CompoundTag itemStackTag = new CompoundTag();
-                ItemStack itemStack = ArtifactUtils.generateRandomArtifact(level, random, random.nextFloat() < legendaryChance);
-                itemStack.save(itemStackTag);
-
-                tag.put(DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag);
+                ItemStack itemStack = ArtifactUtils.generateRandomArtifact( level, random, random.nextFloat() < legendaryChance );
+                itemStack.save( itemStackTag );
+                
+                tag.put( DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag );
             }
         }
-        return isDisplayPedestal ? new StructureTemplate.StructureBlockInfo(blockpos, state, tag) : blockInfo;
+        return isDisplayPedestal ? new StructureTemplate.StructureBlockInfo( blockpos, state, tag ) : blockInfo;
     }
-
+    
     @Override
     protected StructureProcessorType<?> getType() {
         return MRStructureProcessors.DISPLAY_PEDESTAL.get();
     }
-
-    private static ItemStack getRandomItem(RandomSource random) {
-        return new ItemStack(WIZARD_FAVORITES.get(random.nextInt(WIZARD_FAVORITES.size())));
+    
+    private static ItemStack getRandomItem( RandomSource random ) {
+        return new ItemStack( WIZARD_FAVORITES.get( random.nextInt( WIZARD_FAVORITES.size() ) ) );
     }
 }

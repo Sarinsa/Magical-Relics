@@ -24,41 +24,41 @@ import java.util.List;
  * Looks for empty plant pots and selects a random potted plant to replace it with.
  */
 public class PotPlantProcessor extends StructureProcessor {
-
-    public static final Codec<PotPlantProcessor> CODEC = Codec.unit(PotPlantProcessor::new);
+    
+    public static final Codec<PotPlantProcessor> CODEC = Codec.unit( PotPlantProcessor::new );
     private static final List<Block> pottedPlants = new ArrayList<>();
-
-
+    
+    
     public PotPlantProcessor() {
-        for (Block block : ForgeRegistries.BLOCKS.getValues()) {
-            if (block instanceof FlowerPotBlock)
-                pottedPlants.add(block);
+        for( Block block : ForgeRegistries.BLOCKS.getValues() ) {
+            if( block instanceof FlowerPotBlock )
+                pottedPlants.add( block );
         }
     }
-
-
+    
+    
     @Nullable
-    public StructureTemplate.StructureBlockInfo process(LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template) {
-        RandomSource random = structureSettings.getRandom(blockInfo.pos());
+    public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
+        RandomSource random = structureSettings.getRandom( blockInfo.pos() );
         BlockState state = blockInfo.state();
-
-        if (state.is(Blocks.FLOWER_POT)) {
+        
+        if( state.is( Blocks.FLOWER_POT ) ) {
             Block flowerPot = null;
-
+            
             try {
-                flowerPot = pottedPlants.get(random.nextInt(pottedPlants.size()));
+                flowerPot = pottedPlants.get( random.nextInt( pottedPlants.size() ) );
             }
-            catch (Exception e) {
-                MagicalRelics.LOG.error("PotPlantProcessor failed to pick random flower pot block!");
+            catch( Exception e ) {
+                MagicalRelics.LOG.error( "PotPlantProcessor failed to pick random flower pot block!" );
             }
-
-            if (flowerPot != null) {
-                return new StructureTemplate.StructureBlockInfo(blockInfo.pos(), flowerPot.defaultBlockState(), null);
+            
+            if( flowerPot != null ) {
+                return new StructureTemplate.StructureBlockInfo( blockInfo.pos(), flowerPot.defaultBlockState(), null );
             }
         }
         return blockInfo;
     }
-
+    
     @Override
     protected StructureProcessorType<?> getType() {
         return MRStructureProcessors.POT_PLANT.get();

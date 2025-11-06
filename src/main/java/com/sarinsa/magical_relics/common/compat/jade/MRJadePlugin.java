@@ -10,37 +10,37 @@ import snownee.jade.api.config.IWailaConfig;
 
 @WailaPlugin
 public class MRJadePlugin implements IWailaPlugin {
-
-    private static final ResourceLocation displayCamosId = MagicalRelics.resLoc("display_camos");
-
-
+    
+    private static final ResourceLocation displayCamosId = MagicalRelics.rl( "display_camos" );
+    
+    
     @Override
-    public void register(IWailaCommonRegistration registration) {
+    public void register( IWailaCommonRegistration registration ) {
     }
-
+    
     @Override
-    public void registerClient(IWailaClientRegistration registration) {
-        registration.addConfig(displayCamosId, true);
-        registration.markAsClientFeature(displayCamosId);
-
+    public void registerClient( IWailaClientRegistration registration ) {
+        registration.addConfig( displayCamosId, true );
+        registration.markAsClientFeature( displayCamosId );
+        
         // Solid air and illumination block should be hidden
-        registration.hideTarget(MRBlocks.ILLUMINATION_BLOCK.get());
-        registration.hideTarget(MRBlocks.SOLID_AIR.get());
-
+        registration.hideTarget( MRBlocks.ILLUMINATION_BLOCK.get() );
+        registration.hideTarget( MRBlocks.SOLID_AIR.get() );
+        
         // Make camo blocks appear as what they are disguised as
-        registration.addRayTraceCallback((hitResult, accessor, originalAccessor) -> {
-            if (accessor instanceof BlockAccessor blockAccessor) {
-                if (blockAccessor.getBlockEntity() instanceof CamoBlockEntity camoBlockEntity) {
+        registration.addRayTraceCallback( ( hitResult, accessor, originalAccessor ) -> {
+            if( accessor instanceof BlockAccessor blockAccessor ) {
+                if( blockAccessor.getBlockEntity() instanceof CamoBlockEntity camoBlockEntity ) {
                     BlockState camoState = camoBlockEntity.getCamoState();
-                    if (IWailaConfig.get().getPlugin().get(displayCamosId) && camoState != null && camoState != CamoBlockEntity.defaultCamoState.get()) {
-                        return registration.blockAccessor().from(blockAccessor)
-                                .blockEntity(() -> null)
-                                .blockState(camoBlockEntity.getCamoState())
+                    if( IWailaConfig.get().getPlugin().get( displayCamosId ) && camoState != null && camoState != CamoBlockEntity.defaultCamoState.get() ) {
+                        return registration.blockAccessor().from( blockAccessor )
+                                .blockEntity( () -> null )
+                                .blockState( camoBlockEntity.getCamoState() )
                                 .build();
                     }
                 }
             }
             return accessor;
-        });
+        } );
     }
 }

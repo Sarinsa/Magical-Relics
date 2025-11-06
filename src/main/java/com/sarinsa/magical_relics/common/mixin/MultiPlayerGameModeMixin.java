@@ -18,19 +18,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * Call me crazy, but I could not for the life of me figure out a different way
  * of doing this.
  */
-@Mixin(MultiPlayerGameMode.class)
+@Mixin( MultiPlayerGameMode.class )
 public class MultiPlayerGameModeMixin {
-
+    
     @Shadow
     @Final
     private Minecraft minecraft;
-
-    @Shadow private ItemStack destroyingItem;
-
-    @Shadow private BlockPos destroyBlockPos;
-
-    @Inject(method = "sameDestroyTarget", at = @At("HEAD"), cancellable = true)
-    public void onSameDestroyTarget(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        ClientMixinHooks.onSameDestroyTargetHook(pos, destroyBlockPos, minecraft.player.getMainHandItem(), destroyingItem, cir);
+    
+    @Shadow
+    private ItemStack destroyingItem;
+    
+    @Shadow
+    private BlockPos destroyBlockPos;
+    
+    @Inject( method = "sameDestroyTarget", at = @At( "HEAD" ), cancellable = true )
+    public void onSameDestroyTarget( BlockPos pos, CallbackInfoReturnable<Boolean> cir ) {
+        ClientMixinHooks.onSameDestroyTargetHook( pos, destroyBlockPos, minecraft.player.getMainHandItem(), destroyingItem, cir );
     }
 }

@@ -4,9 +4,7 @@ import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.util.ArtifactSet;
 import com.sarinsa.magical_relics.common.item.*;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
@@ -15,7 +13,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -33,17 +30,17 @@ public class MRItems {
         }
     }
 
-    public static final RegistryObject<Item> RANDOM_ARTIFACT = register("random_artifact", () -> new RandomArtifactItem(new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> QUICKSAND_BUCKET = register("quicksand_bucket", () -> new SolidBucketItem(MRBlocks.QUICKSAND.get(), SoundEvents.MUD_PLACE, new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> THICK_TRIPWIRE = register("thick_tripwire", () -> new BlockItem(MRBlocks.THICK_TRIPWIRE.get(), new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> PEDESTAL_KEY = register("pedestal_key", () -> new Item(new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> RAW_MANAESSENCE = register("raw_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> WOOD_MANAESSENCE = register("wood_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> LEATHER_MANAESSENCE = register("leather_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> STONE_MANAESSENCE = register("stone_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> IRON_MANAESSENCE = register("iron_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> GOLD_MANAESSENCE = register("gold_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
-    public static final RegistryObject<Item> DIAMOND_MANAESSENCE = register("diamond_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.getKey());
+    public static final RegistryObject<Item> RANDOM_ARTIFACT = register("random_artifact", () -> new RandomArtifactItem(new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.key());
+    public static final RegistryObject<Item> QUICKSAND_BUCKET = register("quicksand_bucket", () -> new SolidBucketItem(MRBlocks.QUICKSAND.get(), SoundEvents.MUD_PLACE, new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.key());
+    public static final RegistryObject<Item> THICK_TRIPWIRE = register("thick_tripwire", () -> new BlockItem(MRBlocks.THICK_TRIPWIRE.get(), new Item.Properties()), MRCreativeTabs.MOD_TAB.key());
+    public static final RegistryObject<Item> PEDESTAL_KEY = register("pedestal_key", () -> new Item(new Item.Properties().stacksTo(1)), MRCreativeTabs.MOD_TAB.key());
+    public static final RegistryObject<Item> RAW_MANAESSENCE = register("raw_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.key());
+    public static final RegistryObject<Item> WOOD_MANAESSENCE = register("wood_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.key());
+    public static final RegistryObject<Item> LEATHER_MANAESSENCE = register("leather_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.key());
+    public static final RegistryObject<Item> STONE_MANAESSENCE = register("stone_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.key());
+    public static final RegistryObject<Item> IRON_MANAESSENCE = register("iron_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.key());
+    public static final RegistryObject<Item> GOLD_MANAESSENCE = register("gold_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.key());
+    public static final RegistryObject<Item> DIAMOND_MANAESSENCE = register("diamond_manaessence", () -> new Item(new Item.Properties()), MRCreativeTabs.MOD_TAB.key());
 
     public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> LEATHER_ARTIFACT_ARMOR = artifactArmorSet("leather", ArtifactArmorMaterials.LEATHER, true);
     public static final Map<EquipmentSlot, RegistryObject<ArmorItem>> IRON_ARTIFACT_ARMOR = artifactArmorSet("iron", ArtifactArmorMaterials.IRON, false);

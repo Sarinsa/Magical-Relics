@@ -17,12 +17,10 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,25 +28,25 @@ import java.util.List;
 
 
 public class CashoutAbility extends BaseArtifactAbility {
-
-    private static final ResourceLocation LOOT_TABLE = MagicalRelics.resLoc("misc/cashout_ability");
-
+    
+    private static final ResourceLocation LOOT_TABLE = MagicalRelics.rl( "misc/cashout_ability" );
+    
     private static final String[] PREFIXES = {
-            createPrefix("cashout", "valuable"),
-            createPrefix("cashout", "precious")
+            createPrefix( "cashout", "valuable" ),
+            createPrefix( "cashout", "precious" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("cashout", "wealth"),
-            createSuffix("cashout", "riches"),
-            createSuffix("cashout", "money"),
-            createSuffix("cashout", "treasure"),
+            createSuffix( "cashout", "wealth" ),
+            createSuffix( "cashout", "riches" ),
+            createSuffix( "cashout", "money" ),
+            createSuffix( "cashout", "treasure" ),
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.DROPPED
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.AMULET,
             ArtifactCategory.TRINKET,
@@ -56,68 +54,68 @@ public class CashoutAbility extends BaseArtifactAbility {
             ArtifactCategory.RING,
             ArtifactCategory.AXE
     );
-
-
+    
+    
     public CashoutAbility() {
     }
-
-
+    
+    
     @Override
-    public boolean onDropped(Level level, ItemEntity itemEntity, Player player) {
-        if (level instanceof ServerLevel serverLevel) {
-            LootTable lootTable = serverLevel.getServer().getLootData().getLootTable(LOOT_TABLE);
-
-            if (lootTable == LootTable.EMPTY)
+    public boolean onDropped( Level level, ItemEntity itemEntity, Player player ) {
+        if( level instanceof ServerLevel serverLevel ) {
+            LootTable lootTable = serverLevel.getServer().getLootData().getLootTable( LOOT_TABLE );
+            
+            if( lootTable == LootTable.EMPTY )
                 return false;
-
-            LootParams.Builder paramsBuilder = (new LootParams.Builder(serverLevel))
-                    .withParameter(LootContextParams.ORIGIN, itemEntity.position())
-                    .withOptionalParameter(LootContextParams.THIS_ENTITY, player);
-
-            ObjectArrayList<ItemStack> loot = lootTable.getRandomItems(paramsBuilder.create(LootContextParamSets.GIFT));
-
-            for (ItemStack itemStack : loot) {
-                Block.popResource(serverLevel, itemEntity.blockPosition(), itemStack);
+            
+            LootParams.Builder paramsBuilder = (new LootParams.Builder( serverLevel ))
+                    .withParameter( LootContextParams.ORIGIN, itemEntity.position() )
+                    .withOptionalParameter( LootContextParams.THIS_ENTITY, player );
+            
+            ObjectArrayList<ItemStack> loot = lootTable.getRandomItems( paramsBuilder.create( LootContextParamSets.GIFT ) );
+            
+            for( ItemStack itemStack : loot ) {
+                Block.popResource( serverLevel, itemEntity.blockPosition(), itemStack );
             }
             return true;
         }
         // Returning false for client since it gets left out
         return true;
     }
-
+    
     @Override
     public Rarity getRarity() {
         return Rarity.UNCOMMON;
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return TriggerType.DROPPED;
     }
-
+    
     @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        return Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.cashout.description");
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.cashout.description" );
     }
 }

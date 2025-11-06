@@ -11,14 +11,14 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public class MRGlobalLootMods {
-
-    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> GLOBAL_LOOT_MODS = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, MagicalRelics.MODID);
-
-
-    public static final RegistryObject<Codec<AddArtifactModifier>> ADD_ARTIFACT = register("add_artifact", AddArtifactModifier.CODEC);
-
-
-    private static <T extends IGlobalLootModifier> RegistryObject<Codec<T>> register(String name, Supplier<Codec<T>> codecSupplier) {
-        return GLOBAL_LOOT_MODS.register(name, codecSupplier);
+    
+    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> GLOBAL_LOOT_MODS = DeferredRegister.create( ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, MagicalRelics.MODID );
+    
+    
+    public static final RegistryObject<Codec<AddArtifactModifier>> ADD_ARTIFACT = register( "add_artifact", AddArtifactModifier.CODEC );
+    
+    
+    private static <T extends IGlobalLootModifier> RegistryObject<Codec<T>> register( String name, Supplier<Codec<T>> codecSupplier ) {
+        return GLOBAL_LOOT_MODS.register( name, codecSupplier );
     }
 }

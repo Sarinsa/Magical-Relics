@@ -23,105 +23,105 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.network.NetworkHooks;
 
 public class SwungSword extends Entity {
-
-    private static final EntityDataAccessor<ItemStack> SWORD_ITEM = SynchedEntityData.defineId(SwungSword.class, EntityDataSerializers.ITEM_STACK);
-    private static final EntityDataAccessor<Direction> ATTACK_DIRECTION = SynchedEntityData.defineId(SwungSword.class, EntityDataSerializers.DIRECTION);
-
+    
+    private static final EntityDataAccessor<ItemStack> SWORD_ITEM = SynchedEntityData.defineId( SwungSword.class, EntityDataSerializers.ITEM_STACK );
+    private static final EntityDataAccessor<Direction> ATTACK_DIRECTION = SynchedEntityData.defineId( SwungSword.class, EntityDataSerializers.DIRECTION );
+    
     private int lifespan = 0;
     private boolean hasSwung = false;
-
-
-    public SwungSword(EntityType<?> type, Level level) {
-        super(type, level);
+    
+    
+    public SwungSword( EntityType<?> type, Level level ) {
+        super( type, level );
     }
-
-    public SwungSword(Level level, double x, double y, double z) {
-        this(MREntities.SWUNG_SWORD.get(), level);
-        setPos(x, y, z);
+    
+    public SwungSword( Level level, double x, double y, double z ) {
+        this( MREntities.SWUNG_SWORD.get(), level );
+        setPos( x, y, z );
     }
-
-
+    
+    
     @Override
     protected Entity.MovementEmission getMovementEmission() {
         return Entity.MovementEmission.NONE;
     }
-
+    
     @Override
     protected void defineSynchedData() {
-        entityData.define(SWORD_ITEM, new ItemStack(Items.IRON_SWORD));
-        entityData.define(ATTACK_DIRECTION, Direction.NORTH);
+        entityData.define( SWORD_ITEM, new ItemStack( Items.IRON_SWORD ) );
+        entityData.define( ATTACK_DIRECTION, Direction.NORTH );
     }
-
-    public void setSwordItem(SwordItem item) {
-        if (item == null) return;
-        entityData.set(SWORD_ITEM, new ItemStack(item));
+    
+    public void setSwordItem( SwordItem item ) {
+        if( item == null ) return;
+        entityData.set( SWORD_ITEM, new ItemStack( item ) );
     }
-
+    
     public ItemStack getSwordItem() {
-        return entityData.get(SWORD_ITEM);
+        return entityData.get( SWORD_ITEM );
     }
-
-    public void setAttackDirection(Direction direction) {
-        if (direction == null) return;
-        entityData.set(ATTACK_DIRECTION, direction);
+    
+    public void setAttackDirection( Direction direction ) {
+        if( direction == null ) return;
+        entityData.set( ATTACK_DIRECTION, direction );
     }
-
+    
     public Direction getAttackDirection() {
-        return entityData.get(ATTACK_DIRECTION);
+        return entityData.get( ATTACK_DIRECTION );
     }
-
+    
     public int getLifespan() {
         return lifespan;
     }
-
+    
     @Override
     public void tick() {
-        if (++lifespan >= 10) {
+        if( ++lifespan >= 10 ) {
             discard();
         }
-        if (!hasSwung) {
+        if( !hasSwung ) {
             performAttack();
             hasSwung = true;
         }
     }
-
+    
     private void performAttack() {
-        if (!level().isClientSide) {
-            level().playSound(null, blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.BLOCKS, 1.0F, 1.0F);
-
-            AABB aabb = new AABB(blockPosition()).inflate(0.2D);
+        if( !level().isClientSide ) {
+            level().playSound( null, blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.BLOCKS, 1.0F, 1.0F );
+            
+            AABB aabb = new AABB( blockPosition() ).inflate( 0.2D );
             float damage = 1.0F;
-
-            if (getSwordItem().getItem() instanceof SwordItem swordItem) {
+            
+            if( getSwordItem().getItem() instanceof SwordItem swordItem ) {
                 damage = swordItem.getDamage();
             }
-
-            for (LivingEntity livingEntity : level().getEntitiesOfClass(LivingEntity.class, aabb)) {
-                livingEntity.hurt(MRDamageTypes.of(level(), MRDamageTypes.SWUNG_SWORD), damage);
+            
+            for( LivingEntity livingEntity : level().getEntitiesOfClass( LivingEntity.class, aabb ) ) {
+                livingEntity.hurt( MRDamageTypes.of( level(), MRDamageTypes.SWUNG_SWORD ), damage );
             }
         }
     }
-
+    
     @Override
-    protected void addAdditionalSaveData(CompoundTag compoundTag) {
+    protected void addAdditionalSaveData( CompoundTag compoundTag ) {
     }
-
+    
     @Override
-    protected void readAdditionalSaveData(CompoundTag compoundTag) {
+    protected void readAdditionalSaveData( CompoundTag compoundTag ) {
     }
-
+    
     @Override
     public boolean isPickable() {
         return false;
     }
-
+    
     @Override
-    public boolean hurt(DamageSource damageSource, float damage) {
+    public boolean hurt( DamageSource damageSource, float damage ) {
         return false;
     }
-
+    
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        return NetworkHooks.getEntitySpawningPacket( this );
     }
 }

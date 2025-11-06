@@ -15,57 +15,55 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class MRRecipeProvider extends RecipeProvider {
-
-    public MRRecipeProvider(DataGenerator generator) {
-        super(generator.getPackOutput());
+    
+    public MRRecipeProvider( DataGenerator generator ) {
+        super( generator.getPackOutput() );
     }
-
+    
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
-        manaessenceRecipe(MRItems.WOOD_MANAESSENCE, ItemTags.LOGS_THAT_BURN, consumer);
-        manaessenceRecipe(MRItems.STONE_MANAESSENCE, Tags.Items.COBBLESTONE, consumer);
-        manaessenceRecipe(MRItems.LEATHER_MANAESSENCE, Tags.Items.LEATHER, consumer);
-        manaessenceRecipe(MRItems.IRON_MANAESSENCE, Items.IRON_INGOT, consumer);
-        manaessenceRecipe(MRItems.GOLD_MANAESSENCE, Items.GOLD_INGOT, consumer);
-        manaessenceRecipe(MRItems.DIAMOND_MANAESSENCE, Items.DIAMOND, consumer);
-
-        simpleShapeless(RecipeCategory.MISC, Items.STRING, 2, MRBlocks.THICK_TRIPWIRE.get(), consumer);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, MRItems.RAW_MANAESSENCE.get(), 4)
-                .requires(MRItemTags.ARTIFACTS)
-                .unlockedBy("has_artifact", has(MRItemTags.ARTIFACTS))
-                .save(consumer);
+    protected void buildRecipes( Consumer<FinishedRecipe> consumer ) {
+        manaessenceRecipe( MRItems.WOOD_MANAESSENCE, ItemTags.LOGS_THAT_BURN, consumer );
+        manaessenceRecipe( MRItems.STONE_MANAESSENCE, Tags.Items.COBBLESTONE, consumer );
+        manaessenceRecipe( MRItems.LEATHER_MANAESSENCE, Tags.Items.LEATHER, consumer );
+        manaessenceRecipe( MRItems.IRON_MANAESSENCE, Items.IRON_INGOT, consumer );
+        manaessenceRecipe( MRItems.GOLD_MANAESSENCE, Items.GOLD_INGOT, consumer );
+        manaessenceRecipe( MRItems.DIAMOND_MANAESSENCE, Items.DIAMOND, consumer );
+        
+        simpleShapeless( RecipeCategory.MISC, Items.STRING, 2, MRBlocks.THICK_TRIPWIRE.get(), consumer );
+        
+        ShapelessRecipeBuilder.shapeless( RecipeCategory.MISC, MRItems.RAW_MANAESSENCE.get(), 4 )
+                .requires( MRItemTags.ARTIFACTS )
+                .unlockedBy( "has_artifact", has( MRItemTags.ARTIFACTS ) )
+                .save( consumer );
     }
-
-    private void manaessenceRecipe(Supplier<Item> manaessenceItem, ItemLike keyIngredient, Consumer<FinishedRecipe> consumer) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, manaessenceItem.get(), 2)
-                .requires(Tags.Items.NUGGETS_GOLD)
-                .requires(keyIngredient)
-                .requires(MRItems.RAW_MANAESSENCE.get())
-                .unlockedBy("has_raw_manaessence", has(MRItems.RAW_MANAESSENCE.get()))
-                .save(consumer);
+    
+    private void manaessenceRecipe( Supplier<Item> manaessenceItem, ItemLike keyIngredient, Consumer<FinishedRecipe> consumer ) {
+        ShapelessRecipeBuilder.shapeless( RecipeCategory.MISC, manaessenceItem.get(), 2 )
+                .requires( Tags.Items.NUGGETS_GOLD )
+                .requires( keyIngredient )
+                .requires( MRItems.RAW_MANAESSENCE.get() )
+                .unlockedBy( "has_raw_manaessence", has( MRItems.RAW_MANAESSENCE.get() ) )
+                .save( consumer );
     }
-
-    private void manaessenceRecipe(Supplier<Item> manaessenceItem, TagKey<Item> keyIngredient, Consumer<FinishedRecipe> consumer) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, manaessenceItem.get(), 2)
-                .requires(Tags.Items.NUGGETS_GOLD)
-                .requires(keyIngredient)
-                .requires(MRItems.RAW_MANAESSENCE.get())
-                .unlockedBy("has_raw_manaessence", has(MRItems.RAW_MANAESSENCE.get()))
-                .save(consumer);
+    
+    private void manaessenceRecipe( Supplier<Item> manaessenceItem, TagKey<Item> keyIngredient, Consumer<FinishedRecipe> consumer ) {
+        ShapelessRecipeBuilder.shapeless( RecipeCategory.MISC, manaessenceItem.get(), 2 )
+                .requires( Tags.Items.NUGGETS_GOLD )
+                .requires( keyIngredient )
+                .requires( MRItems.RAW_MANAESSENCE.get() )
+                .unlockedBy( "has_raw_manaessence", has( MRItems.RAW_MANAESSENCE.get() ) )
+                .save( consumer );
     }
-
-    private void simpleShapeless(RecipeCategory category, Item result, int amount, ItemLike ingredient, Consumer<FinishedRecipe> consumer) {
-        ShapelessRecipeBuilder.shapeless(category, result, amount)
-                .requires(ingredient)
-                .unlockedBy("has_" + ForgeRegistries.ITEMS.getKey(ingredient.asItem()).getPath(), has(ingredient))
-                .save(consumer);
+    
+    private void simpleShapeless( RecipeCategory category, Item result, int amount, ItemLike ingredient, Consumer<FinishedRecipe> consumer ) {
+        ShapelessRecipeBuilder.shapeless( category, result, amount )
+                .requires( ingredient )
+                .unlockedBy( "has_" + ForgeRegistries.ITEMS.getKey( ingredient.asItem() ).getPath(), has( ingredient ) )
+                .save( consumer );
     }
 }

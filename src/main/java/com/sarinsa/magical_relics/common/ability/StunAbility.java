@@ -24,22 +24,22 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class StunAbility extends BaseArtifactAbility {
-
+    
     private static final String[] PREFIXES = {
-            createPrefix("stun", "slowing"),
-            createPrefix("stun", "immobilizing")
+            createPrefix( "stun", "slowing" ),
+            createPrefix( "stun", "immobilizing" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("stun", "trapping"),
-            createSuffix("stun", "halting"),
+            createSuffix( "stun", "trapping" ),
+            createSuffix( "stun", "halting" ),
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.DROPPED,
             TriggerType.USER_ATTACKING
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.FIGURINE,
             ArtifactCategory.TRINKET,
@@ -47,78 +47,78 @@ public class StunAbility extends BaseArtifactAbility {
             ArtifactCategory.SWORD,
             ArtifactCategory.DAGGER
     );
-
+    
     private static final int EFFECT_DURATION = 120;
-
+    
     private static ForgeConfigSpec.IntValue cooldown;
-
-
+    
+    
     public StunAbility() {
-
+    
     }
-
-
-    @AbilityConfig(abilityId = "magical_relics:stun")
-    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
-        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been activated")
-                .defineInRange("cooldown", 500, 5, 100000);
+    
+    
+    @AbilityConfig( abilityId = "magical_relics:stun" )
+    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
+        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been activated" )
+                .defineInRange( "cooldown", 500, 5, 100000 );
     }
-
+    
     @Override
-    public boolean onDropped(Level level, ItemEntity itemEntity, Player player) {
-        if (!ArtifactUtils.isAbilityOnCooldown(itemEntity.getItem(), this)) {
-            List<LivingEntity> nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(20.0D, 10.0D, 20.0F));
-            nearbyEntities.remove(player);
-
-            for (LivingEntity entity : nearbyEntities) {
-                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, EFFECT_DURATION, 1));
+    public boolean onDropped( Level level, ItemEntity itemEntity, Player player ) {
+        if( !ArtifactUtils.isAbilityOnCooldown( itemEntity.getItem(), this ) ) {
+            List<LivingEntity> nearbyEntities = level.getEntitiesOfClass( LivingEntity.class, player.getBoundingBox().inflate( 20.0D, 10.0D, 20.0F ) );
+            nearbyEntities.remove( player );
+            
+            for( LivingEntity entity : nearbyEntities ) {
+                entity.addEffect( new MobEffectInstance( MobEffects.MOVEMENT_SLOWDOWN, EFFECT_DURATION, 1 ) );
             }
-            ArtifactUtils.setAbilityCooldown(itemEntity.getItem(), this, cooldown.get());
+            ArtifactUtils.setAbilityCooldown( itemEntity.getItem(), this, cooldown.get() );
         }
         return false;
     }
-
+    
     @Override
-    public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
-        if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-            attackedMob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, EFFECT_DURATION, 1));
-            ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            attackedMob.addEffect( new MobEffectInstance( MobEffects.MOVEMENT_SLOWDOWN, EFFECT_DURATION, 1 ) );
+            ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
         }
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
-        if (isArmor) return null;
-
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
+        if( isArmor ) return null;
+        
         return random.nextBoolean() ? TriggerType.USER_ATTACKING : TriggerType.DROPPED;
     }
-
+    
     @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         return type == TriggerType.USER_ATTACKING
-                ? Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.stun.description.user_attacking", EFFECT_DURATION / 20)
-                : Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.stun.description.dropped", EFFECT_DURATION / 20);
+                ? Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.stun.description.user_attacking", EFFECT_DURATION / 20 )
+                : Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.stun.description.dropped", EFFECT_DURATION / 20 );
     }
 }

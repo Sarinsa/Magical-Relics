@@ -18,30 +18,29 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class MRItemTagProvider extends ItemTagsProvider {
-
-    public MRItemTagProvider(DataGenerator generator, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagsProvider.TagLookup<Block>> blockTagsProvider, @Nullable ExistingFileHelper fileHelper) {
-        super(generator.getPackOutput(), lookupProvider, blockTagsProvider, MagicalRelics.MODID, fileHelper);
+    
+    public MRItemTagProvider( DataGenerator generator, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagsProvider.TagLookup<Block>> blockTagsProvider, @Nullable ExistingFileHelper fileHelper ) {
+        super( generator.getPackOutput(), lookupProvider, blockTagsProvider, MagicalRelics.MODID, fileHelper );
     }
-
-    @Override
-    protected void addTags(HolderLookup.Provider provider) {
-        IntrinsicTagAppender<Item> artifactsTag = tag(MRItemTags.ARTIFACTS);
-        IntrinsicTagAppender<Item> artifactCuriosTag = tag(MRItemTags.ARTIFACT_CURIOS);
-        IntrinsicTagAppender<Item> trimmableArmorTag = tag(ItemTags.TRIMMABLE_ARMOR);
-
-        for (List<RegistryObject<? extends Item>> artifactList : MRItems.ARTIFACTS_BY_CATEGORY.values()) {
-            for (RegistryObject<? extends Item> regObj : artifactList) {
-                artifactsTag.add(regObj.get());
+    
+    protected void addTags( HolderLookup.Provider provider ) {
+        IntrinsicTagAppender<Item> artifactsTag = tag( MRItemTags.ARTIFACTS );
+        IntrinsicTagAppender<Item> artifactCuriosTag = tag( MRItemTags.ARTIFACT_CURIOS );
+        IntrinsicTagAppender<Item> trimmableArmorTag = tag( ItemTags.TRIMMABLE_ARMOR );
+        
+        for( List<RegistryObject<? extends Item>> artifactList : MRItems.ARTIFACTS_BY_CATEGORY.values() ) {
+            for( RegistryObject<? extends Item> regObj : artifactList ) {
+                artifactsTag.add( regObj.get() );
             }
         }
-
-        MRItems.DIAMOND_ARTIFACT_ARMOR.forEach((slot, item) -> trimmableArmorTag.add(item.get()));
-        MRItems.IRON_ARTIFACT_ARMOR.forEach((slot, item) -> trimmableArmorTag.add(item.get()));
-        MRItems.GOLD_ARTIFACT_ARMOR.forEach((slot, item) -> trimmableArmorTag.add(item.get()));
-        MRItems.LEATHER_ARTIFACT_ARMOR.forEach((slot, item) -> trimmableArmorTag.add(item.get()));
-
-        MRItems.RINGS.dataStructure().forEach((regObj) -> artifactCuriosTag.add(regObj.get()));
-        MRItems.AMULETS.dataStructure().forEach((regObj) -> artifactCuriosTag.add(regObj.get()));
-        MRItems.BELTS.dataStructure().forEach((regObj) -> artifactCuriosTag.add(regObj.get()));
+        
+        MRItems.DIAMOND_ARTIFACT_ARMOR.forEach( ( slot, item ) -> trimmableArmorTag.add( item.get() ) );
+        MRItems.IRON_ARTIFACT_ARMOR.forEach( ( slot, item ) -> trimmableArmorTag.add( item.get() ) );
+        MRItems.GOLD_ARTIFACT_ARMOR.forEach( ( slot, item ) -> trimmableArmorTag.add( item.get() ) );
+        MRItems.LEATHER_ARTIFACT_ARMOR.forEach( ( slot, item ) -> trimmableArmorTag.add( item.get() ) );
+        
+        MRItems.RINGS.dataStructure().forEach( ( regObj ) -> artifactCuriosTag.add( regObj.get() ) );
+        MRItems.AMULETS.dataStructure().forEach( ( regObj ) -> artifactCuriosTag.add( regObj.get() ) );
+        MRItems.BELTS.dataStructure().forEach( ( regObj ) -> artifactCuriosTag.add( regObj.get() ) );
     }
 }

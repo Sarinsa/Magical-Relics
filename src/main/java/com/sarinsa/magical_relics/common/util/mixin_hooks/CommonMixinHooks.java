@@ -8,13 +8,13 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 public class CommonMixinHooks {
-
-    public static void injectOnClimbable(CallbackInfoReturnable<Boolean> cir, LivingEntity livingEntity) {
-        if (livingEntity instanceof Player player) {
-            for (EquipmentSlot slot : ArtifactUtils.ARMOR_SLOTS) {
-                if (ArtifactUtils.hasAbility(player.getItemBySlot(slot), MRArtifactAbilities.SPIDER.get())) {
-                    if (player.horizontalCollision) {
-                        cir.setReturnValue(true);
+    
+    public static void injectOnClimbable( CallbackInfoReturnable<Boolean> cir, LivingEntity livingEntity ) {
+        if( livingEntity instanceof Player player ) {
+            for( EquipmentSlot slot : ArtifactUtils.ARMOR_SLOTS ) {
+                if( ArtifactUtils.hasAbility( player.getItemBySlot( slot ), MRArtifactAbilities.SPIDER.get() ) ) {
+                    if( player.horizontalCollision ) {
+                        cir.setReturnValue( true );
                         break;
                     }
                 }

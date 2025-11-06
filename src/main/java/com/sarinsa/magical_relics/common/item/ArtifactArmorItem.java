@@ -12,7 +12,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -22,80 +25,80 @@ import java.util.Collection;
 import java.util.List;
 
 public class ArtifactArmorItem extends ArmorItem implements ItemArtifact {
-
+    
     private final ArtifactCategory type;
-
-    public ArtifactArmorItem(ArmorMaterial armorMaterial, ArtifactCategory type, ArmorItem.Type armorType, Properties properties) {
-        super(armorMaterial, armorType, properties.rarity(ArtifactUtils.MAGICAL));
+    
+    public ArtifactArmorItem( ArmorMaterial armorMaterial, ArtifactCategory type, ArmorItem.Type armorType, Properties properties ) {
+        super( armorMaterial, armorType, properties.rarity( ArtifactUtils.MAGICAL ) );
         this.type = type;
     }
-
+    
     @Override
     public ArtifactCategory getCategory() {
         return type;
     }
-
+    
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
-        super.appendHoverText(itemStack, level, components, flag);
-
-        ArtifactUtils.addDescriptionsToTooltip(itemStack, level, components, flag);
+    public void appendHoverText( ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag ) {
+        super.appendHoverText( itemStack, level, components, flag );
+        
+        ArtifactUtils.addDescriptionsToTooltip( itemStack, level, components, flag );
     }
-
-
-    @SuppressWarnings("removal")
+    
+    
+    @SuppressWarnings( "removal" )
     @Override
-    public void onArmorTick(ItemStack stack, Level level, Player player) {
-        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger(TriggerType.ARMOR_TICK, stack);
-
-        if (!abilities.isEmpty()) {
-            for (BaseArtifactAbility ability : abilities) {
-                ability.onArmorTick(stack, level, player, getEquipmentSlot());
+    public void onArmorTick( ItemStack stack, Level level, Player player ) {
+        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.ARMOR_TICK, stack );
+        
+        if( !abilities.isEmpty() ) {
+            for( BaseArtifactAbility ability : abilities ) {
+                ability.onArmorTick( stack, level, player, getEquipmentSlot() );
             }
         }
     }
-
+    
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods(stack, AttributeBoost.ActiveType.EQUIPPED);
-
-        if (artifactModifiers != null && slot == getEquipmentSlot()) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers( EquipmentSlot slot, ItemStack stack ) {
+        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods( stack, AttributeBoost.ActiveType.EQUIPPED );
+        
+        if( artifactModifiers != null && slot == getEquipmentSlot() ) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> attribs = ImmutableMultimap.builder();
-            attribs.putAll(artifactModifiers);
-            attribs.putAll(getDefaultAttributeModifiers(slot));
+            attribs.putAll( artifactModifiers );
+            attribs.putAll( getDefaultAttributeModifiers( slot ) );
             return attribs.build();
         }
-        return super.getAttributeModifiers(slot, stack);
+        return super.getAttributeModifiers( slot, stack );
     }
-
+    
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if (enchantment == Enchantments.MENDING)
+    public boolean canApplyAtEnchantingTable( ItemStack stack, Enchantment enchantment ) {
+        if( enchantment == Enchantments.MENDING )
             return false;
-
-        return super.canApplyAtEnchantingTable(stack, enchantment);
+        
+        return super.canApplyAtEnchantingTable( stack, enchantment );
     }
-
+    
     @Override
-    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
-        return !newStack.is(oldStack.getItem());
+    public boolean shouldCauseBlockBreakReset( ItemStack oldStack, ItemStack newStack ) {
+        return !newStack.is( oldStack.getItem() );
     }
-
+    
     @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        if (book.getEnchantmentLevel(Enchantments.MENDING) > 0)
+    public boolean isBookEnchantable( ItemStack stack, ItemStack book ) {
+        if( book.getEnchantmentLevel( Enchantments.MENDING ) > 0 )
             return false;
-
-        return super.isBookEnchantable(stack, book);
+        
+        return super.isBookEnchantable( stack, book );
     }
-
+    
     @Override
-    public Component getName(ItemStack itemStack) {
-        Component alteredName = ArtifactUtils.getItemDisplayName(itemStack);
-
-        if (alteredName == null)
-            return super.getName(itemStack);
-
+    public Component getName( ItemStack itemStack ) {
+        Component alteredName = ArtifactUtils.getItemDisplayName( itemStack );
+        
+        if( alteredName == null )
+            return super.getName( itemStack );
+        
         return alteredName;
     }
 }

@@ -16,51 +16,51 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public class TriggerTypeArgument implements ArgumentType<TriggerType> {
-
-    private static final DynamicCommandExceptionType ERROR_INVALID_TRIGGER = new DynamicCommandExceptionType((o) -> Component.translatable(References.ERROR_INVALID_TRIGGER, o));
-    private static final Collection<String> EXAMPLES = Arrays.asList("use", "inventory_tick", "");
-
-
+    
+    private static final DynamicCommandExceptionType ERROR_INVALID_TRIGGER = new DynamicCommandExceptionType( ( o ) -> Component.translatable( References.ERROR_INVALID_TRIGGER, o ) );
+    private static final Collection<String> EXAMPLES = Arrays.asList( "use", "inventory_tick", "" );
+    
+    
     public TriggerTypeArgument() {
-
+    
     }
-
+    
     public static TriggerTypeArgument triggerType() {
         return new TriggerTypeArgument();
     }
-
+    
     @Override
-    public TriggerType parse(StringReader stringReader) throws CommandSyntaxException {
+    public TriggerType parse( StringReader stringReader ) throws CommandSyntaxException {
         String s = stringReader.readUnquotedString();
-        TriggerType triggerType = TriggerType.getFromName(s);
-
-        if (triggerType == null) throw ERROR_INVALID_TRIGGER.create(s);
-
+        TriggerType triggerType = TriggerType.getFromName( s );
+        
+        if( triggerType == null ) throw ERROR_INVALID_TRIGGER.create( s );
+        
         return triggerType;
     }
-
-    public static <S> TriggerType getTriggerType(CommandContext<S> context, String s) {
-        return context.getArgument(s, TriggerType.class);
+    
+    public static <S> TriggerType getTriggerType( CommandContext<S> context, String s ) {
+        return context.getArgument( s, TriggerType.class );
     }
-
+    
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder suggestionsBuilder) {
-        if (suggestionsBuilder.getRemaining().isEmpty()) {
-            for (TriggerType triggerType : TriggerType.values()) {
-                suggestionsBuilder.suggest(triggerType.getName());
+    public <S> CompletableFuture<Suggestions> listSuggestions( CommandContext<S> context, SuggestionsBuilder suggestionsBuilder ) {
+        if( suggestionsBuilder.getRemaining().isEmpty() ) {
+            for( TriggerType triggerType : TriggerType.values() ) {
+                suggestionsBuilder.suggest( triggerType.getName() );
             }
             return suggestionsBuilder.buildFuture();
         }
-
-        for (TriggerType triggerType : TriggerType.values()) {
-
-            if (triggerType.getName().contains(suggestionsBuilder.getRemaining())) {
-                suggestionsBuilder.suggest(triggerType.getName());
+        
+        for( TriggerType triggerType : TriggerType.values() ) {
+            
+            if( triggerType.getName().contains( suggestionsBuilder.getRemaining() ) ) {
+                suggestionsBuilder.suggest( triggerType.getName() );
             }
         }
         return suggestionsBuilder.buildFuture();
     }
-
+    
     @Override
     public Collection<String> getExamples() {
         return EXAMPLES;

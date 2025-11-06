@@ -21,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -38,133 +37,133 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, CamoBlock {
-
+    
     /** The vanilla dispenser behavior registry is copied over to this one during {@link net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent} */
     private static Object2ObjectOpenHashMap<Item, DispenseItemBehavior> DISPENSER_BEHAVIORS;
-
+    
     /** Default dispense behavior for instances of DispensibleContainerItems. */
     private static final DispenseItemBehavior defaultDispensibleBehavior = new DefaultDispenseItemBehavior() {
         private final DefaultDispenseItemBehavior defaultBehavior = new DefaultDispenseItemBehavior();
-
-        public ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+        
+        public ItemStack execute( BlockSource blockSource, ItemStack itemStack ) {
             DispensibleContainerItem dispensibleItem = (DispensibleContainerItem) itemStack.getItem();
-            BlockPos pos = blockSource.getPos().relative(blockSource.getBlockState().getValue(DispenserBlock.FACING));
+            BlockPos pos = blockSource.getPos().relative( blockSource.getBlockState().getValue( DispenserBlock.FACING ) );
             Level level = blockSource.getLevel();
-
-            if (dispensibleItem.emptyContents(null, level, pos, null, itemStack)) {
-                dispensibleItem.checkExtraContent(null, level, itemStack, pos);
-                return new ItemStack(Items.BUCKET);
+            
+            if( dispensibleItem.emptyContents( null, level, pos, null, itemStack ) ) {
+                dispensibleItem.checkExtraContent( null, level, itemStack, pos );
+                return new ItemStack( Items.BUCKET );
             }
             else {
-                return defaultBehavior.dispense(blockSource, itemStack);
+                return defaultBehavior.dispense( blockSource, itemStack );
             }
         }
     };
-
-
+    
+    
     public CamoDispenserBlock() {
-        super(BlockBehaviour.Properties.of()
-                .sound(SoundType.STONE)
+        super( BlockBehaviour.Properties.of()
+                .sound( SoundType.STONE )
                 .requiresCorrectToolForDrops()
-                .strength(1.5F, 1.0F));
-
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TRIGGERED, false));
+                .strength( 1.5F, 1.0F ) );
+        
+        registerDefaultState( stateDefinition.any().setValue( FACING, Direction.NORTH ).setValue( TRIGGERED, false ) );
     }
-
+    
     public static void setupBehaviors() {
         // New behaviors also meant for the vanilla dispenser
-        DispenserBlock.registerBehavior(MRItems.QUICKSAND_BUCKET.get(), defaultDispensibleBehavior);
-
+        DispenserBlock.registerBehavior( MRItems.QUICKSAND_BUCKET.get(), defaultDispensibleBehavior );
+        
         // Copy vanilla behavior first
-        DISPENSER_BEHAVIORS = new Object2ObjectOpenHashMap<>(DispenserBlock.DISPENSER_REGISTRY);
-        DISPENSER_BEHAVIORS.defaultReturnValue(new DefaultDispenseItemBehavior());
-
+        DISPENSER_BEHAVIORS = new Object2ObjectOpenHashMap<>( DispenserBlock.DISPENSER_REGISTRY );
+        DISPENSER_BEHAVIORS.defaultReturnValue( new DefaultDispenseItemBehavior() );
+        
         // Swung Sword behavior
-        for (Item item : ForgeRegistries.ITEMS.getValues()) {
-            if (item instanceof SwordItem swordItem) {
-                DISPENSER_BEHAVIORS.put(item, new OptionalDispenseItemBehavior() {
-                    protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+        for( Item item : ForgeRegistries.ITEMS.getValues() ) {
+            if( item instanceof SwordItem swordItem ) {
+                DISPENSER_BEHAVIORS.put( item, new OptionalDispenseItemBehavior() {
+                    protected ItemStack execute( BlockSource blockSource, ItemStack itemStack ) {
                         Level level = blockSource.getLevel();
-                        setSuccess(true);
-                        Direction direction = blockSource.getBlockState().getValue(DispenserBlock.FACING);
-                        BlockPos blockPos = blockSource.getPos().relative(direction);
-                        BlockState state = level.getBlockState(blockPos);
-
-                        if (state.isFaceSturdy(level, blockPos, direction.getOpposite()) || !level.getEntitiesOfClass(SwungSword.class, new AABB(blockPos)).isEmpty()) {
-                            setSuccess(false);
+                        setSuccess( true );
+                        Direction direction = blockSource.getBlockState().getValue( DispenserBlock.FACING );
+                        BlockPos blockPos = blockSource.getPos().relative( direction );
+                        BlockState state = level.getBlockState( blockPos );
+                        
+                        if( state.isFaceSturdy( level, blockPos, direction.getOpposite() ) || !level.getEntitiesOfClass( SwungSword.class, new AABB( blockPos ) ).isEmpty() ) {
+                            setSuccess( false );
                             return itemStack;
                         }
-                        SwungSword sword = new SwungSword(level, blockPos.getX() + 0.5D, blockPos.getY(), blockPos.getZ() + 0.5D);
-                        sword.setSwordItem(swordItem);
-                        sword.setAttackDirection(direction);
-                        level.addFreshEntity(sword);
-
-                        if (itemStack.hurt(1, level.random, null)) {
-                            itemStack.setCount(0);
+                        SwungSword sword = new SwungSword( level, blockPos.getX() + 0.5D, blockPos.getY(), blockPos.getZ() + 0.5D );
+                        sword.setSwordItem( swordItem );
+                        sword.setAttackDirection( direction );
+                        level.addFreshEntity( sword );
+                        
+                        if( itemStack.hurt( 1, level.random, null ) ) {
+                            itemStack.setCount( 0 );
                         }
                         return itemStack;
                     }
-                });
+                } );
             }
         }
     }
-
+    
     @Override
-    protected DispenseItemBehavior getDispenseMethod(ItemStack itemStack) {
-        return DISPENSER_BEHAVIORS.get(itemStack.getItem());
+    protected DispenseItemBehavior getDispenseMethod( ItemStack itemStack ) {
+        return DISPENSER_BEHAVIORS.get( itemStack.getItem() );
     }
-
+    
     @Override
-    protected void dispenseFrom(ServerLevel serverLevel, BlockPos pos) {
-        BlockSourceImpl blockSource = new BlockSourceImpl(serverLevel, pos);
+    protected void dispenseFrom( ServerLevel serverLevel, BlockPos pos ) {
+        BlockSourceImpl blockSource = new BlockSourceImpl( serverLevel, pos );
         DispenserBlockEntity dispenser = blockSource.getEntity();
-        int slot = dispenser.getRandomSlot(serverLevel.random);
-
-        if (slot < 0) {
-            serverLevel.levelEvent(1001, pos, 0);
-            serverLevel.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
+        int slot = dispenser.getRandomSlot( serverLevel.random );
+        
+        if( slot < 0 ) {
+            serverLevel.levelEvent( 1001, pos, 0 );
+            serverLevel.gameEvent( null, GameEvent.BLOCK_ACTIVATE, pos );
         }
         else {
-            ItemStack itemStack = dispenser.getItem(slot);
-            DispenseItemBehavior behavior = DISPENSER_BEHAVIORS.get(itemStack.getItem());
-
+            ItemStack itemStack = dispenser.getItem( slot );
+            DispenseItemBehavior behavior = DISPENSER_BEHAVIORS.get( itemStack.getItem() );
+            
             try {
-                if (behavior != DispenseItemBehavior.NOOP) {
-                    dispenser.setItem(slot, behavior.dispense(blockSource, itemStack));
+                if( behavior != DispenseItemBehavior.NOOP ) {
+                    dispenser.setItem( slot, behavior.dispense( blockSource, itemStack ) );
                 }
             }
-            catch (Exception e) {
+            catch( Exception e ) {
                 e.printStackTrace();
             }
         }
     }
-
+    
     @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        return getLightEmission(level, pos, super.getLightEmission(state, level, pos));
+    public int getLightEmission( BlockState state, BlockGetter level, BlockPos pos ) {
+        return getLightEmission( level, pos, super.getLightEmission( state, level, pos ) );
     }
-
+    
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return use(level, pos, player, hand, null, (player1, menuProvider) -> {
-            player.openMenu(menuProvider);
-            player.awardStat(Stats.INSPECT_DISPENSER);
-        });
+    public InteractionResult use( BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult ) {
+        return use( level, pos, player, hand, null, ( player1, menuProvider ) -> {
+            player.openMenu( menuProvider );
+            player.awardStat( Stats.INSPECT_DISPENSER );
+        } );
     }
-
+    
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        CamoDispenserBlockEntity arrowTrap = new CamoDispenserBlockEntity(pos, state);
-        arrowTrap.setCamoState(CamoBlockEntity.defaultCamoState.get());
+    public BlockEntity newBlockEntity( BlockPos pos, BlockState state ) {
+        CamoDispenserBlockEntity arrowTrap = new CamoDispenserBlockEntity( pos, state );
+        arrowTrap.setCamoState( CamoBlockEntity.defaultCamoState.get() );
         return arrowTrap;
     }
-
+    
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockState state, BlockEntityType<T> type ) {
         return type == MRBlockEntities.CAMO_DISPENSER.get()
-                ? (_level, _pos, _state, _blockEntity) -> CamoDispenserBlockEntity.tick(_level, _pos, _state, (CamoDispenserBlockEntity) _blockEntity)
+                ? ( _level, _pos, _state, _blockEntity ) -> CamoDispenserBlockEntity.tick( _level, _pos, _state, (CamoDispenserBlockEntity) _blockEntity )
                 : null;
     }
 }

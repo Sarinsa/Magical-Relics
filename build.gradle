@@ -92,6 +92,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     runtimeOnly fg.deobf("curse.maven:crust_src-873570:${crust_src_version}")
+    compileOnly fg.deobf("curse.maven:crust_api-873570:${crust_api_version}")
 
     runtimeOnly fg.deobf("com.telepathicgrunt:StructureVoidToggle-Forge:${structurevt_version}+${mc_version}")
     implementation fg.deobf("curse.maven:jade-324717:${jade_version}")

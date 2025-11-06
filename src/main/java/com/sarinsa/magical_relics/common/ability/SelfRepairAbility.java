@@ -23,21 +23,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SelfRepairAbility extends BaseArtifactAbility {
-
-
+    
+    
     private static final String[] PREFIXES = {
-            createPrefix("self_repair", "repairing"),
-            createPrefix("self_repair", "recharging")
+            createPrefix( "self_repair", "repairing" ),
+            createPrefix( "self_repair", "recharging" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("self_repair", "renewal")
+            createSuffix( "self_repair", "renewal" )
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.ARMOR_TICK, TriggerType.HELD, TriggerType.INVENTORY_TICK
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.AMULET,
             ArtifactCategory.RING,
@@ -49,89 +49,92 @@ public class SelfRepairAbility extends BaseArtifactAbility {
             ArtifactCategory.SWORD,
             ArtifactCategory.AXE
     );
-
+    
     private static ForgeConfigSpec.IntValue cooldown;
-
-
+    
+    
     public SelfRepairAbility() {
-
+    
     }
-
-
-    @AbilityConfig(abilityId = "magical_relics:self_repair")
-    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
-        cooldown = configBuilder.comment("How many ticks of cooldown must pass before the next time this ability can restore a point of durability")
-                .defineInRange("cooldown", 120, 5, 100000);
+    
+    
+    @AbilityConfig( abilityId = "magical_relics:self_repair" )
+    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
+        cooldown = configBuilder.comment( "How many ticks of cooldown must pass before the next time this ability can restore a point of durability" )
+                .defineInRange( "cooldown", 120, 5, 100000 );
     }
-
+    
     @Override
-    public void onInventoryTick(ItemStack artifact, Level level, Entity entity, int slot, boolean isSelectedItem) {
-        handleRepair(artifact, level, entity);
+    public void onInventoryTick( ItemStack artifact, Level level, Entity entity, int slot, boolean isSelectedItem ) {
+        handleRepair( artifact, level, entity );
     }
-
+    
     @Override
-    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
-        handleRepair(artifact, level, player);
+    public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
+        handleRepair( artifact, level, player );
     }
-
+    
     @Override
-    public void onHeld(Level level, Player player, ItemStack artifact, EquipmentSlot slot) {
-        handleRepair(artifact, level, player);
+    public void onHeld( Level level, Player player, ItemStack artifact, EquipmentSlot slot ) {
+        handleRepair( artifact, level, player );
     }
-
-    private void handleRepair(ItemStack artifact, Level level, Entity entity) {
-        if (artifact.getDamageValue() > 0) {
-            if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-                artifact.hurt(-1, level.random, entity instanceof ServerPlayer serverPlayer ? serverPlayer : null);
-
-                ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
+    
+    private void handleRepair( ItemStack artifact, Level level, Entity entity ) {
+        if( artifact.getDamageValue() > 0 ) {
+            if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+                artifact.hurt( -1, level.random, entity instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                
+                ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
             }
         }
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
-        if(isArmor) {
-            return random.nextInt(2) == 0 ? TriggerType.ARMOR_TICK : TriggerType.HELD;
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
+        if( isArmor ) {
+            return random.nextInt( 2 ) == 0 ? TriggerType.ARMOR_TICK : TriggerType.HELD;
         }
-        return random.nextInt(2) == 0 ? TriggerType.INVENTORY_TICK : TriggerType.HELD;
+        return random.nextInt( 2 ) == 0 ? TriggerType.INVENTORY_TICK : TriggerType.HELD;
     }
-
+    
     @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
     public boolean showCooldownSymbol() {
         return false;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        if (type == null) return null;
-
-        return switch (type) {
-            case INVENTORY_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.inventory_tick");
-            case HELD -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.held");
-            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.armor_tick");
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        if( type == null ) return null;
+        
+        return switch( type ) {
+            case INVENTORY_TICK ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.inventory_tick" );
+            case HELD ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.held" );
+            default ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.armor_tick" );
         };
     }
 }

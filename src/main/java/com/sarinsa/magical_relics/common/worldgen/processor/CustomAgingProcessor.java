@@ -28,86 +28,86 @@ import java.util.Map;
  * such as camo dispensers, illusionary blocks and crumbling blocks.
  */
 public class CustomAgingProcessor extends StructureProcessor {
-
-    public static final Codec<CustomAgingProcessor> CODEC = Codec.FLOAT.fieldOf("oldness")
-            .xmap(CustomAgingProcessor::new, (processor) -> processor.oldness)
+    
+    public static final Codec<CustomAgingProcessor> CODEC = Codec.FLOAT.fieldOf( "oldness" )
+            .xmap( CustomAgingProcessor::new, ( processor ) -> processor.oldness )
             .codec();
-
-
+    
+    
     private static final Map<Block, Block> REPLACEMENTS = new HashMap<>();
-
-
+    
+    
     // Its chewsday innit?
     public static void init() {
-        REPLACEMENTS.put(Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE);
-        REPLACEMENTS.put(Blocks.COBBLESTONE_SLAB, Blocks.MOSSY_COBBLESTONE_SLAB);
-        REPLACEMENTS.put(Blocks.COBBLESTONE_STAIRS, Blocks.MOSSY_COBBLESTONE_STAIRS);
-        REPLACEMENTS.put(Blocks.COBBLESTONE_WALL, Blocks.MOSSY_COBBLESTONE_WALL);
-        REPLACEMENTS.put(Blocks.STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS);
-        REPLACEMENTS.put(Blocks.STONE_BRICK_SLAB, Blocks.MOSSY_STONE_BRICK_SLAB);
-        REPLACEMENTS.put(Blocks.STONE_BRICK_STAIRS, Blocks.MOSSY_STONE_BRICK_STAIRS);
-        REPLACEMENTS.put(Blocks.STONE_BRICK_WALL, Blocks.MOSSY_COBBLESTONE_WALL);
-        REPLACEMENTS.put(MRBlocks.CRUMBLING_COBBLESTONE.get(), MRBlocks.CRUMBLING_MOSSY_COBBLESTONE.get());
-        REPLACEMENTS.put(MRBlocks.CRUMBLING_STONE_BRICKS.get(), MRBlocks.CRUMBLING_MOSSY_STONE_BRICKS.get());
-        REPLACEMENTS.put(Blocks.BOOKSHELF, Blocks.COBWEB);
+        REPLACEMENTS.put( Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE );
+        REPLACEMENTS.put( Blocks.COBBLESTONE_SLAB, Blocks.MOSSY_COBBLESTONE_SLAB );
+        REPLACEMENTS.put( Blocks.COBBLESTONE_STAIRS, Blocks.MOSSY_COBBLESTONE_STAIRS );
+        REPLACEMENTS.put( Blocks.COBBLESTONE_WALL, Blocks.MOSSY_COBBLESTONE_WALL );
+        REPLACEMENTS.put( Blocks.STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS );
+        REPLACEMENTS.put( Blocks.STONE_BRICK_SLAB, Blocks.MOSSY_STONE_BRICK_SLAB );
+        REPLACEMENTS.put( Blocks.STONE_BRICK_STAIRS, Blocks.MOSSY_STONE_BRICK_STAIRS );
+        REPLACEMENTS.put( Blocks.STONE_BRICK_WALL, Blocks.MOSSY_COBBLESTONE_WALL );
+        REPLACEMENTS.put( MRBlocks.CRUMBLING_COBBLESTONE.get(), MRBlocks.CRUMBLING_MOSSY_COBBLESTONE.get() );
+        REPLACEMENTS.put( MRBlocks.CRUMBLING_STONE_BRICKS.get(), MRBlocks.CRUMBLING_MOSSY_STONE_BRICKS.get() );
+        REPLACEMENTS.put( Blocks.BOOKSHELF, Blocks.COBWEB );
     }
-
+    
     private final float oldness;
-
-
-    public CustomAgingProcessor(float oldness) {
+    
+    
+    public CustomAgingProcessor( float oldness ) {
         this.oldness = oldness;
     }
-
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    
+    
+    @SuppressWarnings( { "unchecked", "rawtypes" } )
     @Nullable
-    public StructureTemplate.StructureBlockInfo process(LevelReader level, BlockPos p_74017_, BlockPos p_74018_, StructureTemplate.StructureBlockInfo p_74019_, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template) {
-        RandomSource random = structureSettings.getRandom(blockInfo.pos());
+    public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos p_74017_, BlockPos p_74018_, StructureTemplate.StructureBlockInfo p_74019_, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
+        RandomSource random = structureSettings.getRandom( blockInfo.pos() );
         BlockState state = blockInfo.state();
         BlockPos blockpos = blockInfo.pos();
         BlockState newState = null;
-
-        if (state.getBlock() instanceof CamoBlock) {
+        
+        if( state.getBlock() instanceof CamoBlock ) {
             CompoundTag blockEntityTag = blockInfo.nbt();
-
+            
             // Don't bother checking for camo blocks
             // that don't have an existing camo.
-            if (blockEntityTag != null && random.nextFloat() < oldness) {
-                CompoundTag camoTag = blockEntityTag.getCompound("CamoState");
-                BlockState nbtBlockState = NbtUtils.readBlockState(level.holderLookup(Registries.BLOCK), camoTag);
-
-                if (nbtBlockState.is(Blocks.COBBLESTONE)) {
-                    writeToCamo(blockEntityTag, Blocks.MOSSY_COBBLESTONE.defaultBlockState());
+            if( blockEntityTag != null && random.nextFloat() < oldness ) {
+                CompoundTag camoTag = blockEntityTag.getCompound( "CamoState" );
+                BlockState nbtBlockState = NbtUtils.readBlockState( level.holderLookup( Registries.BLOCK ), camoTag );
+                
+                if( nbtBlockState.is( Blocks.COBBLESTONE ) ) {
+                    writeToCamo( blockEntityTag, Blocks.MOSSY_COBBLESTONE.defaultBlockState() );
                 }
-                else if (nbtBlockState.is(Blocks.STONE_BRICKS)) {
-                    writeToCamo(blockEntityTag, Blocks.MOSSY_STONE_BRICKS.defaultBlockState());
+                else if( nbtBlockState.is( Blocks.STONE_BRICKS ) ) {
+                    writeToCamo( blockEntityTag, Blocks.MOSSY_STONE_BRICKS.defaultBlockState() );
                 }
             }
         }
         else {
-            if (REPLACEMENTS.containsKey(blockInfo.state().getBlock())) {
-                if (random.nextFloat() < oldness) {
-                    newState = REPLACEMENTS.get(state.getBlock()).defaultBlockState();
-
+            if( REPLACEMENTS.containsKey( blockInfo.state().getBlock() ) ) {
+                if( random.nextFloat() < oldness ) {
+                    newState = REPLACEMENTS.get( state.getBlock() ).defaultBlockState();
+                    
                     try {
-                        for (Property property : state.getProperties()) {
-                            newState = newState.trySetValue(property, state.getValue(property));
+                        for( Property property : state.getProperties() ) {
+                            newState = newState.trySetValue( property, state.getValue( property ) );
                         }
                     }
-                    catch (Exception e) {
-                        MagicalRelics.LOG.error("Aging processor failed to copy block state properties from state '" + state + "' to state '" + newState + "'");
+                    catch( Exception e ) {
+                        MagicalRelics.LOG.error( "Aging processor failed to copy block state properties from state '" + state + "' to state '" + newState + "'" );
                     }
                 }
             }
         }
-        return newState != null ? new StructureTemplate.StructureBlockInfo(blockpos, newState, blockInfo.nbt()) : blockInfo;
+        return newState != null ? new StructureTemplate.StructureBlockInfo( blockpos, newState, blockInfo.nbt() ) : blockInfo;
     }
-
-    private static void writeToCamo(CompoundTag tag, BlockState state) {
-        tag.put("CamoState", NbtUtils.writeBlockState(state));
+    
+    private static void writeToCamo( CompoundTag tag, BlockState state ) {
+        tag.put( "CamoState", NbtUtils.writeBlockState( state ) );
     }
-
+    
     @Override
     protected StructureProcessorType<?> getType() {
         return MRStructureProcessors.CUSTOM_MOSSIFIER.get();

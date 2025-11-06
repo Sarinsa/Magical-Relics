@@ -29,26 +29,26 @@ import top.theillusivec4.curios.api.SlotContext;
 import java.util.List;
 
 public class FoodieAbility extends BaseArtifactAbility {
-
+    
     private static final String[] PREFIXES = {
-            createPrefix("foodie", "well_fed"),
-            createPrefix("foodie", "porky"),
-            createPrefix("foodie", "gluttonous")
+            createPrefix( "foodie", "well_fed" ),
+            createPrefix( "foodie", "porky" ),
+            createPrefix( "foodie", "gluttonous" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("foodie", "saturation"),
-            createSuffix("foodie", "noms"),
-            createSuffix("foodie", "munching")
+            createSuffix( "foodie", "saturation" ),
+            createSuffix( "foodie", "noms" ),
+            createSuffix( "foodie", "munching" )
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.USE,
             TriggerType.USER_ATTACKING,
             TriggerType.ARMOR_TICK,
             TriggerType.CURIO_TICK
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.RING,
             ArtifactCategory.AMULET,
@@ -59,82 +59,82 @@ public class FoodieAbility extends BaseArtifactAbility {
             ArtifactCategory.CHESTPLATE,
             ArtifactCategory.HELMET
     );
-
+    
     private static ForgeConfigSpec.IntValue cooldown;
-
-
+    
+    
     public FoodieAbility() {
-
+    
     }
-
-    @AbilityConfig(abilityId = "magical_relics:foodie")
-    public static void buildEntries(ForgeConfigSpec.Builder configBuilder) {
-        cooldown = configBuilder.comment("How many ticks of cooldown to put this ability on when it has been used")
-                .defineInRange("cooldown", 20, 5, 100000);
+    
+    @AbilityConfig( abilityId = "magical_relics:foodie" )
+    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
+        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
+                .defineInRange( "cooldown", 20, 5, 100000 );
     }
-
+    
     @Override
-    public boolean onUse(Level level, Player player, ItemStack artifact) {
-        if (!player.getFoodData().needsFood()) return false;
-
-        if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
-            ArtifactUtils.setAbilityCooldown(artifact, this, cooldown.get());
+    public boolean onUse( Level level, Player player, ItemStack artifact ) {
+        if( !player.getFoodData().needsFood() ) return false;
+        
+        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
             RandomSource random = player.getRandom();
-
-            if (!level.isClientSide) {
-                player.getFoodData().eat(2, 0.0F);
-                playEatSound((ServerLevel) player.level(), player.blockPosition(), random);
+            
+            if( !level.isClientSide ) {
+                player.getFoodData().eat( 2, 0.0F );
+                playEatSound( (ServerLevel) player.level(), player.blockPosition(), random );
             }
-            artifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
             return true;
         }
         return false;
     }
-
+    
     @Override
-    public void onDamageMob(ItemStack artifact, Player player, LivingEntity attackedMob) {
-        if (!player.getFoodData().needsFood()) return;
-
-        if (!player.level().isClientSide) {
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+        if( !player.getFoodData().needsFood() ) return;
+        
+        if( !player.level().isClientSide ) {
             RandomSource random = player.getRandom();
-
-            if (random.nextInt(4) == 0) {
-                player.getFoodData().eat(1, 0.0F);
-                playEatSound((ServerLevel) player.level(), player.blockPosition(), random);
-                artifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            
+            if( random.nextInt( 4 ) == 0 ) {
+                player.getFoodData().eat( 1, 0.0F );
+                playEatSound( (ServerLevel) player.level(), player.blockPosition(), random );
+                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
             }
         }
     }
-
+    
     @Override
-    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
-        if (level.isClientSide) return;
-
+    public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
+        if( level.isClientSide ) return;
+        
         FoodData foodData = player.getFoodData();
-
-        if (foodData.getFoodLevel() < 10) {
+        
+        if( foodData.getFoodLevel() < 10 ) {
             final int restoredHunger = 10 - foodData.getFoodLevel();
-            foodData.eat(restoredHunger, 0.0F);
-            playEatSound((ServerLevel) level, player.blockPosition(), player.getRandom());
-            artifact.hurtAndBreak(restoredHunger, player, (p) -> p.broadcastBreakEvent(slot));
+            foodData.eat( restoredHunger, 0.0F );
+            playEatSound( (ServerLevel) level, player.blockPosition(), player.getRandom() );
+            artifact.hurtAndBreak( restoredHunger, player, ( p ) -> p.broadcastBreakEvent( slot ) );
         }
     }
-
+    
     @Override
-    public void onCurioTick(ItemStack artifact, Level level, Player player, SlotContext slotContext) {
-        if (level.isClientSide) return;
-
+    public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
+        if( level.isClientSide ) return;
+        
         FoodData foodData = player.getFoodData();
-
-        if (foodData.getFoodLevel() < 10) {
+        
+        if( foodData.getFoodLevel() < 10 ) {
             final int restoredHunger = 10 - foodData.getFoodLevel();
-            foodData.eat(restoredHunger, 0.0F);
-            playEatSound((ServerLevel) level, player.blockPosition(), player.getRandom());
-            artifact.hurtAndBreak(restoredHunger, player, (p) -> CuriosApi.broadcastCurioBreakEvent(slotContext));
+            foodData.eat( restoredHunger, 0.0F );
+            playEatSound( (ServerLevel) level, player.blockPosition(), player.getRandom() );
+            artifact.hurtAndBreak( restoredHunger, player, ( p ) -> CuriosApi.broadcastCurioBreakEvent( slotContext ) );
         }
     }
-
-    private static void playEatSound(ServerLevel level, BlockPos pos, RandomSource random) {
+    
+    private static void playEatSound( ServerLevel level, BlockPos pos, RandomSource random ) {
         level.playSound(
                 null,
                 pos,
@@ -144,45 +144,49 @@ public class FoodieAbility extends BaseArtifactAbility {
                 random.nextFloat() - (random.nextFloat() * 0.2F) + 1.0F
         );
     }
-
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Override
-    public @Nullable TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
-        if (isArmor) return TriggerType.ARMOR_TICK;
-
-        if (isCurio) return random.nextBoolean() ? TriggerType.CURIO_TICK : TriggerType.USE;
-
+    public @Nullable TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
+        if( isArmor ) return TriggerType.ARMOR_TICK;
+        
+        if( isCurio ) return random.nextBoolean() ? TriggerType.CURIO_TICK : TriggerType.USE;
+        
         return random.nextBoolean() ? TriggerType.USE : TriggerType.USER_ATTACKING;
     }
-
+    
     @Override
     public @NotNull List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        if (type == null) return null;
-
-        return switch (type) {
-            case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.use");
-            case USER_ATTACKING -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.user_attacking");
-            case CURIO_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.curio");
-            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.armor_tick");
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        if( type == null ) return null;
+        
+        return switch( type ) {
+            case USE ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.use" );
+            case USER_ATTACKING ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.user_attacking" );
+            case CURIO_TICK ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.curio" );
+            default ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.armor_tick" );
         };
     }
 }

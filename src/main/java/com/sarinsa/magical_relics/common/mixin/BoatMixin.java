@@ -11,15 +11,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Boat.class)
+@Mixin( Boat.class )
 public abstract class BoatMixin extends Entity implements IForgeBoat {
-
-    public BoatMixin(EntityType<?> type, Level level) {
-        super(type, level);
+    
+    public BoatMixin( EntityType<?> type, Level level ) {
+        super( type, level );
     }
-
-    @Inject(method = "controlBoat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/Boat;setPaddleState(ZZ)V", ordinal = 0))
-    public void onControlBoat(CallbackInfo ci) {
-        ClientMixinHooks.onControlBoat((Boat) (Object) this, ci);
+    
+    @Inject( method = "controlBoat", at = @At( value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/Boat;setPaddleState(ZZ)V", ordinal = 0 ) )
+    public void onControlBoat( CallbackInfo ci ) {
+        ClientMixinHooks.onControlBoat( (Boat) (Object) this, ci );
     }
 }

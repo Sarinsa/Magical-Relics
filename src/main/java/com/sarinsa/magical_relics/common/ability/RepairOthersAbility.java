@@ -7,12 +7,10 @@ import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.item.ItemArtifact;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,24 +24,24 @@ import top.theillusivec4.curios.api.SlotContext;
 import java.util.List;
 
 public class RepairOthersAbility extends BaseArtifactAbility {
-
-
+    
+    
     private static final String[] PREFIXES = {
-            createPrefix("repair_others", "repairing"),
-            createPrefix("repair_others", "recharging")
+            createPrefix( "repair_others", "repairing" ),
+            createPrefix( "repair_others", "recharging" )
     };
-
+    
     private static final String[] SUFFIXES = {
-            createSuffix("repair_others", "renewal")
+            createSuffix( "repair_others", "renewal" )
     };
-
+    
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
             TriggerType.ARMOR_TICK,
             TriggerType.HELD,
             TriggerType.USE,
             TriggerType.CURIO_TICK
     );
-
+    
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
             ArtifactCategory.WAND,
             ArtifactCategory.BELT,
@@ -52,128 +50,132 @@ public class RepairOthersAbility extends BaseArtifactAbility {
             ArtifactCategory.CHESTPLATE,
             ArtifactCategory.HELMET
     );
-
-
+    
+    
     public RepairOthersAbility() {
-
+    
     }
-
+    
     @Override
-    public boolean onUse(Level level, Player player, ItemStack artifact) {
-        if (!ArtifactUtils.isAbilityOnCooldown(artifact, this)) {
+    public boolean onUse( Level level, Player player, ItemStack artifact ) {
+        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             ItemStack stackToRepair = ItemStack.EMPTY;
-
-            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                ItemStack checkedStack = player.getInventory().getItem(i);
-
-                if (!(checkedStack.getItem() instanceof ItemArtifact) && checkedStack.getDamageValue() > 0) {
-                    stackToRepair = player.getInventory().getItem(i);
+            
+            for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
+                ItemStack checkedStack = player.getInventory().getItem( i );
+                
+                if( !(checkedStack.getItem() instanceof ItemArtifact) && checkedStack.getDamageValue() > 0 ) {
+                    stackToRepair = player.getInventory().getItem( i );
                     break;
                 }
             }
-
-            if (!stackToRepair.isEmpty()) {
-                stackToRepair.hurt(-1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null);
-                artifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                ArtifactUtils.setAbilityCooldown(artifact, this, 20);
+            
+            if( !stackToRepair.isEmpty() ) {
+                stackToRepair.hurt( -1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
+                ArtifactUtils.setAbilityCooldown( artifact, this, 20 );
                 return true;
             }
         }
         return false;
     }
-
+    
     @Override
-    public void onHeld(Level level, Player player, ItemStack artifact, EquipmentSlot slot) {
-        if (MREventListener.getRepairTick() % 200 == 0) {
+    public void onHeld( Level level, Player player, ItemStack artifact, EquipmentSlot slot ) {
+        if( MREventListener.getRepairTick() % 200 == 0 ) {
             ItemStack stackToRepair = ItemStack.EMPTY;
-
-            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                ItemStack checkedStack = player.getInventory().getItem(i);
-
-                if (!(checkedStack.getItem() instanceof ItemArtifact) && checkedStack.getDamageValue() > 0) {
-                    stackToRepair = player.getInventory().getItem(i);
+            
+            for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
+                ItemStack checkedStack = player.getInventory().getItem( i );
+                
+                if( !(checkedStack.getItem() instanceof ItemArtifact) && checkedStack.getDamageValue() > 0 ) {
+                    stackToRepair = player.getInventory().getItem( i );
                     break;
                 }
             }
-
-            if (!stackToRepair.isEmpty()) {
-                stackToRepair.hurt(-1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null);
-                artifact.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(slot));
+            
+            if( !stackToRepair.isEmpty() ) {
+                stackToRepair.hurt( -1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( slot ) );
             }
         }
     }
-
+    
     @Override
-    public void onCurioTick(ItemStack artifact, Level level, Player player, SlotContext slotContext) {
-        if (MREventListener.getRepairTick() % 200 == 0) {
+    public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
+        if( MREventListener.getRepairTick() % 200 == 0 ) {
             ItemStack stackToRepair = ItemStack.EMPTY;
-
-            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                ItemStack checkedStack = player.getInventory().getItem(i);
-
-                if (!(checkedStack.getItem() instanceof ItemArtifact) && checkedStack.getDamageValue() > 0) {
-                    stackToRepair = player.getInventory().getItem(i);
+            
+            for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
+                ItemStack checkedStack = player.getInventory().getItem( i );
+                
+                if( !(checkedStack.getItem() instanceof ItemArtifact) && checkedStack.getDamageValue() > 0 ) {
+                    stackToRepair = player.getInventory().getItem( i );
                     break;
                 }
             }
-
-            if (!stackToRepair.isEmpty()) {
-                stackToRepair.hurt(-1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null);
-                artifact.hurtAndBreak(1, player, (p) -> CuriosApi.broadcastCurioBreakEvent(slotContext));
+            
+            if( !stackToRepair.isEmpty() ) {
+                stackToRepair.hurt( -1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                artifact.hurtAndBreak( 1, player, ( p ) -> CuriosApi.broadcastCurioBreakEvent( slotContext ) );
             }
         }
     }
-
+    
     @Override
-    public void onArmorTick(ItemStack artifact, Level level, Player player, EquipmentSlot slot) {
-        onHeld(level, player, artifact, slot);
+    public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
+        onHeld( level, player, artifact, slot );
     }
-
-
+    
+    
     @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
-
+    
     @Override
     public String[] getSuffixes() {
         return SUFFIXES;
     }
-
+    
     @Nullable
     @Override
-    public TriggerType getRandomTrigger(ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio) {
-        if (isArmor) return TriggerType.ARMOR_TICK;
-        if (isCurio) return TriggerType.CURIO_TICK;
-
-        return random.nextInt(2) == 0 ? TriggerType.USE : TriggerType.HELD;
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
+        if( isArmor ) return TriggerType.ARMOR_TICK;
+        if( isCurio ) return TriggerType.CURIO_TICK;
+        
+        return random.nextInt( 2 ) == 0 ? TriggerType.USE : TriggerType.HELD;
     }
-
+    
     @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
-
+    
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
     }
-
+    
     @Override
     public boolean showCooldownSymbol() {
         return false;
     }
-
+    
     @Override
-    public MutableComponent getAbilityDescription(TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag) {
-        if (type == null) return null;
-
-        return switch (type) {
-            case USE -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.use");
-            case HELD -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.held");
-            case CURIO_TICK -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.curio");
-            default -> Component.translatable(MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.armor_tick");
+    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        if( type == null ) return null;
+        
+        return switch( type ) {
+            case USE ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.use" );
+            case HELD ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.held" );
+            case CURIO_TICK ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.curio" );
+            default ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.armor_tick" );
         };
     }
 }
