@@ -30,9 +30,9 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
@@ -49,7 +49,6 @@ public class QuicksandBlock extends Block implements BucketPickup {
     public static final IntegerProperty LAYERS = IntegerProperty.create( "layers", 1, 16 );
     
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[] {
-            Shapes.empty(),
             Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D ),
             Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D ),
             Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D ),
@@ -66,6 +65,25 @@ public class QuicksandBlock extends Block implements BucketPickup {
             Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 14.0D, 16.0D ),
             Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D ),
             Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D )
+    };
+    
+    protected static final AABB[] TOUCH_SHAPE_BY_LAYER = new AABB[] {
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 11.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 14.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D ).toAabbs().get( 0 ),
+            Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D ).toAabbs().get( 0 )
     };
     
     
@@ -86,19 +104,19 @@ public class QuicksandBlock extends Block implements BucketPickup {
     @Override
     @SuppressWarnings( "deprecation" )
     public VoxelShape getShape( BlockState state, BlockGetter level, BlockPos pos, CollisionContext context ) {
-        return SHAPE_BY_LAYER[state.getValue( LAYERS )];
+        return SHAPE_BY_LAYER[state.getValue( LAYERS ) - 1];
     }
     
     @Override
     @SuppressWarnings( "deprecation" )
     public VoxelShape getBlockSupportShape( BlockState state, BlockGetter level, BlockPos pos ) {
-        return SHAPE_BY_LAYER[state.getValue( LAYERS )];
+        return SHAPE_BY_LAYER[state.getValue( LAYERS ) - 1];
     }
     
     @Deprecated
     @SuppressWarnings( "deprecation" )
     public VoxelShape getVisualShape( BlockState state, BlockGetter level, BlockPos pos, CollisionContext context ) {
-        return SHAPE_BY_LAYER[state.getValue( LAYERS )];
+        return SHAPE_BY_LAYER[state.getValue( LAYERS ) - 1];
     }
     
     @Override
@@ -110,7 +128,11 @@ public class QuicksandBlock extends Block implements BucketPickup {
     @Override
     @SuppressWarnings( "deprecation" )
     public void entityInside( BlockState state, Level level, BlockPos pos, Entity entity ) {
-        entity.makeStuckInBlock( state, new Vec3( 0.5D, 0.2D, 0.5D ) );
+        AABB touchShape = TOUCH_SHAPE_BY_LAYER[state.getValue( LAYERS ) - 1].move( pos );
+        
+        if( touchShape.intersects( entity.getBoundingBox() ) ) {
+            entity.makeStuckInBlock( state, new Vec3( 0.5D, 0.2D, 0.5D ) );
+        }
         
         if( entity instanceof LivingEntity livingEntity && areEyesInQuicksand( livingEntity ) ) {
             livingEntity.hurt( MRDamageTypes.of( level, MRDamageTypes.QUICKSAND ), 1.0F );
