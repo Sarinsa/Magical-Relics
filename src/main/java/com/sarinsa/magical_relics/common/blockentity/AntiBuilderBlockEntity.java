@@ -2,13 +2,13 @@ package com.sarinsa.magical_relics.common.blockentity;
 
 import com.sarinsa.magical_relics.common.block.AntiBuilderBlock;
 import com.sarinsa.magical_relics.common.block.CamoBlock;
-import com.sarinsa.magical_relics.common.core.config.MRGeneralConfig;
+import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.util.References;
 import fathertoast.crust.api.util.BoxShape;
-import fathertoast.crust.api.util.IBlockEntityDebugShapeProvider;
 import fathertoast.crust.api.util.IDebugShape;
+import fathertoast.crust.api.util.IDebugShapeProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityDebugShapeProvider {
+public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapeProvider {
     
     private Direction lastFacing;
     private int[] bbCoordinates;
@@ -72,25 +72,20 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     }
     
     public void recalculateEffectiveArea( Direction direction, int[] bbCoordinates ) {
-        this.bbCoordinates = bbCoordinates;
-        AABB aabb = effectiveArea;
+        int minX = bbCoordinates[0];
+        int minY = bbCoordinates[1];
+        int minZ = bbCoordinates[2];
+        int maxX = bbCoordinates[3];
+        int maxY = bbCoordinates[4];
+        int maxZ = bbCoordinates[5];
         
-        switch( direction ) {
-            case NORTH -> {
-                aabb = new AABB( bbCoordinates[0], bbCoordinates[1], bbCoordinates[2], bbCoordinates[3], bbCoordinates[4], bbCoordinates[5] );
-                break;
-            }
-            case EAST -> {
-            
-            }
-            case SOUTH -> {
-            
-            }
-            case WEST -> {
-            
-            }
-        }
-        setEffectiveArea( aabb );
+        AABB aabb = switch( direction ) {
+            case NORTH -> new AABB( minX, minY, minZ, maxX, maxY, maxZ );
+            case EAST -> new AABB( minX, minY, minZ, maxX, maxY, maxZ );
+            case SOUTH -> new AABB( minX, minY, minZ, maxX, maxY, maxZ );
+            default -> new AABB( minX, minY, minZ, maxX, maxY, maxZ );
+        };
+        setEffectiveArea( aabb.move( getBlockPos() ) );
     }
     
     @SuppressWarnings( "ConstantConditions" )
@@ -185,7 +180,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onPlayerRightClickBlock( PlayerInteractEvent.RightClickBlock event ) {
-        if( !MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level )
+        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level )
             return;
         
         Item item = event.getItemStack().getItem();
@@ -206,7 +201,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onPlayerLeftClickBlock( PlayerInteractEvent.LeftClickBlock event ) {
-        if( !MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level )
+        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || event.getEntity().isCreative() || effectiveArea == null || event.getLevel() != level )
             return;
         
         BlockState blockState = event.getLevel().getBlockState( event.getPos() );
@@ -236,7 +231,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onBlockBreak( BlockEvent.BreakEvent event ) {
-        if( !MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level )
+        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || effectiveArea == null || event.getLevel() != level )
             return;
         
         if( event.getState().getBlock() == MRBlocks.ANTI_BUILDER.get() )
@@ -247,7 +242,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onExplodeEvent( ExplosionEvent.Detonate event ) {
-        if( !MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level )
+        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || effectiveArea == null || event.getLevel() != level )
             return;
         
         Vec3 pos = event.getExplosion().getPosition();
@@ -259,7 +254,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onMobGrief( EntityMobGriefingEvent event ) {
-        if( !MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getEntity().level() != level )
+        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || effectiveArea == null || event.getEntity().level() != level )
             return;
         
         BlockPos pos = event.getEntity().blockPosition();
@@ -271,7 +266,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onBlockPlace( BlockEvent.EntityPlaceEvent event ) {
-        if( !MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level )
+        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || effectiveArea == null || event.getLevel() != level )
             return;
         
         if( event.getState().getBlock() == MRBlocks.ANTI_BUILDER.get() )
@@ -282,7 +277,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onBlockMultiPlace( BlockEvent.EntityMultiPlaceEvent event ) {
-        if( !MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level )
+        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || effectiveArea == null || event.getLevel() != level )
             return;
         
         checkAndCancelPlayer( event, event.getPos(), event.getEntity() instanceof Player player ? player : null );
@@ -290,7 +285,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onFluidPlaceBlock( BlockEvent.FluidPlaceBlockEvent event ) {
-        if( !MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level )
+        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || effectiveArea == null || event.getLevel() != level )
             return;
         
         checkAndCancel( event, event.getPos() );
@@ -298,7 +293,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onPortalSpawn( BlockEvent.PortalSpawnEvent event ) {
-        if( !MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level )
+        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || effectiveArea == null || event.getLevel() != level )
             return;
         
         checkAndCancel( event, event.getPos() );
@@ -306,7 +301,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onToolModification( BlockEvent.BlockToolModificationEvent event ) {
-        if( !MRGeneralConfig.CONFIG.enableAntiBuilderBlock.get() || effectiveArea == null || event.getLevel() != level )
+        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || effectiveArea == null || event.getLevel() != level )
             return;
         
         checkAndCancelPlayer( event, event.getPos(), event.getPlayer() );
@@ -332,6 +327,6 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IBlockEntityD
     @Override
     @Nullable
     public List<IDebugShape> getDebugShapes() {
-        return List.of( new BoxShape( effectiveArea ) );
+        return List.of( new BoxShape( effectiveArea ).withRGB( 0x00FF00 ) );
     }
 }

@@ -39,8 +39,6 @@ public abstract class AbstractTextField<T> extends EditBox {
     @Override
     @SuppressWarnings( "all" )
     public void onValueChange( String value ) {
-        super.onValueChange( value );
-        
         if( checkIsValidValue( value ) ) {
             isValueValid = true;
             setTextColor( ChatFormatting.WHITE.getColor() );
@@ -50,6 +48,7 @@ public abstract class AbstractTextField<T> extends EditBox {
             isValueValid = false;
             setTextColor( ChatFormatting.RED.getColor() );
         }
+        super.onValueChange( value );
     }
     
     @Override

@@ -78,7 +78,6 @@
   "item.magical_relics.gold_axe_artifact": "Golden Axe",
   "item.magical_relics.diamond_axe_artifact": "Diamond Axe",
 
-
   "block.magical_relics.solid_air": "Solid Air",
   "block.magical_relics.illumination_block": "Illumination Block",
   "block.magical_relics.thick_tripwire": "Thick Thread",
@@ -126,7 +125,6 @@
   "entity.magical_relics.volatile_fireball": "Volatile Fireball",
   "entity.magical_relics.swung_sword": "Sword",
 
-
   "death.attack.magical_relics.spikes": "%1$s was impaled on a spike trap",
   "death.attack.magical_relics.spikes.player": "%1$s got impaled on a spike trap whilst trying to escape %2$s",
   "death.attack.magical_relics.swung_sword": "%1$s was sliced with a sword",
@@ -134,13 +132,11 @@
   "death.attack.magical_relics.quicksand": "%1$s suffocated in quicksand",
   "death.attack.magical_relics.quicksand.player": "%1$s suffocated in quicksand whilst trying to escape %2$s",
 
-
   "magical_relics.anti_builder.blocked_message": "A powerful spell protects this land",
   "magical_relics.display_pedestal.locked_message": "It is locked...",
   "magical_relics.display_pedestal.locked_tooltip": "Locked",
-  "magical_relics.anti_builder.screen.min_xyz": "Min X Y Z",
-  "magical_relics.anti_builder.screen.max_xyz": "Max X Y Z",
-
+  "magical_relics.anti_builder.screen.corner_1": "Corner 1",
+  "magical_relics.anti_builder.screen.corner_2": "Corner 2",
 
   "magical_relics.artifact_ability.magical_relics.baker.description": "Conjures cakes on solid surfaces when right-clicking",
   "magical_relics.artifact_ability.magical_relics.cashout.description": "Converts to treasure when dropped",
@@ -204,7 +200,6 @@
   "magical_relics.artifact_ability.magical_relics.foodie.description.user_attacking": "Occasionally restores a pinch of hunger when attacking",
   "magical_relics.artifact_ability.magical_relics.foodie.description.curio": "Prevents hunger from dropping below half while equipped",
   "magical_relics.artifact_ability.magical_relics.foodie.description.armor_tick": "Prevents hunger from dropping below half while equipped",
-
 
   "magical_relics.ability.mundane_prefix": "Mundane",
 
@@ -365,11 +360,8 @@
   "magical_relics.artifact_ability.magical_relics.foodie.suffix.noms": "of Noms",
   "magical_relics.artifact_ability.magical_relics.foodie.suffix.munching": "of Munching",
 
-
-
   "curios.identifier.amulet": "Amulet",
   "curios.modifiers.amulet": "When worn as amulet",
-
 
   "config.jade.plugin_magical_relics.display_camos": "Display Block Camos"
 }

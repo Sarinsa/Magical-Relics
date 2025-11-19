@@ -8,8 +8,8 @@ public class References {
     // STATIC CHAT COMPONENTS
     public static final MutableComponent ANTI_BUILDER_BLOCK_MESSAGE = Component.translatable( "magical_relics.anti_builder.blocked_message" );
     
-    public static final MutableComponent ANTI_BUILDER_MIN_XYZ_SIZE = Component.translatable( "magical_relics.anti_builder.screen.min_xyz" );
-    public static final MutableComponent ANTI_BUILDER_MAX_XYZ_SIZE = Component.translatable( "magical_relics.anti_builder.screen.max_xyz" );
+    public static final MutableComponent ANTI_BUILDER_CORNER_1 = Component.translatable( "magical_relics.anti_builder.screen.corner_1" );
+    public static final MutableComponent ANTI_BUILDER_CORNER_2 = Component.translatable( "magical_relics.anti_builder.screen.corner_2" );
     
     
     public static final MutableComponent PEDESTAL_LOCKED = Component.translatable( "magical_relics.display_pedestal.locked_message" );

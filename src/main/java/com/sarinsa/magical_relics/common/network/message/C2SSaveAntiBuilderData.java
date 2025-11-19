@@ -29,7 +29,7 @@ public class C2SSaveAntiBuilderData {
         NetworkEvent.Context context = contextSupplier.get();
         
         if( context.getDirection().getReceptionSide().isServer() ) {
-            context.enqueueWork( () -> ServerWork.handleSaveALTNEGData( message ) );
+            context.enqueueWork( () -> ServerWork.saveAntiBuilderData( message ) );
         }
         context.setPacketHandled( true );
     }
