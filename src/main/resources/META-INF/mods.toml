@@ -1,36 +1,43 @@
-modLoader="javafml"
-loaderVersion="[47,)"
-license="MIT Lisence"
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "MIT Lisence"
 
 [[mods]]
-modId="magical_relics"
-version="${file.jarVersion}"
-displayName="Magical Relics"
-logoFile="logo.png"
-credits="Draco18s and Tmtravlr (former authors)"
-authors="Sarinsa (author), Tuttita (artist)"
+modId = "magical_relics"
+version = "${file.jarVersion}"
+displayName = "Magical Relics"
+logoFile = "logo.png"
+credits = "Draco18s and Tmtravlr (former authors)"
+authors = "Sarinsa (author), Tuttita (artist)"
 
-description='''
+description = '''
 Adds a variety of unique artifacts with special abilities, and new dungeons
 '''
 
 [[dependencies.magical_relics]]
-modId="forge"
-mandatory=true
-versionRange="[47.3.10,)"
-ordering="NONE"
-side="BOTH"
+modId = "forge"
+mandatory = true
+versionRange = "[47.3.10,)"
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies.magical_relics]]
-modId="minecraft"
-mandatory=true
-versionRange="[1.20.1,)"
-ordering="NONE"
-side="BOTH"
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1,)"
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies.magical_relics]]
-modId="curios"
-mandatory=true
-versionRange="[5.9,)"
-ordering="NONE"
-side="BOTH"
+modId = "crust"
+mandatory = true
+versionRange = "[4.9.15,)"
+ordering = "BEFORE"
+side = "BOTH"
+
+[[dependencies.magical_relics]]
+modId = "curios"
+mandatory = true
+versionRange = "[5.9,)"
+ordering = "NONE"
+side = "BOTH"
