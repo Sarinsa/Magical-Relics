@@ -194,10 +194,10 @@ public class QuicksandBlock extends Block implements BucketPickup {
             return true;
         }
         
-        boolean hasBelowQuicksand = belowState.is( this ) && belowState.getValue( LAYERS ) < MAX_HEIGHT;
+        final boolean isQuicksandBelow = belowState.is( this ) && belowState.getValue( LAYERS ) < MAX_HEIGHT;
         
         // Try flowing down into quicksand below, if there is any
-        if( hasBelowQuicksand ) {
+        if( isQuicksandBelow ) {
             int flowAmount = Math.min( MAX_HEIGHT - belowState.getValue( LAYERS ), Math.min( state.getValue( LAYERS ), MAX_FLOW_AMOUNT ) );
             
             if( flowAmount > 0 ) {
