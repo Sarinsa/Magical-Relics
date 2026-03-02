@@ -54,7 +54,7 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
     /** Helper method for creating ability description tooltip components. */
     public MutableComponent getDescComponent( @Nullable TriggerType triggerType, Object... args ) {
         final ResourceLocation id = Objects.requireNonNull( MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( this ) );
-        final String triggerKey = triggerType == null ? "" : "." + triggerType.name();
+        final String triggerKey = triggerType == null ? "" : "." + triggerType.getName();
         final String s = MagicalRelics.MODID + ".artifact_ability." + id.getNamespace() + "." + id.getPath() + ".description" + triggerKey;
         
         return Component.translatable( s, args );

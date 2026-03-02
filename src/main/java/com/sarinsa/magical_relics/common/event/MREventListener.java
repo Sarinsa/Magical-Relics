@@ -46,6 +46,8 @@ public class MREventListener {
     @SubscribeEvent
     @SuppressWarnings( "ConstantConditions" )
     public void onPlayerTick( TickEvent.PlayerTickEvent event ) {
+        if( event.phase == TickEvent.Phase.START ) return;
+        
         Player player = event.player;
         ItemStack heldItem = player.getItemInHand( InteractionHand.MAIN_HAND );
         Level level = player.level();
