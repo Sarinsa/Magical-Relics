@@ -1,7 +1,6 @@
 package com.sarinsa.magical_relics.client;
 
 import com.mojang.blaze3d.shaders.FogShape;
-import com.sarinsa.magical_relics.common.ability.OreRadarAbility;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRMobEffects;
@@ -58,11 +57,13 @@ public class ClientEventListener {
                 if( ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.HEAD ), MRArtifactAbilities.ORE_RADAR.get() ) ) {
                     Level level = player.level();
                     BlockPos playerPos = player.blockPosition();
-                    final int scanRange = OreRadarAbility.scanRange.get();
+                    // TODO - Make the server send its value to client
+                    final int scanRange = MRArtifactAbilities.ORE_RADAR.get().getConfig().ORE_RADAR.radius.get();
                     
                     for( BlockPos pos : BlockPos.betweenClosed(
                             playerPos.offset( scanRange, scanRange, scanRange ),
                             playerPos.offset( -scanRange, -scanRange, -scanRange ) ) ) {
+                        // noinspection deprecation
                         if( level.hasChunkAt( pos ) && level.getBlockState( pos ).is( Tags.Blocks.ORES ) ) {
                             level.addParticle( MRParticles.ORE_PING.get(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 0.0F, 0.0F, 0.0F );
                         }

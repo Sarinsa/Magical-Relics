@@ -2,7 +2,7 @@ package com.sarinsa.magical_relics.common.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.command.argument.ArtifactCategoryArgument;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
@@ -53,8 +53,8 @@ public class ArtifactBaseCommand {
         ItemStack artifact = ArtifactUtils.createBlankArtifact( artifactItem, variant, source.getLevel().random );
         ArtifactUtils.applyMandatoryAttributeMods( artifact, category, random );
         
-        CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.MOD_DATA_KEY );
-        modDataTag.putString( ArtifactUtils.PREFIX_KEY, References.MUNDANE_ABILITY_PREFIX );
+        CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.TAG_MOD_DATA );
+        modDataTag.putString( ArtifactUtils.TAG_PREFIX, References.MUNDANE_ABILITY_PREFIX );
         
         boolean wasAdded = player.addItem( artifact );
         

@@ -22,6 +22,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.network.NetworkHooks;
 
+import java.util.Objects;
+
+@SuppressWarnings( "resource" )
 public class SwungSword extends Entity {
     
     private static final EntityDataAccessor<ItemStack> SWORD_ITEM = SynchedEntityData.defineId( SwungSword.class, EntityDataSerializers.ITEM_STACK );
@@ -53,7 +56,7 @@ public class SwungSword extends Entity {
     }
     
     public void setSwordItem( SwordItem item ) {
-        if( item == null ) return;
+        Objects.requireNonNull( item );
         entityData.set( SWORD_ITEM, new ItemStack( item ) );
     }
     
@@ -62,7 +65,7 @@ public class SwungSword extends Entity {
     }
     
     public void setAttackDirection( Direction direction ) {
-        if( direction == null ) return;
+        Objects.requireNonNull( direction );
         entityData.set( ATTACK_DIRECTION, direction );
     }
     

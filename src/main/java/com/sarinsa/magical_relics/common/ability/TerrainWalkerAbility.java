@@ -1,26 +1,31 @@
 package com.sarinsa.magical_relics.common.ability;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.AttributeBoost;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.DoubleField;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeMod;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-public class TerrainWalkerAbility extends BaseArtifactAbility {
+public class TerrainWalkerAbility extends BaseArtifactAbility<TerrainWalkerAbility.TerrainWalkerAbilityConfig> {
     
     
     private static final String[] PREFIXES = {
@@ -41,24 +46,46 @@ public class TerrainWalkerAbility extends BaseArtifactAbility {
             ArtifactCategory.LEGGINGS
     );
     
-    private static final AttributeBoost STEP_BOOST = new AttributeBoost(
+    private final Supplier<AttributeBoost> STEP_BOOST = Suppliers.memoize( () -> new AttributeBoost(
             ForgeMod.STEP_HEIGHT_ADDITION,
             "MREntityStepHeightBoost",
             AttributeModifier.Operation.ADDITION,
-            ( random ) -> TerrainWalkerAbility.stepIncrease.get(),
+            getConfig().TERRAIN_WALKER.boost::next,
             AttributeBoost.ActiveType.EQUIPPED
-    );
-    
-    private static ForgeConfigSpec.IntValue stepIncrease;
+    ) );
     
     
     public TerrainWalkerAbility() { }
     
     
-    @AbilityConfig( abilityId = "magical_relics:terrain_walker" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        stepIncrease = configBuilder.comment( "The max height a player can step up. A value of 3 will allow a player to walk up a 3 high block pillar for example." )
-                .defineInRange( "stepIncrease", 1, 1, 100 );
+    public static class TerrainWalkerAbilityConfig extends AbilityConfig {
+        
+        public TerrainWalker TERRAIN_WALKER;
+        
+        public TerrainWalkerAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
+                                           double minBoost, double maxBoost ) {
+            super( cfgManager, abilityId );
+            
+            TERRAIN_WALKER = new TerrainWalker( this, minBoost, maxBoost );
+        }
+        
+        public static class TerrainWalker extends AbstractConfigCategory<TerrainWalkerAbilityConfig> {
+            
+            public DoubleField.RandomRange boost;
+            
+            public TerrainWalker( TerrainWalkerAbilityConfig parent, double minBoost, double maxBoost ) {
+                super( parent, "terrain_walker", "Options for the step-boost this ability provides" );
+                
+                boost = new DoubleField.RandomRange( SPEC, "boost", minBoost, maxBoost, DoubleField.Range.PERCENT,
+                        "The minimum and maximum (inclusive) percentage multiplier of boosted step-height this ability can apply to an artifact item, .",
+                        "When this ability is applied to an artifact, a random modifier between minimum and maximum is picked." );
+            }
+        }
+    }
+    
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new TerrainWalkerAbilityConfig( cfgManager, abilityId, 1, 1 );
     }
     
     @Override
@@ -72,12 +99,13 @@ public class TerrainWalkerAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public @Nullable TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
+    @Nullable
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? TriggerType.ARMOR_TICK : null;
     }
     
     @Override
-    public @NotNull List<TriggerType> supportedTriggers() {
+    public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
     
@@ -87,12 +115,13 @@ public class TerrainWalkerAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public @Nullable AttributeBoost getAttributeWithBoost() {
-        return STEP_BOOST;
+    @Nullable
+    public AttributeBoost getAttributeWithBoost() {
+        return STEP_BOOST.get();
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.terrain_walker.description" );
     }
 }

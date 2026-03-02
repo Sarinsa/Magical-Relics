@@ -1,15 +1,21 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.IntField;
+import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -21,14 +27,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
-public class JumpBoostAbility extends BaseArtifactAbility {
+public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpBoostAbilityConfig> {
+    
+    public static final String TAG_ABILITY_DATA = "JumpBoostAbilityData";
+    public static final String TAG_AMPLIFIER = "EffectAmplifier";
     
     private static final String[] PREFIXES = {
             createPrefix( "jump_boost", "jumpy" ),
@@ -57,45 +64,71 @@ public class JumpBoostAbility extends BaseArtifactAbility {
             ArtifactCategory.TRINKET
     );
     
-    private static final int USE_EFFECT_DURATION = 900;
-    private static final int ATTACK_EFFECT_DURATION = 125;
-    private static final int PASSIVE_EFFECT_DURATION = 310;
     
-    private static ForgeConfigSpec.IntValue maxAmplifier;
-    private static ForgeConfigSpec.IntValue cooldown;
+    public JumpBoostAbility() { }
     
     
-    public JumpBoostAbility() {
-    
-    }
-    
-    
-    @AbilityConfig( abilityId = "magical_relics:jump_boost" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        maxAmplifier = configBuilder.comment( "The maximum possible potion amplifier that can be applied to this ability." )
-                .defineInRange( "maxAmplifier", 2, 0, 10 );
+    public static class JumpBoostAbilityConfig extends CooldownAbilityConfig {
         
-        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
-                .defineInRange( "cooldown", USE_EFFECT_DURATION, 20, 100000 );
+        public JumpBoost JUMP_BOOST;
+        
+        public JumpBoostAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
+                                       int cooldown,
+                                       int useDuration, int passiveDuration, int attackDuration,
+                                       int minAmplifier, int maxAmplifier ) {
+            super( cfgManager, abilityId, rarity, cooldown );
+            
+            JUMP_BOOST = new JumpBoost( this, useDuration, passiveDuration, attackDuration, minAmplifier, maxAmplifier );
+        }
+        
+        public static class JumpBoost extends AbstractConfigCategory<JumpBoostAbilityConfig> {
+            
+            public IntField useDuration;
+            public IntField passiveDuration;
+            public IntField attackDuration;
+            
+            public IntField.RandomRange amplifier;
+            
+            public JumpBoost( JumpBoostAbilityConfig parent, int useDur, int passiveDur, int attackDur,
+                              int minAmplifier, int maxAmplifier ) {
+                super( parent, "jump_boost", "Options for the jump boost effect applied by this ability." );
+                
+                useDuration = SPEC.define( new IntField( "use_duration", useDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability has a use trigger." ) );
+                passiveDuration = SPEC.define( new IntField( "passive_duration", passiveDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability has a passive trigger." ) );
+                attackDuration = SPEC.define( new IntField( "attack_duration", attackDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability has an attack trigger." ) );
+                
+                amplifier = new IntField.RandomRange( SPEC, "amplifier", minAmplifier, maxAmplifier, IntField.Range.NON_NEGATIVE,
+                        "The minimum and maximum (inclusive) effect amplifier that is picked for the potion effect granted by this ability." );
+            }
+        }
     }
     
     @Override
-    public void onAbilityAttached( ItemStack artifact, RandomSource randomSource ) {
-        CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.MOD_DATA_KEY );
-        int multiplier = randomSource.nextInt( maxAmplifier.get() + 1 );
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new JumpBoostAbilityConfig( cfgManager, abilityId, Rarity.RARE,
+                900,
+                900, 310, 125,
+                0, 2 );
+    }
+    
+    @Override
+    public void onAbilityAttached( ItemStack artifact, RandomSource random ) {
+        CompoundTag modData = NBTHelper.getOrCreateCompound( artifact.getOrCreateTag(), ArtifactUtils.TAG_MOD_DATA );
+        CompoundTag abilityData = NBTHelper.getOrCreateCompound( modData, TAG_ABILITY_DATA );
         
-        CompoundTag abilityDataTag = new CompoundTag();
-        abilityDataTag.putInt( "EffectMultiplier", multiplier );
-        
-        modDataTag.put( "JumpBoostAbilityData", abilityDataTag );
+        int amplifier = getConfig().JUMP_BOOST.amplifier.next( random );
+        abilityData.putInt( TAG_AMPLIFIER, amplifier );
     }
     
     private int getEffectMultiplier( ItemStack artifact ) {
-        CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.MOD_DATA_KEY );
-        CompoundTag abilityDataTag = modDataTag.getCompound( "JumpBoostAbilityData" );
+        CompoundTag modData = NBTHelper.getOrCreateCompound( artifact.getOrCreateTag(), ArtifactUtils.TAG_MOD_DATA );
+        CompoundTag abilityData = NBTHelper.getOrCreateCompound( modData, TAG_ABILITY_DATA );
         
-        if( abilityDataTag.contains( "EffectMultiplier", Tag.TAG_INT ) ) {
-            return Math.max( 0, abilityDataTag.getInt( "EffectMultiplier" ) );
+        if( NBTHelper.containsNumber( abilityData, TAG_AMPLIFIER ) ) {
+            return Math.max( 0, abilityData.getInt( TAG_AMPLIFIER ) );
         }
         return 0;
     }
@@ -104,11 +137,11 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     public boolean onUse( Level level, Player player, ItemStack artifact ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
-            
+            // noinspection resource
             if( !player.level().isClientSide )
-                player.addEffect( new MobEffectInstance( MobEffects.JUMP, USE_EFFECT_DURATION, getEffectMultiplier( artifact ) ) );
+                player.addEffect( new MobEffectInstance( MobEffects.JUMP, getConfig().JUMP_BOOST.useDuration.get(), getEffectMultiplier( artifact ) ) );
             
-            ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
+            ArtifactUtils.setAbilityOnCooldown( artifact, this );
             return true;
         }
         return false;
@@ -116,15 +149,16 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     
     @Override
     public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+        // noinspection resource
         if( !player.level().isClientSide )
-            player.addEffect( new MobEffectInstance( MobEffects.JUMP, ATTACK_EFFECT_DURATION, getEffectMultiplier( artifact ) ) );
+            player.addEffect( new MobEffectInstance( MobEffects.JUMP, getConfig().JUMP_BOOST.attackDuration.get(), getEffectMultiplier( artifact ) ) );
     }
     
     @Override
     public void onInventoryTick( ItemStack artifact, Level level, Entity entity, int slot, boolean isSelectedItem ) {
         if( !level.isClientSide ) {
             if( entity instanceof LivingEntity livingEntity ) {
-                livingEntity.addEffect( new MobEffectInstance( MobEffects.JUMP, PASSIVE_EFFECT_DURATION, getEffectMultiplier( artifact ) ) );
+                livingEntity.addEffect( new MobEffectInstance( MobEffects.JUMP, getConfig().JUMP_BOOST.passiveDuration.get(), getEffectMultiplier( artifact ) ) );
             }
         }
     }
@@ -140,11 +174,6 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public Rarity getRarity() {
-        return Rarity.RARE;
-    }
-    
-    @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
@@ -154,21 +183,20 @@ public class JumpBoostAbility extends BaseArtifactAbility {
         return SUFFIXES;
     }
     
-    @Nullable
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isArmor ) return TriggerType.ARMOR_TICK;
         
         if( isCurio ) return TriggerType.CURIO_TICK;
         
         return switch( random.nextInt( 3 ) ) {
-            default -> TriggerType.USE;
             case 1 -> TriggerType.USER_ATTACKING;
             case 2 -> TriggerType.INVENTORY_TICK;
+            default -> TriggerType.USE;
         };
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -180,22 +208,23 @@ public class JumpBoostAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         Component potionLevel = Component.translatable( "enchantment.level." + (getEffectMultiplier( artifact ) + 1) );
         
         if( type == null ) return null;
         
         return switch( type ) {
-            default ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.armor_tick", PASSIVE_EFFECT_DURATION / 20, potionLevel.getString() );
             case USE ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.use", USE_EFFECT_DURATION / 20, potionLevel.getString() );
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.use", getConfig().JUMP_BOOST.useDuration.get() / 20, potionLevel.getString() );
             case USER_ATTACKING ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.user_attacking", ATTACK_EFFECT_DURATION / 20, potionLevel.getString() );
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.user_attacking", getConfig().JUMP_BOOST.attackDuration.get() / 20, potionLevel.getString() );
             case INVENTORY_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.inventory_tick", PASSIVE_EFFECT_DURATION / 20, potionLevel.getString() );
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.inventory_tick", getConfig().JUMP_BOOST.passiveDuration.get() / 20, potionLevel.getString() );
             case CURIO_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.curio", USE_EFFECT_DURATION / 20, potionLevel.getString() );
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.curio", getConfig().JUMP_BOOST.useDuration.get() / 20, potionLevel.getString() );
+            default ->
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.armor_tick", getConfig().JUMP_BOOST.passiveDuration.get() / 20, potionLevel.getString() );
         };
     }
 }

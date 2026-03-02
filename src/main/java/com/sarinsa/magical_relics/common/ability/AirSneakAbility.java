@@ -1,17 +1,20 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
+import fathertoast.crust.api.config.common.ConfigManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -19,11 +22,10 @@ import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 
-public class AirSneakAbility extends BaseArtifactAbility {
+public class AirSneakAbility extends BaseArtifactAbility<AbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "air_sneak", "floaty" ),
@@ -53,9 +55,13 @@ public class AirSneakAbility extends BaseArtifactAbility {
     );
     
     
-    public AirSneakAbility() {
-    }
+    public AirSneakAbility() { }
     
+    
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new AbilityConfig( cfgManager, abilityId, Rarity.EPIC );
+    }
     
     @Override
     public void onHeld( Level level, Player player, ItemStack heldArtifact, EquipmentSlot slot ) {
@@ -107,6 +113,7 @@ public class AirSneakAbility extends BaseArtifactAbility {
     }
     
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isCurio ) {
             return random.nextBoolean() ? TriggerType.HELD : TriggerType.CURIO_TICK;
@@ -115,7 +122,6 @@ public class AirSneakAbility extends BaseArtifactAbility {
     }
     
     @Override
-    @Nonnull
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
@@ -126,16 +132,12 @@ public class AirSneakAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == null ) return null;
         
         return switch( type ) {
-            case HELD ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.air_sneak.description.held" );
-            case CURIO_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.air_sneak.description.curio" );
-            case ARMOR_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.air_sneak.description.armor_tick" );
+            case HELD, CURIO_TICK, ARMOR_TICK -> getDescComponent( type );
             default -> null;
         };
     }

@@ -1,6 +1,6 @@
 package com.sarinsa.magical_relics.datagen.model;
 
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import net.minecraft.data.DataGenerator;

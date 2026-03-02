@@ -1,4 +1,4 @@
-package com.sarinsa.magical_relics.common.ability.misc;
+package com.sarinsa.magical_relics.common.ability.base;
 
 import com.google.common.collect.ImmutableList;
 

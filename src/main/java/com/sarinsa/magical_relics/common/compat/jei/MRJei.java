@@ -1,9 +1,10 @@
 package com.sarinsa.magical_relics.common.compat.jei;
 
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
-import com.sarinsa.magical_relics.common.item.ItemArtifact;
+import com.sarinsa.magical_relics.common.item.IArtifactItem;
+import fathertoast.crust.api.lib.NBTHelper;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -22,14 +23,13 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sarinsa.magical_relics.common.util.ArtifactUtils.MOD_DATA_KEY;
-import static com.sarinsa.magical_relics.common.util.ArtifactUtils.VARIANT_KEY;
+import static com.sarinsa.magical_relics.common.util.ArtifactUtils.TAG_MOD_DATA;
+import static com.sarinsa.magical_relics.common.util.ArtifactUtils.TAG_VARIANT;
 
 @JeiPlugin
 public class MRJei implements IModPlugin {
     
     private static final ResourceLocation ID = MagicalRelics.rl( "magical_relics_jei" );
-    
     
     @Nonnull
     @Override
@@ -53,33 +53,25 @@ public class MRJei implements IModPlugin {
                 if( item instanceof TieredItem tieredItem ) {
                     List<ItemStack> inputs = new ArrayList<>();
                     List<ItemStack> outputs = new ArrayList<>();
-                    
-                    ArtifactCategory category = ((ItemArtifact) item).getCategory();
+                    ArtifactCategory category = ((IArtifactItem) item).getCategory();
                     
                     for( int i = 0; i < category.getVariations(); i++ ) {
-                        ItemStack input = new ItemStack( item );
+                        ItemStack inputStack = new ItemStack( item );
                         
-                        CompoundTag inputStackTag = input.getOrCreateTag();
-                        CompoundTag inputModDataTag = new CompoundTag();
-                        inputModDataTag.putInt( VARIANT_KEY, i );
-                        inputStackTag.put( MOD_DATA_KEY, inputModDataTag );
-                        input.setDamageValue( item.getMaxDamage( input ) );
-                        inputs.add( input );
+                        CompoundTag inputModData = NBTHelper.getOrCreateCompound( inputStack.getOrCreateTag(), TAG_MOD_DATA );
+                        inputModData.putInt( TAG_VARIANT, i );
+                        inputStack.setDamageValue( item.getMaxDamage( inputStack ) );
+                        inputs.add( inputStack );
                         
-                        ItemStack output = new ItemStack( item );
+                        ItemStack outputStack = new ItemStack( item );
                         
-                        CompoundTag outputStackTag = output.getOrCreateTag();
-                        CompoundTag outputModDataTag = new CompoundTag();
-                        outputModDataTag.putInt( VARIANT_KEY, i );
-                        outputStackTag.put( MOD_DATA_KEY, outputModDataTag );
-                        output.setDamageValue( item.getMaxDamage( output ) - item.getMaxDamage( output ) / 4 );
-                        outputs.add( output );
+                        CompoundTag outputModData = NBTHelper.getOrCreateCompound( outputStack.getOrCreateTag(), TAG_MOD_DATA );
+                        outputModData.putInt( TAG_VARIANT, i );
+                        outputStack.setDamageValue( item.getMaxDamage( outputStack ) - item.getMaxDamage( outputStack ) / 4 );
+                        outputs.add( outputStack );
                     }
                     Ingredient ingredient = tieredItem.getTier().getRepairIngredient();
-                    
-                    IJeiAnvilRecipe recipe = registration.getVanillaRecipeFactory().createAnvilRecipe( inputs, List.of( ingredient.getItems() ), outputs );
-                    
-                    recipes.add( recipe );
+                    recipes.add( registration.getVanillaRecipeFactory().createAnvilRecipe( inputs, List.of( ingredient.getItems() ), outputs ) );
                 }
                 else if( item instanceof ArmorItem armorItem ) {
                     Ingredient ingredient = armorItem.getMaterial().getRepairIngredient();
@@ -88,9 +80,7 @@ public class MRJei implements IModPlugin {
                     ItemStack result = new ItemStack( item );
                     result.setDamageValue( item.getMaxDamage( result ) - item.getMaxDamage( result ) / 4 );
                     
-                    IJeiAnvilRecipe recipe = registration.getVanillaRecipeFactory().createAnvilRecipe( input, List.of( ingredient.getItems() ), List.of( result ) );
-                    
-                    recipes.add( recipe );
+                    recipes.add( registration.getVanillaRecipeFactory().createAnvilRecipe( input, List.of( ingredient.getItems() ), List.of( result ) ) );
                 }
             }
         }

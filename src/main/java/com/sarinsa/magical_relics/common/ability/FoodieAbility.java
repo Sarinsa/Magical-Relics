@@ -1,14 +1,18 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
+import fathertoast.crust.api.config.common.ConfigManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -20,15 +24,13 @@ import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
-public class FoodieAbility extends BaseArtifactAbility {
+public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "foodie", "well_fed" ),
@@ -60,17 +62,15 @@ public class FoodieAbility extends BaseArtifactAbility {
             ArtifactCategory.HELMET
     );
     
-    private static ForgeConfigSpec.IntValue cooldown;
-    
     
     public FoodieAbility() {
     
     }
     
-    @AbilityConfig( abilityId = "magical_relics:foodie" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
-                .defineInRange( "cooldown", 20, 5, 100000 );
+    
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new CooldownAbilityConfig( cfgManager, abilityId, 20 );
     }
     
     @Override
@@ -78,7 +78,7 @@ public class FoodieAbility extends BaseArtifactAbility {
         if( !player.getFoodData().needsFood() ) return false;
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
+            ArtifactUtils.setAbilityOnCooldown( artifact, this );
             RandomSource random = player.getRandom();
             
             if( !level.isClientSide ) {
@@ -95,6 +95,7 @@ public class FoodieAbility extends BaseArtifactAbility {
     public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
         if( !player.getFoodData().needsFood() ) return;
         
+        // noinspection resource
         if( !player.level().isClientSide ) {
             RandomSource random = player.getRandom();
             
@@ -156,7 +157,8 @@ public class FoodieAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public @Nullable TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
+    @Nullable
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isArmor ) return TriggerType.ARMOR_TICK;
         
         if( isCurio ) return random.nextBoolean() ? TriggerType.CURIO_TICK : TriggerType.USE;
@@ -165,7 +167,7 @@ public class FoodieAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public @NotNull List<TriggerType> supportedTriggers() {
+    public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
     
@@ -175,7 +177,8 @@ public class FoodieAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == null ) return null;
         
         return switch( type ) {

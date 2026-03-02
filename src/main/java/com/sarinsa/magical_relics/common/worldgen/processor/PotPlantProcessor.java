@@ -38,8 +38,8 @@ public class PotPlantProcessor extends StructureProcessor {
     
     
     @Nullable
-    public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
-        RandomSource random = structureSettings.getRandom( blockInfo.pos() );
+    public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos pos, BlockPos pos2, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings settings, @Nullable StructureTemplate template ) {
+        RandomSource random = settings.getRandom( blockInfo.pos() );
         BlockState state = blockInfo.state();
         
         if( state.is( Blocks.FLOWER_POT ) ) {

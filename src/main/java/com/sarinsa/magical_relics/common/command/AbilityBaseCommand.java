@@ -1,13 +1,13 @@
 package com.sarinsa.magical_relics.common.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
-import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.AttributeBoost;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.command.argument.AbilityArgument;
 import com.sarinsa.magical_relics.common.command.argument.TriggerTypeArgument;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
-import com.sarinsa.magical_relics.common.item.ItemArtifact;
+import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.util.References;
 import net.minecraft.commands.CommandSourceStack;
@@ -53,7 +53,7 @@ public class AbilityBaseCommand {
     }
     
     //TODO - don't forget this exists, lol
-    private static int applyAbility( CommandSourceStack source, BaseArtifactAbility ability, TriggerType triggerType ) {
+    private static int applyAbility( CommandSourceStack source, BaseArtifactAbility<?> ability, TriggerType triggerType ) {
         if( source.getPlayer() == null ) {
             source.sendFailure( Component.translatable( References.PLAYER_ONLY_CMD ) );
             return 0;
@@ -66,25 +66,25 @@ public class AbilityBaseCommand {
         RandomSource random = source.getLevel().getRandom();
         ItemStack itemStack = player.getItemBySlot( EquipmentSlot.MAINHAND );
         
-        if( !(itemStack.getItem() instanceof ItemArtifact) ) {
+        if( !(itemStack.getItem() instanceof IArtifactItem) ) {
             source.sendFailure( Component.translatable( References.ABILITY_APPLY_ERROR_2 ) );
             return 0;
         }
-        Map<BaseArtifactAbility, TriggerType> currentAbilities = ArtifactUtils.getAllAbilities( itemStack );
+        Map<BaseArtifactAbility<?>, TriggerType> currentAbilities = ArtifactUtils.getAllAbilities( itemStack );
         
         // Make sure necessary NBT keys exist on the ItemStack
         CompoundTag stackTag = itemStack.getOrCreateTag();
         
-        if( !stackTag.contains( ArtifactUtils.MOD_DATA_KEY, Tag.TAG_COMPOUND ) )
-            stackTag.put( ArtifactUtils.MOD_DATA_KEY, new CompoundTag() );
+        if( !stackTag.contains( ArtifactUtils.TAG_MOD_DATA, Tag.TAG_COMPOUND ) )
+            stackTag.put( ArtifactUtils.TAG_MOD_DATA, new CompoundTag() );
         
-        CompoundTag modDataTag = stackTag.getCompound( ArtifactUtils.MOD_DATA_KEY );
+        CompoundTag modDataTag = stackTag.getCompound( ArtifactUtils.TAG_MOD_DATA );
         
-        if( !modDataTag.contains( ArtifactUtils.ABILITY_KEY, Tag.TAG_LIST ) )
-            modDataTag.put( ArtifactUtils.ABILITY_KEY, new ListTag() );
+        if( !modDataTag.contains( ArtifactUtils.TAG_ABILITY, Tag.TAG_LIST ) )
+            modDataTag.put( ArtifactUtils.TAG_ABILITY, new ListTag() );
         
-        if( !modDataTag.contains( ArtifactUtils.ATTRIBUTE_MODS_KEY, Tag.TAG_LIST ) )
-            modDataTag.put( ArtifactUtils.ATTRIBUTE_MODS_KEY, new ListTag() );
+        if( !modDataTag.contains( ArtifactUtils.TAG_ATTRIBUTE_MODS, Tag.TAG_LIST ) )
+            modDataTag.put( ArtifactUtils.TAG_ATTRIBUTE_MODS, new ListTag() );
         
         if( currentAbilities.containsKey( ability ) ) {
             source.sendFailure( Component.translatable( References.ABILITY_APPLY_ERROR_0 ) );
@@ -94,19 +94,21 @@ public class AbilityBaseCommand {
             source.sendFailure( Component.translatable( References.ABILITY_APPLY_ERROR_1 ) );
             return 0;
         }
+        // noinspection ConstantConditions
         String id = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( ability ).toString();
         
         // Success, probably
         CompoundTag abilityData = new CompoundTag();
         abilityData.putString( "AbilityId", id );
         abilityData.putString( "TriggerType", triggerType.getName() );
-        modDataTag.getList( ArtifactUtils.ABILITY_KEY, Tag.TAG_COMPOUND ).add( abilityData );
+        modDataTag.getList( ArtifactUtils.TAG_ABILITY, Tag.TAG_COMPOUND ).add( abilityData );
         ability.onAbilityAttached( itemStack, random );
         
         // Save any ability attribute modifiers to NBT
         AttributeBoost boost = ability.getAttributeWithBoost();
         
         if( boost != null ) {
+            // noinspection ConstantConditions
             String attributeId = ForgeRegistries.ATTRIBUTES.getKey( boost.attribute().get() ).toString();
             CompoundTag attributeMod = new CompoundTag();
             
@@ -117,24 +119,25 @@ public class AbilityBaseCommand {
                     boost.operation()
             ).save() );
             attributeMod.putString( "ActiveType", boost.activeType().getName() );
-            modDataTag.getList( ArtifactUtils.ATTRIBUTE_MODS_KEY, Tag.TAG_COMPOUND ).add( attributeMod );
+            modDataTag.getList( ArtifactUtils.TAG_ATTRIBUTE_MODS, Tag.TAG_COMPOUND ).add( attributeMod );
         }
-        List<BaseArtifactAbility> allAbilities = new ArrayList<>( currentAbilities.keySet() );
+        List<BaseArtifactAbility<?>> allAbilities = new ArrayList<>( currentAbilities.keySet() );
         allAbilities.add( ability );
         
-        BaseArtifactAbility firstAbility = allAbilities.get( random.nextInt( allAbilities.size() ) );
-        BaseArtifactAbility secondAbility = allAbilities.get( random.nextInt( allAbilities.size() ) );
+        BaseArtifactAbility<?> firstAbility = allAbilities.get( random.nextInt( allAbilities.size() ) );
+        BaseArtifactAbility<?> secondAbility = allAbilities.get( random.nextInt( allAbilities.size() ) );
         
-        modDataTag.putString( ArtifactUtils.PREFIX_KEY, firstAbility.getPrefixes()[random.nextInt( firstAbility.getPrefixes().length )] );
-        modDataTag.putString( ArtifactUtils.SUFFIX_KEY, secondAbility.getSuffixes()[random.nextInt( secondAbility.getSuffixes().length )] );
+        modDataTag.putString( ArtifactUtils.TAG_PREFIX, firstAbility.getPrefixes()[random.nextInt( firstAbility.getPrefixes().length )] );
+        modDataTag.putString( ArtifactUtils.TAG_SUFFIX, secondAbility.getSuffixes()[random.nextInt( secondAbility.getSuffixes().length )] );
         return 1;
     }
     
-    private static int removeAbility( CommandSourceStack source, BaseArtifactAbility ability ) {
+    private static int removeAbility( CommandSourceStack source, BaseArtifactAbility<?> ability ) {
         if( source.getPlayer() == null ) {
             source.sendFailure( Component.translatable( References.PLAYER_ONLY_CMD ) );
             return 0;
         }
+        // noinspection ConstantConditions
         String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( ability ).toString();
         ServerPlayer player = source.getPlayer();
         

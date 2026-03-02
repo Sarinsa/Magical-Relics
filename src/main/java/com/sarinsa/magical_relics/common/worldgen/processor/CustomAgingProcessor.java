@@ -5,10 +5,9 @@ import com.sarinsa.magical_relics.common.block.CamoBlock;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
+import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -62,7 +61,7 @@ public class CustomAgingProcessor extends StructureProcessor {
     
     @SuppressWarnings( { "unchecked", "rawtypes" } )
     @Nullable
-    public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos p_74017_, BlockPos p_74018_, StructureTemplate.StructureBlockInfo p_74019_, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
+    public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos pos, BlockPos pos2, StructureTemplate.StructureBlockInfo p_74019_, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
         RandomSource random = structureSettings.getRandom( blockInfo.pos() );
         BlockState state = blockInfo.state();
         BlockPos blockpos = blockInfo.pos();
@@ -75,7 +74,7 @@ public class CustomAgingProcessor extends StructureProcessor {
             // that don't have an existing camo.
             if( blockEntityTag != null && random.nextFloat() < oldness ) {
                 CompoundTag camoTag = blockEntityTag.getCompound( "CamoState" );
-                BlockState nbtBlockState = NbtUtils.readBlockState( level.holderLookup( Registries.BLOCK ), camoTag );
+                BlockState nbtBlockState = NBTHelper.readBlockState( camoTag );
                 
                 if( nbtBlockState.is( Blocks.COBBLESTONE ) ) {
                     writeToCamo( blockEntityTag, Blocks.MOSSY_COBBLESTONE.defaultBlockState() );
@@ -105,7 +104,7 @@ public class CustomAgingProcessor extends StructureProcessor {
     }
     
     private static void writeToCamo( CompoundTag tag, BlockState state ) {
-        tag.put( "CamoState", NbtUtils.writeBlockState( state ) );
+        tag.put( "CamoState", NBTHelper.writeBlockState( state ) );
     }
     
     @Override

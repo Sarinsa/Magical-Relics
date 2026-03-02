@@ -17,10 +17,12 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Looks for empty Display Pedestals and either puts random artifacts in them
@@ -32,13 +34,10 @@ public class DisplayPedestalProcessor extends StructureProcessor {
             .xmap( DisplayPedestalProcessor::new, ( processor ) -> processor.legendaryChance )
             .codec();
     
-    /**
-     * Public and modifiable, but only really supposed
-     * to be modified by {@link com.sarinsa.magical_relics.common.core.config.ConfigReloadListener}
-     */
-    public static final List<Item> WIZARD_FAVORITES = new ArrayList<>();
+    private static final List<Item> WIZARD_FAVORITES = new ArrayList<>();
     
     private final float legendaryChance;
+    
     
     public DisplayPedestalProcessor( float legendaryChance ) {
         this.legendaryChance = legendaryChance;
@@ -46,7 +45,7 @@ public class DisplayPedestalProcessor extends StructureProcessor {
     
     
     @Nullable
-    public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
+    public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos pos, BlockPos pos2, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
         RandomSource random = structureSettings.getRandom( blockInfo.pos() );
         BlockState state = blockInfo.state();
         BlockPos blockpos = blockInfo.pos();
@@ -81,5 +80,11 @@ public class DisplayPedestalProcessor extends StructureProcessor {
     
     private static ItemStack getRandomItem( RandomSource random ) {
         return new ItemStack( WIZARD_FAVORITES.get( random.nextInt( WIZARD_FAVORITES.size() ) ) );
+    }
+    
+    public static void refreshWizFavorites( Set<Item> blacklistedItems ) {
+        WIZARD_FAVORITES.clear();
+        WIZARD_FAVORITES.addAll( ForgeRegistries.ITEMS.getValues() );
+        WIZARD_FAVORITES.removeAll( blacklistedItems );
     }
 }

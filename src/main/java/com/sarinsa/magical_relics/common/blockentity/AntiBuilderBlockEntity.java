@@ -67,23 +67,23 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         }
     }
     
-    public void recalculateEffectiveArea( int[] bbCoordinates ) {
-        this.recalculateEffectiveArea( getBlockState().getValue( AntiBuilderBlock.FACING ), bbCoordinates );
+    public void recalculateEffectiveArea( int[] bbDimensions ) {
+        recalculateEffectiveArea( getBlockState().getValue( AntiBuilderBlock.FACING ), bbDimensions );
     }
     
-    public void recalculateEffectiveArea( Direction direction, int[] bbCoordinates ) {
-        int minX = bbCoordinates[0];
-        int minY = bbCoordinates[1];
-        int minZ = bbCoordinates[2];
-        int maxX = bbCoordinates[3];
-        int maxY = bbCoordinates[4];
-        int maxZ = bbCoordinates[5];
+    public void recalculateEffectiveArea( Direction direction, int[] bbDimensions ) {
+        int x0 = bbCoordinates[0] = (getBlockPos().getX() - bbDimensions[0]);
+        int y0 = bbCoordinates[1] = (getBlockPos().getY() - bbDimensions[1]);
+        int z0 = bbCoordinates[2] = (getBlockPos().getZ() - bbDimensions[2]);
+        int x1 = bbCoordinates[3] = (getBlockPos().getX() - bbDimensions[3]);
+        int y1 = bbCoordinates[4] = (getBlockPos().getY() - bbDimensions[4]);
+        int z1 = bbCoordinates[5] = (getBlockPos().getZ() - bbDimensions[5]);
         
         AABB aabb = switch( direction ) {
-            case NORTH -> new AABB( minX, minY, minZ, maxX, maxY, maxZ );
-            case EAST -> new AABB( minX, minY, minZ, maxX, maxY, maxZ );
-            case SOUTH -> new AABB( minX, minY, minZ, maxX, maxY, maxZ );
-            default -> new AABB( minX, minY, minZ, maxX, maxY, maxZ );
+            case NORTH -> new AABB( x0, y0, z0, x1, y1, z1 );
+            case EAST -> new AABB( x0, y0, z0, x1, y1, z1 );
+            case SOUTH -> new AABB( x0, y0, z0, x1, y1, z1 );
+            default -> new AABB( x0, y0, z0, x1, y1, z1 );
         };
         setEffectiveArea( aabb.move( getBlockPos() ) );
     }
@@ -237,7 +237,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         if( event.getState().getBlock() == MRBlocks.ANTI_BUILDER.get() )
             return;
         
-        checkAndCancelPlayer( event, event.getPos(), event.getPlayer() );
+        checkAndCancel( event, event.getPos(), event.getPlayer() );
     }
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
@@ -272,7 +272,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         if( event.getState().getBlock() == MRBlocks.ANTI_BUILDER.get() )
             return;
         
-        checkAndCancelPlayer( event, event.getPos(), event.getEntity() instanceof Player player ? player : null );
+        checkAndCancel( event, event.getPos(), event.getEntity() instanceof Player player ? player : null );
     }
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
@@ -280,7 +280,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || effectiveArea == null || event.getLevel() != level )
             return;
         
-        checkAndCancelPlayer( event, event.getPos(), event.getEntity() instanceof Player player ? player : null );
+        checkAndCancel( event, event.getPos(), event.getEntity() instanceof Player player ? player : null );
     }
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
@@ -304,7 +304,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || effectiveArea == null || event.getLevel() != level )
             return;
         
-        checkAndCancelPlayer( event, event.getPos(), event.getPlayer() );
+        checkAndCancel( event, event.getPos(), event.getPlayer() );
     }
     
     
@@ -314,7 +314,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         }
     }
     
-    private void checkAndCancelPlayer( Event event, BlockPos pos, @Nullable Player player ) {
+    private void checkAndCancel( Event event, BlockPos pos, @Nullable Player player ) {
         if( player == null || player.isCreative() )
             return;
         
@@ -327,6 +327,6 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
     @Override
     @Nullable
     public List<IDebugShape> getDebugShapes() {
-        return List.of( new BoxShape( effectiveArea ).withRGB( 0x00FF00 ) );
+        return effectiveArea == null ? IDebugShapeProvider.NO_SHAPES : List.of( new BoxShape( effectiveArea ).withRGB( 0x00FF00 ) );
     }
 }

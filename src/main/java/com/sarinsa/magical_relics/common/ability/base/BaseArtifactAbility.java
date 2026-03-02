@@ -1,14 +1,16 @@
-package com.sarinsa.magical_relics.common.ability;
+package com.sarinsa.magical_relics.common.ability.base;
 
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.Config;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import fathertoast.crust.api.config.common.ConfigManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -28,12 +30,16 @@ import top.theillusivec4.curios.api.SlotContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
-public abstract class BaseArtifactAbility {
+public abstract class BaseArtifactAbility<T extends AbilityConfig> {
     
-    public BaseArtifactAbility() {
+    /** This ability's Crust config. Assigned through reflection. */
+    @SuppressWarnings( "unused" )
+    private T config;
     
-    }
+    public BaseArtifactAbility() { }
+    
     
     /** Helper method for creating artifact prefixes. */
     protected static String createPrefix( String abilityName, String prefix ) {
@@ -45,6 +51,43 @@ public abstract class BaseArtifactAbility {
         return MagicalRelics.MODID + ".artifact_ability." + MagicalRelics.MODID + "." + abilityName + ".suffix." + suffix;
     }
     
+    /** Helper method for creating ability description tooltip components. */
+    public MutableComponent getDescComponent( @Nullable TriggerType triggerType, Object... args ) {
+        final ResourceLocation id = Objects.requireNonNull( MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( this ) );
+        final String triggerKey = triggerType == null ? "" : "." + triggerType.name();
+        final String s = MagicalRelics.MODID + ".artifact_ability." + id.getNamespace() + "." + id.getPath() + ".description" + triggerKey;
+        
+        return Component.translatable( s, args );
+    }
+    
+    /**
+     * Called from {@link Config#initAbilityConfigs()} after
+     * the artifact ability registry has been populated.
+     *
+     * @param cfgManager Magical Relic's config manager.
+     * @param abilityId  The registry ID of the ability.
+     */
+    @SuppressWarnings( "JavadocReference" )
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new AbilityConfig( cfgManager, abilityId );
+    }
+    
+    /**
+     * Note that ability configs are constructed after
+     * the ability Forge registry has been populated.
+     *
+     * @return This ability's config.
+     */
+    public final T getConfig() {
+        // Shouldn't really happen unless this is called before
+        // Forge registries are populated, so hopefully never!
+        if( config == null ) {
+            ResourceLocation id = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( this );
+            String s = id == null ? "null" : id.toString();
+            throw new IllegalStateException( "Encountered null config for ability with id \"" + s + "\"" );
+        }
+        return config;
+    }
     
     /**
      * @return An array of possible translatable prefixes for this ability.
@@ -86,7 +129,10 @@ public abstract class BaseArtifactAbility {
     /**
      * @return A description of this ability that will be added to the artifact item stack's tooltip.
      */
-    public abstract MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag );
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+        return getDescComponent( null );
+    }
     
     /**
      * Called from {@link ArtifactUtils#generateRandomArtifact(LevelReader, RandomSource, boolean)} when the ability
@@ -94,7 +140,7 @@ public abstract class BaseArtifactAbility {
      * <br><br>
      * Can be used to write additional data to the ItemStack's NBT and whatnot.
      */
-    public void onAbilityAttached( ItemStack artifact, RandomSource randomSource ) {
+    public void onAbilityAttached( ItemStack artifact, RandomSource random ) {
     
     }
     
@@ -188,9 +234,14 @@ public abstract class BaseArtifactAbility {
     /**
      * Primarily used for the ability's description text color when
      * rendering it in item tooltip.
+     *
+     * @return The rarity from the config associated with this ability.
+     * returns {@link Rarity#COMMON} if the config does not exist yet.
      */
     public Rarity getRarity() {
-        return ArtifactUtils.COMMON_ABILITY;
+        return getConfig() == null
+                ? Rarity.COMMON
+                : getConfig().GENERAL.rarity.get();
     }
     
     /**
@@ -205,10 +256,10 @@ public abstract class BaseArtifactAbility {
     
     @Override
     public String toString() {
+        // noinspection ConstantConditions
         String regName = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().containsValue( this )
                 ? MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( this ).toString()
                 : "null";
-        
         return "Registry name: " + regName + ", Instance: " + super.toString();
     }
 }

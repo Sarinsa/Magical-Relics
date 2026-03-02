@@ -22,11 +22,11 @@ public class ServerWork {
     }
     
     
-    public static void handleSaveALTNEGData( C2SSaveAntiBuilderData message ) {
+    public static void saveAntiBuilderData( C2SSaveAntiBuilderData message ) {
         if( server == null ) return;
         
-        if( message.bbCoordinates.length != 6 ) {
-            MagicalRelics.LOG.warn( "Received anti-builder 'update bounds' packet with invalid coordinates array length. Expected 6, got {}", message.bbCoordinates.length );
+        if( message.bbDimensions.length != 6 ) {
+            MagicalRelics.LOG.warn( "Received anti-builder 'update bounds' packet with invalid coordinates array length. Expected 6, got {}", message.bbDimensions.length );
             return;
         }
         
@@ -34,12 +34,13 @@ public class ServerWork {
         
         if( player == null ) return;
         
+        // noinspection resource
         ServerLevel level = player.serverLevel();
         
         BlockEntity blockEntity = level.getBlockEntity( message.blockEntityPos );
         
         if( blockEntity instanceof AntiBuilderBlockEntity antiBuilder ) {
-            antiBuilder.recalculateEffectiveArea( message.bbCoordinates );
+            antiBuilder.recalculateEffectiveArea( message.bbDimensions );
         }
     }
 }

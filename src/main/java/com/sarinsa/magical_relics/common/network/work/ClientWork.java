@@ -1,23 +1,26 @@
 package com.sarinsa.magical_relics.common.network.work;
 
 import com.sarinsa.magical_relics.client.screen.AntiBuilderScreen;
+import com.sarinsa.magical_relics.common.ability.JukeboxAbility;
 import com.sarinsa.magical_relics.common.blockentity.AntiBuilderBlockEntity;
 import com.sarinsa.magical_relics.common.network.message.S2CJukeboxAbility;
 import com.sarinsa.magical_relics.common.network.message.S2COpenAntiBuilderScreen;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.RecordItem;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.registries.ForgeRegistries;
 
+@SuppressWarnings( "resource" )
 public class ClientWork {
     
     public static void handleJukeboxAbilityUse( S2CJukeboxAbility message ) {
@@ -30,14 +33,16 @@ public class ClientWork {
         if( player == null ) return;
         
         ItemStack itemStack = player.getMainHandItem();
-        CompoundTag modDataTag = itemStack.getOrCreateTag().getCompound( ArtifactUtils.MOD_DATA_KEY );
-        RecordItem record = (RecordItem) ForgeRegistries.ITEMS.getValue( ResourceLocation.tryParse( modDataTag.getString( "JUKEBOXMusicDiscId" ) ) );
+        
+        CompoundTag modData = NBTHelper.getOrCreateCompound( itemStack.getOrCreateTag(), ArtifactUtils.TAG_MOD_DATA );
+        CompoundTag abilityData = NBTHelper.getOrCreateCompound( modData, JukeboxAbility.TAG_ABILITY_DATA );
+        Item item = NBTHelper.getRegistryEntry( abilityData, ForgeRegistries.ITEMS, JukeboxAbility.TAG_DISC_ITEM );
         
         if( !playMusic ) {
-            levelRenderer.playStreamingMusic( null, pos );
+            levelRenderer.playStreamingMusic( null, pos, null );
         }
         else {
-            if( record != null ) {
+            if( item instanceof RecordItem record ) {
                 levelRenderer.playStreamingMusic( record.getSound(), pos, record );
                 RandomSource random = player.level().getRandom();
                 

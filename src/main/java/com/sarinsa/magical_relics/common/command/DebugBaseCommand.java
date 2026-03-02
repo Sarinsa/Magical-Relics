@@ -1,8 +1,8 @@
 package com.sarinsa.magical_relics.common.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -30,13 +30,11 @@ public class DebugBaseCommand {
         for( ArtifactCategory category : ArtifactCategory.values() ) {
             usagesPerCategory.put( category, 0 );
         }
-        
-        for( BaseArtifactAbility ability : MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get() ) {
+        for( BaseArtifactAbility<?> ability : MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get() ) {
             for( ArtifactCategory category : ability.getCompatibleTypes() ) {
                 usagesPerCategory.put( category, usagesPerCategory.get( category ) + 1 );
             }
         }
-        
         source.sendSystemMessage( Component.literal( "-----------------------------" ) );
         source.sendSystemMessage( Component.literal( "Applicable abilities per artifact category:" ).withStyle( ChatFormatting.GRAY ) );
         

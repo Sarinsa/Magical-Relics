@@ -3,11 +3,10 @@ package com.sarinsa.magical_relics.common.core;
 import com.mojang.brigadier.CommandDispatcher;
 import com.sarinsa.magical_relics.common.block.CamoDispenserBlock;
 import com.sarinsa.magical_relics.common.command.MRBaseCommand;
-import com.sarinsa.magical_relics.common.core.config.ConfigReloadListener;
-import com.sarinsa.magical_relics.common.core.config.MRAbilitiesConfig;
-import com.sarinsa.magical_relics.common.core.config.MRGeneralConfig;
+import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.event.MREventListener;
+import com.sarinsa.magical_relics.common.event.ServerEventListener;
 import com.sarinsa.magical_relics.common.network.PacketHandler;
 import com.sarinsa.magical_relics.common.tag.MRBlockTags;
 import com.sarinsa.magical_relics.common.worldgen.WorldgenHelper;
@@ -17,7 +16,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -46,6 +44,7 @@ public class MagicalRelics {
         modBus.addListener( MRItems::onCreativeTabPopulate );
         
         MinecraftForge.EVENT_BUS.register( new MREventListener() );
+        MinecraftForge.EVENT_BUS.register( new ServerEventListener() );
         MinecraftForge.EVENT_BUS.addListener( this::registerCommands );
         
         MRBlockTags.init();
@@ -70,10 +69,8 @@ public class MagicalRelics {
         MRConfiguredFeatures.P_REGISTRY.register( modBus );
         MRArgumentTypes.ARGUMENT_TYPES.register( modBus );
         
-        context.registerConfig( ModConfig.Type.COMMON, MRAbilitiesConfig.CONFIG_SPEC, "magical_relics/ability-properties.toml" );
-        context.registerConfig( ModConfig.Type.COMMON, MRGeneralConfig.CONFIG_SPEC, "magical_relics/general.toml" );
-        
-        modBus.register( new ConfigReloadListener() );
+        // Initialize configs
+        Config.init();
     }
     
     

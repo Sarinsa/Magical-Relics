@@ -1,27 +1,32 @@
 package com.sarinsa.magical_relics.common.ability;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.AttributeBoost;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.DoubleField;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 
-public class SpeedAbility extends BaseArtifactAbility {
+public class SpeedBoostAbility extends BaseArtifactAbility<SpeedBoostAbility.SpeedBoostAbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "speed_boost", "fast" ),
@@ -50,33 +55,51 @@ public class SpeedAbility extends BaseArtifactAbility {
             ArtifactCategory.AXE
     );
     
-    private static final AttributeBoost SPEED_BOOST = new AttributeBoost(
+    private final Supplier<AttributeBoost> SPEED_BOOST = Suppliers.memoize( () -> new AttributeBoost(
             () -> Attributes.MOVEMENT_SPEED,
             "MRSpeedBoost",
             AttributeModifier.Operation.MULTIPLY_BASE,
-            ( random ) -> ((double) SpeedAbility.minBoost.get() + random.nextInt( SpeedAbility.maxAdditionalBoost.get() + 1 )) / 100,
+            getConfig().SPEED_BOOST.boost::next,
             AttributeBoost.ActiveType.HELD_OR_EQUIPPED
-    );
-    
-    private static ForgeConfigSpec.IntValue minBoost;
-    private static ForgeConfigSpec.IntValue maxAdditionalBoost;
+    ) );
     
     
-    public SpeedAbility() {
+    public SpeedBoostAbility() { }
+    
+    
+    public static class SpeedBoostAbilityConfig extends AbilityConfig {
+        
+        public SpeedBoost SPEED_BOOST;
+        
+        public SpeedBoostAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
+                                        double minBoost, double maxBoost ) {
+            super( cfgManager, abilityId );
+            
+            SPEED_BOOST = new SpeedBoost( this, minBoost, maxBoost );
+        }
+        
+        public static class SpeedBoost extends AbstractConfigCategory<SpeedBoostAbilityConfig> {
+            
+            public DoubleField.RandomRange boost;
+            
+            public SpeedBoost( SpeedBoostAbilityConfig parent, double minBoost, double maxBoost ) {
+                super( parent, "speed", "Options for the speed boost this ability provides" );
+                
+                boost = new DoubleField.RandomRange( SPEC, "boost", minBoost, maxBoost, DoubleField.Range.PERCENT,
+                        "The minimum and maximum (inclusive) percentage multiplier of speed boost this ability can apply to an artifact item, .",
+                        "When this ability is applied to an artifact, a random modifier between minimum and maximum is picked." );
+            }
+        }
     }
     
-    @AbilityConfig( abilityId = "magical_relics:speed_boost" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        minBoost = configBuilder.comment( "The minimum amount of movement speed increase the boost of this ability can grant, in percentage. When this ability is applied to an artifact, the total boost equals minBoost + a random value between 0 and maxAdditionalBoost." )
-                .defineInRange( "minBoost", 4, 1, 100000 );
-        
-        maxAdditionalBoost = configBuilder.comment( "The maximum amount of additional movement speed increase the boost of this ability can grant, in percentage. When this ability is applied to an artifact, the total boost equals minBoost + a random value between 0 and maxAdditionalBoost." )
-                .defineInRange( "maxAdditionalBoost", 12, 0, 100000 );
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new SpeedBoostAbilityConfig( cfgManager, abilityId, 0.04, 0.12 );
     }
     
     @Override
     public AttributeBoost getAttributeWithBoost() {
-        return SPEED_BOOST;
+        return SPEED_BOOST.get();
     }
     
     @Override
@@ -90,11 +113,11 @@ public class SpeedAbility extends BaseArtifactAbility {
     }
     
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? TriggerType.ARMOR_TICK : TriggerType.HELD;
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -106,7 +129,8 @@ public class SpeedAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == TriggerType.ARMOR_TICK )
             return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.speed_boost.description.armor_tick" );
         else if( type == TriggerType.HELD )

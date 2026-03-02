@@ -1,26 +1,31 @@
 package com.sarinsa.magical_relics.common.ability;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.AttributeBoost;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.DoubleField;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeMod;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-public class ReachBoostAbility extends BaseArtifactAbility {
+public class ReachBoostAbility extends BaseArtifactAbility<ReachBoostAbility.ReachBoostAbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "reach_boost", "lengthy" ),
@@ -43,29 +48,51 @@ public class ReachBoostAbility extends BaseArtifactAbility {
             ArtifactCategory.AXE
     );
     
-    private static final AttributeBoost REACH_BOOST = new AttributeBoost(
+    private final Supplier<AttributeBoost> REACH_BOOST = Suppliers.memoize( () -> new AttributeBoost(
             ForgeMod.ENTITY_REACH,
             "MREntityReachBoost",
             AttributeModifier.Operation.ADDITION,
-            ( random ) -> (1.0D + random.nextInt( ReachBoostAbility.maxBoost.get() )) / 10,
+            ( random ) -> getConfig().REACH_BOOST.boost.next( random ) / 10,
             AttributeBoost.ActiveType.HELD_OR_EQUIPPED
-    );
-    
-    private static ForgeConfigSpec.IntValue maxBoost;
+    ) );
     
     
     public ReachBoostAbility() { }
     
     
-    @AbilityConfig( abilityId = "magical_relics:reach_boost" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        maxBoost = configBuilder.comment( "The maximum amount of extra reach the boost of this ability can grant (for example, a value of 3 would equal 3/10 of a block more range). When this ability is applied to an artifact, a random value between 1 and maxBoost is picked." )
-                .defineInRange( "maxBoost", 4, 1, 100 );
+    public static class ReachBoostAbilityConfig extends AbilityConfig {
+        
+        public ReachBoost REACH_BOOST;
+        
+        public ReachBoostAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
+                                        double minBoost, double maxBoost ) {
+            super( cfgManager, abilityId );
+            
+            REACH_BOOST = new ReachBoost( this, minBoost, maxBoost );
+        }
+        
+        public static class ReachBoost extends AbstractConfigCategory<ReachBoostAbilityConfig> {
+            
+            public DoubleField.RandomRange boost;
+            
+            public ReachBoost( ReachBoostAbilityConfig parent, double minBoost, double maxBoost ) {
+                super( parent, "reach_boost", "Options for the reach boost this ability provides" );
+                
+                boost = new DoubleField.RandomRange( SPEC, "boost", minBoost, maxBoost, 0.01, 10.0,
+                        "The minimum and maximum (inclusive) amount of extra reach the boost of this ability can grant (for example, a value of 0.5 would equal half a block more range).",
+                        "When this ability is applied to an artifact, a random value between minimum and maximum is picked." );
+            }
+        }
+    }
+    
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new ReachBoostAbilityConfig( cfgManager, abilityId, 0.1, 0.4 );
     }
     
     @Override
     public AttributeBoost getAttributeWithBoost() {
-        return REACH_BOOST;
+        return REACH_BOOST.get();
     }
     
     @Override
@@ -78,13 +105,12 @@ public class ReachBoostAbility extends BaseArtifactAbility {
         return SUFFIXES;
     }
     
-    @Nullable
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? TriggerType.ARMOR_TICK : TriggerType.HELD;
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -96,8 +122,8 @@ public class ReachBoostAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
-        
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == TriggerType.ARMOR_TICK ) {
             return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.reach_boost.description.armor_tick" );
         }

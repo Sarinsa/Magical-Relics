@@ -1,13 +1,17 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
-import net.minecraft.network.chat.Component;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.IntField;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -16,16 +20,13 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class WaterBreathingAbility extends BaseArtifactAbility {
+public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbility.WaterBreathingAbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "water_breathing", "aerated" ),
@@ -53,40 +54,66 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
             ArtifactCategory.HELMET
     );
     
-    private static final int USE_EFFECT_DURATION = 1210;
-    private static final int DROWN_EFFECT_DURATION = 50;
-    private static final int ATTACK_EFFECT_DURATION = 125;
-    private static final int PASSIVE_EFFECT_DURATION = 310;
-    
-    private static ForgeConfigSpec.IntValue cooldown;
-    
     
     public WaterBreathingAbility() { }
     
     
-    @AbilityConfig( abilityId = "magical_relics:water_breathing" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
-                .defineInRange( "cooldown", USE_EFFECT_DURATION, 5, 100000 );
+    public static class WaterBreathingAbilityConfig extends CooldownAbilityConfig {
+        
+        public WaterBreathing WATER_BREATHING;
+        
+        public WaterBreathingAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
+                                            int cooldown,
+                                            int useDuration, int passiveDuration, int attackDuration, int drownDuration ) {
+            super( cfgManager, abilityId, cooldown );
+            
+            WATER_BREATHING = new WaterBreathing( this, useDuration, passiveDuration, attackDuration, drownDuration );
+        }
+        
+        public static class WaterBreathing extends AbstractConfigCategory<WaterBreathingAbilityConfig> {
+            
+            public IntField useDuration;
+            public IntField passiveDuration;
+            public IntField attackDuration;
+            public IntField drownDuration;
+            
+            public WaterBreathing( WaterBreathingAbilityConfig parent, int useDur, int passiveDur, int attackDur, int drownDur ) {
+                super( parent, "water_breathing", "Options for the water breathing effect applied by this ability." );
+                
+                useDuration = SPEC.define( new IntField( "use_duration", useDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability has a use trigger." ) );
+                passiveDuration = SPEC.define( new IntField( "passive_duration", passiveDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability has a passive trigger." ) );
+                attackDuration = SPEC.define( new IntField( "attack_duration", attackDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability has an attack trigger." ) );
+                drownDuration = SPEC.define( new IntField( "drowning_duration", drownDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability is triggered by drowning." ) );
+            }
+        }
+    }
+    
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new WaterBreathingAbilityConfig( cfgManager, abilityId, 1200, 1200, 310, 120, 50 );
     }
     
     @Override
     public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+        // noinspection resource
         if( !player.level().isClientSide )
-            player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, ATTACK_EFFECT_DURATION ) );
+            player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, getConfig().WATER_BREATHING.attackDuration.get() ) );
     }
     
     @Override
     public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact ) {
-        if( damageSource == level.damageSources().drown() ) {
-            if( !player.level().isClientSide )
-                player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, DROWN_EFFECT_DURATION ) );
+        if( !level.isClientSide && damageSource == level.damageSources().drown() ) {
+            player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, getConfig().WATER_BREATHING.drownDuration.get() ) );
         }
     }
     
     @Override
     public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
-        this.onHeld( level, player, artifact, slot );
+        onHeld( level, player, artifact, slot );
     }
     
     @Override
@@ -94,10 +121,10 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( player.getUsedItemHand() ) );
             
-            if( !player.level().isClientSide )
-                player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, USE_EFFECT_DURATION ) );
+            if( !level.isClientSide )
+                player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, getConfig().WATER_BREATHING.useDuration.get() ) );
             
-            ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
+            ArtifactUtils.setAbilityOnCooldown( artifact, this );
             return true;
         }
         return false;
@@ -105,8 +132,8 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
     
     @Override
     public void onHeld( Level level, Player player, ItemStack artifact, EquipmentSlot slot ) {
-        if( !player.level().isClientSide )
-            player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, PASSIVE_EFFECT_DURATION ) );
+        if( !level.isClientSide )
+            player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, getConfig().WATER_BREATHING.passiveDuration.get() ) );
     }
     
     @Override
@@ -119,20 +146,19 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
         return SUFFIXES;
     }
     
-    @Nullable
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isCurio ) return random.nextBoolean() ? TriggerType.CURIO_TICK : TriggerType.USER_DAMAGED;
         if( isArmor ) return random.nextInt( 2 ) == 0 ? TriggerType.ARMOR_TICK : TriggerType.USER_DAMAGED;
         
         return switch( random.nextInt( 3 ) ) {
-            default -> TriggerType.USE;
             case 1 -> TriggerType.HELD;
             case 2 -> TriggerType.USER_ATTACKING;
+            default -> TriggerType.USE;
         };
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -144,25 +170,16 @@ public class WaterBreathingAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public Rarity getRarity() {
-        return Rarity.RARE;
-    }
-    
-    @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == null ) return null;
         
         return switch( type ) {
-            case USER_DAMAGED ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.user_damaged", DROWN_EFFECT_DURATION / 20 );
-            case ARMOR_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.armor_tick" );
-            case USE ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.use", (USE_EFFECT_DURATION / 20) / 60 );
-            case USER_ATTACKING ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.user_attacking", ATTACK_EFFECT_DURATION / 20 );
-            default ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.water_breathing.description.held" );
+            case USER_DAMAGED -> getDescComponent( type, getConfig().WATER_BREATHING.drownDuration.get() / 20 );
+            case ARMOR_TICK -> getDescComponent( type );
+            case USE -> getDescComponent( type, (getConfig().WATER_BREATHING.useDuration.get() / 20) / 60 );
+            case USER_ATTACKING -> getDescComponent( type, getConfig().WATER_BREATHING.attackDuration.get() / 20 );
+            default -> getDescComponent( TriggerType.HELD );
         };
     }
 }

@@ -1,15 +1,21 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.IntField;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -20,13 +26,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TntAbility extends BaseArtifactAbility {
+public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig> {
     
     
     private static final String[] PREFIXES = {
@@ -52,22 +56,36 @@ public class TntAbility extends BaseArtifactAbility {
             ArtifactCategory.SWORD
     );
     
-    private static ForgeConfigSpec.IntValue cooldown;
-    private static ForgeConfigSpec.IntValue fuse;
+    
+    public TntAbility() { }
     
     
-    public TntAbility() {
-    
+    public static class TntAbilityConfig extends CooldownAbilityConfig {
+        
+        public Tnt TNT;
+        
+        public TntAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, int cooldown, int fuse ) {
+            super( cfgManager, abilityId, cooldown );
+            
+            TNT = new Tnt( this, fuse );
+        }
+        
+        public static class Tnt extends AbstractConfigCategory<TntAbilityConfig> {
+            
+            public IntField fuse;
+            
+            public Tnt( TntAbilityConfig parent, int fuze ) {
+                super( parent, "tnt", "Options for the step-boost this ability provides" );
+                
+                fuse = SPEC.define( new IntField( "fuse", fuze, IntField.Range.NON_NEGATIVE,
+                        "The fuse length (in ticks) of the TNT summoned by this ability." ) );
+            }
+        }
     }
     
-    
-    @AbilityConfig( abilityId = "magical_relics:tnt" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
-                .defineInRange( "cooldown", 400, 5, 100000 );
-        
-        fuse = configBuilder.comment( "How long it takes before the TNT actually explodes after being summoned (in ticks)" )
-                .defineInRange( "fuse", 80, 1, 100000 );
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new TntAbilityConfig( cfgManager, abilityId, 120, 80 );
     }
     
     @Override
@@ -78,14 +96,14 @@ public class TntAbility extends BaseArtifactAbility {
             
             if( relativeState.getCollisionShape( level, relativePos ).isEmpty() ) {
                 PrimedTnt tnt = new PrimedTnt( level, relativePos.getX() + 0.5D, relativePos.getY(), relativePos.getZ() + 0.5D, player );
-                tnt.setFuse( fuse.get() );
+                tnt.setFuse( getConfig().TNT.fuse.get() );
                 level.addFreshEntity( tnt );
                 
                 if( !level.isClientSide ) {
                     level.playSound( null, relativePos, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F );
                 }
                 artifact.hurtAndBreak( 2, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
-                ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
+                ArtifactUtils.setAbilityOnCooldown( artifact, this );
                 return true;
             }
         }
@@ -102,13 +120,12 @@ public class TntAbility extends BaseArtifactAbility {
         return SUFFIXES;
     }
     
-    @Nullable
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? null : TriggerType.RIGHT_CLICK_BLOCK;
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -120,7 +137,7 @@ public class TntAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.tnt.description" );
     }
 }

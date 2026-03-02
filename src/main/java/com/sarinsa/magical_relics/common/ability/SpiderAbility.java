@@ -1,21 +1,22 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SpiderAbility extends BaseArtifactAbility {
+public class SpiderAbility extends BaseArtifactAbility<AbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "spider", "arachnid" ),
@@ -37,9 +38,7 @@ public class SpiderAbility extends BaseArtifactAbility {
     );
     
     
-    public SpiderAbility() {
-    
-    }
+    public SpiderAbility() { }
     
     @Override
     public String[] getPrefixes() {
@@ -51,13 +50,12 @@ public class SpiderAbility extends BaseArtifactAbility {
         return SUFFIXES;
     }
     
-    @Nullable
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? TriggerType.ARMOR_TICK : null;
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -69,7 +67,8 @@ public class SpiderAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == null ) return null;
         
         return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.spider.description.armor_tick" );

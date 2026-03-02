@@ -1,15 +1,19 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
+import fathertoast.crust.api.config.common.ConfigManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -21,15 +25,13 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MassExcavateAbility extends BaseArtifactAbility {
+public class MassExcavateAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "mass_excavate", "miners" ),
@@ -54,18 +56,12 @@ public class MassExcavateAbility extends BaseArtifactAbility {
             ArtifactCategory.WAND
     );
     
-    private static ForgeConfigSpec.IntValue cooldown;
+    public MassExcavateAbility() { }
     
     
-    public MassExcavateAbility() {
-    
-    }
-    
-    
-    @AbilityConfig( abilityId = "magical_relics:mass_excavate" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
-                .defineInRange( "cooldown", 20, 5, 100000 );
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new CooldownAbilityConfig( cfgManager, abilityId, Rarity.UNCOMMON, 20 );
     }
     
     @Override
@@ -88,11 +84,6 @@ public class MassExcavateAbility extends BaseArtifactAbility {
                 BlockPos pos2;
                 
                 switch( face ) {
-                    // Up and default
-                    default -> {
-                        pos1 = pos.offset( 1, 0, 1 );
-                        pos2 = pos.offset( -1, -2, -1 );
-                    }
                     case DOWN -> {
                         pos1 = pos.offset( 1, 0, 1 );
                         pos2 = pos.offset( -1, 2, -1 );
@@ -113,8 +104,12 @@ public class MassExcavateAbility extends BaseArtifactAbility {
                         pos1 = pos.offset( 0, -1, 1 );
                         pos2 = pos.offset( 2, 1, -1 );
                     }
+                    // Up and default!
+                    default -> {
+                        pos1 = pos.offset( 1, 0, 1 );
+                        pos2 = pos.offset( -1, -2, -1 );
+                    }
                 }
-                
                 boolean destroyedAnyBlocks = false;
                 
                 for( BlockPos nextPos : BlockPos.betweenClosed( pos1, pos2 ) ) {
@@ -124,7 +119,7 @@ public class MassExcavateAbility extends BaseArtifactAbility {
                 }
                 if( destroyedAnyBlocks ) {
                     artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( player.getUsedItemHand() ) );
-                    ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
+                    ArtifactUtils.setAbilityOnCooldown( artifact, this );
                     return true;
                 }
             }
@@ -153,17 +148,11 @@ public class MassExcavateAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public Rarity getRarity() {
-        return Rarity.UNCOMMON;
-    }
-    
     @Nullable
-    @Override
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? null : TriggerType.RIGHT_CLICK_BLOCK;
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -180,7 +169,8 @@ public class MassExcavateAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.mass_excavate.description" );
     }
 }

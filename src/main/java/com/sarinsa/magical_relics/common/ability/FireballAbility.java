@@ -1,29 +1,29 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.entity.VolatileFireball;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.IntField;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FireballAbility extends BaseArtifactAbility {
+public class FireballAbility extends BaseArtifactAbility<FireballAbility.FireballAbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "fireball", "flaming" ),
@@ -48,20 +48,38 @@ public class FireballAbility extends BaseArtifactAbility {
             ArtifactCategory.AXE
     );
     
-    private static ForgeConfigSpec.IntValue explosionPower;
-    private static ForgeConfigSpec.IntValue cooldown;
-    
     
     public FireballAbility() { }
     
     
-    @AbilityConfig( abilityId = "magical_relics:fireball" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        explosionPower = configBuilder.comment( "The explosion power of the fireballs summoned by this ability. Be a bit careful with larger numbers, since the fireballs explode automatically after having traveled a good distance" )
-                .defineInRange( "explosionPower", 1, 1, 20 );
+    public static class FireballAbilityConfig extends CooldownAbilityConfig {
         
-        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
-                .defineInRange( "cooldown", 20, 5, 100000 );
+        public Fireball FIREBALL;
+        
+        public FireballAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
+                                      int cooldown, int explosionPower ) {
+            super( cfgManager, abilityId, cooldown );
+            
+            FIREBALL = new Fireball( this, explosionPower );
+        }
+        
+        public static class Fireball extends AbstractConfigCategory<FireballAbilityConfig> {
+            
+            public IntField explosionPower;
+            
+            public Fireball( FireballAbilityConfig parent, int explosionPwer ) {
+                super( parent, "fireball", "Options for the fireball summoned by this ability." );
+                
+                explosionPower = SPEC.define( new IntField( "explosion_power", explosionPwer, IntField.Range.NON_NEGATIVE,
+                        "The explosion power of the fireballs summoned by this ability.",
+                        "Be a bit careful with larger numbers, since the fireballs explode automatically after having traveled a good distance." ) );
+            }
+        }
+    }
+    
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new FireballAbilityConfig( cfgManager, abilityId, 20, 1 );
     }
     
     @Override
@@ -70,7 +88,7 @@ public class FireballAbility extends BaseArtifactAbility {
             shootFireball( level, player );
             itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
             
-            ArtifactUtils.setAbilityCooldown( itemStack, this, cooldown.get() );
+            ArtifactUtils.setAbilityOnCooldown( itemStack, this );
             return true;
         }
         return false;
@@ -78,7 +96,7 @@ public class FireballAbility extends BaseArtifactAbility {
     
     private void shootFireball( Level level, Player player ) {
         Vec3 viewVec = player.getViewVector( 1.0F );
-        VolatileFireball fireball = new VolatileFireball( level, player, 0.0D, 0.0D, 0.0D, explosionPower.get() );
+        VolatileFireball fireball = new VolatileFireball( level, player, 0.0D, 0.0D, 0.0D, getConfig().FIREBALL.explosionPower.get() );
         fireball.setPos( player.getX() + viewVec.x * 2.0D, player.getY( 0.5D ) + 0.25D, fireball.getZ() + viewVec.z * 2.0D );
         fireball.shootFromRotation( player, player.getXRot(), player.getYRot(), 2.5F, 2.5F, 2.5F );
         level.addFreshEntity( fireball );
@@ -99,13 +117,12 @@ public class FireballAbility extends BaseArtifactAbility {
         return SUFFIXES;
     }
     
-    @Nullable
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return isArmor ? null : TriggerType.USE;
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -114,10 +131,5 @@ public class FireballAbility extends BaseArtifactAbility {
     @Override
     public List<ArtifactCategory> getCompatibleTypes() {
         return TYPES;
-    }
-    
-    @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
-        return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.fireball.description" );
     }
 }

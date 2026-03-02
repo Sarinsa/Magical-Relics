@@ -24,7 +24,9 @@ public class ClientMixinHooks {
     public static void onControlBoat( Boat boat, CallbackInfo callbackInfo ) {
         if( boat.getControllingPassenger() instanceof Player player ) {
             if( ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.CHEST ), MRArtifactAbilities.SAILOR.get() ) ) {
-                boat.setDeltaMovement( boat.getDeltaMovement().multiply( 1.05D, 0.0D, 1.05D ) );
+                // TODO - Send value from server to client.
+                final double multiplier = 1.0D + MRArtifactAbilities.SAILOR.get().getConfig().SAILOR.speedMultiplier.get();
+                boat.setDeltaMovement( boat.getDeltaMovement().multiply( multiplier, 1.0D, multiplier ) );
             }
         }
     }

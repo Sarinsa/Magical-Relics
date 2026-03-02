@@ -1,13 +1,21 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.IntField;
+import fathertoast.crust.api.lib.NBTHelper;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -18,14 +26,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
-public class SlowFallingAbility extends BaseArtifactAbility {
+public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.SlowFallingAbilityConfig> {
+    
+    public static final String TAG_ABILITY_DATA = "SlowFallingAbilityData";
+    public static final String TAG_AMPLIFIER = "EffectAmplifier";
     
     private static final String[] PREFIXES = {
             createPrefix( "slow_falling", "gauzy" ),
@@ -54,30 +63,67 @@ public class SlowFallingAbility extends BaseArtifactAbility {
             ArtifactCategory.DAGGER
     );
     
-    private static final int USE_EFFECT_DURATION = 2400;
-    private static final int PASSIVE_EFFECT_DURATION = 310;
-    
-    private static ForgeConfigSpec.IntValue cooldown;
+    public SlowFallingAbility() { }
     
     
-    public SlowFallingAbility() {
+    public static class SlowFallingAbilityConfig extends CooldownAbilityConfig {
+        
+        public SlowFalling SLOW_FALLING;
+        
+        public SlowFallingAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
+                                         int cooldown, int useDuration, int passiveDuration,
+                                         int minAmplifier, int maxAmplifier ) {
+            super( cfgManager, abilityId, rarity, cooldown );
+            
+            SLOW_FALLING = new SlowFalling( this, useDuration, passiveDuration, minAmplifier, maxAmplifier );
+        }
+        
+        public static class SlowFalling extends AbstractConfigCategory<SlowFallingAbilityConfig> {
+            
+            public IntField useDuration;
+            public IntField passiveDuration;
+            
+            public IntField.RandomRange amplifier;
+            
+            public SlowFalling( SlowFallingAbilityConfig parent, int useDur, int passiveDur,
+                                int minAmplifier, int maxAmplifier ) {
+                super( parent, "slow_falling", "Options for the slow falling effect applied by this ability." );
+                
+                useDuration = SPEC.define( new IntField( "use_duration", useDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability has a use trigger." ) );
+                passiveDuration = SPEC.define( new IntField( "passive_duration", passiveDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability has a passive trigger." ) );
+                
+                amplifier = new IntField.RandomRange( SPEC, "amplifier", minAmplifier, maxAmplifier, IntField.Range.NON_NEGATIVE,
+                        "The minimum and maximum (inclusive) effect amplifier that is picked for the potion effect granted by this ability." );
+            }
+        }
     }
     
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new SlowFallingAbilityConfig( cfgManager, abilityId, Rarity.RARE,
+                2400, 2400, 310,
+                0, 2 );
+    }
     
-    @AbilityConfig( abilityId = "magical_relics:slow_falling" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
-                .defineInRange( "cooldown", USE_EFFECT_DURATION, 5, 100000 );
+    @Override
+    public void onAbilityAttached( ItemStack artifact, RandomSource random ) {
+        CompoundTag modData = NBTHelper.getOrCreateCompound( artifact.getOrCreateTag(), ArtifactUtils.TAG_MOD_DATA );
+        CompoundTag abilityData = NBTHelper.getOrCreateCompound( modData, TAG_ABILITY_DATA );
+        
+        int amplifier = getConfig().SLOW_FALLING.amplifier.next( random );
+        abilityData.putInt( TAG_AMPLIFIER, amplifier );
     }
     
     @Override
     public boolean onUse( Level level, Player player, ItemStack itemStack ) {
         if( !ArtifactUtils.isAbilityOnCooldown( itemStack, this ) ) {
-            player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, USE_EFFECT_DURATION ) );
+            player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, getConfig().SLOW_FALLING.useDuration.get() ) );
             
             itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
             
-            ArtifactUtils.setAbilityCooldown( itemStack, this, cooldown.get() );
+            ArtifactUtils.setAbilityOnCooldown( itemStack, this );
             return true;
         }
         return false;
@@ -85,32 +131,28 @@ public class SlowFallingAbility extends BaseArtifactAbility {
     
     @Override
     public void onHeld( Level level, Player player, ItemStack artifact, EquipmentSlot slot ) {
-        if( !player.level().isClientSide )
-            player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, PASSIVE_EFFECT_DURATION ) );
+        if( !level.isClientSide )
+            player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, getConfig().SLOW_FALLING.passiveDuration.get() ) );
     }
     
     @Override
     public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
+        // noinspection ConstantConditions
         onArmorTick( artifact, level, player, null );
     }
     
     @Override
     public void onInventoryTick( ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem ) {
         if( !level.isClientSide && entity instanceof Player player ) {
-            player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, PASSIVE_EFFECT_DURATION ) );
+            player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, getConfig().SLOW_FALLING.passiveDuration.get() ) );
         }
     }
     
     @Override
     public void onArmorTick( ItemStack stack, Level level, Player player, EquipmentSlot slot ) {
         if( !level.isClientSide ) {
-            player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, PASSIVE_EFFECT_DURATION ) );
+            player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, getConfig().SLOW_FALLING.passiveDuration.get() ) );
         }
-    }
-    
-    @Override
-    public Rarity getRarity() {
-        return Rarity.RARE;
     }
     
     @Override
@@ -124,18 +166,18 @@ public class SlowFallingAbility extends BaseArtifactAbility {
     }
     
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isCurio ) return TriggerType.CURIO_TICK;
         if( isArmor ) return TriggerType.ARMOR_TICK;
         
         return switch( random.nextInt( 3 ) ) {
-            default -> TriggerType.USE;
             case 1 -> TriggerType.INVENTORY_TICK;
             case 2 -> TriggerType.HELD;
+            default -> TriggerType.USE;
         };
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -147,14 +189,15 @@ public class SlowFallingAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == null ) return null;
         
         return switch( type ) {
             case ARMOR_TICK ->
                     Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.slow_falling.description.armor_tick" );
             case USE ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.slow_falling.description.use", (USE_EFFECT_DURATION / 20) / 60 );
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.slow_falling.description.use", (getConfig().SLOW_FALLING.useDuration.get() / 20) / 60 );
             case HELD ->
                     Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.slow_falling.description.held" );
             case CURIO_TICK ->

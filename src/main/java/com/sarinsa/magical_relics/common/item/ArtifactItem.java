@@ -2,10 +2,10 @@ package com.sarinsa.magical_relics.common.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.AttributeBoost;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -39,12 +39,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem {
+public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioItem {
     
     private final ArtifactCategory artifactCategory;
     
     public ArtifactItem( Tier tier, ArtifactCategory artifactCategory ) {
-        super( tier, new Properties().rarity( ArtifactUtils.MAGICAL ).stacksTo( 1 ) );
+        super( tier, new Properties().rarity( ArtifactUtils.RARITY_GLORIOUS ).stacksTo( 1 ) );
         this.artifactCategory = artifactCategory;
     }
     
@@ -56,10 +56,10 @@ public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem
     @Override
     public InteractionResultHolder<ItemStack> use( Level level, Player player, InteractionHand hand ) {
         ItemStack heldItem = player.getItemInHand( hand );
-        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
+        Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
         
         if( !abilities.isEmpty() ) {
-            for( BaseArtifactAbility ability : abilities ) {
+            for( BaseArtifactAbility<?> ability : abilities ) {
                 if( ability.onUse( level, player, heldItem ) ) {
                     return InteractionResultHolder.success( heldItem );
                 }
@@ -75,7 +75,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem
         BlockPos pos = context.getClickedPos();
         BlockState clickedState = level.getBlockState( pos );
         Player player = context.getPlayer();
-        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.RIGHT_CLICK_BLOCK, heldItem );
+        Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.RIGHT_CLICK_BLOCK, heldItem );
         
         // Help prevent stupid things from happening
         // when holding a potentially dangerous artifact
@@ -85,7 +85,7 @@ public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem
         if( clickedState.hasBlockEntity() ) return InteractionResult.PASS;
         
         if( !abilities.isEmpty() ) {
-            for( BaseArtifactAbility ability : abilities ) {
+            for( BaseArtifactAbility<?> ability : abilities ) {
                 if( ability.onClickBlock( level, heldItem, pos, level.getBlockState( pos ), context.getClickedFace(), player ) )
                     return InteractionResult.SUCCESS;
             }
@@ -95,9 +95,9 @@ public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem
     
     @Override
     public void onUnequip( SlotContext slotContext, ItemStack newStack, ItemStack stack ) {
-        Map<BaseArtifactAbility, TriggerType> allAbilities = ArtifactUtils.getAllAbilities( stack );
+        Map<BaseArtifactAbility<?>, TriggerType> allAbilities = ArtifactUtils.getAllAbilities( stack );
         
-        for( BaseArtifactAbility ability : allAbilities.keySet() ) {
+        for( BaseArtifactAbility<?> ability : allAbilities.keySet() ) {
             ability.onUnequipped( slotContext, stack );
         }
     }
@@ -111,10 +111,10 @@ public class ArtifactItem extends TieredItem implements ItemArtifact, ICurioItem
     
     @Override
     public void inventoryTick( ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem ) {
-        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.INVENTORY_TICK, itemStack );
+        Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.INVENTORY_TICK, itemStack );
         
         if( !abilities.isEmpty() ) {
-            for( BaseArtifactAbility ability : abilities ) {
+            for( BaseArtifactAbility<?> ability : abilities ) {
                 ability.onInventoryTick( itemStack, level, entity, slot, isSelectedItem );
             }
         }

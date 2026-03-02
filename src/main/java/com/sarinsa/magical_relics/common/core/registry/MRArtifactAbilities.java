@@ -1,62 +1,63 @@
 package com.sarinsa.magical_relics.common.core.registry;
 
 import com.sarinsa.magical_relics.common.ability.*;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class MRArtifactAbilities {
     
-    public static final DeferredRegister<BaseArtifactAbility> ARTIFACT_ABILITIES = DeferredRegister.create( MagicalRelics.rl( "artifact_abilities" ), MagicalRelics.MODID );
-    public static final Supplier<IForgeRegistry<BaseArtifactAbility>> ARTIFACT_ABILITY_REGISTRY = ARTIFACT_ABILITIES.makeRegistry( ()
-            -> (new RegistryBuilder<BaseArtifactAbility>()).setDefaultKey( MagicalRelics.rl( "empty" ) ) );
+    public static final DeferredRegister<BaseArtifactAbility<?>> ARTIFACT_ABILITIES = DeferredRegister.create( MagicalRelics.rl( "artifact_abilities" ), MagicalRelics.MODID );
+    public static final Supplier<IForgeRegistry<BaseArtifactAbility<?>>> ARTIFACT_ABILITY_REGISTRY = ARTIFACT_ABILITIES.makeRegistry( ()
+            -> (new RegistryBuilder<BaseArtifactAbility<?>>()).setDefaultKey( MagicalRelics.rl( "empty" ) ) );
     
     
-    public static final RegistryObject<BaseArtifactAbility> EMPTY = register( "empty", EmptyAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> BAKER = register( "baker", BakerAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> CASHOUT = register( "cashout", CashoutAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> HEALTH_BOOST = register( "health_boost", HealthBoostAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> SPEED_BOOST = register( "speed_boost", SpeedAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> AIR_SNEAK = register( "air_sneak", AirSneakAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> NIGHT_VISION = register( "night_vision", NightVisionAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> ADRENALINE = register( "adrenaline", AdrenalineAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> JUKEBOX = register( "jukebox", JukeboxAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> WATER_BREATHING = register( "water_breathing", WaterBreathingAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> OBSCURITY = register( "obscurity", ObscurityAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> SAILOR = register( "sailor", SailorAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> STUN = register( "stun", StunAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> FIREBALL = register( "fireball", FireballAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> MASS_EXCAVATE = register( "mass_excavate", MassExcavateAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> ILLUMINATION = register( "illumination", IlluminationAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> GLOW_VISION = register( "glow_vision", GlowVisionAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> JUMP_BOOST = register( "jump_boost", JumpBoostAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> RESURRECT = register( "resurrect", ResurrectAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> SELF_REPAIR = register( "self_repair", SelfRepairAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> REPAIR_OTHERS = register( "repair_others", RepairOthersAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> TNT = register( "tnt", TntAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> REACH_BOOST = register( "reach_boost", ReachBoostAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> ORE_RADAR = register( "ore_radar", OreRadarAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> TERRAIN_WALKER = register( "terrain_walker", TerrainWalkerAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> SLOW_FALLING = register( "slow_falling", SlowFallingAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> SPIDER = register( "spider", SpiderAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> LIGHTNING = register( "lightning", LightningAbility::new );
-    public static final RegistryObject<BaseArtifactAbility> FOODIE = register( "foodie", FoodieAbility::new );
+    public static final RegistryObject<BakerAbility> BAKER = register( "baker", BakerAbility::new );
+    public static final RegistryObject<CashoutAbility> CASHOUT = register( "cashout", CashoutAbility::new );
+    public static final RegistryObject<HealthBoostAbility> HEALTH_BOOST = register( "health_boost", HealthBoostAbility::new );
+    public static final RegistryObject<SpeedBoostAbility> SPEED_BOOST = register( "speed_boost", SpeedBoostAbility::new );
+    public static final RegistryObject<AirSneakAbility> AIR_SNEAK = register( "air_sneak", AirSneakAbility::new );
+    public static final RegistryObject<NightVisionAbility> NIGHT_VISION = register( "night_vision", NightVisionAbility::new );
+    public static final RegistryObject<AdrenalineAbility> ADRENALINE = register( "adrenaline", AdrenalineAbility::new );
+    public static final RegistryObject<JukeboxAbility> JUKEBOX = register( "jukebox", JukeboxAbility::new );
+    public static final RegistryObject<WaterBreathingAbility> WATER_BREATHING = register( "water_breathing", WaterBreathingAbility::new );
+    public static final RegistryObject<ObscurityAbility> OBSCURITY = register( "obscurity", ObscurityAbility::new );
+    public static final RegistryObject<SailorAbility> SAILOR = register( "sailor", SailorAbility::new );
+    public static final RegistryObject<StunAbility> STUN = register( "stun", StunAbility::new );
+    public static final RegistryObject<FireballAbility> FIREBALL = register( "fireball", FireballAbility::new );
+    public static final RegistryObject<MassExcavateAbility> MASS_EXCAVATE = register( "mass_excavate", MassExcavateAbility::new );
+    public static final RegistryObject<IlluminationAbility> ILLUMINATION = register( "illumination", IlluminationAbility::new );
+    public static final RegistryObject<GlowVisionAbility> GLOW_VISION = register( "glow_vision", GlowVisionAbility::new );
+    public static final RegistryObject<JumpBoostAbility> JUMP_BOOST = register( "jump_boost", JumpBoostAbility::new );
+    public static final RegistryObject<ResurrectAbility> RESURRECT = register( "resurrect", ResurrectAbility::new );
+    public static final RegistryObject<SelfRepairAbility> SELF_REPAIR = register( "self_repair", SelfRepairAbility::new );
+    public static final RegistryObject<RepairOthersAbility> REPAIR_OTHERS = register( "repair_others", RepairOthersAbility::new );
+    public static final RegistryObject<TntAbility> TNT = register( "tnt", TntAbility::new );
+    public static final RegistryObject<ReachBoostAbility> REACH_BOOST = register( "reach_boost", ReachBoostAbility::new );
+    public static final RegistryObject<OreRadarAbility> ORE_RADAR = register( "ore_radar", OreRadarAbility::new );
+    public static final RegistryObject<TerrainWalkerAbility> TERRAIN_WALKER = register( "terrain_walker", TerrainWalkerAbility::new );
+    public static final RegistryObject<SlowFallingAbility> SLOW_FALLING = register( "slow_falling", SlowFallingAbility::new );
+    public static final RegistryObject<SpiderAbility> SPIDER = register( "spider", SpiderAbility::new );
+    public static final RegistryObject<LightningAbility> LIGHTNING = register( "lightning", LightningAbility::new );
+    public static final RegistryObject<FoodieAbility> FOODIE = register( "foodie", FoodieAbility::new );
     
     
-    private static RegistryObject<BaseArtifactAbility> register( String name, Supplier<BaseArtifactAbility> supplier ) {
+    private static <CFG extends AbilityConfig, T extends BaseArtifactAbility<CFG>> RegistryObject<T> register( String name, Supplier<T> supplier ) {
         return ARTIFACT_ABILITIES.register( name, supplier );
     }
     
-    public static BaseArtifactAbility getOrDefault( ResourceLocation id ) {
-        for( BaseArtifactAbility type : ARTIFACT_ABILITY_REGISTRY.get().getValues() ) {
-            if( ARTIFACT_ABILITY_REGISTRY.get().getKey( type ).equals( id ) )
-                return type;
-        }
-        return EMPTY.get();
+    @Nullable
+    public static BaseArtifactAbility<?> fromId( ResourceLocation id ) {
+        if( ARTIFACT_ABILITY_REGISTRY.get().containsKey( id ) )
+            return ARTIFACT_ABILITY_REGISTRY.get().getValue( id );
+        return null;
     }
 }

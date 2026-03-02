@@ -8,6 +8,7 @@ import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ForgeEventFactory;
 
+@SuppressWarnings( "resource" )
 public class VolatileFireball extends LargeFireball {
     
     int timeUntilDetonation = 60;

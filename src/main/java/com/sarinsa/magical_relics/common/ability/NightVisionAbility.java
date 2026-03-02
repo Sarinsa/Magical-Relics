@@ -1,13 +1,19 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.IntField;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -18,15 +24,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
 
-public class NightVisionAbility extends BaseArtifactAbility {
+public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.NightVisionAbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "night_vision", "sensing" ),
@@ -58,30 +62,50 @@ public class NightVisionAbility extends BaseArtifactAbility {
             ArtifactCategory.HELMET
     );
     
-    private static final int USE_EFFECT_DURATION = 2400;
-    private static final int PASSIVE_EFFECT_DURATION = 310;
-    
-    private static ForgeConfigSpec.IntValue cooldown;
+    public NightVisionAbility() { }
     
     
-    public NightVisionAbility() {
+    public static class NightVisionAbilityConfig extends CooldownAbilityConfig {
+        
+        public NightVision NIGHT_VISION;
+        
+        public NightVisionAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
+                                         int cooldown, int useDuration, int passiveDuration ) {
+            super( cfgManager, abilityId, rarity, cooldown );
+            
+            NIGHT_VISION = new NightVision( this, useDuration, passiveDuration );
+        }
+        
+        public static class NightVision extends AbstractConfigCategory<NightVisionAbilityConfig> {
+            
+            public IntField useDuration;
+            public IntField passiveDuration;
+            
+            public NightVision( NightVisionAbilityConfig parent, int useDur, int passiveDur ) {
+                super( parent, "night_vision", "Options for the night vision effect applied by this ability." );
+                
+                useDuration = SPEC.define( new IntField( "use_duration", useDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability has a use trigger." ) );
+                passiveDuration = SPEC.define( new IntField( "passive_duration", passiveDur, IntField.Range.POSITIVE,
+                        "The duration (in ticks) of the potion effect when this ability has a passive trigger." ) );
+            }
+        }
     }
     
-    
-    @AbilityConfig( abilityId = "magical_relics:night_vision" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
-                .defineInRange( "cooldown", USE_EFFECT_DURATION, 5, 100000 );
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new NightVisionAbilityConfig( cfgManager, abilityId, Rarity.RARE,
+                2400, 2400, 310 );
     }
     
     @Override
     public boolean onUse( Level level, Player player, ItemStack itemStack ) {
         if( !ArtifactUtils.isAbilityOnCooldown( itemStack, this ) ) {
-            player.addEffect( new MobEffectInstance( MobEffects.NIGHT_VISION, USE_EFFECT_DURATION ) );
+            player.addEffect( new MobEffectInstance( MobEffects.NIGHT_VISION, getConfig().NIGHT_VISION.useDuration.get() ) );
             
             itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
             
-            ArtifactUtils.setAbilityCooldown( itemStack, this, cooldown.get() );
+            ArtifactUtils.setAbilityOnCooldown( itemStack, this );
             return true;
         }
         return false;
@@ -89,32 +113,29 @@ public class NightVisionAbility extends BaseArtifactAbility {
     
     @Override
     public void onHeld( Level level, Player player, ItemStack artifact, EquipmentSlot slot ) {
+        // noinspection resource
         if( !player.level().isClientSide )
-            player.addEffect( new MobEffectInstance( MobEffects.NIGHT_VISION, PASSIVE_EFFECT_DURATION ) );
+            player.addEffect( new MobEffectInstance( MobEffects.NIGHT_VISION, getConfig().NIGHT_VISION.passiveDuration.get() ) );
     }
     
     @Override
     public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
+        // noinspection ConstantConditions
         onArmorTick( artifact, level, player, null );
     }
     
     @Override
     public void onInventoryTick( ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem ) {
         if( !level.isClientSide && entity instanceof Player player ) {
-            player.addEffect( new MobEffectInstance( MobEffects.NIGHT_VISION, PASSIVE_EFFECT_DURATION ) );
+            player.addEffect( new MobEffectInstance( MobEffects.NIGHT_VISION, getConfig().NIGHT_VISION.passiveDuration.get() ) );
         }
     }
     
     @Override
     public void onArmorTick( ItemStack stack, Level level, Player player, EquipmentSlot slot ) {
         if( !level.isClientSide ) {
-            player.addEffect( new MobEffectInstance( MobEffects.NIGHT_VISION, PASSIVE_EFFECT_DURATION ) );
+            player.addEffect( new MobEffectInstance( MobEffects.NIGHT_VISION, getConfig().NIGHT_VISION.passiveDuration.get() ) );
         }
-    }
-    
-    @Override
-    public Rarity getRarity() {
-        return Rarity.RARE;
     }
     
     @Override
@@ -128,18 +149,18 @@ public class NightVisionAbility extends BaseArtifactAbility {
     }
     
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isCurio ) return TriggerType.CURIO_TICK;
         if( isArmor ) return TriggerType.ARMOR_TICK;
         
         return switch( random.nextInt( 3 ) ) {
-            default -> TriggerType.USE;
             case 1 -> TriggerType.INVENTORY_TICK;
             case 2 -> TriggerType.HELD;
+            default -> TriggerType.USE;
         };
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -151,14 +172,15 @@ public class NightVisionAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == null ) return null;
         
         return switch( type ) {
             case ARMOR_TICK ->
                     Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.armor_tick" );
             case USE ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.use", (USE_EFFECT_DURATION / 20) / 60 );
+                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.use", (getConfig().NIGHT_VISION.useDuration.get() / 20) / 60 );
             case HELD ->
                     Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.held" );
             case CURIO_TICK ->

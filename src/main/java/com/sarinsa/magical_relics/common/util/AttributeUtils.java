@@ -29,7 +29,6 @@ public class AttributeUtils {
         }
     }
     
-    
     private static UUID findAndReplace( UUID uuid ) {
         if( uuid.equals( Item.BASE_ATTACK_DAMAGE_UUID ) ) {
             return Item.BASE_ATTACK_DAMAGE_UUID;
@@ -37,7 +36,6 @@ public class AttributeUtils {
         else if( uuid.equals( Item.BASE_ATTACK_SPEED_UUID ) ) {
             return Item.BASE_ATTACK_SPEED_UUID;
         }
-        
         return uuid;
     }
 }

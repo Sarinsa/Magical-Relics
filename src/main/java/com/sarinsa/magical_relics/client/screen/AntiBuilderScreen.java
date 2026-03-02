@@ -42,22 +42,25 @@ public class AntiBuilderScreen extends Screen {
     
     @Override
     protected void init() {
-        AABB aabb = antiBuilder.getEffectiveArea();
+        AABB aabb = antiBuilder.getEffectiveArea() == null
+                // Default box in case existing AoE is null for whatever reason.
+                ? new AABB( antiBuilder.getBlockPos() ).inflate( 5.0D )
+                : antiBuilder.getEffectiveArea();
         Vec3i pos = antiBuilder.getBlockPos();
         
-        corner2XEdit = createCoordField( (width / 2) - 70, (height / 3) + 50, (int) aabb.minX - pos.getX() );
-        corner2YEdit = createCoordField( (width / 2) - 20, (height / 3) + 50, (int) aabb.minY - pos.getY() );
-        corner2ZEdit = createCoordField( (width / 2) + 30, (height / 3) + 50, (int) aabb.minZ - pos.getZ() );
         corner1XEdit = createCoordField( (width / 2) - 70, (height / 3), (int) aabb.maxX - pos.getX() );
         corner1YEdit = createCoordField( (width / 2) - 20, (height / 3), (int) aabb.maxY - pos.getY() );
         corner1ZEdit = createCoordField( (width / 2) + 30, (height / 3), (int) aabb.maxZ - pos.getZ() );
+        corner2XEdit = createCoordField( (width / 2) - 70, (height / 3) + 50, (int) aabb.minX - pos.getX() );
+        corner2YEdit = createCoordField( (width / 2) - 20, (height / 3) + 50, (int) aabb.minY - pos.getY() );
+        corner2ZEdit = createCoordField( (width / 2) + 30, (height / 3) + 50, (int) aabb.minZ - pos.getZ() );
         
-        corner2XEdit.setResponder( this::updateDoneButton );
-        corner2YEdit.setResponder( this::updateDoneButton );
-        corner2ZEdit.setResponder( this::updateDoneButton );
         corner1XEdit.setResponder( this::updateDoneButton );
         corner1YEdit.setResponder( this::updateDoneButton );
         corner1ZEdit.setResponder( this::updateDoneButton );
+        corner2XEdit.setResponder( this::updateDoneButton );
+        corner2YEdit.setResponder( this::updateDoneButton );
+        corner2ZEdit.setResponder( this::updateDoneButton );
         
         addRenderableWidget( corner1XEdit );
         addRenderableWidget( corner1YEdit );
@@ -67,21 +70,18 @@ public class AntiBuilderScreen extends Screen {
         addRenderableWidget( corner2ZEdit );
         
         // Done button
-        Button.Builder doneButton = new Button.Builder( CommonComponents.GUI_DONE, ( button ) -> {
-            onDone();
-        } );
-        doneButton.pos( width / 2 - 154, 210 );
-        doneButton.size( 150, 20 );
-        this.doneButton = doneButton.build();
-        addRenderableWidget( this.doneButton );
+        doneButton = new Button.Builder( CommonComponents.GUI_DONE, ( button ) -> onDone() )
+                .pos( width / 2 - 154, 210 )
+                .size( 150, 20 )
+                .build();
+        
+        addRenderableWidget( doneButton );
         
         // Cancel button
-        Button.Builder cancelButton = new Button.Builder( CommonComponents.GUI_CANCEL, ( button ) -> {
-            onCancel();
-        } );
-        cancelButton.pos( width / 2 + 4, 210 );
-        cancelButton.size( 150, 20 );
-        addRenderableWidget( cancelButton.build() );
+        addRenderableWidget( new Button.Builder( CommonComponents.GUI_CANCEL, ( button ) -> onCancel() )
+                .pos( width / 2 + 4, 210 )
+                .size( 150, 20 )
+                .build() );
         
         setInitialFocus( corner1XEdit );
     }
@@ -124,7 +124,7 @@ public class AntiBuilderScreen extends Screen {
     
     private void onDone() {
         // Add offset
-        int[] bbCoordinates = new int[] {
+        int[] bbDimensions = new int[] {
                 corner1XEdit.getCurrentValue(),
                 corner1YEdit.getCurrentValue(),
                 corner1ZEdit.getCurrentValue(),
@@ -132,8 +132,8 @@ public class AntiBuilderScreen extends Screen {
                 corner2YEdit.getCurrentValue(),
                 corner2ZEdit.getCurrentValue()
         };
-        antiBuilder.recalculateEffectiveArea( bbCoordinates );
-        sendNBTToServer( bbCoordinates );
+        antiBuilder.recalculateEffectiveArea( bbDimensions );
+        sendNBTToServer( bbDimensions );
         minecraft.setScreen( null );
     }
     

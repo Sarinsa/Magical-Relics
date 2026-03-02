@@ -1,17 +1,23 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.annotations.AbilityConfig;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.BooleanField;
+import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
@@ -23,15 +29,15 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class LightningAbility extends BaseArtifactAbility {
+public class LightningAbility extends BaseArtifactAbility<LightningAbility.LightningAbilityConfig> {
+    
+    public static final String TAG_SUMMONER_UUID = "SummonerUUID";
     
     private static final String[] PREFIXES = {
             createPrefix( "lightning", "shocking" ),
@@ -57,17 +63,36 @@ public class LightningAbility extends BaseArtifactAbility {
             ArtifactCategory.STAFF
     );
     
-    public static ForgeConfigSpec.BooleanValue cancelUserDamage;
-    private static ForgeConfigSpec.IntValue cooldown;
+    public LightningAbility() { }
     
     
-    @AbilityConfig( abilityId = "magical_relics:lightning" )
-    public static void buildEntries( ForgeConfigSpec.Builder configBuilder ) {
-        cancelUserDamage = configBuilder.comment( "If enabled, the player summoning the lightning bolt will not be struck themselves." )
-                .define( "cancelUserDamage", true );
+    public static class LightningAbilityConfig extends CooldownAbilityConfig {
         
-        cooldown = configBuilder.comment( "How many ticks of cooldown to put this ability on when it has been used" )
-                .defineInRange( "cooldown", 100, 20, 100000 );
+        public Lightning LIGHTNING;
+        
+        public LightningAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
+                                       int cooldown, boolean immuneSummoner ) {
+            super( cfgManager, abilityId, cooldown );
+            
+            LIGHTNING = new Lightning( this, immuneSummoner );
+        }
+        
+        public static class Lightning extends AbstractConfigCategory<LightningAbilityConfig> {
+            
+            public BooleanField immuneSummoner;
+            
+            public Lightning( LightningAbilityConfig parent, boolean immuneSummnr ) {
+                super( parent, "lightning", "Options for the lightning summoned by this ability." );
+                
+                immuneSummoner = SPEC.define( new BooleanField( "immune_summoner", immuneSummnr,
+                        "If enabled, the player summoning the lightning will not be damaged by it." ) );
+            }
+        }
+    }
+    
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new LightningAbilityConfig( cfgManager, abilityId, 100, true );
     }
     
     @Override
@@ -83,15 +108,17 @@ public class LightningAbility extends BaseArtifactAbility {
     @Override
     public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
+            ArtifactUtils.setAbilityOnCooldown( artifact, this );
             
             Level level = attackedMob.level();
             LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create( level );
-            lightningBolt.moveTo( Vec3.atBottomCenterOf( attackedMob.blockPosition() ) );
-            lightningBolt.setCause( player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-            level.addFreshEntity( lightningBolt );
-            assignSummoner( lightningBolt, player );
             
+            if( lightningBolt != null ) {
+                lightningBolt.moveTo( Vec3.atBottomCenterOf( attackedMob.blockPosition() ) );
+                lightningBolt.setCause( player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                level.addFreshEntity( lightningBolt );
+                assignSummoner( lightningBolt, player );
+            }
             artifact.hurtAndBreak( 3, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
         }
     }
@@ -99,14 +126,16 @@ public class LightningAbility extends BaseArtifactAbility {
     @Override
     public boolean onClickBlock( Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            ArtifactUtils.setAbilityCooldown( artifact, this, cooldown.get() );
+            ArtifactUtils.setAbilityOnCooldown( artifact, this );
             
             LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create( level );
-            lightningBolt.moveTo( Vec3.atBottomCenterOf( pos ) );
-            lightningBolt.setCause( player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-            level.addFreshEntity( lightningBolt );
-            assignSummoner( lightningBolt, player );
             
+            if( lightningBolt != null ) {
+                lightningBolt.moveTo( Vec3.atBottomCenterOf( pos ) );
+                lightningBolt.setCause( player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                level.addFreshEntity( lightningBolt );
+                assignSummoner( lightningBolt, player );
+            }
             artifact.hurtAndBreak( 3, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
             return true;
         }
@@ -117,32 +146,33 @@ public class LightningAbility extends BaseArtifactAbility {
         Objects.requireNonNull( lightningBolt );
         Objects.requireNonNull( player );
         
-        CompoundTag modData = new CompoundTag();
-        modData.putUUID( "PlayerSummoner", player.getUUID() );
-        lightningBolt.getPersistentData().put( "MagicalRelicsData", modData );
+        CompoundTag modData = NBTHelper.getOrCreateCompound( lightningBolt.getPersistentData(), ArtifactUtils.TAG_MOD_DATA );
+        modData.putUUID( TAG_SUMMONER_UUID, player.getUUID() );
     }
     
     @Nullable
     public static UUID getSummonerId( LightningBolt lightningBolt ) {
-        if( lightningBolt.getPersistentData().contains( "MagicalRelicsData", Tag.TAG_COMPOUND ) ) {
-            CompoundTag modData = lightningBolt.getPersistentData().getCompound( "MagicalRelicsData" );
+        CompoundTag persistentData = lightningBolt.getPersistentData();
+        
+        if( NBTHelper.containsCompound( persistentData, ArtifactUtils.TAG_MOD_DATA ) ) {
+            CompoundTag modData = NBTHelper.getOrCreateCompound( persistentData, ArtifactUtils.TAG_MOD_DATA );
             
-            if( modData.hasUUID( "PlayerSummoner" ) ) {
-                return modData.getUUID( "PlayerSummoner" );
+            if( modData.hasUUID( TAG_SUMMONER_UUID ) ) {
+                return modData.getUUID( TAG_SUMMONER_UUID );
             }
         }
         return null;
     }
     
     @Override
-    public @Nullable TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
+    @Nullable
+    public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isArmor ) return null;
-        
         return random.nextBoolean() ? TriggerType.USER_ATTACKING : TriggerType.RIGHT_CLICK_BLOCK;
     }
     
     @Override
-    public @NotNull List<TriggerType> supportedTriggers() {
+    public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
     }
     
@@ -152,7 +182,8 @@ public class LightningAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == null ) return null;
         
         return type == TriggerType.RIGHT_CLICK_BLOCK

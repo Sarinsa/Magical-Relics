@@ -2,10 +2,10 @@ package com.sarinsa.magical_relics.common.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.sarinsa.magical_relics.common.ability.BaseArtifactAbility;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.AttributeBoost;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.AttributeBoost;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -21,12 +21,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public class DyableArtifactArmorItem extends ArmorItem implements ItemArtifact, DyeableLeatherItem {
+public class DyableArtifactArmorItem extends ArmorItem implements IArtifactItem, DyeableLeatherItem {
     
     private final ArtifactCategory type;
     
     public DyableArtifactArmorItem( ArmorMaterial armorMaterial, ArtifactCategory type, ArmorItem.Type armorType, Properties properties ) {
-        super( armorMaterial, armorType, properties.rarity( ArtifactUtils.MAGICAL ) );
+        super( armorMaterial, armorType, properties.rarity( ArtifactUtils.RARITY_GLORIOUS ) );
         this.type = type;
     }
     
@@ -46,10 +46,10 @@ public class DyableArtifactArmorItem extends ArmorItem implements ItemArtifact, 
     @SuppressWarnings( "removal" )
     @Override
     public void onArmorTick( ItemStack stack, Level level, Player player ) {
-        Collection<BaseArtifactAbility> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.ARMOR_TICK, stack );
+        Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.ARMOR_TICK, stack );
         
         if( !abilities.isEmpty() ) {
-            for( BaseArtifactAbility ability : abilities ) {
+            for( BaseArtifactAbility<?> ability : abilities ) {
                 ability.onArmorTick( stack, level, player, getEquipmentSlot() );
             }
         }

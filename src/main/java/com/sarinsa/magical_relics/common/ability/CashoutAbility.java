@@ -1,9 +1,12 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import fathertoast.crust.api.config.common.ConfigManager;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -21,13 +24,12 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 
-public class CashoutAbility extends BaseArtifactAbility {
+public class CashoutAbility extends BaseArtifactAbility<AbilityConfig> {
     
     private static final ResourceLocation LOOT_TABLE = MagicalRelics.rl( "misc/cashout_ability" );
     
@@ -56,9 +58,13 @@ public class CashoutAbility extends BaseArtifactAbility {
     );
     
     
-    public CashoutAbility() {
-    }
+    public CashoutAbility() { }
     
+    
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new AbilityConfig( cfgManager, abilityId, Rarity.UNCOMMON );
+    }
     
     @Override
     public boolean onDropped( Level level, ItemEntity itemEntity, Player player ) {
@@ -84,11 +90,6 @@ public class CashoutAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public Rarity getRarity() {
-        return Rarity.UNCOMMON;
-    }
-    
-    @Override
     public String[] getPrefixes() {
         return PREFIXES;
     }
@@ -99,11 +100,11 @@ public class CashoutAbility extends BaseArtifactAbility {
     }
     
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         return TriggerType.DROPPED;
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -115,7 +116,8 @@ public class CashoutAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.cashout.description" );
     }
 }

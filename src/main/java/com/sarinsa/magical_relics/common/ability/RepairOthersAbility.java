@@ -1,14 +1,21 @@
 package com.sarinsa.magical_relics.common.ability;
 
 import com.google.common.collect.ImmutableList;
-import com.sarinsa.magical_relics.common.ability.misc.ArtifactCategory;
-import com.sarinsa.magical_relics.common.ability.misc.TriggerType;
+import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.event.MREventListener;
-import com.sarinsa.magical_relics.common.item.ItemArtifact;
+import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
+import com.sarinsa.magical_relics.common.event.ServerEventListener;
+import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
+import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.IntField;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,14 +23,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
-public class RepairOthersAbility extends BaseArtifactAbility {
+public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility.RepairOthersAbilityConfig> {
     
     
     private static final String[] PREFIXES = {
@@ -52,29 +58,58 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     );
     
     
-    public RepairOthersAbility() {
+    public RepairOthersAbility() { }
     
+    
+    public static class RepairOthersAbilityConfig extends CooldownAbilityConfig {
+        
+        public RepairOthers REPAIR_OTHERS;
+        
+        public RepairOthersAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
+                                          int cooldown ) {
+            super( cfgManager, abilityId, cooldown );
+            
+            REPAIR_OTHERS = new RepairOthers( this );
+        }
+        
+        public static class RepairOthers extends AbstractConfigCategory<RepairOthersAbilityConfig> {
+            
+            public IntField durRestoredOnUse;
+            public IntField durRestoredPassively;
+            
+            public RepairOthers( RepairOthersAbilityConfig parent ) {
+                super( parent, "repair_others", "Options for this ability repairing other items in the inventory." );
+                
+                durRestoredOnUse = SPEC.define( new IntField( "durability_restoration.active", 1, IntField.Range.POSITIVE,
+                        "The amount of durability that is restored for the target item in the inventory when this ability has a use trigger." ) );
+                
+                durRestoredPassively = SPEC.define( new IntField( "durability_restoration.passive", 1, IntField.Range.POSITIVE,
+                        "The amount of durability that is restored for the target item in the inventory when this ability has a passive trigger." ) );
+            }
+        }
+    }
+    
+    @Override
+    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new RepairOthersAbilityConfig( cfgManager, abilityId, 20 );
     }
     
     @Override
     public boolean onUse( Level level, Player player, ItemStack artifact ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            ItemStack stackToRepair = ItemStack.EMPTY;
-            
             for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
                 ItemStack checkedStack = player.getInventory().getItem( i );
                 
-                if( !(checkedStack.getItem() instanceof ItemArtifact) && checkedStack.getDamageValue() > 0 ) {
-                    stackToRepair = player.getInventory().getItem( i );
-                    break;
+                if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
+                    ItemStack stackToRepair = player.getInventory().getItem( i );
+                    
+                    if( !stackToRepair.isEmpty() ) {
+                        stackToRepair.hurt( -getConfig().REPAIR_OTHERS.durRestoredOnUse.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                        artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
+                        ArtifactUtils.setAbilityOnCooldown( artifact, this );
+                        return true;
+                    }
                 }
-            }
-            
-            if( !stackToRepair.isEmpty() ) {
-                stackToRepair.hurt( -1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
-                ArtifactUtils.setAbilityCooldown( artifact, this, 20 );
-                return true;
             }
         }
         return false;
@@ -82,20 +117,21 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     
     @Override
     public void onHeld( Level level, Player player, ItemStack artifact, EquipmentSlot slot ) {
-        if( MREventListener.getRepairTick() % 200 == 0 ) {
+        if( level.isClientSide ) return;
+        
+        if( ServerEventListener.getRepairTick() % 200 == 0 ) {
             ItemStack stackToRepair = ItemStack.EMPTY;
             
             for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
                 ItemStack checkedStack = player.getInventory().getItem( i );
                 
-                if( !(checkedStack.getItem() instanceof ItemArtifact) && checkedStack.getDamageValue() > 0 ) {
+                if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
                     stackToRepair = player.getInventory().getItem( i );
                     break;
                 }
             }
-            
             if( !stackToRepair.isEmpty() ) {
-                stackToRepair.hurt( -1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                stackToRepair.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
                 artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( slot ) );
             }
         }
@@ -103,20 +139,22 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     
     @Override
     public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
-        if( MREventListener.getRepairTick() % 200 == 0 ) {
+        if( level.isClientSide ) return;
+        
+        if( ServerEventListener.getRepairTick() % 200 == 0 ) {
             ItemStack stackToRepair = ItemStack.EMPTY;
             
             for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
                 ItemStack checkedStack = player.getInventory().getItem( i );
                 
-                if( !(checkedStack.getItem() instanceof ItemArtifact) && checkedStack.getDamageValue() > 0 ) {
+                if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
                     stackToRepair = player.getInventory().getItem( i );
                     break;
                 }
             }
             
             if( !stackToRepair.isEmpty() ) {
-                stackToRepair.hurt( -1, level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                stackToRepair.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
                 artifact.hurtAndBreak( 1, player, ( p ) -> CuriosApi.broadcastCurioBreakEvent( slotContext ) );
             }
         }
@@ -126,7 +164,6 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
         onHeld( level, player, artifact, slot );
     }
-    
     
     @Override
     public String[] getPrefixes() {
@@ -138,8 +175,8 @@ public class RepairOthersAbility extends BaseArtifactAbility {
         return SUFFIXES;
     }
     
-    @Nullable
     @Override
+    @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isArmor ) return TriggerType.ARMOR_TICK;
         if( isCurio ) return TriggerType.CURIO_TICK;
@@ -147,7 +184,6 @@ public class RepairOthersAbility extends BaseArtifactAbility {
         return random.nextInt( 2 ) == 0 ? TriggerType.USE : TriggerType.HELD;
     }
     
-    @NotNull
     @Override
     public List<TriggerType> supportedTriggers() {
         return TRIGGERS;
@@ -164,7 +200,8 @@ public class RepairOthersAbility extends BaseArtifactAbility {
     }
     
     @Override
-    public MutableComponent getAbilityDescription( TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
+    @Nullable
+    public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == null ) return null;
         
         return switch( type ) {
