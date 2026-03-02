@@ -41,3 +41,8 @@ mandatory = true
 versionRange = "[5.9,)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.magical_relics]]
+modId = "jei"
+mandatory = false
+versionRange = "[15.5.0,)"
