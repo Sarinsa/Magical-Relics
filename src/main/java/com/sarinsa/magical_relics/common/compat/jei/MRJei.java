@@ -8,6 +8,9 @@ import fathertoast.crust.api.lib.NBTHelper;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.ingredients.IIngredientHelper;
+import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +30,7 @@ import static com.sarinsa.magical_relics.common.util.ArtifactUtils.TAG_MOD_DATA;
 import static com.sarinsa.magical_relics.common.util.ArtifactUtils.TAG_VARIANT;
 
 @JeiPlugin
+@SuppressWarnings( "unused" )
 public class MRJei implements IModPlugin {
     
     private static final ResourceLocation ID = MagicalRelics.rl( "magical_relics_jei" );
@@ -44,46 +48,66 @@ public class MRJei implements IModPlugin {
     }
     
     private void artifactAnvilRecipes( IRecipeRegistration registration ) {
-        List<IJeiAnvilRecipe> recipes = new ArrayList<>();
+        IIngredientHelper<ItemStack> ingredientHelper = registration.getIngredientManager().getIngredientHelper( VanillaTypes.ITEM_STACK );
+        final List<IJeiAnvilRecipe> recipes = new ArrayList<>();
         
         for( List<RegistryObject<? extends Item>> artifactSet : MRItems.ARTIFACTS_BY_CATEGORY.values() ) {
             for( RegistryObject<? extends Item> regObj : artifactSet ) {
                 Item item = regObj.get();
                 
                 if( item instanceof TieredItem tieredItem ) {
-                    List<ItemStack> inputs = new ArrayList<>();
-                    List<ItemStack> outputs = new ArrayList<>();
-                    ArtifactCategory category = ((IArtifactItem) item).getCategory();
+                    final List<ItemStack> inputs = new ArrayList<>();
+                    final List<ItemStack> outputs = new ArrayList<>();
+                    final ArtifactCategory category = ((IArtifactItem) item).getCategory();
                     
                     for( int i = 0; i < category.getVariations(); i++ ) {
                         ItemStack inputStack = new ItemStack( item );
-                        
                         CompoundTag inputModData = NBTHelper.getOrCreateCompound( inputStack.getOrCreateTag(), TAG_MOD_DATA );
                         inputModData.putInt( TAG_VARIANT, i );
                         inputStack.setDamageValue( item.getMaxDamage( inputStack ) );
                         inputs.add( inputStack );
                         
                         ItemStack outputStack = new ItemStack( item );
-                        
                         CompoundTag outputModData = NBTHelper.getOrCreateCompound( outputStack.getOrCreateTag(), TAG_MOD_DATA );
                         outputModData.putInt( TAG_VARIANT, i );
                         outputStack.setDamageValue( item.getMaxDamage( outputStack ) - item.getMaxDamage( outputStack ) / 4 );
                         outputs.add( outputStack );
                     }
                     Ingredient ingredient = tieredItem.getTier().getRepairIngredient();
-                    recipes.add( registration.getVanillaRecipeFactory().createAnvilRecipe( inputs, List.of( ingredient.getItems() ), outputs ) );
+                    String ingredientId = ingredientHelper.getUniqueId( inputs.get( 0 ), UidContext.Recipe );
+                    
+                    recipes.add( registration.getVanillaRecipeFactory().createAnvilRecipe( inputs, List.of( ingredient.getItems() ), outputs,
+                            MagicalRelics.rl( "self_repair." + toValidPath( ingredientId ) ) ) );
                 }
                 else if( item instanceof ArmorItem armorItem ) {
                     Ingredient ingredient = armorItem.getMaterial().getRepairIngredient();
-                    ItemStack input = new ItemStack( item );
-                    input.setDamageValue( item.getMaxDamage( input ) );
-                    ItemStack result = new ItemStack( item );
-                    result.setDamageValue( item.getMaxDamage( result ) - item.getMaxDamage( result ) / 4 );
+                    ItemStack inputStack = new ItemStack( item );
+                    inputStack.setDamageValue( item.getMaxDamage( inputStack ) );
+                    ItemStack outputStack = new ItemStack( item );
+                    outputStack.setDamageValue( item.getMaxDamage( outputStack ) - item.getMaxDamage( outputStack ) / 4 );
                     
-                    recipes.add( registration.getVanillaRecipeFactory().createAnvilRecipe( input, List.of( ingredient.getItems() ), List.of( result ) ) );
+                    String ingredientId = ingredientHelper.getUniqueId( inputStack, UidContext.Recipe );
+                    recipes.add( registration.getVanillaRecipeFactory().createAnvilRecipe( inputStack, List.of( ingredient.getItems() ), List.of( outputStack ),
+                            MagicalRelics.rl( "self_repair." + toValidPath( ingredientId ) ) ) );
                 }
             }
         }
         registration.addRecipes( RecipeTypes.ANVIL, recipes );
+    }
+    
+    /**
+     * Replaces all chars in the given String that aren't
+     * allowed in ResourceLocation paths with "." and returns it.
+     */
+    private static String toValidPath( String value ) {
+        char[] chars = value.toCharArray();
+        
+        for( int i = 0; i < chars.length; i++ ) {
+            char c = chars[i];
+            if( !ResourceLocation.isAllowedInResourceLocation( c ) || c == ':' ) {
+                chars[i] = '.';
+            }
+        }
+        return new String( chars );
     }
 }
