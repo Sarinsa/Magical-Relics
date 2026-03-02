@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class AbilityArgument implements ArgumentType<BaseArtifactAbility> {
+public class AbilityArgument implements ArgumentType<BaseArtifactAbility<?>> {
     
     private static final DynamicCommandExceptionType ERROR_INVALID_ABILITY = new DynamicCommandExceptionType( ( o ) -> Component.translatable( References.ERROR_INVALID_ABILITY, o ) );
     private static final Collection<String> EXAMPLES = Arrays.asList( "magical_relics:jump_boost", "glow_vision", "jei:recipe_smuggler" );
@@ -32,7 +32,7 @@ public class AbilityArgument implements ArgumentType<BaseArtifactAbility> {
     }
     
     @Override
-    public BaseArtifactAbility parse( StringReader stringReader ) throws CommandSyntaxException {
+    public BaseArtifactAbility<?> parse( StringReader stringReader ) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read( stringReader );
         
         
@@ -42,7 +42,7 @@ public class AbilityArgument implements ArgumentType<BaseArtifactAbility> {
         return MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValue( id );
     }
     
-    public static <S> BaseArtifactAbility getAbility( CommandContext<S> context, String s ) {
+    public static <S> BaseArtifactAbility<?> getAbility( CommandContext<S> context, String s ) {
         return context.getArgument( s, BaseArtifactAbility.class );
     }
     

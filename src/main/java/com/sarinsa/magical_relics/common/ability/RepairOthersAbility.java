@@ -101,10 +101,8 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
                 ItemStack checkedStack = player.getInventory().getItem( i );
                 
                 if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
-                    ItemStack stackToRepair = player.getInventory().getItem( i );
-                    
-                    if( !stackToRepair.isEmpty() ) {
-                        stackToRepair.hurt( -getConfig().REPAIR_OTHERS.durRestoredOnUse.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                    if( !checkedStack.isEmpty() ) {
+                        checkedStack.hurt( -getConfig().REPAIR_OTHERS.durRestoredOnUse.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
                         artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
                         ArtifactUtils.setAbilityOnCooldown( artifact, this );
                         return true;
@@ -120,19 +118,16 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
         if( level.isClientSide ) return;
         
         if( ServerEventListener.getRepairTick() % 200 == 0 ) {
-            ItemStack stackToRepair = ItemStack.EMPTY;
-            
             for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
                 ItemStack checkedStack = player.getInventory().getItem( i );
                 
                 if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
-                    stackToRepair = player.getInventory().getItem( i );
-                    break;
+                    if( !checkedStack.isEmpty() ) {
+                        checkedStack.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                        artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( slot ) );
+                        break;
+                    }
                 }
-            }
-            if( !stackToRepair.isEmpty() ) {
-                stackToRepair.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( slot ) );
             }
         }
     }
@@ -142,20 +137,16 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
         if( level.isClientSide ) return;
         
         if( ServerEventListener.getRepairTick() % 200 == 0 ) {
-            ItemStack stackToRepair = ItemStack.EMPTY;
-            
             for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
                 ItemStack checkedStack = player.getInventory().getItem( i );
                 
                 if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
-                    stackToRepair = player.getInventory().getItem( i );
-                    break;
+                    if( !checkedStack.isEmpty() ) {
+                        checkedStack.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                        artifact.hurtAndBreak( 1, player, ( p ) -> CuriosApi.broadcastCurioBreakEvent( slotContext ) );
+                        break;
+                    }
                 }
-            }
-            
-            if( !stackToRepair.isEmpty() ) {
-                stackToRepair.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-                artifact.hurtAndBreak( 1, player, ( p ) -> CuriosApi.broadcastCurioBreakEvent( slotContext ) );
             }
         }
     }
