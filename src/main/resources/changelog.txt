@@ -1,0 +1,11 @@
+1.20.1-4.0.3
+    - Now requires Crust.
+    - All configs have been rewritten to make use of Crust's config API.
+        - More config options for abilities.
+        - More config options for the Anti Builder's behavior.
+    - Some abilities have been rebalanced.
+    - Fixed some ability logic running twice a tick.
+    - Added new behavior modes for the Anti Builder; it can now either:
+        - Block world interactions like before (building, placing etc.)
+        - Plague intruders with negative potion effects.
+        - Do nothing. Incredible!
