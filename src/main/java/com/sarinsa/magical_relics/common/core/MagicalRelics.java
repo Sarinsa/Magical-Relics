@@ -8,7 +8,6 @@ import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.event.ServerEventListener;
 import com.sarinsa.magical_relics.common.network.PacketHandler;
-import com.sarinsa.magical_relics.common.tag.MRBlockTags;
 import com.sarinsa.magical_relics.common.worldgen.WorldgenHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
@@ -47,10 +46,6 @@ public class MagicalRelics {
         MinecraftForge.EVENT_BUS.register( new ServerEventListener() );
         MinecraftForge.EVENT_BUS.addListener( this::registerCommands );
         
-        MRBlockTags.init();
-        
-        PacketHandler.registerMessages();
-        
         MRBlocks.BLOCKS.register( modBus );
         MRItems.ITEMS.register( modBus );
         MRCreativeTabs.CREATIVE_TABS.register( modBus );
@@ -59,7 +54,6 @@ public class MagicalRelics {
         MRParticles.PARTICLES.register( modBus );
         MRContainers.CONTAINERS.register( modBus );
         MRMobEffects.MOB_EFFECTS.register( modBus );
-        MRDamageTypes.DAMAGE_TYPES.register( modBus );
         MRArtifactAbilities.ARTIFACT_ABILITIES.register( modBus );
         MRLootItemFunctions.LOOT_ITEM_FUNCTIONS.register( modBus );
         MRGlobalLootMods.GLOBAL_LOOT_MODS.register( modBus );
@@ -71,6 +65,9 @@ public class MagicalRelics {
         
         // Initialize configs
         Config.init();
+        
+        // Init and register packets and network stuff
+        PacketHandler.register();
     }
     
     

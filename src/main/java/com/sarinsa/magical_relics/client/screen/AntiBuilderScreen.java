@@ -147,6 +147,7 @@ public class AntiBuilderScreen extends Screen {
             NetworkHelper.sendRecalcAntiBuilderBounds( minecraft.player, pos, bbCoordinates );
     }
     
+    // TODO - Test if this override should be removed
     @Override
     public void resize( Minecraft minecraft, int width, int height ) {
         init( minecraft, width, height );

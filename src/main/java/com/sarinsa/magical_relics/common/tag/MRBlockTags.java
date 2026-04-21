@@ -16,10 +16,5 @@ public final class MRBlockTags {
         return BlockTags.create( ResourceLocation.fromNamespaceAndPath( "forge", name ) );
     }
     
-    public static void init() {
-        MRBiomeTags.init();
-        MRItemTags.init();
-    }
-    
     private MRBlockTags() { }
 }

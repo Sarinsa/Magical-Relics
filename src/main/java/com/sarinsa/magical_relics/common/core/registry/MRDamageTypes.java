@@ -7,12 +7,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.DeferredRegister;
 
 public class MRDamageTypes {
-    
-    public static final DeferredRegister<DamageType> DAMAGE_TYPES = DeferredRegister.create( Registries.DAMAGE_TYPE, MagicalRelics.MODID );
-    
     
     public static final ResourceKey<DamageType> QUICKSAND = create( "quicksand" );
     public static final ResourceKey<DamageType> SPIKES = create( "spikes" );

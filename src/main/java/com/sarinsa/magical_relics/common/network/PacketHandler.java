@@ -5,10 +5,12 @@ import com.sarinsa.magical_relics.common.network.message.C2SSaveAntiBuilderData;
 import com.sarinsa.magical_relics.common.network.message.S2CJukeboxAbility;
 import com.sarinsa.magical_relics.common.network.message.S2COpenAntiBuilderScreen;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.event.EventNetworkChannel;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.Optional;
@@ -18,28 +20,41 @@ import java.util.function.Supplier;
 
 public class PacketHandler {
     
+    public static final ResourceLocation CHANNEL_NAME = MagicalRelics.rl( "channel" );
+    public static final ResourceLocation EVENT_CHANNEL_NAME = MagicalRelics.rl( "network_events" );
+    
     private static final String PROTOCOL_NAME = "MAGICAL_RELICS";
     /**
      * The network channel our mod will be
      * using when sending messages.
      */
     public static final SimpleChannel CHANNEL = createChannel();
+    public static final EventNetworkChannel EVENT_CHANNEL = createEventChannel();
     
     private static int messageIndex;
     private static boolean registered = false;
     
     private static SimpleChannel createChannel() {
         return NetworkRegistry.ChannelBuilder
-                .named( MagicalRelics.rl( "channel" ) )
+                .named( CHANNEL_NAME )
                 .serverAcceptedVersions( PROTOCOL_NAME::equals )
                 .clientAcceptedVersions( PROTOCOL_NAME::equals )
                 .networkProtocolVersion( () -> PROTOCOL_NAME )
                 .simpleChannel();
     }
     
-    public static void registerMessages() {
+    private static EventNetworkChannel createEventChannel() {
+        return NetworkRegistry.ChannelBuilder
+                .named( EVENT_CHANNEL_NAME )
+                .serverAcceptedVersions( PROTOCOL_NAME::equals )
+                .clientAcceptedVersions( PROTOCOL_NAME::equals )
+                .networkProtocolVersion( () -> PROTOCOL_NAME )
+                .eventNetworkChannel();
+    }
+    
+    public static void register() {
         if( registered )
-            throw new IllegalStateException( "Network messages already registered. This should not happen!" );
+            throw new IllegalStateException( "Network setup already complete!" );
         
         // Server -> Client
         registerMessage( S2CJukeboxAbility.class, S2CJukeboxAbility::encode, S2CJukeboxAbility::decode, S2CJukeboxAbility::handle );
