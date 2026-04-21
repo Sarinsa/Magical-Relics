@@ -31,7 +31,7 @@ side = "BOTH"
 [[dependencies.magical_relics]]
 modId = "crust"
 mandatory = true
-versionRange = "[4.11.20,)"
+versionRange = "[4.13,)"
 ordering = "BEFORE"
 side = "BOTH"
 
