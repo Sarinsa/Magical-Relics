@@ -9,3 +9,4 @@
         - Block world interactions like before (building, placing etc.)
         - Plague intruders with negative potion effects.
         - Do nothing. Incredible!
+    - Some config properties that need it are now properly synced from server to client.

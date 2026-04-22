@@ -150,7 +150,6 @@ public final class SyncedProperties {
             }
             else if( value instanceof Integer i ) {
                 PacketHandler.sendToClient( new S2CSimpleCfgIntSync( i, propertyId ), player );
-                
             }
             else {
                 final Class<?> clazz = value == null ? null : value.getClass();
@@ -163,6 +162,10 @@ public final class SyncedProperties {
         }
     }
     
+    /**
+     * @return The SyncedProperty in the property map that is mapped to the given ID.
+     * Returns null if no property exists for the ID.
+     */
     @Nullable
     public static SyncedProperty<?, ?> getFromId( byte id ) {
         return SYNC_PROPERTIES.get( id );
