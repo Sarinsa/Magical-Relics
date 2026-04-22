@@ -1,9 +1,7 @@
 package com.sarinsa.magical_relics.common.network;
 
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.network.message.C2SSaveAntiBuilderData;
-import com.sarinsa.magical_relics.common.network.message.S2CJukeboxAbility;
-import com.sarinsa.magical_relics.common.network.message.S2COpenAntiBuilderScreen;
+import com.sarinsa.magical_relics.common.network.message.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -59,6 +57,10 @@ public class PacketHandler {
         // Server -> Client
         registerMessage( S2CJukeboxAbility.class, S2CJukeboxAbility::encode, S2CJukeboxAbility::decode, S2CJukeboxAbility::handle );
         registerMessage( S2COpenAntiBuilderScreen.class, S2COpenAntiBuilderScreen::encode, S2COpenAntiBuilderScreen::decode, S2COpenAntiBuilderScreen::handle );
+        /// Config field sync messages
+        registerMessage( S2CSimpleCfgIntSync.class, S2CSimpleCfgIntSync::encode, S2CSimpleCfgIntSync::decode, S2CSimpleCfgIntSync::handle );
+        registerMessage( S2CSimpleCfgDoubleSync.class, S2CSimpleCfgDoubleSync::encode, S2CSimpleCfgDoubleSync::decode, S2CSimpleCfgDoubleSync::handle );
+        
         
         // Client -> Server
         registerMessage( C2SSaveAntiBuilderData.class, C2SSaveAntiBuilderData::encode, C2SSaveAntiBuilderData::decode, C2SSaveAntiBuilderData::handle );

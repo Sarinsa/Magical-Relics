@@ -13,8 +13,6 @@ import java.util.Objects;
 public class NetworkHelper {
     
     
-    //----------------- CONVENIENCE METHODS --------------------
-    
     public static void sendJukeboxAbilityUse( @Nonnull ServerPlayer player, int x, int y, int z, boolean play ) {
         Objects.requireNonNull( player );
         PacketHandler.sendToClient( new S2CJukeboxAbility( x, y, z, play ), player );

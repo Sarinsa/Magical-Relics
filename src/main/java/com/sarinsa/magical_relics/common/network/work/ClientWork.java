@@ -3,6 +3,9 @@ package com.sarinsa.magical_relics.common.network.work;
 import com.sarinsa.magical_relics.client.screen.AntiBuilderScreen;
 import com.sarinsa.magical_relics.common.ability.JukeboxAbility;
 import com.sarinsa.magical_relics.common.blockentity.AntiBuilderBlockEntity;
+import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.sync.SyncedProperties;
+import com.sarinsa.magical_relics.common.core.config.sync.SyncedProperty;
 import com.sarinsa.magical_relics.common.network.message.S2CJukeboxAbility;
 import com.sarinsa.magical_relics.common.network.message.S2COpenAntiBuilderScreen;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
@@ -71,6 +74,27 @@ public class ClientWork {
             if( blockEntity instanceof AntiBuilderBlockEntity antiBuilder ) {
                 Minecraft.getInstance().setScreen( new AntiBuilderScreen( blockPos, antiBuilder ) );
             }
+        }
+    }
+    
+    @SuppressWarnings( { "unchecked", "ConstantConditions" } )
+    public static void handleCfgValueSync( Object value, byte propertyId ) {
+        final SyncedProperty<?, ?> property = SyncedProperties.getFromId( propertyId );
+        
+        try {
+            if( value instanceof Integer i ) {
+                ((SyncedProperty<Integer, ?>) property).setValue( i );
+            }
+            else if( value instanceof Double d ) {
+                ((SyncedProperty<Double, ?>) property).setValue( d );
+            }
+            else {
+                MagicalRelics.LOG.warn( "Received config field sync packet from server with unsupported value type! Property ID: '{}'", value );
+            }
+        }
+        catch( Exception e ) {
+            // noinspection CallToPrintStackTrace
+            e.printStackTrace();
         }
     }
 }

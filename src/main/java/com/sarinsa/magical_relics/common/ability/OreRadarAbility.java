@@ -6,8 +6,10 @@ import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.sync.SyncedProperties;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.InjectionWrapperField;
 import fathertoast.crust.api.config.common.field.IntField;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -58,14 +60,16 @@ public class OreRadarAbility extends BaseArtifactAbility<OreRadarAbility.OreRada
         
         public static class OreRadar extends AbstractConfigCategory<OreRadarAbilityConfig> {
             
-            public IntField radius;
+            public InjectionWrapperField<IntField> radius;
             
             public OreRadar( OreRadarAbilityConfig parent, int rad ) {
                 super( parent, "ore_radar", "Options for the in-world visual this ability grants." );
                 
-                radius = SPEC.define( new IntField( "radius", rad, IntField.Range.NON_NEGATIVE,
+                radius = SPEC.define( new InjectionWrapperField<>( new IntField( "radius", rad, IntField.Range.NON_NEGATIVE,
                         "The radius of the spherical area around the player in which ore-ping particles are spawned.",
-                        "Keep in mind that larger values may cause poor performance on the client." ) );
+                        "Keep in mind that larger values may cause poor performance on the client." ), ( field ) -> {
+                    SyncedProperties.broadcastSyncProperty( SyncedProperties.ORE_RADAR_RADIUS );
+                } ) );
             }
         }
     }

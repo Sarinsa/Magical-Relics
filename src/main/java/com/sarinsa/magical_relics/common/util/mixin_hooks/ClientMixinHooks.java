@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.util.mixin_hooks;
 
+import com.sarinsa.magical_relics.common.core.config.sync.SyncedProperties;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.tag.MRItemTags;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
@@ -24,8 +25,7 @@ public class ClientMixinHooks {
     public static void onControlBoat( Boat boat, CallbackInfo callbackInfo ) {
         if( boat.getControllingPassenger() instanceof Player player ) {
             if( ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.CHEST ), MRArtifactAbilities.SAILOR.get() ) ) {
-                // TODO - Send value from server to client.
-                final double multiplier = 1.0D + MRArtifactAbilities.SAILOR.get().getConfig().SAILOR.speedMultiplier.get();
+                final double multiplier = 1.0D + SyncedProperties.SAILOR_ABILITY_SPEED_MULT.getValue();
                 boat.setDeltaMovement( boat.getDeltaMovement().multiply( multiplier, 1.0D, multiplier ) );
             }
         }

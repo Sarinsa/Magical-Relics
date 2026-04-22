@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.client;
 
 import com.mojang.blaze3d.shaders.FogShape;
+import com.sarinsa.magical_relics.common.core.config.sync.SyncedProperties;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRMobEffects;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.LogicalSide;
 
 public class ClientEventListener {
     
-    private static int timeNextOrePing = 120;
+    private int timeNextOrePing = 120;
     
     @SuppressWarnings( "ConstantConditions" )
     @SubscribeEvent
@@ -57,8 +58,7 @@ public class ClientEventListener {
                 if( ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.HEAD ), MRArtifactAbilities.ORE_RADAR.get() ) ) {
                     Level level = player.level();
                     BlockPos playerPos = player.blockPosition();
-                    // TODO - Make the server send its value to client
-                    final int scanRange = MRArtifactAbilities.ORE_RADAR.get().getConfig().ORE_RADAR.radius.get();
+                    final int scanRange = SyncedProperties.ORE_RADAR_RADIUS.getValue();
                     
                     for( BlockPos pos : BlockPos.betweenClosed(
                             playerPos.offset( scanRange, scanRange, scanRange ),

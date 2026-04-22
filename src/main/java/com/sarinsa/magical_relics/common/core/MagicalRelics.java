@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.sarinsa.magical_relics.common.block.CamoDispenserBlock;
 import com.sarinsa.magical_relics.common.command.MRBaseCommand;
 import com.sarinsa.magical_relics.common.core.config.Config;
+import com.sarinsa.magical_relics.common.core.config.sync.SyncedProperties;
 import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.event.MREventListener;
 import com.sarinsa.magical_relics.common.event.ServerEventListener;
@@ -14,6 +15,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingStage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -38,6 +41,7 @@ public class MagicalRelics {
     
     public MagicalRelics( FMLJavaModLoadingContext context ) {
         IEventBus modBus = context.getModEventBus();
+        ModContainer modContainer = context.getContainer();
         
         modBus.addListener( this::onCommonSetup );
         modBus.addListener( MRItems::onCreativeTabPopulate );
@@ -63,8 +67,11 @@ public class MagicalRelics {
         MRConfiguredFeatures.P_REGISTRY.register( modBus );
         MRArgumentTypes.ARGUMENT_TYPES.register( modBus );
         
-        // Initialize configs
-        Config.init();
+        // Enqueue config init
+        ModLoadingStage.COMMON_SETUP.getDeferredWorkQueue().enqueueWork( modContainer, Config::initialize );
+        
+        // Load synced properties class
+        SyncedProperties.init();
         
         // Init and register packets and network stuff
         PacketHandler.register();
