@@ -12,6 +12,7 @@ import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.tag.MRItemTags;
+import fathertoast.crust.api.config.common.value.collection.RegistrySet;
 import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -612,7 +613,7 @@ public class ArtifactUtils {
     /**
      * Decrements all ability cooldowns on the ItemStack by the given number.
      * <br><br>
-     * Called from {@link com.sarinsa.magical_relics.common.event.MREventListener#onServerTick(TickEvent.ServerTickEvent)}.
+     * Called from {@link com.sarinsa.magical_relics.common.event.ServerEventListener#onServerTick(TickEvent.ServerTickEvent)}.
      */
     @SuppressWarnings( "ConstantConditions" )
     public static void tickAbilityCooldowns( Player player, int decrement ) {
@@ -659,13 +660,13 @@ public class ArtifactUtils {
      * <br><br>
      * This gets called when {@link com.sarinsa.magical_relics.common.core.config.MainConfig.General#unobtainableAbilities} changes.
      */
-    public static void refreshObtainableAbilities( Set<BaseArtifactAbility<?>> unobtainable ) {
+    @SuppressWarnings( "UnstableApiUsage" )
+    public static void refreshObtainableAbilities( RegistrySet<BaseArtifactAbility<?>> unobtainable ) {
         OBTAINABLE_ABILITIES.clear();
         
         for( BaseArtifactAbility<?> ability : MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues() ) {
             if( unobtainable.contains( ability ) )
                 continue;
-            
             OBTAINABLE_ABILITIES.add( ability );
         }
     }

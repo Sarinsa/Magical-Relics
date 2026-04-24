@@ -42,8 +42,6 @@ public class Config {
         if( registry == null )
             throw new IllegalStateException( "Artifact Abilities registry has not yet been constructed!" );
         
-        final ConfigManager manager = ConfigManager.getRequired( MagicalRelics.MODID );
-        
         for( BaseArtifactAbility<?> ability : registry ) {
             ResourceLocation id = registry.getKey( ability );
             

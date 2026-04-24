@@ -9,12 +9,13 @@ import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.InjectionWrapperField;
-import fathertoast.crust.api.config.common.field.RegistryEntryListField;
-import fathertoast.crust.api.config.common.value.RegistryEntryList;
+import fathertoast.crust.api.config.common.field.collection.RegistrySetField;
+import fathertoast.crust.api.config.common.value.collection.RegistrySet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
 
+@SuppressWarnings( "UnstableApiUsage" )
 public class MainConfig extends AbstractConfigFile {
     
     public final General GENERAL;
@@ -32,43 +33,44 @@ public class MainConfig extends AbstractConfigFile {
     
     public static class General extends AbstractConfigCategory<MainConfig> {
         
-        public final InjectionWrapperField<RegistryEntryListField<BaseArtifactAbility<?>>> unobtainableAbilities;
+        public final InjectionWrapperField<RegistrySetField<BaseArtifactAbility<?>>> unobtainableAbilities;
         
-        public final InjectionWrapperField<RegistryEntryListField<Item>> wizardFavoriteBlacklist;
+        public final InjectionWrapperField<RegistrySetField<Item>> wizardFavoriteBlacklist;
         
         
         General( MainConfig parent ) {
             super( parent, "general",
                     "Options to customize settings that apply to the mod as a whole." );
             
-            unobtainableAbilities = SPEC.define( new InjectionWrapperField<>( new RegistryEntryListField<>( "unobtainable_abilities",
+            unobtainableAbilities = SPEC.define( new InjectionWrapperField<>( new RegistrySetField<>( "unobtainable_abilities",
                     createDefaultUnobtainableAbilities(),
                     "A list of artifact abilities that are blacklisted and cannot be obtained without using commands." ),
-                    ( field ) -> ArtifactUtils.refreshObtainableAbilities( field.getEntries() ) ) );
+                    ( field ) -> ArtifactUtils.refreshObtainableAbilities( field.get() ) ) );
             
             SPEC.newLine();
             
-            wizardFavoriteBlacklist = SPEC.define( new InjectionWrapperField<>( new RegistryEntryListField<>( "wizards_favorite_blacklist",
+            wizardFavoriteBlacklist = SPEC.define( new InjectionWrapperField<>( new RegistrySetField<>( "wizards_favorite_blacklist",
                     createDefaultWizFavoriteBlacklist(),
                     "A list of items that should not be findable in \"Wizard's Favorite\" display "
                             + "pedestals in wizard tower structures." ),
-                    ( field ) -> DisplayPedestalProcessor.refreshWizFavorites( field.getEntries() ) ) );
+                    ( field ) -> DisplayPedestalProcessor.refreshWizFavorites( field.get() ) ) );
         }
         
-        private RegistryEntryList<BaseArtifactAbility<?>> createDefaultUnobtainableAbilities() {
-            return new RegistryEntryList<>( MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get() );
+        private RegistrySet<BaseArtifactAbility<?>> createDefaultUnobtainableAbilities() {
+            return new RegistrySet.Builder<>( MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get() )
+                    .build();
         }
         
-        private RegistryEntryList<Item> createDefaultWizFavoriteBlacklist() {
-            return new RegistryEntryList<>( ForgeRegistries.ITEMS,
-                    Items.BEDROCK,
-                    Items.STRUCTURE_BLOCK,
-                    Items.JIGSAW,
-                    Items.STRUCTURE_VOID,
-                    Items.BARRIER,
-                    Items.AIR,
-                    Items.DEBUG_STICK
-            );
+        private RegistrySet<Item> createDefaultWizFavoriteBlacklist() {
+            return new RegistrySet.Builder<>( ForgeRegistries.ITEMS )
+                    .add( Items.BEDROCK )
+                    .add( Items.STRUCTURE_BLOCK )
+                    .add( Items.JIGSAW )
+                    .add( Items.STRUCTURE_VOID )
+                    .add( Items.BARRIER )
+                    .add( Items.AIR )
+                    .add( Items.DEBUG_STICK )
+                    .build();
         }
     }
     

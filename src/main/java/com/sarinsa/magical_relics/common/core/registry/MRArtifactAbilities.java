@@ -15,9 +15,9 @@ import java.util.function.Supplier;
 
 public class MRArtifactAbilities {
     
-    public static final DeferredRegister<BaseArtifactAbility<?>> ARTIFACT_ABILITIES = DeferredRegister.create( MagicalRelics.rl( "artifact_abilities" ), MagicalRelics.MODID );
-    public static final Supplier<IForgeRegistry<BaseArtifactAbility<?>>> ARTIFACT_ABILITY_REGISTRY = ARTIFACT_ABILITIES.makeRegistry( ()
-            -> (new RegistryBuilder<BaseArtifactAbility<?>>()).setDefaultKey( MagicalRelics.rl( "empty" ) ) );
+    public static final ResourceLocation REGISTRY_KEY = MagicalRelics.rl( "artifact_abilities" );
+    public static final DeferredRegister<BaseArtifactAbility<?>> ARTIFACT_ABILITIES = DeferredRegister.create( REGISTRY_KEY, MagicalRelics.MODID );
+    public static final Supplier<IForgeRegistry<BaseArtifactAbility<?>>> ARTIFACT_ABILITY_REGISTRY = ARTIFACT_ABILITIES.makeRegistry( RegistryBuilder::new );
     
     
     public static final RegistryObject<BakerAbility> BAKER = register( "baker", BakerAbility::new );

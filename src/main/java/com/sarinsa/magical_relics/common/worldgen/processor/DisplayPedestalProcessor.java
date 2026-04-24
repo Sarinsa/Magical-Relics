@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import fathertoast.crust.api.config.common.value.collection.RegistrySet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -22,7 +23,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Looks for empty Display Pedestals and either puts random artifacts in them
@@ -82,9 +82,9 @@ public class DisplayPedestalProcessor extends StructureProcessor {
         return new ItemStack( WIZARD_FAVORITES.get( random.nextInt( WIZARD_FAVORITES.size() ) ) );
     }
     
-    public static void refreshWizFavorites( Set<Item> blacklistedItems ) {
+    @SuppressWarnings( "UnstableApiUsage" )
+    public static void refreshWizFavorites( RegistrySet<Item> registrySet ) {
         WIZARD_FAVORITES.clear();
-        WIZARD_FAVORITES.addAll( ForgeRegistries.ITEMS.getValues() );
-        WIZARD_FAVORITES.removeAll( blacklistedItems );
+        WIZARD_FAVORITES.addAll( ForgeRegistries.ITEMS.getValues().stream().filter( item -> !registrySet.contains( item ) ).toList() );
     }
 }
