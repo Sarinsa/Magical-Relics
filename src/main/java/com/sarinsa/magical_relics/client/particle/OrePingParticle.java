@@ -33,7 +33,7 @@ public class OrePingParticle extends TextureSheetParticle {
     
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderTypes.ORE_PING;
+        return ParticleRenderTypes.NO_DEPTH;
     }
     
     @Override
@@ -54,6 +54,7 @@ public class OrePingParticle extends TextureSheetParticle {
     @Override
     protected int getLightColor( float f ) {
         BlockPos pos = BlockPos.containing( x, y, z );
+        // noinspection deprecation
         return level.hasChunkAt( pos ) ? 15728640 : 0;
     }
     

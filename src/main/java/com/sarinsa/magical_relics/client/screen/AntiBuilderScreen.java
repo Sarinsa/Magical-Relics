@@ -134,15 +134,18 @@ public class AntiBuilderScreen extends Screen {
         };
         antiBuilder.recalculateEffectiveArea( bbDimensions );
         sendNBTToServer( bbDimensions );
+        // noinspection ConstantConditions
         minecraft.setScreen( null );
     }
     
     private void onCancel() {
+        // noinspection ConstantConditions
         minecraft.setScreen( null );
     }
     
     /** Sends any bounds changes back to the server. */
     private void sendNBTToServer( int[] bbCoordinates ) {
+        // noinspection ConstantConditions
         if( minecraft.player != null )
             NetworkHelper.sendRecalcAntiBuilderBounds( minecraft.player, pos, bbCoordinates );
     }

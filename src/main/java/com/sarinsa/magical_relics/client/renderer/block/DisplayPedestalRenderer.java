@@ -17,9 +17,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class DisplayPedestalRenderer implements BlockEntityRenderer<DisplayPedestalBlockEntity> {
     
-    public DisplayPedestalRenderer( BlockEntityRendererProvider.Context context ) {
-    
-    }
+    @SuppressWarnings( "unused" )
+    public DisplayPedestalRenderer( BlockEntityRendererProvider.Context context ) { }
     
     
     @Override

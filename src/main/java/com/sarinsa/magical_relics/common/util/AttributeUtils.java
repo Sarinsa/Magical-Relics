@@ -14,7 +14,7 @@ public class AttributeUtils {
      * {@link AttributeModifier#load(CompoundTag)}, except modifier UUID is manually
      * replaced with specific UUID objects when needed.<br><br>
      * <p>
-     * This is because some places in vanilla, UUID objects are compared as objects and not UUIDs.
+     * This is because some places in vanilla, UUID objects are compared as "normal" objects and not UUIDs.
      */
     public static AttributeModifier loadUUIDSensitive( CompoundTag compoundTag ) {
         try {

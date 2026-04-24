@@ -18,7 +18,6 @@ public class IntegerMinTextField extends IntegerTextField {
     public boolean checkIsValidValue( String value ) {
         try {
             int intValue = Integer.parseInt( value );
-            
             return intValue >= minValue && intValue <= maxValue && intValue < maxField.getCurrentValue();
         }
         catch( Exception ignored ) {

@@ -8,9 +8,7 @@ public class ClientUtils {
     
     public static boolean isQuicksandViewBlocking() {
         Player player = Minecraft.getInstance().player;
-        
         if( player == null ) return false;
-        
         return QuicksandBlock.areEyesInQuicksand( player );
     }
 }

@@ -23,9 +23,8 @@ public class AbilityArgument implements ArgumentType<BaseArtifactAbility<?>> {
     private static final Collection<String> EXAMPLES = Arrays.asList( "magical_relics:jump_boost", "glow_vision", "jei:recipe_smuggler" );
     
     
-    public AbilityArgument() {
+    public AbilityArgument() { }
     
-    }
     
     public static AbilityArgument ability() {
         return new AbilityArgument();

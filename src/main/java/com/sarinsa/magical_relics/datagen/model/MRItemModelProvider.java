@@ -14,6 +14,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MRItemModelProvider extends ItemModelProvider {
     
@@ -39,7 +40,7 @@ public class MRItemModelProvider extends ItemModelProvider {
                     || category == ArtifactCategory.STAFF || category == ArtifactCategory.WAND || category == ArtifactCategory.AXE )
                 parentModel = "item/handheld";
             
-            ItemModelBuilder builder = getBuilder( itemId.toString() )
+            ItemModelBuilder builder = getBuilder( Objects.requireNonNull( itemId ).toString() )
                     .parent( new ModelFile.UncheckedModelFile( parentModel ) )
                     .texture( "layer0", modArtifactTexture( categoryName, categoryName + "1" ) );
             

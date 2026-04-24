@@ -52,7 +52,7 @@ public class SwungSwordRenderer extends EntityRenderer<SwungSword> {
     }
     
     @Override
-    protected void renderNameTag( SwungSword sword, Component component, PoseStack poseStack, MultiBufferSource bufferSource, int p_114502_ ) {
-    
+    protected void renderNameTag( SwungSword sword, Component component, PoseStack poseStack, MultiBufferSource bufferSource, int i ) {
+        // Not rendering name tag
     }
 }

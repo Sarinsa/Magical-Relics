@@ -21,9 +21,8 @@ public class TriggerTypeArgument implements ArgumentType<TriggerType> {
     private static final Collection<String> EXAMPLES = Arrays.asList( "use", "inventory_tick", "" );
     
     
-    public TriggerTypeArgument() {
+    public TriggerTypeArgument() { }
     
-    }
     
     public static TriggerTypeArgument triggerType() {
         return new TriggerTypeArgument();

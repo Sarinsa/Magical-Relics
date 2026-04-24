@@ -13,9 +13,8 @@ import net.minecraftforge.client.model.data.ModelData;
 
 public class CamoTrapRenderer<T extends BlockEntity & CamoBlockEntity> implements BlockEntityRenderer<T> {
     
-    public CamoTrapRenderer( BlockEntityRendererProvider.Context context ) {
-    
-    }
+    @SuppressWarnings( "unused" )
+    public CamoTrapRenderer( BlockEntityRendererProvider.Context context ) { }
     
     @Override
     public void render( T trap, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int textureOverlay ) {

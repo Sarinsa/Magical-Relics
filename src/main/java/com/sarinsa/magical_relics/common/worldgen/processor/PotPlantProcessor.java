@@ -26,10 +26,12 @@ import java.util.List;
 public class PotPlantProcessor extends StructureProcessor {
     
     public static final Codec<PotPlantProcessor> CODEC = Codec.unit( PotPlantProcessor::new );
+    
     private static final List<Block> pottedPlants = new ArrayList<>();
     
     
     public PotPlantProcessor() {
+        // Grab all potted plants from the block registry and store them in a list for later.
         for( Block block : ForgeRegistries.BLOCKS.getValues() ) {
             if( block instanceof FlowerPotBlock )
                 pottedPlants.add( block );

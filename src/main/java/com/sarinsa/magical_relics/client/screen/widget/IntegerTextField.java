@@ -16,7 +16,6 @@ public class IntegerTextField extends AbstractTextField<Integer> {
     public boolean checkIsValidValue( String value ) {
         try {
             int intValue = Integer.parseInt( value );
-            
             return intValue >= minValue && intValue <= maxValue;
         }
         catch( Exception ignored ) {

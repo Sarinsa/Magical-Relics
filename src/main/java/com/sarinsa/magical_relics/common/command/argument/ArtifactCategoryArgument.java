@@ -21,9 +21,8 @@ public class ArtifactCategoryArgument implements ArgumentType<ArtifactCategory> 
     private static final Collection<String> EXAMPLES = Arrays.asList( "trinket", "sword", "staff" );
     
     
-    public ArtifactCategoryArgument() {
+    public ArtifactCategoryArgument() { }
     
-    }
     
     public static ArtifactCategoryArgument artifactCategory() {
         return new ArtifactCategoryArgument();

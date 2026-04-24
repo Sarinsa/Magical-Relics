@@ -20,6 +20,7 @@ public class PercentageSetDamageFunction extends LootItemConditionalFunction {
     
     final NumberProvider percentage;
     
+    
     public PercentageSetDamageFunction( LootItemCondition[] conditions, NumberProvider percentage ) {
         super( conditions );
         this.percentage = percentage;
@@ -41,8 +42,7 @@ public class PercentageSetDamageFunction extends LootItemConditionalFunction {
         
         if( itemStack.isDamageableItem() && (percent >= 0.01F && percent <= 1.0F) ) {
             int maxDamage = itemStack.getMaxDamage();
-            int desiredDamage = maxDamage - (int) (maxDamage * percent);
-            itemStack.setDamageValue( desiredDamage );
+            itemStack.setDamageValue( maxDamage - (int) (maxDamage * percent) );
         }
         else {
             MagicalRelics.LOG.warn( "Couldn't set percentage damage of loot item {}", itemStack );

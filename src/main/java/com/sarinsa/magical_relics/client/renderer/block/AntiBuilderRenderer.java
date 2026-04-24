@@ -20,9 +20,8 @@ public class AntiBuilderRenderer implements BlockEntityRenderer<AntiBuilderBlock
     
     public static final ResourceLocation MODEL_ID = MagicalRelics.rl( "blockentity/anti_builder_dir_indicator" );
     
-    public AntiBuilderRenderer( BlockEntityRendererProvider.Context context ) {
-    
-    }
+    @SuppressWarnings( "unused" )
+    public AntiBuilderRenderer( BlockEntityRendererProvider.Context context ) { }
     
     @Override
     public void render( AntiBuilderBlockEntity antiBuilder, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int textureOverlay ) {

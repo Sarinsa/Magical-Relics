@@ -33,6 +33,6 @@ public class MultiPlayerGameModeMixin {
     
     @Inject( method = "sameDestroyTarget", at = @At( "HEAD" ), cancellable = true )
     public void onSameDestroyTarget( BlockPos pos, CallbackInfoReturnable<Boolean> cir ) {
-        ClientMixinHooks.onSameDestroyTargetHook( pos, destroyBlockPos, minecraft.player.getMainHandItem(), destroyingItem, cir );
+        ClientMixinHooks.onSameDestroyTargetHook( pos, destroyBlockPos, minecraft.player, destroyingItem, cir );
     }
 }

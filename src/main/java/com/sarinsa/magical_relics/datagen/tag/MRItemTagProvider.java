@@ -33,7 +33,6 @@ public class MRItemTagProvider extends ItemTagsProvider {
                 artifactsTag.add( regObj.get() );
             }
         }
-        
         MRItems.DIAMOND_ARTIFACT_ARMOR.forEach( ( slot, item ) -> trimmableArmorTag.add( item.get() ) );
         MRItems.IRON_ARTIFACT_ARMOR.forEach( ( slot, item ) -> trimmableArmorTag.add( item.get() ) );
         MRItems.GOLD_ARTIFACT_ARMOR.forEach( ( slot, item ) -> trimmableArmorTag.add( item.get() ) );

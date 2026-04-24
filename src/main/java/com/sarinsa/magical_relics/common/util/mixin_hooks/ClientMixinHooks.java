@@ -12,9 +12,15 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import javax.annotation.Nullable;
+
 public class ClientMixinHooks {
     
-    public static void onSameDestroyTargetHook( BlockPos pos, BlockPos destroyBlockPos, ItemStack itemStack, ItemStack destroyingItem, CallbackInfoReturnable<Boolean> cir ) {
+    public static void onSameDestroyTargetHook( BlockPos pos, BlockPos destroyBlockPos, @Nullable Player player, ItemStack destroyingItem, CallbackInfoReturnable<Boolean> cir ) {
+        if( player == null ) return;
+        
+        final ItemStack itemStack = player.getMainHandItem();
+        
         if( itemStack.is( MRItemTags.ARTIFACTS ) ) {
             if( pos.equals( destroyBlockPos ) && !destroyingItem.shouldCauseBlockBreakReset( itemStack ) ) {
                 cir.setReturnValue( true );

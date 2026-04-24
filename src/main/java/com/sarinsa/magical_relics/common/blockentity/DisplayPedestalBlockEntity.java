@@ -16,8 +16,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
-
 public class DisplayPedestalBlockEntity extends BlockEntity {
     
     public static final String GENERATE_ARTIFACT_KEY = "GenerateArtifact";
@@ -34,7 +32,6 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
         super( MRBlockEntities.DISPLAY_PEDESTAL.get(), pos, state );
     }
     
-    @Nonnull
     public ItemStack getArtifact() {
         return artifact == null ? ItemStack.EMPTY : artifact;
     }

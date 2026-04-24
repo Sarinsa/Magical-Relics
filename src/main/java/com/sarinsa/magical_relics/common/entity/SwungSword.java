@@ -106,21 +106,18 @@ public class SwungSword extends Entity {
     }
     
     @Override
-    protected void addAdditionalSaveData( CompoundTag compoundTag ) {
-    }
-    
-    @Override
-    protected void readAdditionalSaveData( CompoundTag compoundTag ) {
-    }
-    
-    @Override
-    public boolean isPickable() {
-        return false;
-    }
-    
-    @Override
     public boolean hurt( DamageSource damageSource, float damage ) {
         return false;
+    }
+    
+    @Override
+    protected void readAdditionalSaveData( CompoundTag saveTag ) {
+        // Nothing to load
+    }
+    
+    @Override
+    protected void addAdditionalSaveData( CompoundTag saveTag ) {
+        // Nothing to save
     }
     
     @Override

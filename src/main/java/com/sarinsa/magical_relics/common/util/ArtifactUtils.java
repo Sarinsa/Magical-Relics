@@ -102,14 +102,10 @@ public class ArtifactUtils {
      * @param artifactItem The artifact item to use for this item stack.<br><br>
      *                     Should normally be an instance of the following:
      *                     <br>
-     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactArmorItem}
-     *                     <br>
-     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactItem}
-     *                     <br>
-     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactAxeItem}
-     *                     <br>
-     *                     {@link com.sarinsa.magical_relics.common.item.DyableArtifactArmorItem}
-     *                     <br>
+     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactArmorItem}<br>
+     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactItem}<br>
+     *                     {@link com.sarinsa.magical_relics.common.item.ArtifactAxeItem}<br>
+     *                     {@link com.sarinsa.magical_relics.common.item.DyableArtifactArmorItem}<br>
      * @param variant      An integer corresponding to a specific texture variant of the artifact item.<br>
      * @return An item stack with all the necessary NBT tags for ability data.
      */
@@ -143,7 +139,7 @@ public class ArtifactUtils {
         // Apply a random trim if the artifact is an armor piece
         applyRandomArmorTrim( level, random, artifactStack );
         
-        List<BaseArtifactAbility<?>> allAbilities = new ArrayList<>( OBTAINABLE_ABILITIES );
+        var allAbilities = new ArrayList<>( OBTAINABLE_ABILITIES );
         // Filter out abilities that are not applicable to the Artifact's category.
         allAbilities.removeIf( ( ability ) -> !ability.getCompatibleTypes().contains( ((IArtifactItem) artifactItem).getCategory() ) );
         
@@ -221,8 +217,8 @@ public class ArtifactUtils {
         if( !(itemStack.getItem() instanceof ArmorItem) ) return;
         
         try {
-            Registry<TrimPattern> patterns = level.registryAccess().registryOrThrow( Registries.TRIM_PATTERN );
-            Registry<TrimMaterial> materials = level.registryAccess().registryOrThrow( Registries.TRIM_MATERIAL );
+            final Registry<TrimPattern> patterns = level.registryAccess().registryOrThrow( Registries.TRIM_PATTERN );
+            final Registry<TrimMaterial> materials = level.registryAccess().registryOrThrow( Registries.TRIM_MATERIAL );
             
             Holder.Reference<TrimPattern> randomPattern = patterns.getRandom( random ).orElseThrow();
             Holder.Reference<TrimMaterial> randomMaterial = materials.getRandom( random ).orElseThrow();
@@ -370,7 +366,6 @@ public class ArtifactUtils {
                 MagicalRelics.LOG.warn( "Attempted applying an ability with no ID to an artifact. Problematic ability: {}", nextToApply );
                 continue;
             }
-            
             // Success, probably
             CompoundTag abilityData = new CompoundTag();
             abilityData.putString( "AbilityId", abilityId.toString() );

@@ -17,7 +17,6 @@ import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 
@@ -97,7 +96,6 @@ public class NormalDungeonsStructure extends Structure {
     }
     
     @Override
-    @Nonnull
     public Optional<Structure.GenerationStub> findGenerationPoint( Structure.GenerationContext context ) {
         if( !extraSpawningChecks( context, maxY, canGenerateInWater ) )
             return Optional.empty();
@@ -119,7 +117,6 @@ public class NormalDungeonsStructure extends Structure {
     }
     
     @Override
-    @Nonnull
     public StructureType<?> type() {
         return MRStructureTypes.NORMAL_DUNGEON.get();
     }

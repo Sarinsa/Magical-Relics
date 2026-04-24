@@ -4,7 +4,6 @@ import com.sarinsa.magical_relics.client.ClientUtils;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRDamageTypes;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
-import com.sarinsa.magical_relics.common.util.DirectionUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -224,7 +223,7 @@ public class QuicksandBlock extends Block implements BucketPickup {
         boolean flowed = false;
         int flowCapacity = state.getValue( LAYERS );
         
-        for( Direction dir : DirectionUtils.HORIZONTAL ) {
+        for( Direction dir : Direction.Plane.HORIZONTAL ) {
             if( flowCapacity - MAX_FLOW_AMOUNT <= 0 )
                 break;
             
