@@ -11,14 +11,14 @@ import java.util.function.Supplier;
 public class C2SSaveAntiBuilderData {
     
     public final UUID playerUUID;
-    public final int[] bbDimensions;
+    public final int[] boxDimensions;
     public final BlockPos blockEntityPos;
     
     
     public C2SSaveAntiBuilderData( UUID playerUUID, BlockPos blockPos, int[] bbCoordinates ) {
         this.playerUUID = playerUUID;
         this.blockEntityPos = blockPos;
-        this.bbDimensions = bbCoordinates;
+        this.boxDimensions = bbCoordinates;
     }
     
     private C2SSaveAntiBuilderData( UUID playerUUID, BlockPos blockPos, int minX, int minY, int minZ, int maxX, int maxY, int maxZ ) {
@@ -50,11 +50,11 @@ public class C2SSaveAntiBuilderData {
     public static void encode( C2SSaveAntiBuilderData message, FriendlyByteBuf buffer ) {
         buffer.writeUUID( message.playerUUID );
         buffer.writeBlockPos( message.blockEntityPos );
-        buffer.writeInt( message.bbDimensions[0] );
-        buffer.writeInt( message.bbDimensions[1] );
-        buffer.writeInt( message.bbDimensions[2] );
-        buffer.writeInt( message.bbDimensions[3] );
-        buffer.writeInt( message.bbDimensions[4] );
-        buffer.writeInt( message.bbDimensions[5] );
+        buffer.writeInt( message.boxDimensions[0] );
+        buffer.writeInt( message.boxDimensions[1] );
+        buffer.writeInt( message.boxDimensions[2] );
+        buffer.writeInt( message.boxDimensions[3] );
+        buffer.writeInt( message.boxDimensions[4] );
+        buffer.writeInt( message.boxDimensions[5] );
     }
 }

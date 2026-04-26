@@ -25,22 +25,20 @@ public class ServerWork {
     public static void saveAntiBuilderData( C2SSaveAntiBuilderData message ) {
         if( server == null ) return;
         
-        if( message.bbDimensions.length != 6 ) {
-            MagicalRelics.LOG.warn( "Received anti-builder 'update bounds' packet with invalid coordinates array length. Expected 6, got {}", message.bbDimensions.length );
+        if( message.boxDimensions.length != 6 ) {
+            MagicalRelics.LOG.warn( "Received anti-builder 'update bounds' packet with invalid coordinates array length. Expected 6, got {}", message.boxDimensions.length );
             return;
         }
-        
         ServerPlayer player = server.getPlayerList().getPlayer( message.playerUUID );
         
         if( player == null ) return;
         
         // noinspection resource
         ServerLevel level = player.serverLevel();
-        
         BlockEntity blockEntity = level.getBlockEntity( message.blockEntityPos );
         
         if( blockEntity instanceof AntiBuilderBlockEntity antiBuilder ) {
-            antiBuilder.recalculateEffectiveArea( message.bbDimensions );
+            antiBuilder.recalculateEffectiveArea( message.boxDimensions );
         }
     }
 }

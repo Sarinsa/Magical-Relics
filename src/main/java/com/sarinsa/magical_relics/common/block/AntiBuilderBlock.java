@@ -52,7 +52,7 @@ public class AntiBuilderBlock extends HorizontalDirectionalBlock implements Enti
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker( Level level, BlockState state, BlockEntityType<T> type ) {
         return type == MRBlockEntities.ANTI_BUILDER.get()
-                ? ( lvl, pos, blockState, blockEntity ) -> AntiBuilderBlockEntity.tick( lvl, pos, blockState, (AntiBuilderBlockEntity) blockEntity )
+                ? ( lvl, pos, blockState, blockEntity ) -> AntiBuilderBlockEntity.tick( (AntiBuilderBlockEntity) blockEntity )
                 : null;
     }
     

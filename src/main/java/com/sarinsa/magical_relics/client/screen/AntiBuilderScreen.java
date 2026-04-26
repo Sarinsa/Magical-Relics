@@ -42,11 +42,11 @@ public class AntiBuilderScreen extends Screen {
     
     @Override
     protected void init() {
-        AABB aabb = antiBuilder.getEffectiveArea() == null
+        final AABB aabb = antiBuilder.getEffectiveArea() == null
                 // Default box in case existing AoE is null for whatever reason.
                 ? new AABB( antiBuilder.getBlockPos() ).inflate( 5.0D )
                 : antiBuilder.getEffectiveArea();
-        Vec3i pos = antiBuilder.getBlockPos();
+        final Vec3i pos = antiBuilder.getBlockPos();
         
         corner1XEdit = createCoordField( (width / 2) - 70, (height / 3), (int) aabb.maxX - pos.getX() );
         corner1YEdit = createCoordField( (width / 2) - 20, (height / 3), (int) aabb.maxY - pos.getY() );
@@ -124,7 +124,7 @@ public class AntiBuilderScreen extends Screen {
     
     private void onDone() {
         // Add offset
-        int[] bbDimensions = new int[] {
+        final int[] bbSizes = new int[] {
                 corner1XEdit.getCurrentValue(),
                 corner1YEdit.getCurrentValue(),
                 corner1ZEdit.getCurrentValue(),
@@ -132,8 +132,8 @@ public class AntiBuilderScreen extends Screen {
                 corner2YEdit.getCurrentValue(),
                 corner2ZEdit.getCurrentValue()
         };
-        antiBuilder.recalculateEffectiveArea( bbDimensions );
-        sendNBTToServer( bbDimensions );
+        antiBuilder.recalculateEffectiveArea( bbSizes );
+        sendNBTToServer( bbSizes );
         // noinspection ConstantConditions
         minecraft.setScreen( null );
     }

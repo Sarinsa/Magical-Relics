@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.common.core.config;
 
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
+import com.sarinsa.magical_relics.common.blockentity.AntiBuilderBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.worldgen.processor.DisplayPedestalProcessor;
@@ -10,7 +11,12 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.InjectionWrapperField;
 import fathertoast.crust.api.config.common.field.collection.RegistrySetField;
+import fathertoast.crust.api.config.common.field.collection.RegistryValueListField;
 import fathertoast.crust.api.config.common.value.collection.RegistrySet;
+import fathertoast.crust.api.config.common.value.collection.RegistryValueList;
+import fathertoast.crust.api.config.common.value.collection.value.MobEffectStats;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -51,8 +57,7 @@ public class MainConfig extends AbstractConfigFile {
             
             wizardFavoriteBlacklist = SPEC.define( new InjectionWrapperField<>( new RegistrySetField<>( "wizards_favorite_blacklist",
                     createDefaultWizFavoriteBlacklist(),
-                    "A list of items that should not be findable in \"Wizard's Favorite\" display "
-                            + "pedestals in wizard tower structures." ),
+                    "A list of items that should not be findable in \"Wizard's Favorite\" display pedestals in wizard tower structures." ),
                     ( field ) -> DisplayPedestalProcessor.refreshWizFavorites( field.get() ) ) );
         }
         
@@ -78,6 +83,9 @@ public class MainConfig extends AbstractConfigFile {
         
         public final BooleanField antiBuilderBlocksBuilding;
         
+        public final InjectionWrapperField<RegistryValueListField<MobEffect, MobEffectStats>> maladies;
+        
+        
         public AntiBuilder( MainConfig parent ) {
             super( parent, "anti_builder",
                     "Contains options related to the Anti-Builder / Alteration Negator" );
@@ -87,6 +95,24 @@ public class MainConfig extends AbstractConfigFile {
                     "This includes breaking blocks, placing blocks, explosions, mob griefing etc.",
                     "If this is disabled, the anti-builder will instead punish players with negative potion effects " +
                             "instead of just straight up disallowing the interaction." ) );
+            
+            SPEC.newLine();
+            
+            maladies = SPEC.define( new InjectionWrapperField<>( new RegistryValueListField<>( "maladies", createDefaultPlagueMap(),
+                    "If the above setting is disabled, the anti-builder will pick a random potion effect from this list and inflict " +
+                            "it on meddling players within its area instead of blocking building directly." ),
+                    ( field ) -> AntiBuilderBlockEntity.refreshMaladiesList( field.get() ) ) );
+        }
+        
+        private RegistryValueList<MobEffect, MobEffectStats> createDefaultPlagueMap() {
+            return new RegistryValueList.Builder<>( ForgeRegistries.MOB_EFFECTS, MobEffectStats.CODEC )
+                    .put( MobEffects.WITHER, new MobEffectStats( 80, 1 ) )
+                    .put( MobEffects.POISON, new MobEffectStats( 80, 1 ) )
+                    .put( MobEffects.HUNGER, new MobEffectStats( 240, 2 ) )
+                    .put( MobEffects.MOVEMENT_SLOWDOWN, new MobEffectStats( 160, 2 ) )
+                    .put( MobEffects.DIG_SLOWDOWN, new MobEffectStats( 160, 2 ) )
+                    .put( MobEffects.UNLUCK, new MobEffectStats( 400, 3 ) )
+                    .build();
         }
     }
 }
