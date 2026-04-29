@@ -1,11 +1,11 @@
 package com.sarinsa.magical_relics.common.blockentity;
 
 import com.sarinsa.magical_relics.common.block.AntiBuilderBlock;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.util.References;
+import com.sarinsa.magical_relics.common.util.RotationUtils;
 import fathertoast.crust.api.config.common.value.collection.RegistryValueList;
 import fathertoast.crust.api.config.common.value.collection.value.MobEffectStats;
 import fathertoast.crust.api.lib.NBTHelper;
@@ -25,6 +25,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -52,40 +54,56 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
     private static final List<MobEffectInstance> MALADIES = new ArrayList<>();
     
     private Direction lastFacing;
+    
     private AABB effectiveArea;
     private boolean registeredListener = false;
     
     
     public AntiBuilderBlockEntity( BlockPos pos, BlockState state ) {
         super( MRBlockEntities.ANTI_BUILDER.get(), pos, state );
-        // Create default effective area box.
-        setEffectiveArea( new AABB(
-                -10, -10, -10,
-                10, 10, 10
-        ) );
+    }
+    
+    @Override
+    public void onLoad() {
+        // noinspection ConstantConditions
+        if( !level.isClientSide ) {
+            if( effectiveArea == null ) {
+                // Create default effective area box.
+                setEffectiveArea( new AABB(
+                        -10, -10, -10,
+                        11, 11, 11
+                ) );
+            }
+            lastFacing = getBlockState().getValue( AntiBuilderBlock.FACING );
+        }
+    }
+    
+    /** Convenience method for requesting a block update at this block entity's position. */
+    private void sendBlockUpdate() {
+        if( level == null ) return;
+        level.sendBlockUpdated( getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS );
     }
     
     /**
-     * The client AND server ticker used for this block entity type.
+     * The server ticker used for this block entity type.
      *
      * @see AntiBuilderBlock#getTicker(Level, BlockState, BlockEntityType)
      */
     public static void tick( AntiBuilderBlockEntity antiBuilder ) {
         final Direction dir = antiBuilder.getBlockState().getValue( AntiBuilderBlock.FACING );
         
-        MagicalRelics.LOG.info( "Bounding box on {}: {}",
-                antiBuilder.level.isClientSide ? "client" : "server",
-                antiBuilder.effectiveArea == null ? "null" : antiBuilder.effectiveArea.toString()
-        );
-        
-        if( dir != antiBuilder.lastFacing ) {
-            antiBuilder.recalculateEffectiveArea( dir, antiBuilder.effectiveArea );
+        if( dir != antiBuilder.lastFacing && antiBuilder.effectiveArea != null ) {
+            final BlockPos pos = antiBuilder.getBlockPos();
+            final Rotation rotation = RotationUtils.rotationFromDirectionDiff( dir, antiBuilder.lastFacing );
+            antiBuilder.recalculateEffectiveArea( rotation, antiBuilder.effectiveArea.move( -pos.getX(), -pos.getY(), -pos.getZ() ) );
+            antiBuilder.sendBlockUpdate();
             antiBuilder.lastFacing = dir;
         }
     }
     
     /**
-     * Recalculates the effective area bounding box for this anti builder.
+     * Recalculates the effective area bounding box for this anti-builder,
+     * with no specified rotation.
      *
      * @param boxDimensions An array containing the bounds of the box to create.
      *                      This array must contain only the following, in this specific order:<br>
@@ -93,48 +111,46 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
      *                      Note that the box is moved to this block entity's position during this operation.
      */
     public void recalculateEffectiveArea( int[] boxDimensions ) {
-        recalculateEffectiveArea( getBlockState().getValue( AntiBuilderBlock.FACING ), boxDimensions );
+        recalculateEffectiveArea( null, boxDimensions );
     }
     
     /**
-     * Recalculates the effective area bounding box for this anti builder.
+     * Recalculates the effective area bounding box for this anti-builder.
      *
-     * @param facing        The facing to rotate the resulting box relative to. If this is null, no transformations are made.
+     * @param rotation      The rotation to use when rotating the box. If this is null, no transformations are made.
      * @param boxDimensions An array containing the bounds of the box to create.
      *                      This array must contain only the following, in this specific order:<br>
      *                      <strong>{min-X, min-Y, min-Z, max-X, max-Y, max-Z}</strong>.<br>
      *                      Note that the box is moved to this block entity's position during this operation.
      */
-    public void recalculateEffectiveArea( @Nullable Direction facing, int[] boxDimensions ) {
+    public void recalculateEffectiveArea( @Nullable Rotation rotation, int[] boxDimensions ) {
         if( boxDimensions.length != 6 )
             throw new IllegalArgumentException( "Attempted to recalculate effective area with bounds array with invalid length: "
                     + boxDimensions.length );
-        recalculateEffectiveArea( facing, new AABB(
+        recalculateEffectiveArea( rotation, new AABB(
                 boxDimensions[0], boxDimensions[1], boxDimensions[2],
                 boxDimensions[3], boxDimensions[4], boxDimensions[5]
         ) );
     }
     
     /**
-     * Recalculates the effective area bounding box for this anti builder,
-     * using the current facing of its block state.
+     * Recalculates the effective area bounding box for this anti-builder,
+     * using no rotation.
      *
      * @param boundingBox The bounding box to use. Note that the box is moved to this block entity's position during this operation.
      */
     public void recalculateEffectiveArea( AABB boundingBox ) {
-        recalculateEffectiveArea( getBlockState().getValue( AntiBuilderBlock.FACING ), boundingBox );
+        recalculateEffectiveArea( null, boundingBox );
     }
     
-    // TODO - Make the box orientable
-    
     /**
-     * Recalculates the effective area bounding box for this anti builder.
+     * Recalculates the effective area bounding box for this anti-builder.
      *
-     * @param facing      The facing to rotate the resulting box relative to. If this is null, no transformations are made.
+     * @param rotation    The rotation to use when rotating the box. If this is null, no transformations are made.
      * @param boundingBox The bounding box to use. Note that the box is moved to this block entity's position during this operation.
      */
-    public void recalculateEffectiveArea( @Nullable Direction facing, AABB boundingBox ) {
-        setEffectiveArea( boundingBox );
+    public void recalculateEffectiveArea( @Nullable Rotation rotation, AABB boundingBox ) {
+        setEffectiveArea( RotationUtils.rotate( boundingBox, rotation ) );
     }
     
     /**
@@ -148,13 +164,10 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
     public int[] aabbToIntArray( AABB box, boolean relative ) {
         Objects.requireNonNull( box );
         if( relative ) {
+            final BlockPos pos = getBlockPos();
             return new int[] {
-                    (int) box.minX - getBlockPos().getX(),
-                    (int) box.minY - getBlockPos().getY(),
-                    (int) box.minZ - getBlockPos().getZ(),
-                    (int) box.maxX - getBlockPos().getX(),
-                    (int) box.maxY - getBlockPos().getY(),
-                    (int) box.maxZ - getBlockPos().getZ(),
+                    (int) box.minX - pos.getX(), (int) box.minY - pos.getY(), (int) box.minZ - pos.getZ(),
+                    (int) box.maxX - pos.getX(), (int) box.maxY - pos.getY(), (int) box.maxZ - pos.getZ(),
             };
         }
         else {
@@ -263,30 +276,6 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
     //
     //-----------------------------------------------------------------------------------------------------------------
     
-    // TODO Maybe remove this entirely, seems kinda lame actually
-    /*
-    @SubscribeEvent( priority = EventPriority.LOWEST )
-    public void onPlayerRightClickBlock( PlayerInteractEvent.RightClickBlock event ) {
-        if( !Config.MAIN.ANTI_BUILDER.antiBuilderBlocksBuilding.get() || event.getEntity().isCreative() || !canIntervene( event.getLevel() ) )
-            return;
-        
-        Item item = event.getItemStack().getItem();
-        
-        if( item == Blocks.AIR.asItem() )
-            return;
-        
-        final BlockPos pos = event.getHitVec().getBlockPos();
-        
-        if( isWithinBounds( pos ) ) {
-            if( event.getLevel().getBlockState( event.getPos() ).getBlock() instanceof CamoBlock ) {
-                event.setUseBlock( Event.Result.DENY );
-            }
-            event.setUseItem( Event.Result.DENY );
-            event.getEntity().displayClientMessage( References.ANTI_BUILDER_BLOCK_MESSAGE, true );
-        }
-    }
-    
-     */
     
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public void onPlayerLeftClickBlock( PlayerInteractEvent.LeftClickBlock event ) {

@@ -44,7 +44,8 @@ public class AntiBuilderScreen extends Screen {
     protected void init() {
         final AABB aabb = antiBuilder.getEffectiveArea() == null
                 // Default box in case existing AoE is null for whatever reason.
-                ? new AABB( antiBuilder.getBlockPos() ).inflate( 5.0D )
+                ? new AABB( -10, -10, -10,
+                11, 11, 11 )
                 : antiBuilder.getEffectiveArea();
         final Vec3i pos = antiBuilder.getBlockPos();
         
