@@ -3,6 +3,7 @@ package com.sarinsa.magical_relics.common.event;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import fathertoast.crust.api.lib.EnvironmentHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
@@ -10,9 +11,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Deque;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class ServerEventListener {
     
@@ -24,7 +25,7 @@ public class ServerEventListener {
     private static int nextRepairTick;
     private static final int maxRepairTick = 10000;
     
-    private static final List<ServerPlayer> aggroClearingList = new ArrayList<>();
+    private static final Deque<ServerPlayer> aggroClearingList = new ConcurrentLinkedDeque<>();
     
     
     /*
@@ -66,10 +67,9 @@ public class ServerEventListener {
                 if( MRArtifactAbilities.OBSCURITY.get().getConfig().OBSCURITY.resetAggroRange.get() > 0.0 ) {
                     aggroClearingList.removeIf( ( player ) -> {
                         if( player.isAlive() ) {
-                            // noinspection resource
-                            Level level = player.level();
+                            final Level level = player.level();
                             
-                            if( level.isLoaded( player.blockPosition() ) ) {
+                            if( EnvironmentHelper.isLoaded( level, player.blockPosition() ) ) {
                                 for( PathfinderMob pathfinderMob : level.getEntitiesOfClass( PathfinderMob.class, player.getBoundingBox().inflate( 30.0D, 30.0D, 30.0D ) ) ) {
                                     if( pathfinderMob.getTarget() == player || pathfinderMob.getLastHurtByMob() == player ) {
                                         pathfinderMob.setTarget( null );
@@ -85,10 +85,15 @@ public class ServerEventListener {
         }
     }
     
+    /** @return The current value of the repair-tick timer. */
     public static int getRepairTick() {
         return nextRepairTick;
     }
     
+    /**
+     * Puts the given player at the bottom of the deaggro deque.
+     * This method is thread-safe.
+     */
     public static void queuePlayerForDeaggro( @Nonnull ServerPlayer player ) {
         Objects.requireNonNull( player );
         
