@@ -1,0 +1,22 @@
+{
+  "structures": [
+    {
+      "structure": "magical_relics:small_wizard_tower",
+      "weight": 2
+    },
+    {
+      "structure": "magical_relics:medium_wizard_tower",
+      "weight": 2
+    },
+    {
+      "structure": "magical_relics:large_wizard_tower",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1104946533,
+    "spacing": 20,
+    "separation": 6
+  }
+}

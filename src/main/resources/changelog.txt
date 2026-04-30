@@ -12,4 +12,4 @@
         - Plague intruders with negative potion effects.
         - Do nothing. Incredible!
     - The Core of Warding's effective area box is now rotated along with the structure it generates in.
-    - Some config properties that need it are now properly synced from server to client.
+    - Wizard tower structures are now all part of the same structure set.
