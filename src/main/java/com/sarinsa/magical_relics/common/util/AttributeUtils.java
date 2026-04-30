@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class AttributeUtils {
@@ -16,6 +17,7 @@ public class AttributeUtils {
      * <p>
      * This is because some places in vanilla, UUID objects are compared as "normal" objects and not UUIDs.
      */
+    @Nullable
     public static AttributeModifier loadUUIDSensitive( CompoundTag compoundTag ) {
         try {
             UUID uuid = findAndReplace( compoundTag.getUUID( "UUID" ) );

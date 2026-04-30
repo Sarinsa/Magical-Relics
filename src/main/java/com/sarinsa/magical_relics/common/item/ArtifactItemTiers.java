@@ -13,21 +13,16 @@ import java.util.function.Supplier;
 
 public enum ArtifactItemTiers implements Tier {
     
-    WOOD( "wood", 0, 59, 2.0F, 0.0F, 15, () -> {
-        return Ingredient.of( MRItems.WOOD_MANAESSENCE.get() );
-    } ),
-    STONE( "stone", 1, 131, 4.0F, 1.0F, 5, () -> {
-        return Ingredient.of( MRItems.STONE_MANAESSENCE.get() );
-    } ),
-    IRON( "iron", 2, 250, 6.0F, 2.0F, 14, () -> {
-        return Ingredient.of( MRItems.IRON_MANAESSENCE.get() );
-    } ),
-    DIAMOND( "diamond", 3, 1561, 8.0F, 3.0F, 10, () -> {
-        return Ingredient.of( MRItems.DIAMOND_MANAESSENCE.get() );
-    } ),
-    GOLD( "gold", 0, 32, 12.0F, 0.0F, 22, () -> {
-        return Ingredient.of( MRItems.GOLD_MANAESSENCE.get() );
-    } );
+    WOOD( "wood", 0, 59, 2.0F, 0.0F, 15,
+            () -> Ingredient.of( MRItems.WOOD_MANAESSENCE.get() ) ),
+    STONE( "stone", 1, 131, 4.0F, 1.0F, 5,
+            () -> Ingredient.of( MRItems.STONE_MANAESSENCE.get() ) ),
+    IRON( "iron", 2, 250, 6.0F, 2.0F, 14,
+            () -> Ingredient.of( MRItems.IRON_MANAESSENCE.get() ) ),
+    DIAMOND( "diamond", 3, 1561, 8.0F, 3.0F, 10,
+            () -> Ingredient.of( MRItems.DIAMOND_MANAESSENCE.get() ) ),
+    GOLD( "gold", 0, 32, 12.0F, 0.0F, 22,
+            () -> Ingredient.of( MRItems.GOLD_MANAESSENCE.get() ) );
     
     private final String materialName;
     private final int level;

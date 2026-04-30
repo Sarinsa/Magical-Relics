@@ -45,7 +45,6 @@ import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -402,7 +401,7 @@ public class ArtifactUtils {
      * @return True if nothing went horribly wrong.
      */
     @SuppressWarnings( "ConstantConditions" )
-    public static boolean removeAbility( @Nonnull ItemStack artifact, @Nonnull BaseArtifactAbility<?> ability ) {
+    public static boolean removeAbility( ItemStack artifact, BaseArtifactAbility<?> ability ) {
         try {
             final CompoundTag modData = NBTHelper.getOrCreateCompound( artifact.getOrCreateTag(), TAG_MOD_DATA );
             final String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( ability ).toString();
@@ -448,7 +447,6 @@ public class ArtifactUtils {
      * @return A List of all abilities on the artifact item stack with the given TriggerType.
      * Will not be null, but may be empty.
      */
-    @Nonnull
     public static Collection<BaseArtifactAbility<?>> getAbilitiesWithTrigger( TriggerType type, ItemStack itemStack ) {
         List<BaseArtifactAbility<?>> list = new ArrayList<>();
         
@@ -499,7 +497,6 @@ public class ArtifactUtils {
      * @return A Map of all artifact abilities the given ItemStack has, with their respective TriggerType.
      * Returns an empty Map if no abilities are found.
      */
-    @Nonnull
     public static Map<BaseArtifactAbility<?>, TriggerType> getAllAbilities( ItemStack itemStack ) {
         Map<BaseArtifactAbility<?>, TriggerType> abilities = new HashMap<>();
         CompoundTag stackTag = itemStack.getTag();
