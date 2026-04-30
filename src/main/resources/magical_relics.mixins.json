@@ -14,7 +14,5 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "client": [
-    "MultiPlayerGameModeMixin"
-  ]
+  "client": []
 }
