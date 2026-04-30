@@ -1,4 +1,5 @@
 1.20.1-4.0.3
+    - Bumped minimum required Forge version to 47.4.8.
     - Now requires Crust.
     - All configs have been rewritten to make use of Crust's config API.
         - More config options for abilities.
