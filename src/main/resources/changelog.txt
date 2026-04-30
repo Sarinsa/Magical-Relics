@@ -5,8 +5,10 @@
         - More config options for the Anti Builder's behavior.
     - Some abilities have been rebalanced.
     - Fixed some ability logic running twice a tick.
-    - Added new behavior modes for the Anti Builder; it can now either:
+    - Renamed the Alteration Negator (anti-builder) to Core of Warding.
+    - Added new behavior modes for the Core of Warding; it can now either:
         - Block world interactions like before (building, placing etc.)
         - Plague intruders with negative potion effects.
         - Do nothing. Incredible!
+    - The Core of Warding's effective area box is now rotated along with the structure it generates in.
     - Some config properties that need it are now properly synced from server to client.
