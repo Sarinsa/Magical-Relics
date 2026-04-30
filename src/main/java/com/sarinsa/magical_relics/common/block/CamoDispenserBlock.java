@@ -133,6 +133,7 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
                 }
             }
             catch( Exception e ) {
+                // noinspection CallToPrintStackTrace
                 e.printStackTrace();
             }
         }
@@ -151,7 +152,6 @@ public class CamoDispenserBlock extends DispenserBlock implements EntityBlock, C
         } );
     }
     
-    @Nullable
     @Override
     public BlockEntity newBlockEntity( BlockPos pos, BlockState state ) {
         CamoDispenserBlockEntity arrowTrap = new CamoDispenserBlockEntity( pos, state );

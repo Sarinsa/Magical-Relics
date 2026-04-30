@@ -32,7 +32,7 @@ public class MRJadePlugin implements IWailaPlugin {
             if( accessor instanceof BlockAccessor blockAccessor ) {
                 if( blockAccessor.getBlockEntity() instanceof CamoBlockEntity camoBlockEntity ) {
                     BlockState camoState = camoBlockEntity.getCamoState();
-                    if( IWailaConfig.get().getPlugin().get( displayCamosId ) && camoState != null && camoState != CamoBlockEntity.defaultCamoState.get() ) {
+                    if( IWailaConfig.get().getPlugin().get( displayCamosId ) && camoState != null ) {
                         return registration.blockAccessor().from( blockAccessor )
                                 .blockEntity( () -> null )
                                 .blockState( camoBlockEntity.getCamoState() )
