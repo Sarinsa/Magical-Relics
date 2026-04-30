@@ -86,7 +86,7 @@
   "block.magical_relics.camo_dispenser": "Camo Dispenser",
   "block.magical_relics.camo_tripwire_hook": "Camo Tripwire Hook",
   "block.magical_relics.illusionary_block": "Illusionary Block",
-  "block.magical_relics.anti_builder": "Alteration Negator",
+  "block.magical_relics.anti_builder": "Core of Warding",
   "block.magical_relics.display_pedestal": "Display Pedestal",
   "block.magical_relics.cobblestone_wall_pressure_plate": "Cobblestone Wall Pressure Plate",
   "block.magical_relics.stone_wall_pressure_plate": "Stone Wall Pressure Plate",
@@ -133,10 +133,10 @@
   "death.attack.magical_relics.quicksand.player": "%1$s suffocated in quicksand whilst trying to escape %2$s",
 
   "magical_relics.anti_builder.blocked_message": "A powerful spell protects this land",
-  "magical_relics.display_pedestal.locked_message": "It is locked...",
-  "magical_relics.display_pedestal.locked_tooltip": "Locked",
   "magical_relics.anti_builder.screen.corner_1": "Corner 1",
   "magical_relics.anti_builder.screen.corner_2": "Corner 2",
+  "magical_relics.display_pedestal.locked_message": "It is locked...",
+  "magical_relics.display_pedestal.locked_tooltip": "Locked",
 
   "magical_relics.artifact_ability.magical_relics.baker.description": "Conjures cakes on solid surfaces when right-clicking",
   "magical_relics.artifact_ability.magical_relics.cashout.description": "Converts to treasure when dropped",
