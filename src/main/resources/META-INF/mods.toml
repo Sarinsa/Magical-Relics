@@ -17,7 +17,7 @@ Adds a variety of unique artifacts with special abilities, and new dungeons
 [[dependencies.magical_relics]]
 modId = "forge"
 mandatory = true
-versionRange = "[47.4.0,)"
+versionRange = "[47.4.8,)"
 ordering = "NONE"
 side = "BOTH"
 
