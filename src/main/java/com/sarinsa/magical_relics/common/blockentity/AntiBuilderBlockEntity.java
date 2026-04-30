@@ -50,6 +50,7 @@ import java.util.Objects;
 public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapeProvider {
     
     public static final String KEY_EFFECTIVE_AREA = "EffectiveAreaBounds";
+    public static final String KEY_LAST_FACING = "LastFacing";
     
     private static final List<MobEffectInstance> MALADIES = new ArrayList<>();
     
@@ -74,7 +75,9 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
                         11, 11, 11
                 ) );
             }
-            lastFacing = getBlockState().getValue( AntiBuilderBlock.FACING );
+            if( lastFacing == null ) {
+                lastFacing = getBlockState().getValue( AntiBuilderBlock.FACING );
+            }
         }
     }
     
@@ -222,12 +225,22 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
     @Override
     protected void saveAdditional( CompoundTag saveTag ) {
         super.saveAdditional( saveTag );
+        
+        saveTag.putInt( KEY_LAST_FACING, lastFacing.ordinal() );
         saveEffectiveArea( saveTag );
     }
     
     @Override
     public void load( CompoundTag saveTag ) {
         super.load( saveTag );
+        
+        if( NBTHelper.containsNumber( saveTag, KEY_LAST_FACING ) ) {
+            // If the number ends up exceeding enum length, do nothing
+            int ordinal = saveTag.getInt( KEY_LAST_FACING );
+            if( ordinal > Direction.values().length )
+                return;
+            lastFacing = Direction.values()[ordinal];
+        }
         readEffectiveArea( saveTag );
     }
     

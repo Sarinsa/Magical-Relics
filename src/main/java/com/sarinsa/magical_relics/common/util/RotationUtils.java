@@ -51,12 +51,8 @@ public class RotationUtils {
             }
         }
         return new AABB(
-                Math.min( corner1.x, corner2.x ),
-                Math.min( corner1.y, corner2.y ),
-                Math.min( corner1.z, corner2.z ),
-                Math.max( corner1.x, corner2.x ),
-                Math.max( corner1.y, corner2.y ),
-                Math.max( corner1.z, corner2.z )
+                Math.min( corner1.x, corner2.x ), Math.min( corner1.y, corner2.y ), Math.min( corner1.z, corner2.z ),
+                Math.max( corner1.x, corner2.x ), Math.max( corner1.y, corner2.y ), Math.max( corner1.z, corner2.z )
         );
     }
     
@@ -66,7 +62,7 @@ public class RotationUtils {
      * "rotate" the first direction to become the second one.
      * <br><br>
      * {@link Direction#UP} and {@link Direction#DOWN} are not supported
-     * argument types, and this method will return null if either are
+     * argument types, and this method will return {@link Rotation#NONE} if either are
      * used as a parameter.
      *
      * @param dir1 The first direction.

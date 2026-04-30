@@ -12,7 +12,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -54,13 +53,6 @@ public class AntiBuilderBlock extends HorizontalDirectionalBlock implements Enti
         return type == MRBlockEntities.ANTI_BUILDER.get() && !level.isClientSide
                 ? ( lvl, pos, blockState, blockEntity ) -> AntiBuilderBlockEntity.tick( (AntiBuilderBlockEntity) blockEntity )
                 : null;
-    }
-    
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement( BlockPlaceContext context ) {
-        if( context.getPlayer() == null ) return defaultBlockState();
-        return defaultBlockState().setValue( FACING, context.getHorizontalDirection().getOpposite() );
     }
     
     @Override

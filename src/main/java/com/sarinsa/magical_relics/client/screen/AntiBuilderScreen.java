@@ -105,7 +105,7 @@ public class AntiBuilderScreen extends Screen {
     /** Helper method for creating a coordinate text field. */
     private IntegerTextField createCoordField( int x, int y, int defaultValue ) {
         return new IntegerTextField( font, defaultValue,
-                -20, 20,
+                -40, 40,
                 x, y,
                 40, 20,
                 null, null
