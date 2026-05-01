@@ -10,8 +10,11 @@ import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.InjectionWrapperField;
+import fathertoast.crust.api.config.common.field.PredicateStringListField;
 import fathertoast.crust.api.config.common.field.collection.RegistrySetField;
 import fathertoast.crust.api.config.common.field.collection.RegistryValueListField;
+import fathertoast.crust.api.config.common.file.TomlHelper;
+import fathertoast.crust.api.config.common.value.HexIntWrapper;
 import fathertoast.crust.api.config.common.value.collection.RegistrySet;
 import fathertoast.crust.api.config.common.value.collection.RegistryValueList;
 import fathertoast.crust.api.config.common.value.collection.value.MobEffectStats;
@@ -21,11 +24,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
+
 @SuppressWarnings( "UnstableApiUsage" )
 public class MainConfig extends AbstractConfigFile {
     
-    public final General GENERAL;
+    public final Abilities ABILITIES;
     public final AntiBuilder ANTI_BUILDER;
+    public final Misc MISC;
     
     /** Builds the config spec that should be used for this config. */
     MainConfig( ConfigManager manager, String fileName ) {
@@ -33,32 +39,38 @@ public class MainConfig extends AbstractConfigFile {
                 "This config contains options for miscellaneous features in the mod."
         );
         
-        GENERAL = new General( this );
+        ABILITIES = new Abilities( this );
         ANTI_BUILDER = new AntiBuilder( this );
+        MISC = new Misc( this );
     }
     
-    public static class General extends AbstractConfigCategory<MainConfig> {
+    public static class Abilities extends AbstractConfigCategory<MainConfig> {
         
         public final InjectionWrapperField<RegistrySetField<BaseArtifactAbility<?>>> unobtainableAbilities;
         
-        public final InjectionWrapperField<RegistrySetField<Item>> wizardFavoriteBlacklist;
+        public final InjectionWrapperField<PredicateStringListField> artifactColors;
         
         
-        General( MainConfig parent ) {
-            super( parent, "general",
-                    "Options to customize settings that apply to the mod as a whole." );
+        Abilities( MainConfig parent ) {
+            super( parent, "abilities",
+                    "Options to customize settings that apply to artifact abilities as a whole." );
             
             unobtainableAbilities = SPEC.define( new InjectionWrapperField<>( new RegistrySetField<>( "unobtainable_abilities",
                     createDefaultUnobtainableAbilities(),
                     "A list of artifact abilities that are blacklisted and cannot be obtained without using commands." ),
-                    ( field ) -> ArtifactUtils.refreshObtainableAbilities( field.get() ) ) );
+                    ArtifactUtils::refreshObtainableAbilities ) );
             
             SPEC.newLine();
             
-            wizardFavoriteBlacklist = SPEC.define( new InjectionWrapperField<>( new RegistrySetField<>( "wizards_favorite_blacklist",
-                    createDefaultWizFavoriteBlacklist(),
-                    "A list of items that should not be findable in \"Wizard's Favorite\" display pedestals in wizard tower structures." ),
-                    ( field ) -> DisplayPedestalProcessor.refreshWizFavorites( field.get() ) ) );
+            artifactColors = SPEC.define( new InjectionWrapperField<>( new PredicateStringListField( "artifact_colors", "Color", createDefaultColors(),
+                    ( value ) -> TomlHelper.parseHexInt( value ) != null && value.length() <= 6,
+                    "A list of colors to pick from when picking a random color for a randomly generated artifact item.",
+                    "Note that armor artifact items are handled a bit differently and instead picks a random armor trim.",
+                    "If this list is empty, a completely randomly generated color is picked (which can be ugly at times).",
+                    "Adding multiple entries with the same color to this list is allowed, and effectively increases the odds of said color being picked.",
+                    "The alpha value is ignored." ),
+                    ArtifactUtils::refreshColorList )
+            );
         }
         
         private RegistrySet<BaseArtifactAbility<?>> createDefaultUnobtainableAbilities() {
@@ -66,16 +78,16 @@ public class MainConfig extends AbstractConfigFile {
                     .build();
         }
         
-        private RegistrySet<Item> createDefaultWizFavoriteBlacklist() {
-            return new RegistrySet.Builder<>( ForgeRegistries.ITEMS )
-                    .add( Items.BEDROCK )
-                    .add( Items.STRUCTURE_BLOCK )
-                    .add( Items.JIGSAW )
-                    .add( Items.STRUCTURE_VOID )
-                    .add( Items.BARRIER )
-                    .add( Items.AIR )
-                    .add( Items.DEBUG_STICK )
-                    .build();
+        private List<String> createDefaultColors() {
+            final List<Integer> colors = List.of(
+                    0x00B6FF, 0x1466FF, 0x6647FF,
+                    0xC23FFF, 0xFF00A5, 0xFF0010,
+                    0xFF5F0F, 0xFF9D00, 0xFFE500,
+                    0x2FBC00, 0x00BA6F, 0x37B7AA,
+                    0x915E35, 0xC4746F, 0xC170BC,
+                    0x84BF4E, 0x6B75BC, 0xD8D8D8
+            );
+            return colors.stream().map( ( val ) -> new HexIntWrapper( val, 6 ).toTomlLiteral().substring( 2 ) ).toList();
         }
     }
     
@@ -88,10 +100,10 @@ public class MainConfig extends AbstractConfigFile {
         
         public AntiBuilder( MainConfig parent ) {
             super( parent, "anti_builder",
-                    "Contains options related to the Anti-Builder / Alteration Negator" );
+                    "Contains options related to the anti-builder block (Core of Warding)" );
             
             antiBuilderBlocksBuilding = SPEC.define( new BooleanField( "blocks_building", false,
-                    "If enabled, anti-builders will prevent most world interactions within their effective area.",
+                    "If enabled, Core of Warding blocks will prevent most world interactions within their effective area.",
                     "This includes breaking blocks, placing blocks, explosions, mob griefing etc.",
                     "If this is disabled, the anti-builder will instead punish players with negative potion effects " +
                             "instead of just straight up disallowing the interaction." ) );
@@ -112,6 +124,34 @@ public class MainConfig extends AbstractConfigFile {
                     .put( MobEffects.MOVEMENT_SLOWDOWN, new MobEffectStats( 160, 2 ) )
                     .put( MobEffects.DIG_SLOWDOWN, new MobEffectStats( 160, 2 ) )
                     .put( MobEffects.UNLUCK, new MobEffectStats( 400, 3 ) )
+                    .build();
+        }
+    }
+    
+    public static class Misc extends AbstractConfigCategory<MainConfig> {
+        
+        public final InjectionWrapperField<RegistrySetField<Item>> wizardFavoriteBlacklist;
+        
+        
+        Misc( MainConfig parent ) {
+            super( parent, "misc",
+                    "Options that do not fit in other categories." );
+            
+            wizardFavoriteBlacklist = SPEC.define( new InjectionWrapperField<>( new RegistrySetField<>( "wizards_favorite_blacklist",
+                    createDefaultWizFavoriteBlacklist(),
+                    "A list of items that should not be findable in \"Wizard's Favorite\" display pedestals in wizard tower structures." ),
+                    ( field ) -> DisplayPedestalProcessor.refreshWizFavorites( field.get() ) ) );
+        }
+        
+        private RegistrySet<Item> createDefaultWizFavoriteBlacklist() {
+            return new RegistrySet.Builder<>( ForgeRegistries.ITEMS )
+                    .add( Items.BEDROCK )
+                    .add( Items.STRUCTURE_BLOCK )
+                    .add( Items.JIGSAW )
+                    .add( Items.STRUCTURE_VOID )
+                    .add( Items.BARRIER )
+                    .add( Items.AIR )
+                    .add( Items.DEBUG_STICK )
                     .build();
         }
     }
