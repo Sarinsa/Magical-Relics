@@ -112,7 +112,8 @@ public class MainConfig extends AbstractConfigFile {
             
             maladies = SPEC.define( new InjectionWrapperField<>( new RegistryValueListField<>( "maladies", createDefaultPlagueMap(),
                     "If the above setting is disabled, the anti-builder will pick a random potion effect from this list and inflict " +
-                            "it on meddling players within its area instead of blocking building directly." ),
+                            "it on meddling players within its area instead of blocking building directly.",
+                    "You can effectively disable anti-builders by emptying this list and disabling the \"blocks_building\" setting." ),
                     ( field ) -> AntiBuilderBlockEntity.refreshMaladiesList( field.get() ) ) );
         }
         
