@@ -7,12 +7,16 @@ import com.sarinsa.magical_relics.common.ability.base.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.MainConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.tag.MRItemTags;
-import fathertoast.crust.api.config.common.value.collection.RegistrySet;
+import fathertoast.crust.api.config.common.field.PredicateStringListField;
+import fathertoast.crust.api.config.common.field.collection.RegistrySetField;
+import fathertoast.crust.api.config.common.file.TomlHelper;
+import fathertoast.crust.api.lib.CrustMath;
 import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -47,6 +51,7 @@ import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ArtifactUtils {
     
@@ -84,14 +89,7 @@ public class ArtifactUtils {
     
     
     /** Possible overlay colors for artifact items. */
-    private static final int[] ARTIFACT_COLORS = {
-            0x00B6FF, 0x1466FF, 0x6647FF,
-            0xC23FFF, 0xFF00A5, 0xFF0010,
-            0xFF5F0F, 0xFF9D00, 0xFFE500,
-            0x2FBC00, 0x00BA6F, 0x37B7AA,
-            0x915E35, 0xC4746F, 0xC170BC,
-            0x84BF4E, 0x6B75BC, 0xD8D8D8
-    };
+    private static final List<Integer> ARTIFACT_COLORS = new ArrayList<>();
     
     /** Contains all abilities that CAN be applied when a random artifact is generated. */
     private static final List<BaseArtifactAbility<?>> OBTAINABLE_ABILITIES = new ArrayList<>();
@@ -108,18 +106,30 @@ public class ArtifactUtils {
      * @param variant      An integer corresponding to a specific texture variant of the artifact item.<br>
      * @return An item stack with all the necessary NBT tags for ability data.
      */
-    public static ItemStack createBlankArtifact( Item artifactItem, int variant, RandomSource randomSource ) {
+    public static ItemStack createBlankArtifact( Item artifactItem, int variant, RandomSource random ) {
         ItemStack artifactStack = new ItemStack( artifactItem );
         
-        CompoundTag modData = NBTHelper.getOrCreateCompound( artifactStack.getOrCreateTag(), TAG_MOD_DATA );
+        final CompoundTag modData = NBTHelper.getOrCreateCompound( artifactStack.getOrCreateTag(), TAG_MOD_DATA );
+        // Pick random color and force it solid
+        final int color = ARTIFACT_COLORS.isEmpty()
+                ? generateRandomColor( random )
+                : ARTIFACT_COLORS.get( random.nextInt( ARTIFACT_COLORS.size() ) ) | 0xFF;
         
         modData.putInt( TAG_VARIANT, variant );
-        modData.putInt( TAG_ITEM_COLOR, ARTIFACT_COLORS[randomSource.nextInt( ARTIFACT_COLORS.length )] );
+        modData.putInt( TAG_ITEM_COLOR, color );
         modData.put( TAG_ABILITY_COOLDOWNS, new CompoundTag() );
         modData.putString( TAG_PREFIX, References.MUNDANE_ABILITY_PREFIX );
         modData.putString( TAG_SUFFIX, "" );
         
         return artifactStack;
+    }
+    
+    /** @return A randomly generated solid color. */
+    private static int generateRandomColor( RandomSource random ) {
+        final int redBits = random.nextInt( 0xFF );
+        final int greenBits = random.nextInt( 0xFF );
+        final int blueBits = random.nextInt( 0xFF );
+        return CrustMath.bitsToARGB( 0xFF, redBits, greenBits, blueBits );
     }
     
     /**
@@ -129,33 +139,34 @@ public class ArtifactUtils {
      * @return The randomly generated artifact ItemStack.
      */
     public static ItemStack generateRandomArtifact( LevelReader level, RandomSource random, boolean legendary ) {
-        ArtifactCategory category = ArtifactCategory.values()[random.nextInt( ArtifactCategory.values().length )];
-        List<RegistryObject<? extends Item>> artifactList = MRItems.ARTIFACTS_BY_CATEGORY.get( category );
+        final ArtifactCategory category = ArtifactCategory.values()[random.nextInt( ArtifactCategory.values().length )];
+        final List<RegistryObject<? extends Item>> artifactList = MRItems.ARTIFACTS_BY_CATEGORY.get( category );
         
-        Item artifactItem = artifactList.get( random.nextInt( artifactList.size() ) ).get();
-        ItemStack artifactStack = createBlankArtifact( artifactItem, random.nextInt( category.getVariations() ), random );
+        final Item artifactItem = artifactList.get( random.nextInt( artifactList.size() ) ).get();
+        final ItemStack artifactStack = createBlankArtifact( artifactItem, random.nextInt( category.getVariations() ), random );
         
         // Apply a random trim if the artifact is an armor piece
         applyRandomArmorTrim( level, random, artifactStack );
         
-        var allAbilities = new ArrayList<>( OBTAINABLE_ABILITIES );
-        // Filter out abilities that are not applicable to the Artifact's category.
-        allAbilities.removeIf( ( ability ) -> !ability.getCompatibleTypes().contains( ((IArtifactItem) artifactItem).getCategory() ) );
+        // Gather all obtainable abilities and filter out ones that are not applicable to the artifact category.
+        final List<BaseArtifactAbility<?>> applicableAbilities = OBTAINABLE_ABILITIES.stream()
+                .filter( ( ability ) -> !ability.getCompatibleTypes().contains( ((IArtifactItem) artifactItem).getCategory() ) )
+                .collect( Collectors.toCollection( ArrayList::new ) );
         
         BaseArtifactAbility<?>[] abilitiesToApply;
         BaseArtifactAbility<?>[] appliedAbilities = {};
         // We might get unlucky RNG here and there,
         // so try 10 times before giving up
         for( int i = 0; i < 10; i++ ) {
-            Collections.shuffle( allAbilities );
+            Collections.shuffle( applicableAbilities );
             
             final int maxAbilities = legendary
-                    ? Math.min( 4, allAbilities.size() )
-                    : Math.min( 1 + (random.nextInt( 3 ) == 0 ? random.nextInt( 3 ) : 0), allAbilities.size() );
+                    ? Math.min( 4, applicableAbilities.size() )
+                    : Math.min( 1 + (random.nextInt( 3 ) == 0 ? random.nextInt( 3 ) : 0), applicableAbilities.size() );
             abilitiesToApply = new BaseArtifactAbility[maxAbilities];
             
             for( int j = 0; j < maxAbilities; j++ )
-                abilitiesToApply[j] = allAbilities.get( j );
+                abilitiesToApply[j] = applicableAbilities.get( j );
             
             appliedAbilities = tryApplyAbilities( artifactStack, random, abilitiesToApply );
             
@@ -650,16 +661,32 @@ public class ArtifactUtils {
     /**
      * Clears and repopulates the map of obtainable abilities.
      * <br><br>
-     * This gets called when {@link com.sarinsa.magical_relics.common.core.config.MainConfig.General#unobtainableAbilities} changes.
+     * This gets called when {@link MainConfig.Abilities#unobtainableAbilities} changes.
      */
     @SuppressWarnings( "UnstableApiUsage" )
-    public static void refreshObtainableAbilities( RegistrySet<BaseArtifactAbility<?>> unobtainable ) {
+    public static void refreshObtainableAbilities( RegistrySetField<BaseArtifactAbility<?>> unobtainable ) {
         OBTAINABLE_ABILITIES.clear();
         
         for( BaseArtifactAbility<?> ability : MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues() ) {
             if( unobtainable.contains( ability ) )
                 continue;
             OBTAINABLE_ABILITIES.add( ability );
+        }
+    }
+    
+    /**
+     * Clears and repopulates the list of artifact item overlay colors.
+     * <br><br>
+     * This gets called when {@link MainConfig.Abilities#artifactColors} changes.
+     */
+    public static void refreshColorList( PredicateStringListField stringListField ) {
+        ARTIFACT_COLORS.clear();
+        
+        for( String s : stringListField.get() ) {
+            Integer colorInt = TomlHelper.parseHexInt( s );
+            if( colorInt != null ) {
+                ARTIFACT_COLORS.add( colorInt );
+            }
         }
     }
 }
