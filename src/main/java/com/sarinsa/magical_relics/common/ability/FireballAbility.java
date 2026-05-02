@@ -18,6 +18,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,28 +84,28 @@ public class FireballAbility extends BaseArtifactAbility<FireballAbility.Firebal
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack itemStack ) {
+    public boolean onUse( Level level, Player player, ItemStack itemStack, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( itemStack, this ) ) {
-            shootFireball( level, player );
-            itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
-            
-            ArtifactUtils.setAbilityOnCooldown( itemStack, this );
+            if( !level.isClientSide ) {
+                shootFireball( level, player );
+                itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
+                
+                ArtifactUtils.setAbilityOnCooldown( itemStack, this );
+            }
             return true;
         }
         return false;
     }
     
     private void shootFireball( Level level, Player player ) {
-        Vec3 viewVec = player.getViewVector( 1.0F );
+        Vec3 viewVec = player.getViewVector( 0.5F );
         VolatileFireball fireball = new VolatileFireball( level, player, 0.0D, 0.0D, 0.0D, getConfig().FIREBALL.explosionPower.get() );
         fireball.setPos( player.getX() + viewVec.x * 2.0D, player.getY( 0.5D ) + 0.25D, fireball.getZ() + viewVec.z * 2.0D );
-        fireball.shootFromRotation( player, player.getXRot(), player.getYRot(), 2.5F, 2.5F, 2.5F );
+        fireball.shootFromRotation( player, player.getXRot(), player.getYRot(), 1.5F, 1.5F, 1.5F );
         level.addFreshEntity( fireball );
         
-        if( !level.isClientSide ) {
-            RandomSource random = level.random;
-            level.playSound( null, player.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F );
-        }
+        RandomSource random = level.random;
+        level.playSound( null, player.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F );
     }
     
     @Override
