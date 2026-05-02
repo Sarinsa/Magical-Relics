@@ -98,9 +98,9 @@ public class FireballAbility extends BaseArtifactAbility<FireballAbility.Firebal
     }
     
     private void shootFireball( Level level, Player player ) {
-        Vec3 viewVec = player.getViewVector( 0.5F );
+        Vec3 viewVec = player.getViewVector( 1.0F );
         VolatileFireball fireball = new VolatileFireball( level, player, 0.0D, 0.0D, 0.0D, getConfig().FIREBALL.explosionPower.get() );
-        fireball.setPos( player.getX() + viewVec.x * 2.0D, player.getY( 0.5D ) + 0.25D, fireball.getZ() + viewVec.z * 2.0D );
+        fireball.setPos( player.getX() + viewVec.x, player.getY( 0.5D ) + 0.25D, fireball.getZ() + viewVec.z );
         fireball.shootFromRotation( player, player.getXRot(), player.getYRot(), 1.5F, 1.5F, 1.5F );
         level.addFreshEntity( fireball );
         
