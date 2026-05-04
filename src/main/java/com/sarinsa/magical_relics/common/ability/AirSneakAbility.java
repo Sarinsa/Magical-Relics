@@ -7,18 +7,21 @@ import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.compat.crust.MRCrustPlugin;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.BooleanField;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
@@ -26,7 +29,7 @@ import top.theillusivec4.curios.api.SlotContext;
 import java.util.List;
 
 
-public class AirSneakAbility extends BaseArtifactAbility<AbilityConfig> {
+public class AirSneakAbility extends BaseArtifactAbility<AirSneakAbility.AirSneakAbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "air_sneak", "floaty" ),
@@ -59,9 +62,34 @@ public class AirSneakAbility extends BaseArtifactAbility<AbilityConfig> {
     public AirSneakAbility() { }
     
     
+    public static class AirSneakAbilityConfig extends AbilityConfig {
+        
+        public AirSneakAbilityConfig.AirSneak AIR_SNEAK;
+        
+        public AirSneakAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
+                                      boolean allowReplacing ) {
+            super( cfgManager, abilityId );
+            
+            AIR_SNEAK = new AirSneak( this, allowReplacing );
+        }
+        
+        public static class AirSneak extends AbstractConfigCategory<AirSneakAbilityConfig> {
+            
+            public BooleanField allowReplacing;
+            
+            public AirSneak( AirSneakAbilityConfig parent, boolean allowReplcng ) {
+                super( parent, "air_sneak", "Options for the general behavior of this ability." );
+                
+                allowReplacing = SPEC.define( new BooleanField( "allow_replacing", allowReplcng,
+                        "If enabled, solid air can replace blocks that are considered replaceable, " +
+                                "such as tall grass, snow, dead bushes etc." ) );
+            }
+        }
+    }
+    
     @Override
-    public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
-        return new AbilityConfig( cfgManager, abilityId, Rarity.EPIC );
+    public AirSneakAbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
+        return new AirSneakAbilityConfig( cfgManager, abilityId, false );
     }
     
     @Override
@@ -76,12 +104,16 @@ public class AirSneakAbility extends BaseArtifactAbility<AbilityConfig> {
     
     private void airSneak( ItemStack artifact, Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
         if( !level.isClientSide ) {
-            BlockPos belowPos = player.blockPosition().below();
+            final BlockPos belowPos = player.blockPosition().below();
+            final BlockState belowState = level.getBlockState( belowPos );
             
             if( player.isShiftKeyDown() ) {
                 final boolean notAscending = player.onGround() || MRCrustPlugin.getPlayerVelocityWatcher().getVelocity( player ).y <= -0.0001;
+                final boolean canReplaceBelow = getConfig().AIR_SNEAK.allowReplacing.get()
+                        ? (belowState.canBeReplaced() && !belowState.isFaceSturdy( level, belowPos, Direction.UP ))
+                        : belowState.isAir();
                 
-                if( notAscending && level.getBlockState( belowPos ).isAir() && !level.getBlockState( belowPos ).is( MRBlocks.SOLID_AIR.get() ) ) {
+                if( notAscending && canReplaceBelow && !belowState.is( MRBlocks.SOLID_AIR.get() ) ) {
                     level.setBlock( belowPos, MRBlocks.SOLID_AIR.get().defaultBlockState(), Block.UPDATE_ALL );
                     level.scheduleTick( belowPos, MRBlocks.SOLID_AIR.get(), 20 );
                     
@@ -94,7 +126,7 @@ public class AirSneakAbility extends BaseArtifactAbility<AbilityConfig> {
                 }
             }
             else {
-                if( level.getBlockState( belowPos ).is( MRBlocks.SOLID_AIR.get() ) )
+                if( belowState.is( MRBlocks.SOLID_AIR.get() ) )
                     level.removeBlock( belowPos, false );
             }
         }
