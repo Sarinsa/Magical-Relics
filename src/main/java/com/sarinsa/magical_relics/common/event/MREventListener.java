@@ -48,28 +48,24 @@ public class MREventListener {
     public void onPlayerTick( TickEvent.PlayerTickEvent event ) {
         if( event.phase == TickEvent.Phase.START ) return;
         
-        Player player = event.player;
-        ItemStack heldItem = player.getItemInHand( InteractionHand.MAIN_HAND );
-        Level level = player.level();
-        Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.HELD, heldItem );
+        final Player player = event.player;
+        // noinspection resource
+        final Level level = player.level();
+        final ItemStack mainhandItem = player.getItemInHand( InteractionHand.MAIN_HAND );
+        final ItemStack offhandItem = player.getItemInHand( InteractionHand.OFF_HAND );
         
-        if( !abilities.isEmpty() ) {
-            for( BaseArtifactAbility<?> ability : abilities ) {
-                ability.onHeld( level, player, heldItem, EquipmentSlot.MAINHAND );
-            }
-        }
+        ArtifactUtils.getAbilitiesWithTrigger( TriggerType.HELD, mainhandItem )
+                .forEach( ( ability ) -> ability.onHeld( level, player, mainhandItem, EquipmentSlot.MAINHAND ) );
+        ArtifactUtils.getAbilitiesWithTrigger( TriggerType.HELD, offhandItem )
+                .forEach( ( ability ) -> ability.onHeld( level, player, offhandItem, EquipmentSlot.OFFHAND ) );
+        
         ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory( player ).orElse( null );
         
         if( curiosInventory != null ) {
             for( SlotResult slotResult : curiosInventory.findCurios( ArtifactUtils.CURIO_SLOTS ) ) {
-                ItemStack curioStack = slotResult.stack();
-                Collection<BaseArtifactAbility<?>> curioAbilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.CURIO_TICK, curioStack );
-                
-                if( !curioAbilities.isEmpty() ) {
-                    for( BaseArtifactAbility<?> ability : curioAbilities ) {
-                        ability.onCurioTick( curioStack, level, player, slotResult.slotContext() );
-                    }
-                }
+                final ItemStack curioStack = slotResult.stack();
+                ArtifactUtils.getAbilitiesWithTrigger( TriggerType.CURIO_TICK, curioStack )
+                        .forEach( ability -> ability.onCurioTick( curioStack, level, player, slotResult.slotContext() ) );
             }
         }
     }

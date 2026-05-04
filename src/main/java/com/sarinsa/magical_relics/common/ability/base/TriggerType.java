@@ -6,9 +6,8 @@ import javax.annotation.Nullable;
  * Represents the type of trigger that activates an artifact ability.
  */
 public enum TriggerType {
-    RIGHT_CLICK_BLOCK( "right_click_block", false ), // Activates when the player right-clicks a block with the artifact
-    USE( "use", false ), // Activates when the player right-clicks with the artifact without targeting a block
-    HELD( "held", false ), // Activates every tick while the artifact is held in main hand
+    USE( "use", false ), // Activates when the player right-clicks with the artifact
+    HELD( "held", false ), // Activates every tick while the artifact is held in main hand or off-hand
     CURIO_TICK( "curio", false ), // Activates every tick when the artifact is equipped as a curio
     USER_DAMAGED( "user_damaged", true ), // Activates when the player takes damage
     USER_ATTACKING( "user_attacking", true ), // Activates when the player deals damage to a mob
