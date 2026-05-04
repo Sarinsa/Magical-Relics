@@ -22,8 +22,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.phys.HitResult;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbility.WaterBreathingAbilityConfig> {
@@ -117,7 +118,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( player.getUsedItemHand() ) );
             

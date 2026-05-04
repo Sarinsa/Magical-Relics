@@ -78,7 +78,6 @@ public class ResurrectAbility extends BaseArtifactAbility<CooldownAbilityConfig>
             else if( slot != null ) {
                 artifact.hurtAndBreak( artifact.getMaxDamage() / 4, player, ( p ) -> p.broadcastBreakEvent( slot ) );
             }
-            
             event.setCanceled( true );
             player.setHealth( Math.min( 10.0F, player.getMaxHealth() ) );
             

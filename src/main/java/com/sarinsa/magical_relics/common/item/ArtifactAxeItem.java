@@ -7,13 +7,13 @@ import com.sarinsa.magical_relics.common.ability.base.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +25,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -44,12 +45,12 @@ public class ArtifactAxeItem extends AxeItem implements IArtifactItem {
     
     @Override
     public InteractionResultHolder<ItemStack> use( Level level, Player player, InteractionHand hand ) {
-        ItemStack heldItem = player.getItemInHand( hand );
-        Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
+        final ItemStack heldItem = player.getItemInHand( hand );
+        final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
         
         if( !abilities.isEmpty() ) {
             for( BaseArtifactAbility<?> ability : abilities ) {
-                if( ability.onUse( level, player, heldItem ) ) {
+                if( ability.onUse( level, player, heldItem, null ) ) {
                     return InteractionResultHolder.success( heldItem );
                 }
             }
@@ -59,27 +60,36 @@ public class ArtifactAxeItem extends AxeItem implements IArtifactItem {
     
     @Override
     public InteractionResult useOn( UseOnContext context ) {
-        ItemStack heldItem = context.getItemInHand();
-        Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        BlockState clickedState = level.getBlockState( pos );
-        Player player = context.getPlayer();
-        Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.RIGHT_CLICK_BLOCK, heldItem );
-        
-        // Help prevent stupid things from happening
-        // when holding a potentially dangerous artifact
-        // when trying to interact with a block entity.
-        // It do be sad when your chest full of diamonds
-        // go bye bye and turns into cake.
-        if( clickedState.hasBlockEntity() ) return InteractionResult.PASS;
+        final ItemStack heldItem = context.getItemInHand();
+        final Level level = context.getLevel();
+        final Player player = context.getPlayer();
+        final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
         
         if( !abilities.isEmpty() ) {
+            final BlockHitResult hitResult = context.getHitResult();
+            
             for( BaseArtifactAbility<?> ability : abilities ) {
-                if( ability.onClickBlock( level, heldItem, pos, level.getBlockState( pos ), context.getClickedFace(), player ) )
+                if( ability.onUse( level, player, heldItem, hitResult ) )
                     return InteractionResult.SUCCESS;
             }
         }
         return super.useOn( context );
+    }
+    
+    @Override
+    public InteractionResult interactLivingEntity( ItemStack artifact, Player player, LivingEntity livingEntity, InteractionHand hand ) {
+        final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, artifact );
+        final Level level = player.level();
+        
+        if( !abilities.isEmpty() ) {
+            final EntityHitResult hitResult = new EntityHitResult( livingEntity );
+            
+            for( BaseArtifactAbility<?> ability : abilities ) {
+                if( ability.onUse( level, player, artifact, hitResult ) )
+                    return InteractionResult.SUCCESS;
+            }
+        }
+        return InteractionResult.FAIL;
     }
     
     @Override

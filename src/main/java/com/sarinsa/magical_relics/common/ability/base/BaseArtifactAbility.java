@@ -6,8 +6,6 @@ import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import fathertoast.crust.api.config.common.ConfigManager;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +21,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import top.theillusivec4.curios.api.SlotContext;
 
@@ -138,44 +136,31 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
      * Called from {@link ArtifactUtils#generateRandomArtifact(LevelReader, RandomSource, boolean)} when the ability
      * is applied to an artifact item.
      * <br><br>
-     * Can be used to write additional data to the ItemStack's NBT and whatnot.
+     * Can be overridden to write additional data to the ItemStack's NBT and whatnot.
      */
-    public void onAbilityAttached( ItemStack artifact, RandomSource random ) {
-    
-    }
+    public void onAbilityAttached( ItemStack artifact, RandomSource random ) { }
     
     /**
      * Only relevant for when an ability is attached to an artifact that is an instance of {@link com.sarinsa.magical_relics.common.item.ArtifactItem}.<br><br>
      * This is called whenever an artifact item that can be equipped in a Curio slot is unequipped.
      */
-    public void onUnequipped( SlotContext slotContext, ItemStack artifact ) {
-    
-    }
+    public void onUnequipped( SlotContext slotContext, ItemStack artifact ) { }
     
     /**
-     * Called when the player right-clicks air while holding the artifact.
-     * <br><br>
+     * Called when the player right-clicks while holding the artifact.
      *
+     * @param hitResult An optional HitResult object. If the player interacted with a block or an entity this will be present.
+     *                  If not, this is usually null.
      * @return True if the ability successfully did what it was supposed to.
      */
-    public boolean onUse( Level level, Player player, ItemStack artifact ) {
-        return false;
-    }
-    
-    /**
-     * Called when the player right-clicks a block while holding the artifact.
-     *
-     * @return True if the ability successfully did what it was supposed to.
-     */
-    public boolean onClickBlock( Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
         return false;
     }
     
     /**
      * Called each tick while the artifact is held by the player.
      */
-    public void onHeld( Level level, Player player, ItemStack artifact, EquipmentSlot slot ) {
-    }
+    public void onHeld( Level level, Player player, ItemStack artifact, EquipmentSlot slot ) { }
     
     /**
      * Called when an artifact is dropped and becomes an ItemEntity.
@@ -189,16 +174,12 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
     /**
      * Called when the player attacks an entity with a held artifact.
      */
-    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
-    
-    }
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) { }
     
     /**
      * Called when the player is hurt, regardless of damage source.
      */
-    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact ) {
-    
-    }
+    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact ) { }
     
     /**
      * Called when the player dies (only for held artifact items, armor and curio artifact items)<br><br>
@@ -206,30 +187,22 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
      * @param slot        The equipment slot of the artifact item. This will be null if the artifact item is equipped in a curio slot.
      * @param slotContext The Curios slot context of the artifact item. This will be null if the artifact item is equipped in any vanilla slots.
      */
-    public void onDeath( Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext, ItemStack artifact, LivingDeathEvent event ) {
-    
-    }
+    public void onDeath( Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext, ItemStack artifact, LivingDeathEvent event ) { }
     
     /**
      * Called every tick for artifacts that exist in either the player inventory or hotbar (armor and curio slots are excluded).
      */
-    public void onInventoryTick( ItemStack artifact, Level level, Entity entity, int slot, boolean isSelectedItem ) {
-    
-    }
+    public void onInventoryTick( ItemStack artifact, Level level, Entity entity, int slot, boolean isSelectedItem ) { }
     
     /**
      * Called every tick for artifacts that are equipped in armor slots.
      */
-    public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
-    
-    }
+    public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) { }
     
     /**
      * Called every tick for artifacts that are equipped in curio slots.
      */
-    public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
-    
-    }
+    public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) { }
     
     /**
      * Primarily used for the ability's description text color when

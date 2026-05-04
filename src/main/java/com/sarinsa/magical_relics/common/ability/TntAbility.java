@@ -26,8 +26,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig> {
@@ -46,7 +48,7 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
     };
     
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.RIGHT_CLICK_BLOCK
+            TriggerType.USE
     );
     
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
@@ -89,9 +91,12 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
     }
     
     @Override
-    public boolean onClickBlock( Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+        if( !(hitResult instanceof BlockHitResult blockHitResult) ) return false;
+        
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            BlockPos relativePos = pos.relative( face );
+            Direction face = blockHitResult.getDirection();
+            BlockPos relativePos = blockHitResult.getBlockPos().relative( face );
             BlockState relativeState = level.getBlockState( relativePos );
             
             if( relativeState.getCollisionShape( level, relativePos ).isEmpty() ) {
@@ -123,7 +128,7 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
     @Override
     @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
-        return isArmor ? null : TriggerType.RIGHT_CLICK_BLOCK;
+        return isArmor ? null : TriggerType.USE;
     }
     
     @Override

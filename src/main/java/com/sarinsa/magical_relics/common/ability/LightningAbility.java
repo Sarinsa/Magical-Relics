@@ -13,7 +13,6 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,7 +26,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,7 +52,7 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
     };
     
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.RIGHT_CLICK_BLOCK,
+            TriggerType.USE,
             TriggerType.USER_ATTACKING
     );
     
@@ -124,20 +124,23 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
     }
     
     @Override
-    public boolean onClickBlock( Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player ) {
-        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            ArtifactUtils.setAbilityOnCooldown( artifact, this );
-            
-            LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create( level );
-            
-            if( lightningBolt != null ) {
-                lightningBolt.moveTo( Vec3.atBottomCenterOf( pos ) );
-                lightningBolt.setCause( player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-                level.addFreshEntity( lightningBolt );
-                assignSummoner( lightningBolt, player );
+    public boolean onUse( Level level, Player player, ItemStack artifact, @javax.annotation.Nullable HitResult hitResult ) {
+        if( hitResult instanceof BlockHitResult blockHitResult ) {
+            if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+                ArtifactUtils.setAbilityOnCooldown( artifact, this );
+                
+                final BlockPos pos = blockHitResult.getBlockPos();
+                final LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create( level );
+                
+                if( lightningBolt != null ) {
+                    lightningBolt.moveTo( Vec3.atBottomCenterOf( pos ) );
+                    lightningBolt.setCause( player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                    level.addFreshEntity( lightningBolt );
+                    assignSummoner( lightningBolt, player );
+                }
+                artifact.hurtAndBreak( 3, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
+                return true;
             }
-            artifact.hurtAndBreak( 3, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
-            return true;
         }
         return false;
     }
@@ -168,7 +171,7 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
     @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isArmor ) return null;
-        return random.nextBoolean() ? TriggerType.USER_ATTACKING : TriggerType.RIGHT_CLICK_BLOCK;
+        return random.nextBoolean() ? TriggerType.USER_ATTACKING : TriggerType.USE;
     }
     
     @Override
@@ -186,7 +189,7 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
     public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == null ) return null;
         
-        return type == TriggerType.RIGHT_CLICK_BLOCK
+        return type == TriggerType.USE
                 ? Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.lightning.description.right_click_block" )
                 : Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.lightning.description.user_attacking" );
     }

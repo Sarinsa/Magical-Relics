@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -59,14 +58,7 @@ public class SolidAirBlock extends AirBlock {
     }
     
     @Override
-    public boolean addRunningEffects( BlockState state, Level level, BlockPos pos, Entity entity ) {
-        return false;
-    }
-    
-    @Override
-    protected void spawnDestroyParticles( Level level, Player player, BlockPos pos, BlockState state ) {
-    
-    }
+    protected void spawnDestroyParticles( Level level, Player player, BlockPos pos, BlockState state ) { }
     
     @Override
     public boolean isPathfindable( BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathType ) {
@@ -75,19 +67,23 @@ public class SolidAirBlock extends AirBlock {
     
     @Override
     public void tick( BlockState state, ServerLevel level, BlockPos pos, RandomSource random ) {
+        if( level.isClientSide ) return;
+        
         List<Player> abovePlayers = level.getEntitiesOfClass( Player.class, new AABB( pos.above() ).deflate( 0.3D, 0.0D, 0.3D ) );
         
+        // Check for players above that have the air sneak ability active
         if( !abovePlayers.isEmpty() ) {
-            boolean presentAirSneaker = false;
+            boolean airSneakerAbove = false;
             
             for( Player player : abovePlayers ) {
                 if( ArtifactUtils.hasAbility( player.getItemInHand( InteractionHand.MAIN_HAND ), MRArtifactAbilities.AIR_SNEAK.get() )
+                        || ArtifactUtils.hasAbility( player.getItemInHand( InteractionHand.OFF_HAND ), MRArtifactAbilities.AIR_SNEAK.get() )
                         || ArtifactUtils.hasAbilityOnCurio( player, MRArtifactAbilities.AIR_SNEAK.get() ) ) {
-                    presentAirSneaker = true;
+                    airSneakerAbove = true;
                     break;
                 }
             }
-            if( !presentAirSneaker )
+            if( !airSneakerAbove )
                 level.removeBlock( pos, false );
             else
                 level.scheduleTick( pos, this, 20 );

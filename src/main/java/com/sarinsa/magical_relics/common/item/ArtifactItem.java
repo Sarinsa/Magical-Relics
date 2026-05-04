@@ -30,6 +30,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -55,12 +57,12 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
     
     @Override
     public InteractionResultHolder<ItemStack> use( Level level, Player player, InteractionHand hand ) {
-        ItemStack heldItem = player.getItemInHand( hand );
-        Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
+        final ItemStack heldItem = player.getItemInHand( hand );
+        final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
         
         if( !abilities.isEmpty() ) {
             for( BaseArtifactAbility<?> ability : abilities ) {
-                if( ability.onUse( level, player, heldItem ) ) {
+                if( ability.onUse( level, player, heldItem, null ) ) {
                     return InteractionResultHolder.success( heldItem );
                 }
             }
@@ -70,23 +72,32 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
     
     @Override
     public InteractionResult useOn( UseOnContext context ) {
-        ItemStack heldItem = context.getItemInHand();
-        Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        BlockState clickedState = level.getBlockState( pos );
-        Player player = context.getPlayer();
-        Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.RIGHT_CLICK_BLOCK, heldItem );
-        
-        // Help prevent stupid things from happening
-        // when holding a potentially dangerous artifact
-        // when trying to interact with a block entity.
-        // It do be sad when your chest full of diamonds
-        // go bye bye and turns into cake.
-        if( clickedState.hasBlockEntity() ) return InteractionResult.PASS;
+        final ItemStack heldItem = context.getItemInHand();
+        final Level level = context.getLevel();
+        final Player player = context.getPlayer();
+        final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
         
         if( !abilities.isEmpty() ) {
+            final BlockHitResult hitResult = context.getHitResult();
+            
             for( BaseArtifactAbility<?> ability : abilities ) {
-                if( ability.onClickBlock( level, heldItem, pos, level.getBlockState( pos ), context.getClickedFace(), player ) )
+                if( ability.onUse( level, player, heldItem, hitResult ) )
+                    return InteractionResult.SUCCESS;
+            }
+        }
+        return InteractionResult.FAIL;
+    }
+    
+    @Override
+    public InteractionResult interactLivingEntity( ItemStack artifact, Player player, LivingEntity livingEntity, InteractionHand hand ) {
+        final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, artifact );
+        final Level level = player.level();
+        
+        if( !abilities.isEmpty() ) {
+            final EntityHitResult hitResult = new EntityHitResult( livingEntity );
+            
+            for( BaseArtifactAbility<?> ability : abilities ) {
+                if( ability.onUse( level, player, artifact, hitResult ) )
                     return InteractionResult.SUCCESS;
             }
         }
@@ -95,7 +106,7 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
     
     @Override
     public void onUnequip( SlotContext slotContext, ItemStack newStack, ItemStack stack ) {
-        Map<BaseArtifactAbility<?>, TriggerType> allAbilities = ArtifactUtils.getAllAbilities( stack );
+        final Map<BaseArtifactAbility<?>, TriggerType> allAbilities = ArtifactUtils.getAllAbilities( stack );
         
         for( BaseArtifactAbility<?> ability : allAbilities.keySet() ) {
             ability.onUnequipped( slotContext, stack );
@@ -111,7 +122,7 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
     
     @Override
     public void inventoryTick( ItemStack itemStack, Level level, Entity entity, int slot, boolean isSelectedItem ) {
-        Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.INVENTORY_TICK, itemStack );
+        final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.INVENTORY_TICK, itemStack );
         
         if( !abilities.isEmpty() ) {
             for( BaseArtifactAbility<?> ability : abilities ) {
@@ -133,7 +144,7 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
     
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers( EquipmentSlot slot, ItemStack stack ) {
-        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods( stack, AttributeBoost.ActiveType.HELD );
+        final Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods( stack, AttributeBoost.ActiveType.HELD );
         
         if( artifactModifiers != null && (slot == EquipmentSlot.MAINHAND) ) {
             return artifactModifiers;
@@ -144,7 +155,7 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
     // For Curios!
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers( SlotContext slotContext, UUID uuid, ItemStack stack ) {
-        Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods( stack, AttributeBoost.ActiveType.EQUIPPED );
+        final Multimap<Attribute, AttributeModifier> artifactModifiers = ArtifactUtils.getAttributeMods( stack, AttributeBoost.ActiveType.EQUIPPED );
         
         if( artifactModifiers != null ) {
             return artifactModifiers;

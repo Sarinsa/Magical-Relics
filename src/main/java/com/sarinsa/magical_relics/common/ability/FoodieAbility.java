@@ -24,6 +24,7 @@ import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
@@ -63,9 +64,7 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     );
     
     
-    public FoodieAbility() {
-    
-    }
+    public FoodieAbility() { }
     
     
     @Override
@@ -74,7 +73,7 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
         if( !player.getFoodData().needsFood() ) return false;
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {

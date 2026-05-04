@@ -23,10 +23,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.phys.HitResult;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility.RepairOthersAbilityConfig> {
@@ -95,7 +96,7 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
                 ItemStack checkedStack = player.getInventory().getItem( i );

@@ -26,9 +26,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.phys.HitResult;
 import top.theillusivec4.curios.api.SlotContext;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.SlowFallingAbilityConfig> {
@@ -117,13 +118,13 @@ public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.S
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack itemStack ) {
-        if( !ArtifactUtils.isAbilityOnCooldown( itemStack, this ) ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, getConfig().SLOW_FALLING.useDuration.get() ) );
             
-            itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
+            artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
             
-            ArtifactUtils.setAbilityOnCooldown( itemStack, this );
+            ArtifactUtils.setAbilityOnCooldown( artifact, this );
             return true;
         }
         return false;

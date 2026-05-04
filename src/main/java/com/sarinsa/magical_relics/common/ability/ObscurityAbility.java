@@ -28,8 +28,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.phys.HitResult;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.ObscurityAbilityConfig> {
@@ -116,7 +117,7 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
             // noinspection resource

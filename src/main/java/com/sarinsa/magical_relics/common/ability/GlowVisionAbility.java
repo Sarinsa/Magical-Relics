@@ -26,8 +26,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.phys.HitResult;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class GlowVisionAbility extends BaseArtifactAbility<GlowVisionAbility.GlowVisionAbilityConfig> {
@@ -56,9 +57,7 @@ public class GlowVisionAbility extends BaseArtifactAbility<GlowVisionAbility.Glo
     );
     
     
-    public GlowVisionAbility() {
-    
-    }
+    public GlowVisionAbility() { }
     
     
     public static class GlowVisionAbilityConfig extends CooldownAbilityConfig {
@@ -97,7 +96,7 @@ public class GlowVisionAbility extends BaseArtifactAbility<GlowVisionAbility.Glo
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             final double radius = getConfig().GLOW_VISION.radius.get();
             List<LivingEntity> nearbyEntities = level.getEntitiesOfClass( LivingEntity.class, player.getBoundingBox().inflate( radius, radius, radius ) );

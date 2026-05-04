@@ -22,6 +22,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -42,7 +44,7 @@ public class BakerAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     };
     
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.RIGHT_CLICK_BLOCK
+            TriggerType.USE
     );
     
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
@@ -63,32 +65,37 @@ public class BakerAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     }
     
     @Override
-    public boolean onClickBlock( Level level, ItemStack itemStack, BlockPos pos, BlockState state, Direction face, Player player ) {
-        if( ArtifactUtils.isAbilityOnCooldown( itemStack, this ) ) return false;
+    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+        if( ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) return false;
         
-        if( face != Direction.UP )
-            return false;
-        
-        BlockPos toPlacePos = pos.relative( face );
-        BlockState currentStateAt = level.getBlockState( toPlacePos );
-        
-        if( currentStateAt.isAir() && Blocks.CAKE.defaultBlockState().canSurvive( level, toPlacePos ) ) {
-            level.setBlock( toPlacePos, Blocks.CAKE.defaultBlockState(), Block.UPDATE_ALL );
-            ArtifactUtils.setAbilityOnCooldown( itemStack, this );
+        if( hitResult instanceof BlockHitResult blockHitResult ) {
+            BlockPos clickedPos = blockHitResult.getBlockPos();
+            Direction face = blockHitResult.getDirection();
             
-            itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
+            if( face != Direction.UP )
+                return false;
             
-            if( !level.isClientSide ) {
-                level.playSound( null, toPlacePos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.7F, 1.0F );
-                double x = toPlacePos.getX() + 0.5D;
-                double y = toPlacePos.getY() + 0.4D;
-                double z = toPlacePos.getZ() + 0.5D;
-                double xSpeed = level.random.nextGaussian() * 0.02D;
-                double ySpeed = level.random.nextGaussian() * 0.02D;
-                double zSpeed = level.random.nextGaussian() * 0.02D;
-                ((ServerLevel) level).sendParticles( ParticleTypes.CLOUD, x, y, z, 5, xSpeed, ySpeed, zSpeed, 0.05D );
+            BlockPos toPlacePos = clickedPos.relative( face );
+            BlockState currentStateAt = level.getBlockState( toPlacePos );
+            
+            if( currentStateAt.canBeReplaced() && Blocks.CAKE.defaultBlockState().canSurvive( level, toPlacePos ) ) {
+                level.setBlock( toPlacePos, Blocks.CAKE.defaultBlockState(), Block.UPDATE_ALL );
+                ArtifactUtils.setAbilityOnCooldown( artifact, this );
+                
+                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
+                
+                if( !level.isClientSide ) {
+                    level.playSound( null, toPlacePos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.7F, 1.0F );
+                    double x = toPlacePos.getX() + 0.5D;
+                    double y = toPlacePos.getY() + 0.4D;
+                    double z = toPlacePos.getZ() + 0.5D;
+                    double xSpeed = level.random.nextGaussian() * 0.02D;
+                    double ySpeed = level.random.nextGaussian() * 0.02D;
+                    double zSpeed = level.random.nextGaussian() * 0.02D;
+                    ((ServerLevel) level).sendParticles( ParticleTypes.CLOUD, x, y, z, 5, xSpeed, ySpeed, zSpeed, 0.05D );
+                }
+                return true;
             }
-            return true;
         }
         return false;
     }
@@ -106,7 +113,7 @@ public class BakerAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     @Override
     @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
-        return isArmor ? null : TriggerType.RIGHT_CLICK_BLOCK;
+        return isArmor ? null : TriggerType.USE;
     }
     
     @Override

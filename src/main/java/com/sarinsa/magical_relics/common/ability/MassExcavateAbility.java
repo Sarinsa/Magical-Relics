@@ -25,10 +25,12 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class MassExcavateAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
@@ -45,7 +47,7 @@ public class MassExcavateAbility extends BaseArtifactAbility<CooldownAbilityConf
     };
     
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.RIGHT_CLICK_BLOCK
+            TriggerType.USE
     );
     
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
@@ -75,10 +77,14 @@ public class MassExcavateAbility extends BaseArtifactAbility<CooldownAbilityConf
     }
     
     @Override
-    public boolean onClickBlock( Level level, ItemStack artifact, BlockPos pos, BlockState state, Direction face, Player player ) {
-        if( level.isClientSide ) return false;
+    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+        if( level.isClientSide || !(hitResult instanceof BlockHitResult blockHitResult) ) return false;
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            final BlockState state = level.getBlockState( blockHitResult.getBlockPos() );
+            final BlockPos pos = blockHitResult.getBlockPos();
+            final Direction face = blockHitResult.getDirection();
+            
             if( state.is( BlockTags.MINEABLE_WITH_PICKAXE ) || state.is( BlockTags.MINEABLE_WITH_SHOVEL ) ) {
                 BlockPos pos1;
                 BlockPos pos2;
@@ -150,7 +156,7 @@ public class MassExcavateAbility extends BaseArtifactAbility<CooldownAbilityConf
     @Override
     @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
-        return isArmor ? null : TriggerType.RIGHT_CLICK_BLOCK;
+        return isArmor ? null : TriggerType.USE;
     }
     
     @Override
