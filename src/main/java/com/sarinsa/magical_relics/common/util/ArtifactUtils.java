@@ -588,15 +588,15 @@ public class ArtifactUtils {
      * @param cooldown  The duration of the cooldown in ticks.
      */
     @SuppressWarnings( "ConstantConditions" )
-    public static void setAbilityCooldown( ItemStack itemStack, BaseArtifactAbility<?> ability, int cooldown ) {
-        CompoundTag modData = itemStack.getOrCreateTag().getCompound( TAG_MOD_DATA );
+    public static void setAbilityCooldown( ItemStack itemStack, BaseArtifactAbility<?> ability, long cooldown ) {
+        final CompoundTag modData = itemStack.getOrCreateTag().getCompound( TAG_MOD_DATA );
         
-        if( modData.contains( TAG_ABILITY_COOLDOWNS, Tag.TAG_COMPOUND ) ) {
-            CompoundTag cooldownsTag = modData.getCompound( TAG_ABILITY_COOLDOWNS );
-            String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( ability ).toString();
+        if( NBTHelper.containsCompound( modData, TAG_ABILITY_COOLDOWNS ) ) {
+            final CompoundTag cooldownsTag = modData.getCompound( TAG_ABILITY_COOLDOWNS );
+            final String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( ability ).toString();
             
             if( !cooldownsTag.contains( abilityId ) ) {
-                cooldownsTag.putInt( abilityId, cooldown );
+                cooldownsTag.putLong( abilityId, cooldown );
             }
         }
     }
@@ -635,9 +635,9 @@ public class ArtifactUtils {
                     CompoundTag cooldownTag = tag.getCompound( TAG_MOD_DATA ).getCompound( TAG_ABILITY_COOLDOWNS );
                     
                     for( String key : cooldownTag.getAllKeys() ) {
-                        cooldownTag.putInt( key, cooldownTag.getInt( key ) - decrement );
+                        cooldownTag.putLong( key, cooldownTag.getLong( key ) - decrement );
                     }
-                    cooldownTag.getAllKeys().removeIf( key -> cooldownTag.getInt( key ) <= 0 );
+                    cooldownTag.getAllKeys().removeIf( key -> cooldownTag.getLong( key ) <= 0 );
                 }
             }
         }
@@ -655,9 +655,9 @@ public class ArtifactUtils {
                     CompoundTag cooldownTag = tag.getCompound( TAG_MOD_DATA ).getCompound( TAG_ABILITY_COOLDOWNS );
                     
                     for( String key : cooldownTag.getAllKeys() ) {
-                        cooldownTag.putInt( key, cooldownTag.getInt( key ) - decrement );
+                        cooldownTag.putLong( key, cooldownTag.getLong( key ) - decrement );
                     }
-                    cooldownTag.getAllKeys().removeIf( key -> cooldownTag.getInt( key ) <= 0 );
+                    cooldownTag.getAllKeys().removeIf( key -> cooldownTag.getLong( key ) <= 0 );
                 }
             }
         }

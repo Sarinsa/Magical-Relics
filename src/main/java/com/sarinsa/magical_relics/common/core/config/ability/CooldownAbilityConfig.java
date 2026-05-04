@@ -2,7 +2,7 @@ package com.sarinsa.magical_relics.common.core.config.ability;
 
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
-import fathertoast.crust.api.config.common.field.IntField;
+import fathertoast.crust.api.config.common.field.LongField;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
 
@@ -24,12 +24,12 @@ public class CooldownAbilityConfig extends AbilityConfig {
     
     public static class Cooldown extends AbstractConfigCategory<AbilityConfig> {
         
-        public IntField cooldown;
+        public LongField cooldown;
         
         public Cooldown( AbilityConfig parent, int cooldwn ) {
             super( parent, "cooldown", "Settings for this ability's cooldown." );
             
-            cooldown = SPEC.define( new IntField( "cooldown", cooldwn, IntField.Range.NON_NEGATIVE,
+            cooldown = SPEC.define( new LongField( "cooldown", cooldwn, LongField.Range.NON_NEGATIVE,
                     "The number of ticks to put this ability on cooldown for after use." ) );
         }
     }
