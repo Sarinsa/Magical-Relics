@@ -20,6 +20,7 @@ import fathertoast.crust.api.lib.CrustMath;
 import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -614,26 +615,30 @@ public class ArtifactUtils {
     }
     
     /**
-     * Decrements all ability cooldowns on the ItemStack by the given number.
+     * Decrements all ability cooldowns on every item in the given player's inventory. This includes items in curios slots.
      * <br><br>
      * Called from {@link com.sarinsa.magical_relics.common.event.ServerEventListener#onServerTick(TickEvent.ServerTickEvent)}.
      */
-    @SuppressWarnings( "ConstantConditions" )
+    @SuppressWarnings( { "ConstantConditions", "unchecked", "rawtypes" } )
     public static void tickAbilityCooldowns( Player player, int decrement ) {
         // Tick player inventory
-        for( ItemStack itemStack : player.getInventory().items ) {
-            CompoundTag tag = itemStack.getTag();
-            
-            if( tag == null )
-                continue;
-            
-            if( tag.contains( TAG_MOD_DATA, Tag.TAG_COMPOUND ) && tag.getCompound( TAG_MOD_DATA ).contains( TAG_ABILITY_COOLDOWNS, Tag.TAG_COMPOUND ) ) {
-                CompoundTag cooldownTag = tag.getCompound( TAG_MOD_DATA ).getCompound( TAG_ABILITY_COOLDOWNS );
+        final NonNullList[] itemLists = { player.getInventory().items, player.getInventory().armor, player.getInventory().offhand };
+        
+        for( NonNullList<ItemStack> itemList : itemLists ) {
+            for( ItemStack itemStack : itemList ) {
+                CompoundTag tag = itemStack.getTag();
                 
-                for( String key : cooldownTag.getAllKeys() ) {
-                    cooldownTag.putInt( key, cooldownTag.getInt( key ) - decrement );
+                if( tag == null )
+                    continue;
+                
+                if( tag.contains( TAG_MOD_DATA, Tag.TAG_COMPOUND ) && tag.getCompound( TAG_MOD_DATA ).contains( TAG_ABILITY_COOLDOWNS, Tag.TAG_COMPOUND ) ) {
+                    CompoundTag cooldownTag = tag.getCompound( TAG_MOD_DATA ).getCompound( TAG_ABILITY_COOLDOWNS );
+                    
+                    for( String key : cooldownTag.getAllKeys() ) {
+                        cooldownTag.putInt( key, cooldownTag.getInt( key ) - decrement );
+                    }
+                    cooldownTag.getAllKeys().removeIf( key -> cooldownTag.getInt( key ) <= 0 );
                 }
-                cooldownTag.getAllKeys().removeIf( key -> cooldownTag.getInt( key ) <= 0 );
             }
         }
         // Tick curio artifacts on the player
