@@ -18,6 +18,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +31,7 @@ import top.theillusivec4.curios.api.SlotContext;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility.RepairOthersAbilityConfig> {
     
@@ -97,19 +99,29 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            final List<ItemStack> fixCandidates = new ArrayList<>();
+            
+            // Collect all item stacks in the inventory that can have durability restored
             for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
                 ItemStack checkedStack = player.getInventory().getItem( i );
                 
                 if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
                     if( !checkedStack.isEmpty() ) {
-                        checkedStack.hurt( -getConfig().REPAIR_OTHERS.durRestoredOnUse.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-                        artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
-                        ArtifactUtils.setAbilityOnCooldown( artifact, this );
-                        return true;
+                        fixCandidates.add( checkedStack );
                     }
                 }
+            }
+            // Pick a random "fixable" item to restore durability for
+            if( !fixCandidates.isEmpty() ) {
+                ItemStack stackToFix = fixCandidates.get( level.random.nextInt( fixCandidates.size() ) );
+                
+                // 1/3 chance to hurt the artifact. A 1-to-1 conversion ratio would not be much to brag about.
+                if( level.random.nextInt( 3 ) == 0 )
+                    artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
+                stackToFix.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                return true;
             }
         }
         return false;
@@ -117,6 +129,20 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
     
     @Override
     public void onHeld( Level level, Player player, ItemStack artifact, EquipmentSlot slot ) {
+        repairRandomItem( level, player, artifact, ( p ) -> p.broadcastBreakEvent( slot ) );
+    }
+    
+    @Override
+    public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
+        repairRandomItem( level, player, artifact, ( p ) -> CuriosApi.broadcastCurioBreakEvent( slotContext ) );
+    }
+    
+    @Override
+    public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
+        onHeld( level, player, artifact, slot );
+    }
+    
+    private void repairRandomItem( Level level, Player player, ItemStack artifact, Consumer<Player> onBreakCallback ) {
         if( level.isClientSide ) return;
         
         if( ServerEventListener.getRepairTick() % 200 == 0 ) {
@@ -138,34 +164,10 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
                 
                 // 1/3 chance to hurt the artifact. A 1-to-1 conversion ratio would not be much to brag about.
                 if( level.random.nextInt( 3 ) == 0 )
-                    stackToFix.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( slot ) );
+                    artifact.hurtAndBreak( 1, player, onBreakCallback );
+                stackToFix.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
             }
         }
-    }
-    
-    @Override
-    public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
-        if( level.isClientSide ) return;
-        
-        if( ServerEventListener.getRepairTick() % 200 == 0 ) {
-            for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
-                ItemStack checkedStack = player.getInventory().getItem( i );
-                
-                if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
-                    if( !checkedStack.isEmpty() ) {
-                        checkedStack.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-                        artifact.hurtAndBreak( 1, player, ( p ) -> CuriosApi.broadcastCurioBreakEvent( slotContext ) );
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    
-    @Override
-    public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
-        onHeld( level, player, artifact, slot );
     }
     
     @Override
