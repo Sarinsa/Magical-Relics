@@ -13,3 +13,10 @@
         - Do nothing. Incredible!
     - The Core of Warding's effective area box is now rotated along with the structure it generates in.
     - Wizard tower structures are now all part of the same structure set.
+    - Artifact item overlay colors are now configurable, and optionally completely random.
+    - The fireball projectile summoned by the Fireball ability is now notably slower.
+    - Fixed Jukebox ability effect particles offset being off.
+    - Fixed ability cooldowns not being reduced for items in armor slots or the off-hand slot.
+    - Fixed Air Sneak ability placing blocks when it shouldn't, often resulting in the player getting pushed.
+    - Fixed artifact items in the off-hand not triggering their abilities with the "held" trigger type.
+    - Removed ability trigger type "RIGHT_CLICK_BLOCK" as trigger type "USE" now includes all right-click interactions (use, click block, click entity).
