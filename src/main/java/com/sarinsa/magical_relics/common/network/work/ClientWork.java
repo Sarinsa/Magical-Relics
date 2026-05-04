@@ -52,9 +52,9 @@ public class ClientWork {
                 for( int i = 0; i < 10; i++ ) {
                     player.level().addParticle(
                             ParticleTypes.NOTE,
-                            (player.getX() + 0.5D) + (random.nextGaussian() / 2),
+                            (player.getX()) + (random.nextGaussian() / 2),
                             (player.getY() + 1.2D) + (random.nextGaussian() / 4),
-                            (player.getZ() + 0.5D) + (random.nextGaussian() / 2),
+                            (player.getZ()) + (random.nextGaussian() / 2),
                             random.nextInt( 25 ) / 24.0D, 0.0D, 0.0D );
                 }
             }

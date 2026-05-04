@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
+import com.sarinsa.magical_relics.common.compat.crust.MRCrustPlugin;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import fathertoast.crust.api.config.common.ConfigManager;
@@ -74,11 +75,13 @@ public class AirSneakAbility extends BaseArtifactAbility<AbilityConfig> {
     }
     
     private void airSneak( ItemStack artifact, Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
-        BlockPos belowPos = player.blockPosition().below().immutable();
-        
         if( !level.isClientSide ) {
+            BlockPos belowPos = player.blockPosition().below();
+            
             if( player.isShiftKeyDown() ) {
-                if( level.getBlockState( belowPos ).isAir() && !level.getBlockState( belowPos ).is( MRBlocks.SOLID_AIR.get() ) ) {
+                final boolean notAscending = player.onGround() || MRCrustPlugin.getPlayerVelocityWatcher().getVelocity( player ).y <= -0.0001;
+                
+                if( notAscending && level.getBlockState( belowPos ).isAir() && !level.getBlockState( belowPos ).is( MRBlocks.SOLID_AIR.get() ) ) {
                     level.setBlock( belowPos, MRBlocks.SOLID_AIR.get().defaultBlockState(), Block.UPDATE_ALL );
                     level.scheduleTick( belowPos, MRBlocks.SOLID_AIR.get(), 20 );
                     
@@ -96,6 +99,7 @@ public class AirSneakAbility extends BaseArtifactAbility<AbilityConfig> {
             }
         }
     }
+    
     
     @Override
     public void onArmorTick( ItemStack stack, Level level, Player player, EquipmentSlot slot ) {
