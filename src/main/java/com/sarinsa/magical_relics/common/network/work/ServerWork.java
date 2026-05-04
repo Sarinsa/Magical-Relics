@@ -7,22 +7,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 @Mod.EventBusSubscriber( modid = MagicalRelics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE )
 public class ServerWork {
     
-    private static MinecraftServer server;
     
-    @SubscribeEvent
-    public static void onServerStarting( ServerStartingEvent event ) {
-        server = event.getServer();
-    }
-    
-    
-    public static void saveAntiBuilderData( C2SSaveAntiBuilderData message ) {
+    public static void handleAntiBuilderData( C2SSaveAntiBuilderData message ) {
+        final MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if( server == null ) return;
         
         if( message.boxDimensions.length != 6 ) {
@@ -30,7 +23,6 @@ public class ServerWork {
             return;
         }
         ServerPlayer player = server.getPlayerList().getPlayer( message.playerUUID );
-        
         if( player == null ) return;
         
         // noinspection resource
