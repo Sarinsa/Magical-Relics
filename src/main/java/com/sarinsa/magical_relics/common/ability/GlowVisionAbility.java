@@ -18,9 +18,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -96,7 +96,7 @@ public class GlowVisionAbility extends BaseArtifactAbility<GlowVisionAbility.Glo
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             final double radius = getConfig().GLOW_VISION.radius.get();
             List<LivingEntity> nearbyEntities = level.getEntitiesOfClass( LivingEntity.class, player.getBoundingBox().inflate( radius, radius, radius ) );
@@ -113,7 +113,7 @@ public class GlowVisionAbility extends BaseArtifactAbility<GlowVisionAbility.Glo
                     livingEntity.addEffect( new MobEffectInstance( MobEffects.GLOWING, getConfig().GLOW_VISION.effectDuration.get() ) );
                 }
                 level.playSound( null, player.blockPosition(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, SoundSource.PLAYERS, 1.0F, 0.9F + (level.random.nextFloat() / 3) );
-                artifact.hurtAndBreak( 3, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
+                artifact.hurtAndBreak( 3, player, ( p ) -> p.broadcastBreakEvent( hand ) );
             }
             ArtifactUtils.setAbilityOnCooldown( artifact, this );
             return true;

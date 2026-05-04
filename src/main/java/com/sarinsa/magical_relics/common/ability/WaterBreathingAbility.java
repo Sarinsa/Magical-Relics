@@ -13,6 +13,7 @@ import fathertoast.crust.api.config.common.field.IntField;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -118,9 +119,9 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( player.getUsedItemHand() ) );
+            artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( hand ) );
             
             if( !level.isClientSide )
                 player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, getConfig().WATER_BREATHING.useDuration.get() ) );

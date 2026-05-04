@@ -19,6 +19,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,8 +30,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -124,7 +125,7 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, @javax.annotation.Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( hitResult instanceof BlockHitResult blockHitResult ) {
             if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
                 ArtifactUtils.setAbilityOnCooldown( artifact, this );
@@ -138,7 +139,7 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
                     level.addFreshEntity( lightningBolt );
                     assignSummoner( lightningBolt, player );
                 }
-                artifact.hurtAndBreak( 3, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
+                artifact.hurtAndBreak( 3, player, ( p ) -> p.broadcastBreakEvent( hand ) );
                 return true;
             }
         }

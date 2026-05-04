@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -73,7 +74,7 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( !player.getFoodData().needsFood() ) return false;
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
@@ -84,7 +85,7 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
                 player.getFoodData().eat( 2, 0.0F );
                 playEatSound( (ServerLevel) player.level(), player.blockPosition(), random );
             }
-            artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
+            artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
             return true;
         }
         return false;

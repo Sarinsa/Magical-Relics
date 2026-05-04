@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -84,11 +85,11 @@ public class FireballAbility extends BaseArtifactAbility<FireballAbility.Firebal
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack itemStack, @Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack itemStack, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( itemStack, this ) ) {
             if( !level.isClientSide ) {
                 shootFireball( level, player );
-                itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
+                itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
                 
                 ArtifactUtils.setAbilityOnCooldown( itemStack, this );
             }

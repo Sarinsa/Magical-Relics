@@ -19,6 +19,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -95,12 +96,16 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
                 invisAttackDuration = SPEC.define( new IntField( "invisibility_attack_duration", invisAttackDur, IntField.Range.POSITIVE,
                         "The duration (in ticks) of the invisibility potion effect when this ability has an attack trigger." ) );
                 
+                SPEC.newLine();
+                
                 cloudyUseDuration = SPEC.define( new IntField( "cloudy_vision_use_duration", cloudyUseDur, IntField.Range.POSITIVE,
                         "The duration (in ticks) of the cloudy vision potion effect when this ability has a use trigger." ) );
                 cloudyDamagedDuration = SPEC.define( new IntField( "cloudy_vision_damaged_duration", cloudyDamagedDur, IntField.Range.POSITIVE,
                         "The duration (in ticks) of the cloudy vision potion effect when this ability has a hurt trigger." ) );
                 cloudyAttackDuration = SPEC.define( new IntField( "cloudy_vision_attack_duration", cloudyAttackDur, IntField.Range.POSITIVE,
                         "The duration (in ticks) of the cloudy vision potion effect when this ability has an attack trigger." ) );
+                
+                SPEC.newLine();
                 
                 resetAggroRange = SPEC.define( new DoubleField( "reset_aggro_range", resetAggroRng, DoubleField.Range.NON_NEGATIVE,
                         "If greater than 0.0, pathfinder mobs (e.g. Creepers and Zombies) withing this range will lose aggro on the player." ) );
@@ -117,9 +122,9 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
+            artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
             // noinspection resource
             if( !player.level().isClientSide ) {
                 player.addEffect( new MobEffectInstance( MobEffects.INVISIBILITY, getConfig().OBSCURITY.invisUseDuration.get() ) );

@@ -19,7 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -91,7 +91,7 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( !(hitResult instanceof BlockHitResult blockHitResult) ) return false;
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
@@ -107,7 +107,7 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
                 if( !level.isClientSide ) {
                     level.playSound( null, relativePos, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F );
                 }
-                artifact.hurtAndBreak( 2, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
+                artifact.hurtAndBreak( 2, player, ( p ) -> p.broadcastBreakEvent( hand ) );
                 ArtifactUtils.setAbilityOnCooldown( artifact, this );
                 return true;
             }

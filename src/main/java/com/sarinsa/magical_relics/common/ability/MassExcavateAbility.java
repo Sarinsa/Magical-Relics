@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -77,7 +78,7 @@ public class MassExcavateAbility extends BaseArtifactAbility<CooldownAbilityConf
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( level.isClientSide || !(hitResult instanceof BlockHitResult blockHitResult) ) return false;
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
@@ -124,7 +125,7 @@ public class MassExcavateAbility extends BaseArtifactAbility<CooldownAbilityConf
                     }
                 }
                 if( destroyedAnyBlocks ) {
-                    artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( player.getUsedItemHand() ) );
+                    artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( hand ) );
                     ArtifactUtils.setAbilityOnCooldown( artifact, this );
                     return true;
                 }

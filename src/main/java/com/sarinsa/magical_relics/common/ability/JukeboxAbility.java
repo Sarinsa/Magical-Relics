@@ -17,6 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -96,7 +97,7 @@ public class JukeboxAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             CompoundTag modData = NBTHelper.getOrCreateCompound( artifact.getOrCreateTag(), ArtifactUtils.TAG_MOD_DATA );
             CompoundTag abilityData = NBTHelper.getOrCreateCompound( modData, TAG_ABILITY_DATA );

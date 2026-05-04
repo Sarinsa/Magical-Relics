@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -65,7 +66,7 @@ public class BakerAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, @Nullable HitResult hitResult ) {
+    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) return false;
         
         if( hitResult instanceof BlockHitResult blockHitResult ) {
@@ -82,7 +83,7 @@ public class BakerAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
                 level.setBlock( toPlacePos, Blocks.CAKE.defaultBlockState(), Block.UPDATE_ALL );
                 ArtifactUtils.setAbilityOnCooldown( artifact, this );
                 
-                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( player.getUsedItemHand() ) );
+                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
                 
                 if( !level.isClientSide ) {
                     level.playSound( null, toPlacePos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.7F, 1.0F );

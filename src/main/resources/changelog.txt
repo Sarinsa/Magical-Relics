@@ -20,5 +20,7 @@
     - Fixed Air Sneak ability placing blocks when it shouldn't, often resulting in the player getting pushed.
     - Air Sneak ability can now be configured to force-replace blocks flagged as replaceable (such as tall grass, snow, dead bush etc.) with solid air.
     - Repair Others ability now picks a random "fixable" item in the player's inventory to fix per repair cycle instead of the first found match.
+    - Repair Others ability now only has a 1/3 chance to lose durability when fixing an item.
     - Fixed artifact items in the off-hand not triggering their abilities with the "held" trigger type.
     - Removed ability trigger type "RIGHT_CLICK_BLOCK" as trigger type "USE" now includes all right-click interactions (use, click block, click entity).
+    - BaseArtifactAbility#onUse now gets called with the used InteractionHand, when available from context.

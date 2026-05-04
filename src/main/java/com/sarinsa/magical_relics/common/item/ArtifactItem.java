@@ -30,7 +30,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
@@ -62,7 +61,7 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
         
         if( !abilities.isEmpty() ) {
             for( BaseArtifactAbility<?> ability : abilities ) {
-                if( ability.onUse( level, player, heldItem, null ) ) {
+                if( ability.onUse( level, player, heldItem, hand, null ) ) {
                     return InteractionResultHolder.success( heldItem );
                 }
             }
@@ -78,10 +77,8 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
         final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
         
         if( !abilities.isEmpty() ) {
-            final BlockHitResult hitResult = context.getHitResult();
-            
             for( BaseArtifactAbility<?> ability : abilities ) {
-                if( ability.onUse( level, player, heldItem, hitResult ) )
+                if( ability.onUse( level, player, heldItem, context.getHand(), context.getHitResult() ) )
                     return InteractionResult.SUCCESS;
             }
         }
@@ -94,10 +91,8 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
         final Level level = player.level();
         
         if( !abilities.isEmpty() ) {
-            final EntityHitResult hitResult = new EntityHitResult( livingEntity );
-            
             for( BaseArtifactAbility<?> ability : abilities ) {
-                if( ability.onUse( level, player, artifact, hitResult ) )
+                if( ability.onUse( level, player, artifact, hand, new EntityHitResult( livingEntity ) ) )
                     return InteractionResult.SUCCESS;
             }
         }
