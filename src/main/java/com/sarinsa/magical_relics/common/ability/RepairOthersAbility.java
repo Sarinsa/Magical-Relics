@@ -28,6 +28,7 @@ import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility.RepairOthersAbilityConfig> {
@@ -119,16 +120,26 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
         if( level.isClientSide ) return;
         
         if( ServerEventListener.getRepairTick() % 200 == 0 ) {
+            final List<ItemStack> fixCandidates = new ArrayList<>();
+            
+            // Collect all item stacks in the inventory that can have durability restored
             for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
                 ItemStack checkedStack = player.getInventory().getItem( i );
                 
                 if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
                     if( !checkedStack.isEmpty() ) {
-                        checkedStack.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-                        artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( slot ) );
-                        break;
+                        fixCandidates.add( checkedStack );
                     }
                 }
+            }
+            // Pick a random "fixable" item to restore durability for
+            if( !fixCandidates.isEmpty() ) {
+                ItemStack stackToFix = fixCandidates.get( level.random.nextInt( fixCandidates.size() ) );
+                
+                // 1/3 chance to hurt the artifact. A 1-to-1 conversion ratio would not be much to brag about.
+                if( level.random.nextInt( 3 ) == 0 )
+                    stackToFix.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( slot ) );
             }
         }
     }
