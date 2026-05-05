@@ -12,7 +12,7 @@ import java.util.Objects;
  * Helper class containing various convenience methods
  * related to rotating stuff.
  */
-public class RotationUtils {
+public class RotationUtil {
     
     /**
      * @param original The bounding box to transform.
@@ -61,9 +61,8 @@ public class RotationUtils {
      * and returns the {@link Rotation} that would be needed to
      * "rotate" the first direction to become the second one.
      * <br><br>
-     * {@link Direction#UP} and {@link Direction#DOWN} are not supported
-     * argument types, and this method will return {@link Rotation#NONE} if either are
-     * used as a parameter.
+     * If either direction parameters are {@link Direction#UP} or {@link Direction#DOWN},
+     * this method will return {@link Rotation#NONE}.
      *
      * @param dir1 The first direction.
      * @param dir2 The second direction.

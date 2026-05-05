@@ -8,7 +8,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.util.References;
+import com.sarinsa.magical_relics.common.util.TranslationUtil;
 import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class TriggerTypeArgument implements ArgumentType<TriggerType> {
     
-    private static final DynamicCommandExceptionType ERROR_INVALID_TRIGGER = new DynamicCommandExceptionType( ( o ) -> Component.translatable( References.ERROR_INVALID_TRIGGER, o ) );
+    private static final DynamicCommandExceptionType ERROR_INVALID_TRIGGER = new DynamicCommandExceptionType( ( o ) -> Component.translatable( TranslationUtil.ERROR_INVALID_TRIGGER, o ) );
     private static final Collection<String> EXAMPLES = Arrays.asList( "use", "inventory_tick", "" );
     
     

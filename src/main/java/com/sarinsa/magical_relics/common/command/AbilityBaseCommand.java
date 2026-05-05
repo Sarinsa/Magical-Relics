@@ -9,7 +9,7 @@ import com.sarinsa.magical_relics.common.command.argument.TriggerTypeArgument;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.References;
+import com.sarinsa.magical_relics.common.util.TranslationUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
@@ -55,11 +55,11 @@ public class AbilityBaseCommand {
     //TODO - don't forget this exists, lol
     private static int applyAbility( CommandSourceStack source, BaseArtifactAbility<?> ability, TriggerType triggerType ) {
         if( source.getPlayer() == null ) {
-            source.sendFailure( Component.translatable( References.PLAYER_ONLY_CMD ) );
+            source.sendFailure( Component.translatable( TranslationUtil.PLAYER_ONLY_CMD ) );
             return 0;
         }
         if( !ability.supportedTriggers().contains( triggerType ) ) {
-            source.sendFailure( Component.translatable( References.ABILITY_APPLY_ERROR_3 ) );
+            source.sendFailure( Component.translatable( TranslationUtil.ABILITY_APPLY_ERROR_3 ) );
             return 0;
         }
         ServerPlayer player = source.getPlayer();
@@ -67,7 +67,7 @@ public class AbilityBaseCommand {
         ItemStack itemStack = player.getItemBySlot( EquipmentSlot.MAINHAND );
         
         if( !(itemStack.getItem() instanceof IArtifactItem) ) {
-            source.sendFailure( Component.translatable( References.ABILITY_APPLY_ERROR_2 ) );
+            source.sendFailure( Component.translatable( TranslationUtil.ABILITY_APPLY_ERROR_2 ) );
             return 0;
         }
         Map<BaseArtifactAbility<?>, TriggerType> currentAbilities = ArtifactUtils.getAllAbilities( itemStack );
@@ -87,11 +87,11 @@ public class AbilityBaseCommand {
             modDataTag.put( ArtifactUtils.TAG_ATTRIBUTE_MODS, new ListTag() );
         
         if( currentAbilities.containsKey( ability ) ) {
-            source.sendFailure( Component.translatable( References.ABILITY_APPLY_ERROR_0 ) );
+            source.sendFailure( Component.translatable( TranslationUtil.ABILITY_APPLY_ERROR_0 ) );
             return 0;
         }
         if( currentAbilities.containsValue( triggerType ) && !triggerType.canStack() ) {
-            source.sendFailure( Component.translatable( References.ABILITY_APPLY_ERROR_1 ) );
+            source.sendFailure( Component.translatable( TranslationUtil.ABILITY_APPLY_ERROR_1 ) );
             return 0;
         }
         // noinspection ConstantConditions
@@ -134,7 +134,7 @@ public class AbilityBaseCommand {
     
     private static int removeAbility( CommandSourceStack source, BaseArtifactAbility<?> ability ) {
         if( source.getPlayer() == null ) {
-            source.sendFailure( Component.translatable( References.PLAYER_ONLY_CMD ) );
+            source.sendFailure( Component.translatable( TranslationUtil.PLAYER_ONLY_CMD ) );
             return 0;
         }
         // noinspection ConstantConditions
@@ -142,10 +142,10 @@ public class AbilityBaseCommand {
         ServerPlayer player = source.getPlayer();
         
         if( ArtifactUtils.removeAbility( player.getItemBySlot( EquipmentSlot.MAINHAND ), ability ) ) {
-            source.sendSuccess( () -> Component.translatable( References.ABILITY_REMOVE_CMD, abilityId ), false );
+            source.sendSuccess( () -> Component.translatable( TranslationUtil.ABILITY_REMOVE_CMD, abilityId ), false );
             return 1;
         }
-        source.sendFailure( Component.translatable( References.ABILITY_REMOVE_ERROR_0, abilityId ) );
+        source.sendFailure( Component.translatable( TranslationUtil.ABILITY_REMOVE_ERROR_0, abilityId ) );
         return 0;
     }
 }

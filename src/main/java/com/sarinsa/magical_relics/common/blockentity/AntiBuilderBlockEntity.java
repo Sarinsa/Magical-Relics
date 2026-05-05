@@ -4,8 +4,8 @@ import com.sarinsa.magical_relics.common.block.AntiBuilderBlock;
 import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
-import com.sarinsa.magical_relics.common.util.References;
-import com.sarinsa.magical_relics.common.util.RotationUtils;
+import com.sarinsa.magical_relics.common.util.RotationUtil;
+import com.sarinsa.magical_relics.common.util.TranslationUtil;
 import fathertoast.crust.api.config.common.value.collection.RegistryValueList;
 import fathertoast.crust.api.config.common.value.collection.value.MobEffectStats;
 import fathertoast.crust.api.lib.NBTHelper;
@@ -97,7 +97,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         
         if( dir != antiBuilder.lastFacing && antiBuilder.effectiveArea != null ) {
             final BlockPos pos = antiBuilder.getBlockPos();
-            final Rotation rotation = RotationUtils.rotationFromDirectionDiff( dir, antiBuilder.lastFacing );
+            final Rotation rotation = RotationUtil.rotationFromDirectionDiff( dir, antiBuilder.lastFacing );
             antiBuilder.recalculateEffectiveArea( rotation, antiBuilder.effectiveArea.move( -pos.getX(), -pos.getY(), -pos.getZ() ) );
             antiBuilder.sendBlockUpdate();
             antiBuilder.lastFacing = dir;
@@ -153,7 +153,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
      * @param boundingBox The bounding box to use. Note that the box is moved to this block entity's position during this operation.
      */
     public void recalculateEffectiveArea( @Nullable Rotation rotation, AABB boundingBox ) {
-        setEffectiveArea( RotationUtils.rotate( boundingBox, rotation ) );
+        setEffectiveArea( RotationUtil.rotate( boundingBox, rotation ) );
     }
     
     /**
@@ -308,7 +308,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         
         if( isWithinBounds( pos ) ) {
             event.setUseItem( Event.Result.DENY );
-            player.displayClientMessage( References.ANTI_BUILDER_BLOCK_MESSAGE, true );
+            player.displayClientMessage( TranslationUtil.ANTI_BUILDER_BLOCK_MESSAGE, true );
         }
     }
     
@@ -410,7 +410,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         
         if( isWithinBounds( pos ) ) {
             event.setCanceled( true );
-            player.displayClientMessage( References.ANTI_BUILDER_BLOCK_MESSAGE, true );
+            player.displayClientMessage( TranslationUtil.ANTI_BUILDER_BLOCK_MESSAGE, true );
         }
     }
     
@@ -440,7 +440,8 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
     
     /**
      * Grabs a random mob effect instance from the "plague" config list
-     * and applies it to the given entity. Players in creative mode are immune.
+     * and applies it to the given entity if it is inside the anti-builder's
+     * effective area. Players in creative mode are immune.
      */
     private void inflictWithMalady( LivingEntity entity, BlockPos pos ) {
         // No effects to apply, abort.

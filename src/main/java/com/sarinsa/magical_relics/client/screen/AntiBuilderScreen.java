@@ -4,7 +4,7 @@ import com.sarinsa.magical_relics.client.screen.widget.IntegerTextField;
 import com.sarinsa.magical_relics.common.blockentity.AntiBuilderBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.network.NetworkHelper;
-import com.sarinsa.magical_relics.common.util.References;
+import com.sarinsa.magical_relics.common.util.TranslationUtil;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -178,8 +178,8 @@ public class AntiBuilderScreen extends Screen {
         guiGraphics.drawCenteredString( font, Component.translatable( MRBlocks.ANTI_BUILDER.get().getDescriptionId() ), width / 2, (height / 2) - 90, DEFAULT_TEXT_COLOR );
         
         try {
-            guiGraphics.drawString( font, References.ANTI_BUILDER_CORNER_1, (width / 2) - 71, (height / 2) - 55, DEFAULT_TEXT_COLOR );
-            guiGraphics.drawString( font, References.ANTI_BUILDER_CORNER_2, (width / 2) - 71, (height / 2) - 5, DEFAULT_TEXT_COLOR );
+            guiGraphics.drawString( font, TranslationUtil.ANTI_BUILDER_CORNER_1, (width / 2) - 71, (height / 2) - 55, DEFAULT_TEXT_COLOR );
+            guiGraphics.drawString( font, TranslationUtil.ANTI_BUILDER_CORNER_2, (width / 2) - 71, (height / 2) - 5, DEFAULT_TEXT_COLOR );
             
             corner1XEdit.render( guiGraphics, mouseX, mouseY, partialTicks );
             corner1YEdit.render( guiGraphics, mouseX, mouseY, partialTicks );

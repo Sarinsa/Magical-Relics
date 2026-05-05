@@ -3,7 +3,7 @@ package com.sarinsa.magical_relics.common.block;
 import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
-import com.sarinsa.magical_relics.common.util.References;
+import com.sarinsa.magical_relics.common.util.TranslationUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -89,7 +89,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
                 }
                 else {
                     player.playSound( SoundEvents.ARMOR_EQUIP_CHAIN );
-                    player.displayClientMessage( References.PEDESTAL_LOCKED, true );
+                    player.displayClientMessage( TranslationUtil.PEDESTAL_LOCKED, true );
                 }
                 return InteractionResult.sidedSuccess( level.isClientSide );
             }
@@ -221,7 +221,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
         if( blockEntityData != null ) {
             if( blockEntityData.contains( DisplayPedestalBlockEntity.LOCKED_KEY, Tag.TAG_BYTE ) ) {
                 if( blockEntityData.getBoolean( DisplayPedestalBlockEntity.LOCKED_KEY ) ) {
-                    components.add( Component.translatable( References.PEDESTAL_LOCKED_TOOLTIP ).withStyle( ChatFormatting.GRAY ) );
+                    components.add( Component.translatable( TranslationUtil.PEDESTAL_LOCKED_TOOLTIP ).withStyle( ChatFormatting.GRAY ) );
                 }
             }
         }
