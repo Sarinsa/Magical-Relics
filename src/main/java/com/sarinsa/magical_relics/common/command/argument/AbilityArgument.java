@@ -23,7 +23,7 @@ public class AbilityArgument implements ArgumentType<BaseArtifactAbility<?>> {
     private static final Collection<String> EXAMPLES = Arrays.asList( "magical_relics:jump_boost", "glow_vision", "jei:recipe_smuggler" );
     
     
-    public AbilityArgument() { }
+    private AbilityArgument() { }
     
     
     public static AbilityArgument ability() {
@@ -33,7 +33,6 @@ public class AbilityArgument implements ArgumentType<BaseArtifactAbility<?>> {
     @Override
     public BaseArtifactAbility<?> parse( StringReader stringReader ) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read( stringReader );
-        
         
         if( !MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().containsKey( id ) )
             throw ERROR_INVALID_ABILITY.create( id );
@@ -46,23 +45,25 @@ public class AbilityArgument implements ArgumentType<BaseArtifactAbility<?>> {
     }
     
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions( CommandContext<S> context, SuggestionsBuilder suggestionsBuilder ) {
-        if( suggestionsBuilder.getRemaining().isEmpty() ) {
+    public <S> CompletableFuture<Suggestions> listSuggestions( CommandContext<S> context, SuggestionsBuilder builder ) {
+        // Full list without hint
+        if( builder.getRemaining().isEmpty() ) {
             for( ResourceLocation id : MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKeys() ) {
                 String s = id.toString();
-                suggestionsBuilder.suggest( s );
+                builder.suggest( s );
             }
-            return suggestionsBuilder.buildFuture();
+            return builder.buildFuture();
         }
         
+        // Partial list from hint
         for( ResourceLocation id : MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKeys() ) {
             String s = id.toString();
             
-            if( s.contains( suggestionsBuilder.getRemaining() ) ) {
-                suggestionsBuilder.suggest( s );
+            if( s.contains( builder.getRemaining() ) ) {
+                builder.suggest( s );
             }
         }
-        return suggestionsBuilder.buildFuture();
+        return builder.buildFuture();
     }
     
     @Override

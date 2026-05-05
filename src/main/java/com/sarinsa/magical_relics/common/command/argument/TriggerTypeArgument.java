@@ -22,7 +22,7 @@ public class TriggerTypeArgument implements ArgumentType<TriggerType> {
     private static final Collection<String> EXAMPLES = Arrays.asList( "use", "inventory_tick", "" );
     
     
-    public TriggerTypeArgument() { }
+    private TriggerTypeArgument() { }
     
     
     public static TriggerTypeArgument triggerType() {
@@ -44,7 +44,7 @@ public class TriggerTypeArgument implements ArgumentType<TriggerType> {
     }
     
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions( CommandContext<S> context, SuggestionsBuilder suggestionsBuilder ) {
+    public <S> CompletableFuture<Suggestions> listSuggestions( CommandContext<S> context, SuggestionsBuilder builder ) {
         final BaseArtifactAbility<?> abilityArg = context.getArgument( "ability", BaseArtifactAbility.class );
         TriggerType[] triggerTypes = TriggerType.values();
         
@@ -55,20 +55,20 @@ public class TriggerTypeArgument implements ArgumentType<TriggerType> {
         }
         
         // Full list without hint
-        if( suggestionsBuilder.getRemaining().isEmpty() ) {
+        if( builder.getRemaining().isEmpty() ) {
             for( TriggerType triggerType : triggerTypes ) {
-                suggestionsBuilder.suggest( triggerType.getName() );
+                builder.suggest( triggerType.getName() );
             }
-            return suggestionsBuilder.buildFuture();
+            return builder.buildFuture();
         }
         
         // Partial list from hint
         for( TriggerType triggerType : triggerTypes ) {
-            if( triggerType.getName().contains( suggestionsBuilder.getRemaining() ) ) {
-                suggestionsBuilder.suggest( triggerType.getName() );
+            if( triggerType.getName().contains( builder.getRemaining() ) ) {
+                builder.suggest( triggerType.getName() );
             }
         }
-        return suggestionsBuilder.buildFuture();
+        return builder.buildFuture();
     }
     
     @Override

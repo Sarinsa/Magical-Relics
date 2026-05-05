@@ -21,7 +21,7 @@ public class ArtifactCategoryArgument implements ArgumentType<ArtifactCategory> 
     private static final Collection<String> EXAMPLES = Arrays.asList( "trinket", "sword", "staff" );
     
     
-    public ArtifactCategoryArgument() { }
+    private ArtifactCategoryArgument() { }
     
     
     public static ArtifactCategoryArgument artifactCategory() {
@@ -43,21 +43,22 @@ public class ArtifactCategoryArgument implements ArgumentType<ArtifactCategory> 
     }
     
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions( CommandContext<S> context, SuggestionsBuilder suggestionsBuilder ) {
-        if( suggestionsBuilder.getRemaining().isEmpty() ) {
+    public <S> CompletableFuture<Suggestions> listSuggestions( CommandContext<S> context, SuggestionsBuilder builder ) {
+        // Full list without hint
+        if( builder.getRemaining().isEmpty() ) {
             for( ArtifactCategory category : ArtifactCategory.values() ) {
-                suggestionsBuilder.suggest( category.getName() );
+                builder.suggest( category.getName() );
             }
-            return suggestionsBuilder.buildFuture();
+            return builder.buildFuture();
         }
         
+        // Partial list from hint
         for( ArtifactCategory category : ArtifactCategory.values() ) {
-            
-            if( category.getName().contains( suggestionsBuilder.getRemaining() ) ) {
-                suggestionsBuilder.suggest( category.getName() );
+            if( category.getName().contains( builder.getRemaining() ) ) {
+                builder.suggest( category.getName() );
             }
         }
-        return suggestionsBuilder.buildFuture();
+        return builder.buildFuture();
     }
     
     @Override
