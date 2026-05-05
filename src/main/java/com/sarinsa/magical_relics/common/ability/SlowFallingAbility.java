@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
@@ -13,7 +12,6 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -96,6 +94,8 @@ public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.S
                 passiveDuration = SPEC.define( new IntField( "passive_duration", passiveDur, IntField.Range.POSITIVE,
                         "The duration (in ticks) of the potion effect when this ability has a passive trigger." ) );
                 
+                SPEC.newLine();
+                
                 amplifier = new IntField.RandomRange( SPEC, "amplifier", minAmplifier, maxAmplifier, IntField.Range.NON_NEGATIVE,
                         "The minimum and maximum (inclusive) effect amplifier that is picked for the potion effect granted by this ability." );
             }
@@ -118,10 +118,20 @@ public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.S
         abilityData.putInt( TAG_AMPLIFIER, amplifier );
     }
     
+    private int getEffectMultiplier( ItemStack artifact ) {
+        CompoundTag modData = NBTHelper.getOrCreateCompound( artifact.getOrCreateTag(), ArtifactUtils.TAG_MOD_DATA );
+        CompoundTag abilityData = NBTHelper.getOrCreateCompound( modData, TAG_ABILITY_DATA );
+        
+        if( NBTHelper.containsNumber( abilityData, TAG_AMPLIFIER ) ) {
+            return Math.max( 0, abilityData.getInt( TAG_AMPLIFIER ) );
+        }
+        return 0;
+    }
+    
     @Override
     public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, getConfig().SLOW_FALLING.useDuration.get() ) );
+            player.addEffect( new MobEffectInstance( MobEffects.SLOW_FALLING, getConfig().SLOW_FALLING.useDuration.get(), getEffectMultiplier( artifact ) ) );
             
             artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
             
@@ -196,16 +206,10 @@ public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.S
         if( type == null ) return null;
         
         return switch( type ) {
-            case ARMOR_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.slow_falling.description.armor_tick" );
+            case ARMOR_TICK, HELD, CURIO_TICK, INVENTORY_TICK -> getDescComponent( type );
             case USE ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.slow_falling.description.use", (getConfig().SLOW_FALLING.useDuration.get() / 20) / 60 );
-            case HELD ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.slow_falling.description.held" );
-            case CURIO_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.slow_falling.description.curio" );
-            default ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.slow_falling.description.inventory_tick" );
+                    getDescComponent( type, getConfig().SLOW_FALLING.useDuration.get(), getEffectMultiplier( artifact ) );
+            default -> null;
         };
     }
 }
