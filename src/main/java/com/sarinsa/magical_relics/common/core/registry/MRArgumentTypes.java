@@ -3,6 +3,7 @@ package com.sarinsa.magical_relics.common.core.registry;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.sarinsa.magical_relics.common.command.argument.AbilityArgument;
 import com.sarinsa.magical_relics.common.command.argument.ArtifactCategoryArgument;
+import com.sarinsa.magical_relics.common.command.argument.ArtifactVariantArgument;
 import com.sarinsa.magical_relics.common.command.argument.TriggerTypeArgument;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -19,9 +20,18 @@ public class MRArgumentTypes {
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> ARGUMENT_TYPES = DeferredRegister.create( ForgeRegistries.COMMAND_ARGUMENT_TYPES, MagicalRelics.MODID );
     
     
-    public static final RegistryObject<ArgumentTypeInfo<ArtifactCategoryArgument, ?>> ARTIFACT_CATEGORY = register( "artifact_category", () -> ArgumentTypeInfos.registerByClass( ArtifactCategoryArgument.class, SingletonArgumentInfo.contextFree( ArtifactCategoryArgument::artifactCategory ) ) );
-    public static final RegistryObject<ArgumentTypeInfo<AbilityArgument, ?>> ABILITY = register( "ability", () -> ArgumentTypeInfos.registerByClass( AbilityArgument.class, SingletonArgumentInfo.contextFree( AbilityArgument::ability ) ) );
-    public static final RegistryObject<ArgumentTypeInfo<TriggerTypeArgument, ?>> TRIGGER_TYPE = register( "trigger_type", () -> ArgumentTypeInfos.registerByClass( TriggerTypeArgument.class, SingletonArgumentInfo.contextFree( TriggerTypeArgument::triggerType ) ) );
+    public static final RegistryObject<ArgumentTypeInfo<ArtifactCategoryArgument, ?>> ARTIFACT_CATEGORY = register( "artifact_category", () -> ArgumentTypeInfos.registerByClass(
+            ArtifactCategoryArgument.class, SingletonArgumentInfo.contextFree( ArtifactCategoryArgument::artifactCategory ) )
+    );
+    public static final RegistryObject<ArgumentTypeInfo<ArtifactVariantArgument, ?>> ARTIFACT_VARIANT = register( "artifact_variant", () -> ArgumentTypeInfos.registerByClass(
+            ArtifactVariantArgument.class, SingletonArgumentInfo.contextFree( ArtifactVariantArgument::artifactVariant ) )
+    );
+    public static final RegistryObject<ArgumentTypeInfo<AbilityArgument, ?>> ABILITY = register( "ability", () -> ArgumentTypeInfos.registerByClass(
+            AbilityArgument.class, SingletonArgumentInfo.contextFree( AbilityArgument::ability ) )
+    );
+    public static final RegistryObject<ArgumentTypeInfo<TriggerTypeArgument, ?>> TRIGGER_TYPE = register( "trigger_type", () -> ArgumentTypeInfos.registerByClass(
+            TriggerTypeArgument.class, SingletonArgumentInfo.contextFree( TriggerTypeArgument::triggerType ) )
+    );
     
     
     private static <T extends ArgumentType<?>> RegistryObject<ArgumentTypeInfo<T, ?>> register( String name, Supplier<ArgumentTypeInfo<T, ?>> supplier ) {
