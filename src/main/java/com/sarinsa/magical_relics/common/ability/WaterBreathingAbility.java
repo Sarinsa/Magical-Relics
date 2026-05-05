@@ -151,8 +151,8 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     @Override
     @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
-        if( isCurio ) return random.nextBoolean() ? TriggerType.CURIO_TICK : TriggerType.USER_DAMAGED;
-        if( isArmor ) return random.nextInt( 2 ) == 0 ? TriggerType.ARMOR_TICK : TriggerType.USER_DAMAGED;
+        if( isCurio ) return random.nextInt( 3 ) == 0 ? TriggerType.CURIO_TICK : TriggerType.USER_DAMAGED;
+        if( isArmor ) return random.nextInt( 3 ) == 0 ? TriggerType.ARMOR_TICK : TriggerType.USER_DAMAGED;
         
         return switch( random.nextInt( 3 ) ) {
             case 1 -> TriggerType.HELD;
