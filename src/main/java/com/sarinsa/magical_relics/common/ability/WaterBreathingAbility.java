@@ -177,8 +177,8 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
         if( type == null ) return null;
         
         return switch( type ) {
-            case USER_DAMAGED -> getDescComponent( type, getConfig().WATER_BREATHING.drownDuration.get() );
             case ARMOR_TICK, HELD -> getDescComponent( type );
+            case USER_DAMAGED -> getDescComponent( type, getConfig().WATER_BREATHING.drownDuration.get() );
             case USE -> getDescComponent( type, getConfig().WATER_BREATHING.useDuration.get() );
             case USER_ATTACKING -> getDescComponent( type, getConfig().WATER_BREATHING.attackDuration.get() );
             default -> null;
