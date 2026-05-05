@@ -8,7 +8,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
-import com.sarinsa.magical_relics.common.util.TranslationUtil;
+import com.sarinsa.magical_relics.common.util.TranslationUtils;
 import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ArtifactCategoryArgument implements ArgumentType<ArtifactCategory> {
     
-    private static final DynamicCommandExceptionType ERROR_INVALID_CATEGORY = new DynamicCommandExceptionType( ( o ) -> Component.translatable( TranslationUtil.ERROR_INVALID_CATEGORY, o ) );
+    private static final DynamicCommandExceptionType ERROR_INVALID_CATEGORY = new DynamicCommandExceptionType( ( o ) -> Component.translatable( TranslationUtils.ERROR_INVALID_CATEGORY, o ) );
     private static final Collection<String> EXAMPLES = Arrays.asList( "trinket", "sword", "staff" );
     
     

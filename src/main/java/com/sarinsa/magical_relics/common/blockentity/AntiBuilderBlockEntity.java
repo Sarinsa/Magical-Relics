@@ -4,8 +4,8 @@ import com.sarinsa.magical_relics.common.block.AntiBuilderBlock;
 import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
-import com.sarinsa.magical_relics.common.util.RotationUtil;
-import com.sarinsa.magical_relics.common.util.TranslationUtil;
+import com.sarinsa.magical_relics.common.util.RotationUtils;
+import com.sarinsa.magical_relics.common.util.TranslationUtils;
 import fathertoast.crust.api.config.common.value.collection.RegistryValueList;
 import fathertoast.crust.api.config.common.value.collection.value.MobEffectStats;
 import fathertoast.crust.api.lib.NBTHelper;
@@ -97,7 +97,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         
         if( dir != antiBuilder.lastFacing && antiBuilder.effectiveArea != null ) {
             final BlockPos pos = antiBuilder.getBlockPos();
-            final Rotation rotation = RotationUtil.rotationFromDirectionDiff( dir, antiBuilder.lastFacing );
+            final Rotation rotation = RotationUtils.rotationFromDirectionDiff( dir, antiBuilder.lastFacing );
             antiBuilder.recalculateEffectiveArea( rotation, antiBuilder.effectiveArea.move( -pos.getX(), -pos.getY(), -pos.getZ() ) );
             antiBuilder.sendBlockUpdate();
             antiBuilder.lastFacing = dir;
@@ -153,7 +153,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
      * @param boundingBox The bounding box to use. Note that the box is moved to this block entity's position during this operation.
      */
     public void recalculateEffectiveArea( @Nullable Rotation rotation, AABB boundingBox ) {
-        setEffectiveArea( RotationUtil.rotate( boundingBox, rotation ) );
+        setEffectiveArea( RotationUtils.rotate( boundingBox, rotation ) );
     }
     
     /**
@@ -308,7 +308,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         
         if( isWithinBounds( pos ) ) {
             event.setUseItem( Event.Result.DENY );
-            player.displayClientMessage( TranslationUtil.ANTI_BUILDER_BLOCK_MESSAGE, true );
+            player.displayClientMessage( TranslationUtils.ANTI_BUILDER_BLOCK_MESSAGE, true );
         }
     }
     
@@ -410,7 +410,7 @@ public class AntiBuilderBlockEntity extends BlockEntity implements IDebugShapePr
         
         if( isWithinBounds( pos ) ) {
             event.setCanceled( true );
-            player.displayClientMessage( TranslationUtil.ANTI_BUILDER_BLOCK_MESSAGE, true );
+            player.displayClientMessage( TranslationUtils.ANTI_BUILDER_BLOCK_MESSAGE, true );
         }
     }
     

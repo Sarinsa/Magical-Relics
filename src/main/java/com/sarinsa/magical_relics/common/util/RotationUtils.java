@@ -12,7 +12,7 @@ import java.util.Objects;
  * Helper class containing various convenience methods
  * related to rotating stuff.
  */
-public class RotationUtil {
+public class RotationUtils {
     
     /**
      * @param original The bounding box to transform.

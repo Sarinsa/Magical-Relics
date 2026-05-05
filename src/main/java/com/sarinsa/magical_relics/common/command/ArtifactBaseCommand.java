@@ -6,7 +6,7 @@ import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.command.argument.ArtifactCategoryArgument;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.TranslationUtil;
+import com.sarinsa.magical_relics.common.util.TranslationUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
@@ -39,11 +39,11 @@ public class ArtifactBaseCommand {
     
     private static int createArtifact( CommandSourceStack source, ArtifactCategory category, int variant ) {
         if( source.getPlayer() == null ) {
-            source.sendFailure( Component.translatable( TranslationUtil.PLAYER_ONLY_CMD ) );
+            source.sendFailure( Component.translatable( TranslationUtils.PLAYER_ONLY_CMD ) );
             return 0;
         }
         if( variant > category.getVariations() ) {
-            source.sendFailure( Component.translatable( TranslationUtil.ARTIFACT_CREATE_ERROR_0, category.getVariations() ) );
+            source.sendFailure( Component.translatable( TranslationUtils.ARTIFACT_CREATE_ERROR_0, category.getVariations() ) );
             return 0;
         }
         RandomSource random = source.getLevel().getRandom();
@@ -54,7 +54,7 @@ public class ArtifactBaseCommand {
         ArtifactUtils.applyMandatoryAttributeMods( artifact, category, random );
         
         CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.TAG_MOD_DATA );
-        modDataTag.putString( ArtifactUtils.TAG_PREFIX, TranslationUtil.MUNDANE_ABILITY_PREFIX );
+        modDataTag.putString( ArtifactUtils.TAG_PREFIX, TranslationUtils.MUNDANE_ABILITY_PREFIX );
         
         boolean wasAdded = player.addItem( artifact );
         
@@ -66,7 +66,7 @@ public class ArtifactBaseCommand {
                 itemEntity.setThrower( player.getUUID() );
             }
         }
-        source.sendSuccess( () -> Component.translatable( TranslationUtil.ARTIFACT_CREATE_CMD, category.getName() ), false );
+        source.sendSuccess( () -> Component.translatable( TranslationUtils.ARTIFACT_CREATE_CMD, category.getName() ), false );
         return 1;
     }
 }

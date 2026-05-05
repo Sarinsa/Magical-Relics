@@ -3,7 +3,7 @@ package com.sarinsa.magical_relics.common.util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class TranslationUtil {
+public class TranslationUtils {
     
     // MISC
     public static final String INFINITY_CHAR = "∞";

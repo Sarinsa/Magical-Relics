@@ -119,7 +119,7 @@ public class ArtifactUtils {
         modData.putInt( TAG_VARIANT, variant );
         modData.putInt( TAG_ITEM_COLOR, color );
         modData.put( TAG_ABILITY_COOLDOWNS, new CompoundTag() );
-        modData.putString( TAG_PREFIX, TranslationUtil.MUNDANE_ABILITY_PREFIX );
+        modData.putString( TAG_PREFIX, TranslationUtils.MUNDANE_ABILITY_PREFIX );
         modData.putString( TAG_SUFFIX, "" );
         
         return artifactStack;
