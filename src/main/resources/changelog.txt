@@ -25,3 +25,4 @@
     - Removed ability trigger type "RIGHT_CLICK_BLOCK" as trigger type "USE" now includes all right-click interactions (use, click block, click entity).
     - BaseArtifactAbility#onUse now gets called with the used InteractionHand, when available from context.
     - Command "/magicalrelics ability apply {ability} {trigger}" now only suggests compatible trigger types.
+    - Made the "variant" argument for the command"/magicalrelic artifact create" much more user-friendly.

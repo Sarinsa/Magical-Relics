@@ -1,9 +1,9 @@
 package com.sarinsa.magical_relics.common.command;
 
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.command.argument.ArtifactCategoryArgument;
+import com.sarinsa.magical_relics.common.command.argument.ArtifactVariantArgument;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.util.TranslationUtils;
@@ -34,11 +34,18 @@ public class ArtifactBaseCommand {
     private static ArgumentBuilder<CommandSourceStack, ?> cmdCreate() {
         return Commands.literal( "create" )
                 .then( Commands.argument( "category", ArtifactCategoryArgument.artifactCategory() )
-                        .then( Commands.argument( "variant", IntegerArgumentType.integer( 1, 100 ) ).executes( ( context ) -> createArtifact( context.getSource(), ArtifactCategoryArgument.getCategory( context, "category" ), IntegerArgumentType.getInteger( context, "variant" ) ) ) ) );
+                        .then( Commands.argument( "variant", ArtifactVariantArgument.artifactVariant() )
+                                .executes( ( context ) -> createArtifact(
+                                        context.getSource(),
+                                        ArtifactCategoryArgument.getCategory( context, "category" ),
+                                        ArtifactVariantArgument.getVariant( context, "variant" ) ) ) ) );
     }
     
     private static int createArtifact( CommandSourceStack source, ArtifactCategory category, int variant ) {
-        if( source.getPlayer() == null ) {
+        final RandomSource random = source.getLevel().getRandom();
+        final ServerPlayer player = source.getPlayer();
+        
+        if( player == null ) {
             source.sendFailure( Component.translatable( TranslationUtils.PLAYER_ONLY_CMD ) );
             return 0;
         }
@@ -46,20 +53,20 @@ public class ArtifactBaseCommand {
             source.sendFailure( Component.translatable( TranslationUtils.ARTIFACT_CREATE_ERROR_0, category.getVariations() ) );
             return 0;
         }
-        RandomSource random = source.getLevel().getRandom();
-        ServerPlayer player = source.getPlayer();
-        List<RegistryObject<? extends Item>> artifactsOfCategory = MRItems.ARTIFACTS_BY_CATEGORY.get( category );
-        Item artifactItem = artifactsOfCategory.get( random.nextInt( artifactsOfCategory.size() ) ).get();
-        ItemStack artifact = ArtifactUtils.createBlankArtifact( artifactItem, variant, source.getLevel().random );
+        if( variant == -1 ) {
+            variant = random.nextInt( category.getVariations() + 1 );
+        }
+        final List<RegistryObject<? extends Item>> artifactsOfCategory = MRItems.ARTIFACTS_BY_CATEGORY.get( category );
+        final Item artifactItem = artifactsOfCategory.get( random.nextInt( artifactsOfCategory.size() ) ).get();
+        final ItemStack artifact = ArtifactUtils.createBlankArtifact( artifactItem, variant, source.getLevel().random );
+        
         ArtifactUtils.applyMandatoryAttributeMods( artifact, category, random );
         
         CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.TAG_MOD_DATA );
         modDataTag.putString( ArtifactUtils.TAG_PREFIX, TranslationUtils.MUNDANE_ABILITY_PREFIX );
         
-        boolean wasAdded = player.addItem( artifact );
-        
-        if( !wasAdded ) {
-            ItemEntity itemEntity = player.drop( artifact, false );
+        if( !player.addItem( artifact ) ) {
+            final ItemEntity itemEntity = player.drop( artifact, false );
             
             if( itemEntity != null ) {
                 itemEntity.setNoPickUpDelay();
