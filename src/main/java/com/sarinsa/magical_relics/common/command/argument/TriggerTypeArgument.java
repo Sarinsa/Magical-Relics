@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.util.TranslationUtil;
 import net.minecraft.network.chat.Component;
@@ -44,15 +45,25 @@ public class TriggerTypeArgument implements ArgumentType<TriggerType> {
     
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions( CommandContext<S> context, SuggestionsBuilder suggestionsBuilder ) {
+        final BaseArtifactAbility<?> abilityArg = context.getArgument( "ability", BaseArtifactAbility.class );
+        TriggerType[] triggerTypes = TriggerType.values();
+        
+        // If there is an ability in the given command context,
+        // assume we only want to list compatible trigger types.
+        if( abilityArg != null ) {
+            triggerTypes = abilityArg.supportedTriggers().toArray( new TriggerType[0] );
+        }
+        
+        // Full list without hint
         if( suggestionsBuilder.getRemaining().isEmpty() ) {
-            for( TriggerType triggerType : TriggerType.values() ) {
+            for( TriggerType triggerType : triggerTypes ) {
                 suggestionsBuilder.suggest( triggerType.getName() );
             }
             return suggestionsBuilder.buildFuture();
         }
         
-        for( TriggerType triggerType : TriggerType.values() ) {
-            
+        // Partial list from hint
+        for( TriggerType triggerType : triggerTypes ) {
             if( triggerType.getName().contains( suggestionsBuilder.getRemaining() ) ) {
                 suggestionsBuilder.suggest( triggerType.getName() );
             }
