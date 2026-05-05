@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
@@ -12,7 +11,6 @@ import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -151,9 +149,14 @@ public class StunAbility extends BaseArtifactAbility<StunAbility.StunAbilityConf
     }
     
     @Override
+    @Nullable
     public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
-        return type == TriggerType.USER_ATTACKING
-                ? Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.stun.description.user_attacking", getConfig().STUN.attackDuration.get() / 20 )
-                : Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.stun.description.dropped", getConfig().STUN.dropDuration.get() / 20 );
+        if( type == null ) return null;
+        
+        return switch( type ) {
+            case USER_ATTACKING -> getDescComponent( type, getConfig().STUN.attackDuration.get() );
+            case DROPPED -> getDescComponent( type, getConfig().STUN.dropDuration.get() );
+            default -> null;
+        };
     }
 }

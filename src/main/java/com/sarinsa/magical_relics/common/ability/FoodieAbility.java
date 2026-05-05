@@ -4,13 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import fathertoast.crust.api.config.common.ConfigManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -160,7 +158,6 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isArmor ) return TriggerType.ARMOR_TICK;
-        
         if( isCurio ) return random.nextBoolean() ? TriggerType.CURIO_TICK : TriggerType.USE;
         
         return random.nextBoolean() ? TriggerType.USE : TriggerType.USER_ATTACKING;
@@ -182,14 +179,8 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
         if( type == null ) return null;
         
         return switch( type ) {
-            case USE ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.use" );
-            case USER_ATTACKING ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.user_attacking" );
-            case CURIO_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.curio" );
-            default ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.foodie.description.armor_tick" );
+            case USE, USER_ATTACKING, CURIO_TICK, ARMOR_TICK -> getDescComponent( type );
+            default -> null;
         };
     }
 }

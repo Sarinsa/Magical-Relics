@@ -4,14 +4,12 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -151,12 +149,8 @@ public class SelfRepairAbility extends BaseArtifactAbility<SelfRepairAbility.Rep
         if( type == null ) return null;
         
         return switch( type ) {
-            case INVENTORY_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.inventory_tick" );
-            case HELD ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.held" );
-            default ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.self_repair.description.armor_tick" );
+            case INVENTORY_TICK, HELD, ARMOR_TICK -> getDescComponent( type );
+            default -> null;
         };
     }
 }

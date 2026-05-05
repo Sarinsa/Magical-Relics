@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.network.NetworkHelper;
@@ -161,6 +160,6 @@ public class JukeboxAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
         if( disc != null )
             recordDesc = disc.getDescriptionId() + ".desc";
         
-        return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jukebox.description", Component.translatable( recordDesc ) );
+        return getDescComponent( null, Component.translatable( recordDesc ) );
     }
 }

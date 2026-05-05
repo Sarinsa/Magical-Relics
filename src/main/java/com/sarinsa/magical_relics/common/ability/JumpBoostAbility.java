@@ -4,16 +4,15 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.TranslationUtil;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
 import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -102,6 +101,8 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
                 attackDuration = SPEC.define( new IntField( "attack_duration", attackDur, IntField.Range.POSITIVE,
                         "The duration (in ticks) of the potion effect when this ability has an attack trigger." ) );
                 
+                SPEC.newLine();
+                
                 amplifier = new IntField.RandomRange( SPEC, "amplifier", minAmplifier, maxAmplifier, IntField.Range.NON_NEGATIVE,
                         "The minimum and maximum (inclusive) effect amplifier that is picked for the potion effect granted by this ability." );
             }
@@ -189,7 +190,6 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
     @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
         if( isArmor ) return TriggerType.ARMOR_TICK;
-        
         if( isCurio ) return TriggerType.CURIO_TICK;
         
         return switch( random.nextInt( 3 ) ) {
@@ -212,21 +212,16 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
     @Override
     @Nullable
     public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
-        Component potionLevel = Component.translatable( "enchantment.level." + (getEffectMultiplier( artifact ) + 1) );
-        
         if( type == null ) return null;
         
         return switch( type ) {
             case USE ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.use", getConfig().JUMP_BOOST.useDuration.get() / 20, potionLevel.getString() );
+                    getDescComponent( type, getConfig().JUMP_BOOST.useDuration.get(), getEffectMultiplier( artifact ) );
             case USER_ATTACKING ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.user_attacking", getConfig().JUMP_BOOST.attackDuration.get() / 20, potionLevel.getString() );
-            case INVENTORY_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.inventory_tick", getConfig().JUMP_BOOST.passiveDuration.get() / 20, potionLevel.getString() );
-            case CURIO_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.curio", getConfig().JUMP_BOOST.useDuration.get() / 20, potionLevel.getString() );
-            default ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.jump_boost.description.armor_tick", getConfig().JUMP_BOOST.passiveDuration.get() / 20, potionLevel.getString() );
+                    getDescComponent( type, getConfig().JUMP_BOOST.attackDuration.get(), getEffectMultiplier( artifact ) );
+            case INVENTORY_TICK, CURIO_TICK, ARMOR_TICK ->
+                    getDescComponent( type, TranslationUtil.potionLevel( getEffectMultiplier( artifact ) ) );
+            default -> null;
         };
     }
 }

@@ -44,6 +44,11 @@ public class TranslationUtil {
     public static final String FORMAT_AND = "magical_relics.format.and";
     
     
+    /** @return The given effect multiplier as a translated potion level String. */
+    public static String potionLevel( int effectMult ) {
+        return Component.translatable( "enchantment.level." + (effectMult + 1) ).getString();
+    }
+    
     /**
      * @return A translatable component with the given amount of ticks formatted as<br>
      * <strong>"{} hours, {} minutes and {} seconds".</strong> Any unit that ends up being 0 (unless it is the only unit) is skipped.

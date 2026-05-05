@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.event.ServerEventListener;
@@ -13,7 +12,6 @@ import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -210,14 +208,8 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
         if( type == null ) return null;
         
         return switch( type ) {
-            case USE ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.use" );
-            case HELD ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.held" );
-            case CURIO_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.curio" );
-            default ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.repair_others.description.armor_tick" );
+            case USE, HELD, CURIO_TICK, ARMOR_TICK -> getDescComponent( type );
+            default -> null;
         };
     }
 }

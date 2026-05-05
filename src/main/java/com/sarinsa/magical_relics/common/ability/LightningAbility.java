@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
@@ -14,7 +13,6 @@ import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -190,8 +188,9 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
     public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == null ) return null;
         
-        return type == TriggerType.USE
-                ? Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.lightning.description.right_click_block" )
-                : Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.lightning.description.user_attacking" );
+        return switch( type ) {
+            case USE, USER_ATTACKING -> getDescComponent( type );
+            default -> null;
+        };
     }
 }

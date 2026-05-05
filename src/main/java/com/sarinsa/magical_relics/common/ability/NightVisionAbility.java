@@ -4,14 +4,12 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -179,16 +177,9 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
         if( type == null ) return null;
         
         return switch( type ) {
-            case ARMOR_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.armor_tick" );
-            case USE ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.use", (getConfig().NIGHT_VISION.useDuration.get() / 20) / 60 );
-            case HELD ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.held" );
-            case CURIO_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.curio" );
-            default ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.night_vision.description.inventory_tick" );
+            case ARMOR_TICK, CURIO_TICK, HELD -> getDescComponent( type );
+            case USE -> getDescComponent( type, getConfig().NIGHT_VISION.useDuration.get() );
+            default -> null;
         };
     }
 }

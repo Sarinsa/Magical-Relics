@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
@@ -12,7 +11,6 @@ import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.EnumField;
 import fathertoast.crust.api.config.common.field.IntField;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -180,12 +178,7 @@ public class IlluminationAbility extends BaseArtifactAbility<IlluminationAbility
         if( type == null ) return null;
         
         return switch( type ) {
-            case ARMOR_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.illumination.description.armor_tick" );
-            case HELD ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.illumination.description.held" );
-            case CURIO_TICK ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.illumination.description.curio" );
+            case ARMOR_TICK, HELD, CURIO_TICK -> getDescComponent( type );
             default -> null;
         };
     }

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRMobEffects;
@@ -14,7 +13,6 @@ import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -194,12 +192,10 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
         if( type == null ) return null;
         
         return switch( type ) {
-            case USER_DAMAGED ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.obscurity.description.user_damaged", getConfig().OBSCURITY.invisDamagedDuration.get() / 20 );
-            case USER_ATTACKING ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.obscurity.description.user_attacking", getConfig().OBSCURITY.invisAttackDuration.get() / 20 );
-            default ->
-                    Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.obscurity.description.use", getConfig().OBSCURITY.invisUseDuration.get() / 20 );
+            case USER_DAMAGED -> getDescComponent( type, getConfig().OBSCURITY.invisDamagedDuration.get() );
+            case USER_ATTACKING -> getDescComponent( type, getConfig().OBSCURITY.invisAttackDuration.get() );
+            case USE -> getDescComponent( type, getConfig().OBSCURITY.invisUseDuration.get() );
+            default -> null;
         };
     }
 }

@@ -94,10 +94,14 @@ public class AdrenalineAbility extends BaseArtifactAbility<AdrenalineAbility.Adr
                 moveSpeedAmplifier = new IntField.RandomRange( SPEC, "speed_amplifier", minMoveSpeedAmp, maxMoveSpeedAmp, IntField.Range.NON_NEGATIVE,
                         "The minimum and maximum (inclusive) amplifier for the speed effect." );
                 
+                SPEC.newLine();
+                
                 damageBoostDuration = new IntField.RandomRange( SPEC, "damage_boost_duration", minDamageBoostDur, maxDamageBoostDur, IntField.Range.POSITIVE,
                         "The minimum and maximum (inclusive) number of ticks that the damage boost effect lasts for." );
                 damageBoostAmplifier = new IntField.RandomRange( SPEC, "damage_boost_amplifier", minDamageBoostAmp, maxDamageBoostAmp, IntField.Range.NON_NEGATIVE,
                         "The minimum and maximum (inclusive) amplifier for the damage boost effect." );
+                
+                SPEC.newLine();
                 
                 damageResDuration = new IntField.RandomRange( SPEC, "resistance_duration", minDamageResDur, maxDamageResDur, IntField.Range.POSITIVE,
                         "The minimum and maximum (inclusive) number of ticks that the damage resistance effect lasts for." );

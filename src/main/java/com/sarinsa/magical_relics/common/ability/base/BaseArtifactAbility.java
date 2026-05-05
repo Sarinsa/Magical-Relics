@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.TranslationUtil;
 import fathertoast.crust.api.config.common.ConfigManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -57,6 +58,23 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
         final String s = MagicalRelics.MODID + ".artifact_ability." + id.getNamespace() + "." + id.getPath() + ".description" + triggerKey;
         
         return Component.translatable( s, args );
+    }
+    
+    /**
+     * Helper method for creating ability description tooltip components
+     * containing an effect duration that should be formatted as HMS.
+     */
+    public MutableComponent getDescComponent( @Nullable TriggerType triggerType, long effectDuration ) {
+        return getDescComponent( triggerType, TranslationUtil.ticksToHMS( effectDuration ).getString() );
+    }
+    
+    /**
+     * Helper method for creating ability description tooltip components
+     * containing an effect duration that should be formatted as HMS
+     * and an effect multiplier as a translated potion level string.
+     */
+    public MutableComponent getDescComponent( @Nullable TriggerType triggerType, long effectDuration, int effectMult ) {
+        return getDescComponent( triggerType, TranslationUtil.potionLevel( effectMult ), TranslationUtil.ticksToHMS( effectDuration ).getString() );
     }
     
     /**

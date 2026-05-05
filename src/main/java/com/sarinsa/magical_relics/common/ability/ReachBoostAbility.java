@@ -6,12 +6,10 @@ import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.DoubleField;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -124,11 +122,8 @@ public class ReachBoostAbility extends BaseArtifactAbility<ReachBoostAbility.Rea
     @Override
     @Nullable
     public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
-        if( type == TriggerType.ARMOR_TICK ) {
-            return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.reach_boost.description.armor_tick" );
-        }
-        else if( type == TriggerType.HELD ) {
-            return Component.translatable( MagicalRelics.MODID + ".artifact_ability.magical_relics.reach_boost.description.held" );
+        if( type == TriggerType.ARMOR_TICK || type == TriggerType.HELD ) {
+            return getDescComponent( type );
         }
         return null;
     }
