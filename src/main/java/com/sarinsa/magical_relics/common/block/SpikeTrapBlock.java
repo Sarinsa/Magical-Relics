@@ -6,15 +6,22 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -22,7 +29,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings( "all" )
-public class SpikeTrapBlock extends Block {
+public class SpikeTrapBlock extends Block implements SimpleWaterloggedBlock {
+    
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     
     private static final VoxelShape shape = Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D );
     private static final VoxelShape collisionShape = Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D );
@@ -34,6 +43,20 @@ public class SpikeTrapBlock extends Block {
                 .requiresCorrectToolForDrops()
                 .noOcclusion()
                 .noCollission() );
+        registerDefaultState( stateDefinition.any().setValue( WATERLOGGED, false ) );
+    }
+    
+    @Override
+    public FluidState getFluidState( BlockState state ) {
+        return state.getValue( WATERLOGGED ) ? Fluids.WATER.getSource( false ) : super.getFluidState( state );
+    }
+    
+    @Override
+    public BlockState getStateForPlacement( BlockPlaceContext context ) {
+        final Level level = context.getLevel();
+        final FluidState fluidState = context.getLevel().getFluidState( context.getClickedPos() );
+        
+        return defaultBlockState().setValue( WATERLOGGED, Boolean.valueOf( fluidState.getType() == Fluids.WATER ) );
     }
     
     @Override
@@ -74,5 +97,10 @@ public class SpikeTrapBlock extends Block {
         return !state.canSurvive( level, pos )
                 ? Blocks.AIR.defaultBlockState()
                 : super.updateShape( state, direction, neighborState, level, pos, pos1 );
+    }
+    
+    @Override
+    protected void createBlockStateDefinition( StateDefinition.Builder<Block, BlockState> builder ) {
+        super.createBlockStateDefinition( builder.add( WATERLOGGED ) );
     }
 }
