@@ -170,7 +170,7 @@ public class ArtifactUtils {
     /** @return A modifiable list containing all abilities that are compatible with the given artifact category. */
     public static List<BaseArtifactAbility<?>> getAbilitiesForCategory( ArtifactCategory category ) {
         return OBTAINABLE_ABILITIES.stream()
-                .filter( ( ability ) -> !ability.getCompatibleTypes().contains( category ) )
+                .filter( ( ability ) -> ability.getCompatibleTypes().contains( category ) )
                 .collect( Collectors.toCollection( ArrayList::new ) );
     }
     
