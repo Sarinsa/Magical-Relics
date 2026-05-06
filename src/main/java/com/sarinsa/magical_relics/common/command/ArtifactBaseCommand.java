@@ -2,9 +2,10 @@ package com.sarinsa.magical_relics.common.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
+import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.command.argument.ArtifactCategoryArgument;
 import com.sarinsa.magical_relics.common.command.argument.ArtifactVariantArgument;
-import com.sarinsa.magical_relics.common.core.registry.MRItems;
+import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.util.TranslationUtils;
 import net.minecraft.commands.CommandSourceStack;
@@ -14,9 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 
@@ -44,6 +43,7 @@ public class ArtifactBaseCommand {
     private static int createArtifact( CommandSourceStack source, ArtifactCategory category, int variant ) {
         final RandomSource random = source.getLevel().getRandom();
         final ServerPlayer player = source.getPlayer();
+        boolean randomAbilities = false;
         
         if( player == null ) {
             source.sendFailure( Component.translatable( TranslationUtils.PLAYER_ONLY_CMD ) );
@@ -55,15 +55,22 @@ public class ArtifactBaseCommand {
         }
         if( variant == -1 ) {
             variant = random.nextInt( category.getVariations() + 1 );
+            randomAbilities = true;
         }
-        final List<RegistryObject<? extends Item>> artifactsOfCategory = MRItems.ARTIFACTS_BY_CATEGORY.get( category );
-        final Item artifactItem = artifactsOfCategory.get( random.nextInt( artifactsOfCategory.size() ) ).get();
+        final List<IArtifactItem> artifactsOfCategory = ArtifactUtils.getArtifactsOfCategory( category );
+        final IArtifactItem artifactItem = artifactsOfCategory.get( random.nextInt( artifactsOfCategory.size() ) );
         final ItemStack artifact = ArtifactUtils.createBlankArtifact( artifactItem, variant, source.getLevel().random );
         
         ArtifactUtils.applyMandatoryAttributeMods( artifact, category, random );
         
-        CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.TAG_MOD_DATA );
-        modDataTag.putString( ArtifactUtils.TAG_PREFIX, TranslationUtils.MUNDANE_ABILITY_PREFIX );
+        if( randomAbilities ) {
+            BaseArtifactAbility<?>[] appliedAbilities = ArtifactUtils.applyAbilities( artifact, random, random.nextFloat() < 0.1F, ArtifactUtils.getAbilitiesForCategory( category ) );
+            ArtifactUtils.setPrefixAndSuffix( artifact, random, appliedAbilities );
+        }
+        else {
+            final CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.TAG_MOD_DATA );
+            modDataTag.putString( ArtifactUtils.TAG_PREFIX, TranslationUtils.MUNDANE_ABILITY_PREFIX );
+        }
         
         if( !player.addItem( artifact ) ) {
             final ItemEntity itemEntity = player.drop( artifact, false );
