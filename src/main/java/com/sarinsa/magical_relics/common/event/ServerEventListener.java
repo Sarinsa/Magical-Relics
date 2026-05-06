@@ -23,7 +23,7 @@ public class ServerEventListener {
     private static final int maxCooldownTick = 10;
     
     private static int nextRepairTick;
-    private static final int maxRepairTick = 10000;
+    private static final int maxRepairTick = 1000000;
     
     private static final Deque<ServerPlayer> aggroClearingList = new ConcurrentLinkedDeque<>();
     
