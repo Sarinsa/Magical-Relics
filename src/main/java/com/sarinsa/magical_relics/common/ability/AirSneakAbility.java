@@ -173,7 +173,7 @@ public class AirSneakAbility extends BaseArtifactAbility<AirSneakAbility.AirSnea
         if( type == null ) return null;
         
         return switch( type ) {
-            case HELD, CURIO_TICK, ARMOR_TICK -> getDescComponent( type );
+            case HELD, CURIO_TICK, ARMOR_TICK -> descComponent( type );
             default -> null;
         };
     }

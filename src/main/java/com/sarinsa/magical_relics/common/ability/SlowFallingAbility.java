@@ -206,9 +206,10 @@ public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.S
         if( type == null ) return null;
         
         return switch( type ) {
-            case ARMOR_TICK, HELD, CURIO_TICK, INVENTORY_TICK -> getDescComponent( type );
+            case ARMOR_TICK, HELD, CURIO_TICK, INVENTORY_TICK ->
+                    potionLevelDescComponent( type, getEffectMultiplier( artifact ) );
             case USE ->
-                    getDescComponent( type, getConfig().SLOW_FALLING.useDuration.get(), getEffectMultiplier( artifact ) );
+                    potionDescComponent( type, getConfig().SLOW_FALLING.useDuration.get(), getEffectMultiplier( artifact ) );
             default -> null;
         };
     }

@@ -179,7 +179,7 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
         if( type == null ) return null;
         
         return switch( type ) {
-            case USE, USER_ATTACKING, CURIO_TICK, ARMOR_TICK -> getDescComponent( type );
+            case USE, USER_ATTACKING, CURIO_TICK, ARMOR_TICK -> descComponent( type );
             default -> null;
         };
     }

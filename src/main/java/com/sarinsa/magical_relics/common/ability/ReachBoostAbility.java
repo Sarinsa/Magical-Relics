@@ -123,7 +123,7 @@ public class ReachBoostAbility extends BaseArtifactAbility<ReachBoostAbility.Rea
     @Nullable
     public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == TriggerType.ARMOR_TICK || type == TriggerType.HELD ) {
-            return getDescComponent( type );
+            return descComponent( type );
         }
         return null;
     }

@@ -7,7 +7,6 @@ import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.TranslationUtils;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
@@ -216,11 +215,11 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
         
         return switch( type ) {
             case USE ->
-                    getDescComponent( type, getConfig().JUMP_BOOST.useDuration.get(), getEffectMultiplier( artifact ) );
+                    potionDescComponent( type, getConfig().JUMP_BOOST.useDuration.get(), getEffectMultiplier( artifact ) );
             case USER_ATTACKING ->
-                    getDescComponent( type, getConfig().JUMP_BOOST.attackDuration.get(), getEffectMultiplier( artifact ) );
+                    potionDescComponent( type, getConfig().JUMP_BOOST.attackDuration.get(), getEffectMultiplier( artifact ) );
             case INVENTORY_TICK, CURIO_TICK, ARMOR_TICK ->
-                    getDescComponent( type, TranslationUtils.potionLevel( getEffectMultiplier( artifact ) ) );
+                    potionLevelDescComponent( type, getEffectMultiplier( artifact ) );
             default -> null;
         };
     }

@@ -208,7 +208,7 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
         if( type == null ) return null;
         
         return switch( type ) {
-            case USE, HELD, CURIO_TICK, ARMOR_TICK -> getDescComponent( type );
+            case USE, HELD, CURIO_TICK, ARMOR_TICK -> descComponent( type );
             default -> null;
         };
     }

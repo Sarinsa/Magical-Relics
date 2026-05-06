@@ -149,7 +149,7 @@ public class SelfRepairAbility extends BaseArtifactAbility<SelfRepairAbility.Rep
         if( type == null ) return null;
         
         return switch( type ) {
-            case INVENTORY_TICK, HELD, ARMOR_TICK -> getDescComponent( type );
+            case INVENTORY_TICK, HELD, ARMOR_TICK -> descComponent( type );
             default -> null;
         };
     }

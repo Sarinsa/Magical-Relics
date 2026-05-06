@@ -189,7 +189,7 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
         if( type == null ) return null;
         
         return switch( type ) {
-            case USE, USER_ATTACKING -> getDescComponent( type );
+            case USE, USER_ATTACKING -> descComponent( type );
             default -> null;
         };
     }

@@ -52,7 +52,7 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
     }
     
     /** Helper method for creating ability description tooltip components. */
-    public MutableComponent getDescComponent( @Nullable TriggerType triggerType, Object... args ) {
+    public MutableComponent descComponent( @Nullable TriggerType triggerType, Object... args ) {
         final ResourceLocation id = Objects.requireNonNull( MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( this ) );
         final String triggerKey = triggerType == null ? "" : "." + triggerType.getName();
         final String s = MagicalRelics.MODID + ".artifact_ability." + id.getNamespace() + "." + id.getPath() + ".description" + triggerKey;
@@ -62,10 +62,18 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
     
     /**
      * Helper method for creating ability description tooltip components
+     * containing an effect multiplier as a translated potion level string.
+     */
+    public MutableComponent potionLevelDescComponent( @Nullable TriggerType triggerType, int effectMult ) {
+        return descComponent( triggerType, TranslationUtils.potionLevel( effectMult ) );
+    }
+    
+    /**
+     * Helper method for creating ability description tooltip components
      * containing an effect duration that should be formatted as HMS.
      */
-    public MutableComponent getDescComponent( @Nullable TriggerType triggerType, long effectDuration ) {
-        return getDescComponent( triggerType, TranslationUtils.ticksToHMS( effectDuration ).getString() );
+    public MutableComponent durationDescComponent( @Nullable TriggerType triggerType, int effectDuration ) {
+        return descComponent( triggerType, TranslationUtils.ticksToHMS( effectDuration ).getString() );
     }
     
     /**
@@ -73,8 +81,8 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
      * containing an effect duration that should be formatted as HMS
      * and an effect multiplier as a translated potion level string.
      */
-    public MutableComponent getDescComponent( @Nullable TriggerType triggerType, long effectDuration, int effectMult ) {
-        return getDescComponent( triggerType, TranslationUtils.potionLevel( effectMult ), TranslationUtils.ticksToHMS( effectDuration ).getString() );
+    public MutableComponent potionDescComponent( @Nullable TriggerType triggerType, int effectDuration, int effectMult ) {
+        return descComponent( triggerType, TranslationUtils.potionLevel( effectMult ), TranslationUtils.ticksToHMS( effectDuration ).getString() );
     }
     
     /**
@@ -148,7 +156,7 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
      */
     @Nullable
     public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
-        return getDescComponent( null );
+        return descComponent( null );
     }
     
     /**

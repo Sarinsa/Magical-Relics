@@ -154,8 +154,8 @@ public class StunAbility extends BaseArtifactAbility<StunAbility.StunAbilityConf
         if( type == null ) return null;
         
         return switch( type ) {
-            case USER_ATTACKING -> getDescComponent( type, getConfig().STUN.attackDuration.get() );
-            case DROPPED -> getDescComponent( type, getConfig().STUN.dropDuration.get() );
+            case USER_ATTACKING -> durationDescComponent( type, getConfig().STUN.attackDuration.get() );
+            case DROPPED -> durationDescComponent( type, getConfig().STUN.dropDuration.get() );
             default -> null;
         };
     }

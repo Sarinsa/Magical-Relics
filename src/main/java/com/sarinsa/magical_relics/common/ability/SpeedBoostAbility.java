@@ -130,7 +130,7 @@ public class SpeedBoostAbility extends BaseArtifactAbility<SpeedBoostAbility.Spe
     @Nullable
     public MutableComponent getAbilityDescription( @Nullable TriggerType type, ItemStack artifact, @Nullable Level level, TooltipFlag flag ) {
         if( type == TriggerType.ARMOR_TICK || type == TriggerType.HELD )
-            return getDescComponent( type );
+            return descComponent( type );
         return null;
     }
 }

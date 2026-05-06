@@ -192,9 +192,9 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
         if( type == null ) return null;
         
         return switch( type ) {
-            case USER_DAMAGED -> getDescComponent( type, getConfig().OBSCURITY.invisDamagedDuration.get() );
-            case USER_ATTACKING -> getDescComponent( type, getConfig().OBSCURITY.invisAttackDuration.get() );
-            case USE -> getDescComponent( type, getConfig().OBSCURITY.invisUseDuration.get() );
+            case USER_DAMAGED -> durationDescComponent( type, getConfig().OBSCURITY.invisDamagedDuration.get() );
+            case USER_ATTACKING -> durationDescComponent( type, getConfig().OBSCURITY.invisAttackDuration.get() );
+            case USE -> durationDescComponent( type, getConfig().OBSCURITY.invisUseDuration.get() );
             default -> null;
         };
     }

@@ -160,6 +160,6 @@ public class JukeboxAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
         if( disc != null )
             recordDesc = disc.getDescriptionId() + ".desc";
         
-        return getDescComponent( null, Component.translatable( recordDesc ) );
+        return descComponent( null, Component.translatable( recordDesc ) );
     }
 }

@@ -178,7 +178,7 @@ public class IlluminationAbility extends BaseArtifactAbility<IlluminationAbility
         if( type == null ) return null;
         
         return switch( type ) {
-            case ARMOR_TICK, HELD, CURIO_TICK -> getDescComponent( type );
+            case ARMOR_TICK, HELD, CURIO_TICK -> descComponent( type );
             default -> null;
         };
     }

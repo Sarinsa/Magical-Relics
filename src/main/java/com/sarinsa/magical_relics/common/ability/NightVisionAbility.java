@@ -177,8 +177,8 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
         if( type == null ) return null;
         
         return switch( type ) {
-            case ARMOR_TICK, CURIO_TICK, HELD -> getDescComponent( type );
-            case USE -> getDescComponent( type, getConfig().NIGHT_VISION.useDuration.get() );
+            case ARMOR_TICK, CURIO_TICK, HELD -> descComponent( type );
+            case USE -> durationDescComponent( type, getConfig().NIGHT_VISION.useDuration.get() );
             default -> null;
         };
     }
