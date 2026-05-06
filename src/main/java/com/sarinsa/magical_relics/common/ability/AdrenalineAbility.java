@@ -176,7 +176,7 @@ public class AdrenalineAbility extends BaseArtifactAbility<AdrenalineAbility.Adr
     @Override
     @Nullable
     public TriggerType getRandomTrigger( ItemStack artifact, RandomSource random, boolean isArmor, boolean isCurio ) {
-        return isArmor ? TriggerType.ARMOR_TICK : null;
+        return isArmor ? TriggerType.USER_DAMAGED : null;
     }
     
     @Override
