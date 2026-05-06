@@ -14,9 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin( LivingEntity.class )
 public abstract class LivingEntityMixin extends Entity implements Attackable {
     
+    
     protected LivingEntityMixin( EntityType<? extends LivingEntity> type, Level level ) {
         super( type, level );
     }
+    
     
     @Inject(
             method = "onClimbable",

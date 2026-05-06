@@ -15,7 +15,7 @@ public class CommonMixinHooks {
                 if( ArtifactUtils.hasAbility( player.getItemBySlot( slot ), MRArtifactAbilities.SPIDER.get() ) ) {
                     if( player.horizontalCollision ) {
                         cir.setReturnValue( true );
-                        break;
+                        return;
                     }
                 }
             }
