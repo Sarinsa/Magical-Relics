@@ -21,6 +21,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -64,10 +65,10 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
         
         public WaterBreathing WATER_BREATHING;
         
-        public WaterBreathingAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
+        public WaterBreathingAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
                                             int cooldown,
                                             int useDuration, int passiveDuration, int attackDuration, int drownDuration ) {
-            super( cfgManager, abilityId, cooldown );
+            super( cfgManager, abilityId, rarity, cooldown );
             
             WATER_BREATHING = new WaterBreathing( this, useDuration, passiveDuration, attackDuration, drownDuration );
         }
@@ -96,7 +97,8 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
-        return new WaterBreathingAbilityConfig( cfgManager, abilityId, 1200, 1200, 310, 120, 50 );
+        return new WaterBreathingAbilityConfig( cfgManager, abilityId, Rarity.RARE,
+                1200, 1200, 310, 120, 50 );
     }
     
     @Override
@@ -177,10 +179,10 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
         if( type == null ) return null;
         
         return switch( type ) {
-            case ARMOR_TICK, HELD -> getDescComponent( type );
-            case USER_DAMAGED -> getDescComponent( type, getConfig().WATER_BREATHING.drownDuration.get() );
-            case USE -> getDescComponent( type, getConfig().WATER_BREATHING.useDuration.get() );
-            case USER_ATTACKING -> getDescComponent( type, getConfig().WATER_BREATHING.attackDuration.get() );
+            case ARMOR_TICK, HELD -> descComponent( type );
+            case USER_DAMAGED -> durationDescComponent( type, getConfig().WATER_BREATHING.drownDuration.get() );
+            case USE -> durationDescComponent( type, getConfig().WATER_BREATHING.useDuration.get() );
+            case USER_ATTACKING -> durationDescComponent( type, getConfig().WATER_BREATHING.attackDuration.get() );
             default -> null;
         };
     }
