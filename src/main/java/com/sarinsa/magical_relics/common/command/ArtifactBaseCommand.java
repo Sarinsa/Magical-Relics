@@ -64,8 +64,14 @@ public class ArtifactBaseCommand {
         ArtifactUtils.applyMandatoryAttributeMods( artifact, category, random );
         
         if( randomAbilities ) {
-            BaseArtifactAbility<?>[] appliedAbilities = ArtifactUtils.applyAbilities( artifact, random, random.nextFloat() < 0.1F, ArtifactUtils.getAbilitiesForCategory( category ) );
+            final boolean legendary = random.nextFloat() < 0.1F;
+            BaseArtifactAbility<?>[] appliedAbilities = ArtifactUtils.applyAbilities( artifact, random, legendary, ArtifactUtils.getAbilitiesForCategory( category ) );
             ArtifactUtils.setPrefixAndSuffix( artifact, random, appliedAbilities );
+            
+            if( legendary ) {
+                // Try to apply enchantments if this is a legendary artifact
+                ArtifactUtils.enchantLegendary( artifact, random );
+            }
         }
         else {
             final CompoundTag modDataTag = artifact.getOrCreateTag().getCompound( ArtifactUtils.TAG_MOD_DATA );

@@ -156,7 +156,7 @@ public class ArtifactUtils {
         
         // Try to apply enchantments if this is a legendary artifact
         if( legendary ) {
-            EnchantmentHelper.enchantItem( random, artifactStack, 20 + random.nextInt( 11 ), false );
+            enchantLegendary( artifactStack, random );
         }
         // Apply some stock attribute mods for daggers and swords and whatnot
         applyMandatoryAttributeMods( artifactStack, artifactItem.getCategory(), random );
@@ -200,6 +200,13 @@ public class ArtifactUtils {
             }
         }
         return null;
+    }
+    
+    // TODO - Make the levels configurable maybe
+    
+    /** Enchants the given item stack with "legendary" level. */
+    public static void enchantLegendary( ItemStack itemStack, RandomSource random ) {
+        EnchantmentHelper.enchantItem( random, itemStack, 20 + random.nextInt( 11 ), false );
     }
     
     /**
