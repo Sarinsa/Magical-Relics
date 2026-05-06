@@ -3,10 +3,10 @@ package com.sarinsa.magical_relics.datagen.model;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
+import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -27,10 +27,10 @@ public class MRItemModelProvider extends ItemModelProvider {
         MRItems.ARTIFACTS_BY_CATEGORY.forEach( this::artifactSet );
     }
     
-    private void artifactSet( ArtifactCategory category, List<RegistryObject<? extends Item>> artifactSet ) {
-        for( RegistryObject<? extends Item> regObj : artifactSet ) {
+    private void artifactSet( ArtifactCategory category, List<RegistryObject<? extends IArtifactItem>> artifactSet ) {
+        for( RegistryObject<? extends IArtifactItem> regObj : artifactSet ) {
             // TODO - skip armor for now. We don't have variants, just trims
-            if( regObj.get() instanceof ArmorItem ) continue;
+            if( regObj.get().artifactAsItem() instanceof ArmorItem ) continue;
             
             ResourceLocation itemId = regObj.getId();
             String categoryName = category.getName();

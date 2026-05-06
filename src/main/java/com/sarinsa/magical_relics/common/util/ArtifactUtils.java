@@ -46,6 +46,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.ApiStatus;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
@@ -107,8 +108,8 @@ public class ArtifactUtils {
      * @param variant      An integer corresponding to a specific texture variant of the artifact item.<br>
      * @return An item stack with all the necessary NBT tags for ability data.
      */
-    public static ItemStack createBlankArtifact( Item artifactItem, int variant, RandomSource random ) {
-        ItemStack artifactStack = new ItemStack( artifactItem );
+    public static ItemStack createBlankArtifact( IArtifactItem artifactItem, int variant, RandomSource random ) {
+        ItemStack artifactStack = new ItemStack( artifactItem.artifactAsItem() );
         
         final CompoundTag modData = NBTHelper.getOrCreateCompound( artifactStack.getOrCreateTag(), TAG_MOD_DATA );
         // Pick random color and force it solid
@@ -135,68 +136,49 @@ public class ArtifactUtils {
     
     /**
      * Generates an artifact item with randomized abilities, variant and overlay color. Neat!
-     * <br><br>
      *
      * @return The randomly generated artifact ItemStack.
      */
     public static ItemStack generateRandomArtifact( LevelReader level, RandomSource random, boolean legendary ) {
         final ArtifactCategory category = ArtifactCategory.values()[random.nextInt( ArtifactCategory.values().length )];
-        final List<RegistryObject<? extends Item>> artifactList = MRItems.ARTIFACTS_BY_CATEGORY.get( category );
+        final List<IArtifactItem> artifactList = getArtifactsOfCategory( category );
         
-        final Item artifactItem = artifactList.get( random.nextInt( artifactList.size() ) ).get();
+        final IArtifactItem artifactItem = artifactList.get( random.nextInt( artifactList.size() ) );
         final ItemStack artifactStack = createBlankArtifact( artifactItem, random.nextInt( category.getVariations() ), random );
         
         // Apply a random trim if the artifact is an armor piece
         applyRandomArmorTrim( level, random, artifactStack );
         
         // Gather all obtainable abilities and filter out ones that are not applicable to the artifact category.
-        final List<BaseArtifactAbility<?>> applicableAbilities = OBTAINABLE_ABILITIES.stream()
-                .filter( ( ability ) -> !ability.getCompatibleTypes().contains( ((IArtifactItem) artifactItem).getCategory() ) )
-                .collect( Collectors.toCollection( ArrayList::new ) );
+        final List<BaseArtifactAbility<?>> applicableAbilities = getAbilitiesForCategory( artifactItem.getCategory() );
+        // Try and apply the abilities to the item stack.
+        final BaseArtifactAbility<?>[] appliedAbilities = applyAbilities( artifactStack, random, legendary, applicableAbilities );
         
-        BaseArtifactAbility<?>[] abilitiesToApply;
-        BaseArtifactAbility<?>[] appliedAbilities = {};
-        // We might get unlucky RNG here and there,
-        // so try 10 times before giving up
-        for( int i = 0; i < 10; i++ ) {
-            Collections.shuffle( applicableAbilities );
-            
-            final int maxAbilities = legendary
-                    ? Math.min( 4, applicableAbilities.size() )
-                    : Math.min( 1 + (random.nextInt( 3 ) == 0 ? random.nextInt( 3 ) : 0), applicableAbilities.size() );
-            abilitiesToApply = new BaseArtifactAbility[maxAbilities];
-            
-            for( int j = 0; j < maxAbilities; j++ )
-                abilitiesToApply[j] = applicableAbilities.get( j );
-            
-            appliedAbilities = tryApplyAbilities( artifactStack, random, abilitiesToApply );
-            
-            if( appliedAbilities.length > 0 )
-                break;
-        }
         // Try to apply enchantments if this is a legendary artifact
         if( legendary ) {
             EnchantmentHelper.enchantItem( random, artifactStack, 20 + random.nextInt( 11 ), false );
         }
         // Apply some stock attribute mods for daggers and swords and whatnot
-        applyMandatoryAttributeMods( artifactStack, ((IArtifactItem) artifactItem).getCategory(), random );
+        applyMandatoryAttributeMods( artifactStack, artifactItem.getCategory(), random );
         
         // Create a custom display name for the ItemStack, picking random
         // prefixes and suffixes from successfully applied abilities
-        if( appliedAbilities.length > 0 ) {
-            CompoundTag tag = artifactStack.getOrCreateTag();
-            CompoundTag modDataTag = tag.getCompound( TAG_MOD_DATA );
-            
-            modDataTag.putString( TAG_PREFIX, appliedAbilities[0].getPrefixes()[random.nextInt( appliedAbilities[0].getPrefixes().length )] );
-            
-            if( appliedAbilities.length > 1 ) {
-                modDataTag.putString( TAG_SUFFIX, appliedAbilities[1].getSuffixes()[random.nextInt( appliedAbilities[1].getSuffixes().length )] );
-            }
-            else {
-                modDataTag.putString( TAG_SUFFIX, appliedAbilities[0].getSuffixes()[random.nextInt( appliedAbilities[0].getSuffixes().length )] );
-            }
-        }
+        setPrefixAndSuffix( artifactStack, random, appliedAbilities );
         return artifactStack;
+    }
+    
+    /** @return A modifiable list containing all abilities that are compatible with the given artifact category. */
+    public static List<BaseArtifactAbility<?>> getAbilitiesForCategory( ArtifactCategory category ) {
+        return OBTAINABLE_ABILITIES.stream()
+                .filter( ( ability ) -> !ability.getCompatibleTypes().contains( category ) )
+                .collect( Collectors.toCollection( ArrayList::new ) );
+    }
+    
+    /** @return An unmodifiable list of registered artifact items that belong to the given category. */
+    public static List<IArtifactItem> getArtifactsOfCategory( ArtifactCategory category ) {
+        return MRItems.ARTIFACTS_BY_CATEGORY.get( category ).stream()
+                .map( RegistryObject::get )
+                .collect( Collectors.toUnmodifiableList() );
     }
     
     /**
@@ -206,10 +188,10 @@ public class ArtifactUtils {
     public static Component getItemDisplayName( ItemStack itemStack ) {
         CompoundTag stackTag = itemStack.getOrCreateTag();
         
-        if( stackTag.contains( TAG_MOD_DATA, Tag.TAG_COMPOUND ) ) {
-            CompoundTag modDataTag = stackTag.getCompound( TAG_MOD_DATA );
+        if( NBTHelper.containsCompound( stackTag, TAG_MOD_DATA ) ) {
+            final CompoundTag modDataTag = stackTag.getCompound( TAG_MOD_DATA );
             
-            if( modDataTag.contains( TAG_PREFIX, Tag.TAG_STRING ) && modDataTag.contains( TAG_SUFFIX, Tag.TAG_STRING ) ) {
+            if( NBTHelper.containsString( modDataTag, TAG_PREFIX ) && NBTHelper.containsString( modDataTag, TAG_SUFFIX ) ) {
                 return Component.literal(
                         Component.translatable( modDataTag.getString( TAG_PREFIX ) ).getString() + " "
                                 + Component.translatable( itemStack.getItem().getDescriptionId( itemStack ) ).getString() + " "
@@ -288,31 +270,28 @@ public class ArtifactUtils {
      */
     @Nullable
     public static Multimap<Attribute, AttributeModifier> getAttributeMods( ItemStack itemStack, @Nullable AttributeBoost.ActiveType activeType ) {
-        CompoundTag stackTag = itemStack.getOrCreateTag();
+        final CompoundTag stackTag = itemStack.getOrCreateTag();
         
         if( stackTag.contains( TAG_MOD_DATA, Tag.TAG_COMPOUND ) && stackTag.getCompound( TAG_MOD_DATA ).contains( TAG_ATTRIBUTE_MODS, Tag.TAG_LIST ) ) {
-            ListTag attributeModsTag = stackTag.getCompound( TAG_MOD_DATA ).getList( TAG_ATTRIBUTE_MODS, Tag.TAG_COMPOUND );
-            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+            final ListTag attributeModsTag = stackTag.getCompound( TAG_MOD_DATA ).getList( TAG_ATTRIBUTE_MODS, Tag.TAG_COMPOUND );
+            final ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
             
             for( int i = 0; i < attributeModsTag.size(); i++ ) {
-                CompoundTag attributeTag = attributeModsTag.getCompound( i );
+                final CompoundTag attributeTag = attributeModsTag.getCompound( i );
                 
-                Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue( ResourceLocation.tryParse( attributeTag.getString( "AttributeId" ) ) );
-                AttributeModifier modifier = AttributeUtils.loadUUIDSensitive( attributeTag.getCompound( "AttributeMod" ) );
-                AttributeBoost.ActiveType modActiveType = AttributeBoost.ActiveType.getFromName( attributeTag.getString( "ActiveType" ) );
+                final Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue( ResourceLocation.tryParse( attributeTag.getString( "AttributeId" ) ) );
+                final AttributeModifier modifier = AttributeUtils.loadUUIDSensitive( attributeTag.getCompound( "AttributeMod" ) );
+                final AttributeBoost.ActiveType modActiveType = AttributeBoost.ActiveType.getFromName( attributeTag.getString( "ActiveType" ) );
                 
                 boolean canApply = false;
                 
-                if( activeType == null ) {
+                if( activeType == null )
                     canApply = true;
-                }
                 else if( activeType == AttributeBoost.ActiveType.HELD_OR_EQUIPPED
-                        || modActiveType == AttributeBoost.ActiveType.HELD_OR_EQUIPPED ) {
+                        || modActiveType == AttributeBoost.ActiveType.HELD_OR_EQUIPPED )
                     canApply = true;
-                }
-                else if( activeType == modActiveType ) {
+                else if( activeType == modActiveType )
                     canApply = true;
-                }
                 
                 if( attribute != null && modifier != null && canApply ) {
                     builder.put( attribute, modifier );
@@ -327,7 +306,7 @@ public class ArtifactUtils {
      * @return An integer representing the texture variant of the given artifact item stack.
      */
     public static int getVariant( ItemStack itemStack ) {
-        CompoundTag stackTag = itemStack.getOrCreateTag();
+        final CompoundTag stackTag = itemStack.getOrCreateTag();
         
         if( !NBTHelper.containsCompound( stackTag, TAG_MOD_DATA )
                 || !NBTHelper.containsNumber( stackTag.getCompound( TAG_MOD_DATA ), TAG_VARIANT ) )
@@ -336,16 +315,68 @@ public class ArtifactUtils {
         return stackTag.getCompound( TAG_MOD_DATA ).getInt( TAG_VARIANT );
     }
     
+    /**
+     * Picks a random ability prefix and suffix from the two first provided abilities.
+     * If only one ability is provided, both the prefix and suffix will be picked from that ability.
+     */
+    public static void setPrefixAndSuffix( ItemStack artifact, RandomSource random, BaseArtifactAbility<?>... abilities ) {
+        if( abilities.length > 0 ) {
+            CompoundTag tag = artifact.getOrCreateTag();
+            CompoundTag modDataTag = tag.getCompound( TAG_MOD_DATA );
+            
+            modDataTag.putString( TAG_PREFIX, abilities[0].getPrefixes()[random.nextInt( abilities[0].getPrefixes().length )] );
+            
+            if( abilities.length > 1 )
+                modDataTag.putString( TAG_SUFFIX, abilities[1].getSuffixes()[random.nextInt( abilities[1].getSuffixes().length )] );
+            else
+                modDataTag.putString( TAG_SUFFIX, abilities[0].getSuffixes()[random.nextInt( abilities[0].getSuffixes().length )] );
+        }
+    }
     
     /**
-     * Attempts to apply the given artifact ability instances to the given item stack.
-     * <br><br>
+     * Attempts to apply the given artifact abilities to the given artifact item stack.
+     *
+     * @param artifactItem The item stack to apply the abilities to.
+     * @param random       The RNG.
+     * @param legendary    If true, the maximum number of abilities that can be applied will always
+     *                     be at most 4, or the size of the provided ability list.
+     *                     When this is false, the number of abilities to apply will range from 1-3, with some RNG involved.
+     * @param abilities    The abilities to try and apply to the given item stack.
+     * @return An array of abilities that were successfully applied. Can be empty!
+     */
+    public static BaseArtifactAbility<?>[] applyAbilities( ItemStack artifactItem, RandomSource random, boolean legendary, List<BaseArtifactAbility<?>> abilities ) {
+        BaseArtifactAbility<?>[] abilitiesToApply;
+        BaseArtifactAbility<?>[] appliedAbilities = {};
+        // We might get unlucky RNG here and there,
+        // so try 5 times before giving up
+        for( int i = 0; i < 5; i++ ) {
+            Collections.shuffle( abilities );
+            
+            final int maxAbilities = legendary
+                    ? Math.min( 4, abilities.size() )
+                    : Math.min( 1 + (random.nextInt( 3 ) == 0 ? random.nextInt( 3 ) : 0), abilities.size() );
+            abilitiesToApply = new BaseArtifactAbility[maxAbilities];
+            
+            for( int j = 0; j < maxAbilities; j++ )
+                abilitiesToApply[j] = abilities.get( j );
+            
+            appliedAbilities = tryApplyAbilities( artifactItem, random, abilitiesToApply );
+            
+            if( appliedAbilities.length > 0 )
+                break;
+        }
+        return appliedAbilities;
+    }
+    
+    /**
+     * Attempts to apply the given artifact abilities to the given artifact item stack.
      *
      * @param itemStack The item stack to apply the abilities to.
      * @param toApply   The ability instances to apply to the given item stack.
      * @return An array of abilities that were successfully applied. Can be empty!
      */
-    public static BaseArtifactAbility<?>[] tryApplyAbilities( ItemStack itemStack, RandomSource random, BaseArtifactAbility<?>... toApply ) {
+    @ApiStatus.Internal
+    private static BaseArtifactAbility<?>[] tryApplyAbilities( ItemStack itemStack, RandomSource random, BaseArtifactAbility<?>... toApply ) {
         if( toApply.length == 0 )
             return new BaseArtifactAbility[0];
         
@@ -460,11 +491,11 @@ public class ArtifactUtils {
      * Will not be null, but may be empty.
      */
     public static Collection<BaseArtifactAbility<?>> getAbilitiesWithTrigger( TriggerType type, ItemStack itemStack ) {
-        List<BaseArtifactAbility<?>> list = new ArrayList<>();
+        final List<BaseArtifactAbility<?>> list = new ArrayList<>();
         
         if( itemStack.isEmpty() ) return list;
         
-        Map<BaseArtifactAbility<?>, TriggerType> abilities = getAllAbilities( itemStack );
+        final Map<BaseArtifactAbility<?>, TriggerType> abilities = getAllAbilities( itemStack );
         
         if( abilities.isEmpty() ) return list;
         
@@ -479,7 +510,7 @@ public class ArtifactUtils {
      * @return True if the given item stack has the specified ability attached to it.
      */
     public static boolean hasAbility( ItemStack itemStack, BaseArtifactAbility<?> ability ) {
-        Map<BaseArtifactAbility<?>, TriggerType> abilities = getAllAbilities( itemStack );
+        final Map<BaseArtifactAbility<?>, TriggerType> abilities = getAllAbilities( itemStack );
         if( abilities.isEmpty() ) return false;
         return abilities.containsKey( ability );
     }
@@ -492,10 +523,10 @@ public class ArtifactUtils {
      */
     @SuppressWarnings( "ConstantConditions" )
     public static boolean hasAbilityOnCurio( Player player, BaseArtifactAbility<?> ability ) {
-        ICuriosItemHandler curioInventory = CuriosApi.getCuriosInventory( player ).orElse( null );
+        final ICuriosItemHandler curioInventory = CuriosApi.getCuriosInventory( player ).orElse( null );
         
         if( curioInventory != null ) {
-            List<SlotResult> slotResults = curioInventory.findCurios( CURIO_SLOTS );
+            final List<SlotResult> slotResults = curioInventory.findCurios( CURIO_SLOTS );
             
             for( SlotResult slotResult : slotResults ) {
                 if( hasAbility( slotResult.stack(), ability ) )
@@ -510,8 +541,8 @@ public class ArtifactUtils {
      * Returns an empty Map if no abilities are found.
      */
     public static Map<BaseArtifactAbility<?>, TriggerType> getAllAbilities( ItemStack itemStack ) {
-        Map<BaseArtifactAbility<?>, TriggerType> abilities = new HashMap<>();
-        CompoundTag stackTag = itemStack.getTag();
+        final Map<BaseArtifactAbility<?>, TriggerType> abilities = new HashMap<>();
+        final CompoundTag stackTag = itemStack.getTag();
         
         if( stackTag == null )
             return abilities;
@@ -519,11 +550,11 @@ public class ArtifactUtils {
         if( !stackTag.contains( TAG_MOD_DATA ) || !stackTag.getCompound( TAG_MOD_DATA ).contains( TAG_ABILITY ) )
             return abilities;
         
-        ListTag abilitiesTag = stackTag.getCompound( TAG_MOD_DATA ).getList( TAG_ABILITY, ListTag.TAG_COMPOUND );
+        final ListTag abilitiesTag = stackTag.getCompound( TAG_MOD_DATA ).getList( TAG_ABILITY, ListTag.TAG_COMPOUND );
         
         for( int i = 0; i < abilitiesTag.size(); i++ ) {
-            ResourceLocation abilityId = ResourceLocation.tryParse( abilitiesTag.getCompound( i ).getString( "AbilityId" ) );
-            TriggerType triggerType = TriggerType.getFromName( abilitiesTag.getCompound( i ).getString( "TriggerType" ) );
+            final ResourceLocation abilityId = ResourceLocation.tryParse( abilitiesTag.getCompound( i ).getString( "AbilityId" ) );
+            final TriggerType triggerType = TriggerType.getFromName( abilitiesTag.getCompound( i ).getString( "TriggerType" ) );
             
             if( MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().containsKey( abilityId ) ) {
                 abilities.put( MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValue( abilityId ), triggerType );
@@ -544,13 +575,13 @@ public class ArtifactUtils {
      * {@link com.sarinsa.magical_relics.common.item.DyableArtifactArmorItem#appendHoverText(ItemStack, Level, List, TooltipFlag)}
      */
     public static void addDescriptionsToTooltip( ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag ) {
-        Map<BaseArtifactAbility<?>, TriggerType> abilities = ArtifactUtils.getAllAbilities( itemStack );
+        final Map<BaseArtifactAbility<?>, TriggerType> abilities = ArtifactUtils.getAllAbilities( itemStack );
         
         if( !abilities.isEmpty() ) {
             components.add( Component.literal( " " ) );
             
             for( BaseArtifactAbility<?> ability : abilities.keySet() ) {
-                MutableComponent description = ability.getAbilityDescription( getTriggerFromStack( itemStack, ability ), itemStack, level, flag );
+                final MutableComponent description = ability.getAbilityDescription( getTriggerFromStack( itemStack, ability ), itemStack, level, flag );
                 
                 if( description != null ) {
                     if( ability.showCooldownSymbol() ) {
@@ -668,6 +699,7 @@ public class ArtifactUtils {
      * <br><br>
      * This gets called when {@link MainConfig.Abilities#unobtainableAbilities} changes.
      */
+    @ApiStatus.Internal
     @SuppressWarnings( "UnstableApiUsage" )
     public static void refreshObtainableAbilities( RegistrySetField<BaseArtifactAbility<?>> unobtainable ) {
         OBTAINABLE_ABILITIES.clear();
@@ -684,6 +716,7 @@ public class ArtifactUtils {
      * <br><br>
      * This gets called when {@link MainConfig.Abilities#artifactColors} changes.
      */
+    @ApiStatus.Internal
     public static void refreshColorList( PredicateStringListField stringListField ) {
         ARTIFACT_COLORS.clear();
         

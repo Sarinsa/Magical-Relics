@@ -7,12 +7,13 @@ import com.sarinsa.magical_relics.client.renderer.block.DisplayPedestalRenderer;
 import com.sarinsa.magical_relics.client.renderer.entity.SwungSwordRenderer;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.*;
+import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
@@ -63,9 +64,9 @@ public class ClientRegister {
     @SubscribeEvent
     public static void onItemColors( RegisterColorHandlersEvent.Item event ) {
         // All artifact items (excluding armor)
-        for( List<RegistryObject<? extends Item>> list : MRItems.ARTIFACTS_BY_CATEGORY.values() ) {
-            for( RegistryObject<? extends Item> regObj : list ) {
-                if( regObj.get() instanceof ArmorItem ) continue;
+        for( List<RegistryObject<? extends IArtifactItem>> list : MRItems.ARTIFACTS_BY_CATEGORY.values() ) {
+            for( RegistryObject<? extends IArtifactItem> regObj : list ) {
+                if( regObj.get().artifactAsItem() instanceof ArmorItem ) continue;
                 
                 event.register( ( itemStack, index ) -> {
                     if( index > 0 ) {
@@ -73,19 +74,19 @@ public class ClientRegister {
                         
                         if( stackTag == null ) return -1;
                         
-                        if( stackTag.contains( ArtifactUtils.TAG_MOD_DATA, Tag.TAG_COMPOUND ) && stackTag.getCompound( ArtifactUtils.TAG_MOD_DATA ).contains( ArtifactUtils.TAG_ITEM_COLOR ) ) {
+                        if( NBTHelper.containsCompound( stackTag, ArtifactUtils.TAG_MOD_DATA )
+                                && NBTHelper.containsNumber( stackTag.getCompound( ArtifactUtils.TAG_MOD_DATA ), ArtifactUtils.TAG_ITEM_COLOR ) ) {
                             return stackTag.getCompound( ArtifactUtils.TAG_MOD_DATA ).getInt( ArtifactUtils.TAG_ITEM_COLOR );
                         }
                     }
                     return -1;
-                }, regObj.get() );
+                }, regObj.get().artifactAsItem() );
             }
         }
         
         // Dyable leather items
         for( RegistryObject<Item> regObj : MRItems.ITEMS.getEntries() ) {
-            Item item = regObj.get();
-            
+            final Item item = regObj.get();
             if( item instanceof DyeableLeatherItem dyableItem ) {
                 event.register( ( itemStack, index ) -> index > 0 ? -1 : dyableItem.getColor( itemStack ), regObj.get() );
             }

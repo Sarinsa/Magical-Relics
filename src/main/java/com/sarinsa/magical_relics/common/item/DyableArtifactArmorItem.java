@@ -36,6 +36,11 @@ public class DyableArtifactArmorItem extends ArmorItem implements IArtifactItem,
     }
     
     @Override
+    public Item artifactAsItem() {
+        return asItem();
+    }
+    
+    @Override
     public void appendHoverText( ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag ) {
         super.appendHoverText( itemStack, level, components, flag );
         

@@ -51,9 +51,9 @@ public class MRJei implements IModPlugin {
         IIngredientHelper<ItemStack> ingredientHelper = registration.getIngredientManager().getIngredientHelper( VanillaTypes.ITEM_STACK );
         final List<IJeiAnvilRecipe> recipes = new ArrayList<>();
         
-        for( List<RegistryObject<? extends Item>> artifactSet : MRItems.ARTIFACTS_BY_CATEGORY.values() ) {
-            for( RegistryObject<? extends Item> regObj : artifactSet ) {
-                Item item = regObj.get();
+        for( List<RegistryObject<? extends IArtifactItem>> artifactSet : MRItems.ARTIFACTS_BY_CATEGORY.values() ) {
+            for( RegistryObject<? extends IArtifactItem> regObj : artifactSet ) {
+                Item item = regObj.get().artifactAsItem();
                 
                 if( item instanceof TieredItem tieredItem ) {
                     final List<ItemStack> inputs = new ArrayList<>();

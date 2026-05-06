@@ -12,10 +12,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -36,6 +33,11 @@ public class ArtifactArmorItem extends ArmorItem implements IArtifactItem {
     @Override
     public ArtifactCategory getCategory() {
         return type;
+    }
+    
+    @Override
+    public Item artifactAsItem() {
+        return asItem();
     }
     
     @Override
