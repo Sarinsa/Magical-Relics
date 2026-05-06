@@ -113,7 +113,7 @@ public class AdrenalineAbility extends BaseArtifactAbility<AdrenalineAbility.Adr
     
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
-        return new AdrenalineAbilityConfig( cfgManager, abilityId, Rarity.RARE, 300,
+        return new AdrenalineAbilityConfig( cfgManager, abilityId, Rarity.RARE, 600,
                 80, 120, 0, 1,
                 80, 120, 0, 1,
                 60, 140, 0, 2 );
