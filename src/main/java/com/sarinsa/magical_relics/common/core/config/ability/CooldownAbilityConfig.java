@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.core.config.ability;
 
+import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.LongField;
@@ -19,7 +20,7 @@ public class CooldownAbilityConfig extends AbilityConfig {
     
     public CooldownAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                   int cooldown ) {
-        this( cfgManager, abilityId, Rarity.UNCOMMON, cooldown );
+        this( cfgManager, abilityId, ArtifactUtils.RARITY_MUNDANE, cooldown );
     }
     
     public static class Cooldown extends AbstractConfigCategory<AbilityConfig> {
