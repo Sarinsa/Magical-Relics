@@ -29,3 +29,6 @@
     - BaseArtifactAbility#onUse now gets called with the used InteractionHand, when available from context.
     - Command "/magicalrelics ability apply {ability} {trigger}" now only suggests compatible trigger types.
     - Made the command "/magicalrelic artifact create" much more user-friendly.
+    - The Spike Trap block is now waterloggable.
+    - Added new buried dungeon variant.
+    - Added some Deadly World compat.

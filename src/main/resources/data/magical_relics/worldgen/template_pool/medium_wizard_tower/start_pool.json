@@ -73,10 +73,13 @@
       }
     },
     {
-      "weight": 1,
+      "weight": 2,
       "element": {
         "location": "magical_relics:medium_wizard_tower/medium_wizard_tower_3",
         "processors": [
+          {
+            "processor_type": "crust:feature_gen_activator"
+          },
           {
             "processor_type": "magical_relics:display_pedestal"
           },

@@ -4,6 +4,29 @@
 
   "elements": [
     {
+      "weight": 15,
+      "element": {
+        "location": "magical_relics:buried_dungeon/water_lava_combo",
+        "processors": [
+          {
+            "processor_type": "crust:feature_gen_activator"
+          },
+          {
+            "processor_type": "magical_relics:custom_aging",
+            "oldness": 0.2
+          },
+          {
+            "processor_type": "magical_relics:display_pedestal"
+          },
+          {
+            "processor_type": "magical_relics:no_waterlogging"
+          }
+        ],
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
       "weight": 30,
       "element": {
         "location": "magical_relics:buried_dungeon/quicksand_room",
