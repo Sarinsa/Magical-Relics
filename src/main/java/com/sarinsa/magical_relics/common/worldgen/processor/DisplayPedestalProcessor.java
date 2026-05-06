@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.worldgen.processor;
 
 import com.mojang.serialization.Codec;
 import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
+import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
@@ -30,18 +31,28 @@ import java.util.List;
  */
 public class DisplayPedestalProcessor extends StructureProcessor {
     
+    // TODO - Reimplement when config value providers have been moved from DW to Crust
+    /*
     public static final Codec<DisplayPedestalProcessor> CODEC = Codec.FLOAT.fieldOf( "legendary_chance" )
             .xmap( DisplayPedestalProcessor::new, ( processor ) -> processor.legendaryChance )
             .codec();
+     */
+    
+    public static final Codec<DisplayPedestalProcessor> CODEC = Codec.unit( DisplayPedestalProcessor::new );
+    
     
     private static final List<Item> WIZARD_FAVORITES = new ArrayList<>();
     
-    private final float legendaryChance;
+    // private final float legendaryChance;
     
     
+    /*
     public DisplayPedestalProcessor( float legendaryChance ) {
         this.legendaryChance = legendaryChance;
     }
+     */
+    
+    public DisplayPedestalProcessor() { }
     
     
     @Nullable
@@ -64,7 +75,7 @@ public class DisplayPedestalProcessor extends StructureProcessor {
             }
             else {
                 CompoundTag itemStackTag = new CompoundTag();
-                ItemStack itemStack = ArtifactUtils.generateRandomArtifact( level, random, random.nextFloat() < legendaryChance );
+                ItemStack itemStack = ArtifactUtils.generateRandomArtifact( level, random, Config.MAIN.ABILITIES.legendaryChance.rollChance( random ) );
                 itemStack.save( itemStackTag );
                 
                 tag.put( DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag );

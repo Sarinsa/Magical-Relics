@@ -4,6 +4,7 @@ import com.sarinsa.magical_relics.common.block.DisplayPedestalBlock;
 import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -41,38 +42,35 @@ public class DisplayPedestalBlockEntity extends BlockEntity {
     }
     
     @Override
-    protected void saveAdditional( CompoundTag compoundTag ) {
-        super.saveAdditional( compoundTag );
-        writeUpdateData( compoundTag );
-        compoundTag.remove( GENERATE_ARTIFACT_KEY );
+    protected void saveAdditional( CompoundTag saveTag ) {
+        super.saveAdditional( saveTag );
+        writeUpdateData( saveTag );
+        saveTag.remove( GENERATE_ARTIFACT_KEY );
         
         if( getBlockState().is( MRBlocks.DISPLAY_PEDESTAL.get() ) ) {
-            compoundTag.putBoolean( LOCKED_KEY, getBlockState().getValue( DisplayPedestalBlock.LOCKED ) );
+            saveTag.putBoolean( LOCKED_KEY, getBlockState().getValue( DisplayPedestalBlock.LOCKED ) );
         }
-        
-        compoundTag.putBoolean( WIZARDS_FAVORITE_KEY, generateWizFavorite );
+        saveTag.putBoolean( WIZARDS_FAVORITE_KEY, generateWizFavorite );
     }
     
     @SuppressWarnings( "ConstantConditions" )
     @Override
-    public void load( CompoundTag compoundTag ) {
-        super.load( compoundTag );
-        readArtifactItem( compoundTag );
+    public void load( CompoundTag saveTag ) {
+        super.load( saveTag );
+        readArtifactItem( saveTag );
         
-        if( compoundTag.contains( GENERATE_ARTIFACT_KEY, Tag.TAG_BYTE ) ) {
-            if( compoundTag.getBoolean( GENERATE_ARTIFACT_KEY ) && level != null && !level.isClientSide ) {
+        if( NBTHelper.containsNumber( saveTag, GENERATE_ARTIFACT_KEY ) ) {
+            if( saveTag.getBoolean( GENERATE_ARTIFACT_KEY ) && level != null && !level.isClientSide ) {
                 setArtifact( ArtifactUtils.generateRandomArtifact( level, level.random, false ) );
             }
         }
-        
         if( hasLevel() ) {
-            if( compoundTag.contains( LOCKED_KEY, Tag.TAG_BYTE ) ) {
-                level.setBlock( getBlockPos(), getBlockState().setValue( DisplayPedestalBlock.LOCKED, compoundTag.getBoolean( LOCKED_KEY ) ), Block.UPDATE_CLIENTS );
+            if( NBTHelper.containsNumber( saveTag, LOCKED_KEY ) ) {
+                level.setBlock( getBlockPos(), getBlockState().setValue( DisplayPedestalBlock.LOCKED, saveTag.getBoolean( LOCKED_KEY ) ), Block.UPDATE_CLIENTS );
             }
         }
-        
-        if( compoundTag.contains( WIZARDS_FAVORITE_KEY, Tag.TAG_BYTE ) ) {
-            generateWizFavorite = compoundTag.getBoolean( WIZARDS_FAVORITE_KEY );
+        if( NBTHelper.containsNumber( saveTag, WIZARDS_FAVORITE_KEY ) ) {
+            generateWizFavorite = saveTag.getBoolean( WIZARDS_FAVORITE_KEY );
         }
     }
     

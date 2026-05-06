@@ -9,8 +9,7 @@
         "location": "magical_relics:small_wizard_tower/branch",
         "processors": [
           {
-            "processor_type": "magical_relics:display_pedestal",
-            "legendary_chance": 0.05
+            "processor_type": "magical_relics:display_pedestal"
           },
           {
             "processor_type": "magical_relics:custom_aging",

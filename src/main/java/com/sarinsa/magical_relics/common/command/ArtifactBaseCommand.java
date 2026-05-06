@@ -5,6 +5,7 @@ import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.command.argument.ArtifactCategoryArgument;
 import com.sarinsa.magical_relics.common.command.argument.ArtifactVariantArgument;
+import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import com.sarinsa.magical_relics.common.util.TranslationUtils;
@@ -64,7 +65,7 @@ public class ArtifactBaseCommand {
         ArtifactUtils.applyMandatoryAttributeMods( artifact, category, random );
         
         if( randomAbilities ) {
-            final boolean legendary = random.nextFloat() < 0.1F;
+            final boolean legendary = Config.MAIN.ABILITIES.legendaryChance.rollChance( random );
             BaseArtifactAbility<?>[] appliedAbilities = ArtifactUtils.applyAbilities( artifact, random, legendary, ArtifactUtils.getAbilitiesForCategory( category ) );
             ArtifactUtils.setPrefixAndSuffix( artifact, random, appliedAbilities );
             

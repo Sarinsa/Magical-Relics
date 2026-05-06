@@ -7,6 +7,7 @@ import com.sarinsa.magical_relics.common.ability.base.AttributeBoost;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.core.config.MainConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
@@ -202,11 +203,10 @@ public class ArtifactUtils {
         return null;
     }
     
-    // TODO - Make the levels configurable maybe
-    
-    /** Enchants the given item stack with "legendary" level. */
+    /** Enchants the given item stack with the configured "legendary" level. */
     public static void enchantLegendary( ItemStack itemStack, RandomSource random ) {
-        EnchantmentHelper.enchantItem( random, itemStack, 20 + random.nextInt( 11 ), false );
+        final int level = Config.MAIN.ABILITIES.legendaryEnchantLevel.next( random );
+        EnchantmentHelper.enchantItem( random, itemStack, level, false );
     }
     
     /**
@@ -360,8 +360,8 @@ public class ArtifactUtils {
             Collections.shuffle( abilities );
             
             final int maxAbilities = legendary
-                    ? Math.min( 4, abilities.size() )
-                    : Math.min( 1 + (random.nextInt( 3 ) == 0 ? random.nextInt( 3 ) : 0), abilities.size() );
+                    ? Math.min( Config.MAIN.ABILITIES.legendaryMaxAbilities.next( random ), abilities.size() )
+                    : Math.min( Config.MAIN.ABILITIES.normalMaxAbilities.next( random ), abilities.size() );
             abilitiesToApply = new BaseArtifactAbility[maxAbilities];
             
             for( int j = 0; j < maxAbilities; j++ )

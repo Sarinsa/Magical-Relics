@@ -8,9 +8,7 @@ import com.sarinsa.magical_relics.common.worldgen.processor.DisplayPedestalProce
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.AbstractConfigFile;
 import fathertoast.crust.api.config.common.ConfigManager;
-import fathertoast.crust.api.config.common.field.BooleanField;
-import fathertoast.crust.api.config.common.field.InjectionWrapperField;
-import fathertoast.crust.api.config.common.field.PredicateStringListField;
+import fathertoast.crust.api.config.common.field.*;
 import fathertoast.crust.api.config.common.field.collection.RegistrySetField;
 import fathertoast.crust.api.config.common.field.collection.RegistryValueListField;
 import fathertoast.crust.api.config.common.file.TomlHelper;
@@ -46,6 +44,12 @@ public class MainConfig extends AbstractConfigFile {
     
     public static class Abilities extends AbstractConfigCategory<MainConfig> {
         
+        public final IntField.RandomRange normalMaxAbilities;
+        
+        public final DoubleField legendaryChance;
+        public final IntField.RandomRange legendaryEnchantLevel;
+        public final IntField.RandomRange legendaryMaxAbilities;
+        
         public final InjectionWrapperField<RegistrySetField<BaseArtifactAbility<?>>> unobtainableAbilities;
         
         public final InjectionWrapperField<PredicateStringListField> artifactColors;
@@ -54,6 +58,26 @@ public class MainConfig extends AbstractConfigFile {
         Abilities( MainConfig parent ) {
             super( parent, "abilities",
                     "Options to customize settings that apply to artifact abilities as a whole." );
+            
+            normalMaxAbilities = new IntField.RandomRange( SPEC, "normal_max_abilities", 1, 2, IntField.Range.POSITIVE,
+                    "The minimum and maximum (inclusive) number of abilities that can be applied to non-legendary artifacts." );
+            
+            SPEC.newLine();
+            
+            legendaryChance = SPEC.define( new DoubleField( "legendary_chance", 0.05, DoubleField.Range.PERCENT,
+                    "The chance in percentage for a randomly generated artifact to be of legendary quality." ) );
+            
+            SPEC.newLine();
+            
+            legendaryEnchantLevel = new IntField.RandomRange( SPEC, "legendary_enchant_level", 20, 30, IntField.Range.POSITIVE,
+                    "The minimum and maximum (inclusive) level that legendary artifacts will be enchanted with when they are created." );
+            
+            SPEC.newLine();
+            
+            legendaryMaxAbilities = new IntField.RandomRange( SPEC, "legendary_max_abilities", 3, 4, IntField.Range.POSITIVE,
+                    "The minimum and maximum (inclusive) number of abilities that can be applied to legendary artifacts." );
+            
+            SPEC.newLine();
             
             unobtainableAbilities = SPEC.define( new InjectionWrapperField<>( new RegistrySetField<>( "unobtainable_abilities",
                     createDefaultUnobtainableAbilities(),

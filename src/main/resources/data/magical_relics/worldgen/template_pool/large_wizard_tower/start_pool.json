@@ -9,8 +9,7 @@
         "location": "magical_relics:large_wizard_tower/start",
         "processors": [
           {
-            "processor_type": "magical_relics:display_pedestal",
-            "legendary_chance": 0.1
+            "processor_type": "magical_relics:display_pedestal"
           },
           {
             "processor_type": "magical_relics:custom_aging",
@@ -34,8 +33,7 @@
         "location": "magical_relics:large_wizard_tower/start_1",
         "processors": [
           {
-            "processor_type": "magical_relics:display_pedestal",
-            "legendary_chance": 0.1
+            "processor_type": "magical_relics:display_pedestal"
           },
           {
             "processor_type": "magical_relics:custom_aging",

@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.item;
 
+import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -20,7 +21,7 @@ public class RandomArtifactItem extends Item {
             if( !player.isCreative() )
                 player.setItemInHand( hand, ItemStack.EMPTY );
             
-            ItemStack randomArtifact = ArtifactUtils.generateRandomArtifact( level, level.random, level.random.nextFloat() < 0.1F );
+            ItemStack randomArtifact = ArtifactUtils.generateRandomArtifact( level, level.random, Config.MAIN.ABILITIES.legendaryChance.rollChance( level.random ) );
             player.getInventory().add( randomArtifact );
         }
         return InteractionResultHolder.success( player.getItemInHand( hand ) );

@@ -18,7 +18,6 @@ public class MRLootModProvider extends GlobalLootModifierProvider {
         add( "simple_dungeon_modifier", new AddArtifactModifier(
                 new LootItemCondition[] {},
                 0.5F,
-                0.15F,
                 2,
                 1,
                 ResourceLocation.withDefaultNamespace( "chests/simple_dungeon" )
@@ -27,7 +26,6 @@ public class MRLootModProvider extends GlobalLootModifierProvider {
         add( "desert_pyramid_modifier", new AddArtifactModifier(
                 new LootItemCondition[] {},
                 0.3F,
-                0.4F,
                 1,
                 1,
                 ResourceLocation.withDefaultNamespace( "chests/desert_pyramid" )
@@ -36,7 +34,6 @@ public class MRLootModProvider extends GlobalLootModifierProvider {
         add( "jungle_temple_modifier", new AddArtifactModifier(
                 new LootItemCondition[] {},
                 0.5F,
-                0.2F,
                 2,
                 2,
                 ResourceLocation.withDefaultNamespace( "chests/jungle_temple" )
@@ -45,7 +42,6 @@ public class MRLootModProvider extends GlobalLootModifierProvider {
         add( "wizard_tower_chest_modifier", new AddArtifactModifier(
                 new LootItemCondition[] {},
                 0.8F,
-                0.2F,
                 3,
                 1,
                 MagicalRelics.rl( "chests/wizard_tower_artifact" )
@@ -54,7 +50,6 @@ public class MRLootModProvider extends GlobalLootModifierProvider {
         add( "wizard_tower_dispenser_modifier", new AddArtifactModifier(
                 new LootItemCondition[] {},
                 0.7F,
-                0.15F,
                 2,
                 1,
                 MagicalRelics.rl( "chests/wizard_tower_dispenser_artifact" )
