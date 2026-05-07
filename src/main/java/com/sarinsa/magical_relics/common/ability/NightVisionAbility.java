@@ -95,7 +95,7 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
         return new NightVisionAbilityConfig( cfgManager, abilityId, Rarity.RARE,
-                2400, 2400, 310 );
+                2400, 2400, 1 );
     }
     
     @Override

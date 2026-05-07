@@ -105,7 +105,7 @@ public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.S
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
         return new SlowFallingAbilityConfig( cfgManager, abilityId, Rarity.RARE,
-                2400, 2400, 310,
+                2400, 2400, 1,
                 0, 2 );
     }
     

@@ -15,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -40,7 +39,6 @@ public class MagicalRelics {
     
     public MagicalRelics( FMLJavaModLoadingContext context ) {
         IEventBus modBus = context.getModEventBus();
-        ModContainer modContainer = context.getContainer();
         
         modBus.addListener( this::onCommonSetup );
         modBus.addListener( MRItems::onCreativeTabPopulate );

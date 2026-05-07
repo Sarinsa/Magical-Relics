@@ -98,7 +98,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
         return new WaterBreathingAbilityConfig( cfgManager, abilityId, Rarity.RARE,
-                1200, 1200, 310, 120, 50 );
+                1200, 1200, 1, 120, 50 );
     }
     
     @Override

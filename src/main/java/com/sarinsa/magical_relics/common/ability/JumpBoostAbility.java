@@ -112,7 +112,7 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
         return new JumpBoostAbilityConfig( cfgManager, abilityId, Rarity.RARE,
                 900,
-                900, 310, 125,
+                900, 1, 125,
                 0, 2 );
     }
     

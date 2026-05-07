@@ -79,6 +79,8 @@ public class GlowVisionAbility extends BaseArtifactAbility<GlowVisionAbility.Glo
                 radius = SPEC.define( new DoubleField( "radius", rad, DoubleField.Range.NON_NEGATIVE,
                         "The radius of the spherical area around the player in which mobs should start glowing." ) );
                 
+                SPEC.newLine();
+                
                 effectDuration = SPEC.define( new IntField( "effect_duration", effctDuration, IntField.Range.TOKEN_NEGATIVE,
                         "The duration of the glowing effect given to mobs.",
                         "Setting this to -1 effectively makes the mobs glow forever." ) );
