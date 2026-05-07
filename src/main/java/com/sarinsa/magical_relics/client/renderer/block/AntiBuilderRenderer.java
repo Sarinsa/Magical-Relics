@@ -26,9 +26,9 @@ public class AntiBuilderRenderer implements BlockEntityRenderer<AntiBuilderBlock
     @Override
     public void render( AntiBuilderBlockEntity antiBuilder, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int textureOverlay ) {
         if( Minecraft.getInstance().player != null && Minecraft.getInstance().player.isCreative() ) {
-            BakedModel model = Minecraft.getInstance().getModelManager().getModel( MODEL_ID );
-            BlockState state = antiBuilder.getBlockState();
-            Direction facing = state.getValue( AntiBuilderBlock.FACING );
+            final BakedModel model = Minecraft.getInstance().getModelManager().getModel( MODEL_ID );
+            final BlockState state = antiBuilder.getBlockState();
+            final Direction facing = state.getValue( AntiBuilderBlock.FACING );
             
             poseStack.translate( 0.5D, 0.5D, 0.5D );
             poseStack.mulPose( facing.getRotation() );

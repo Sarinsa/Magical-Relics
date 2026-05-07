@@ -18,7 +18,7 @@ public class CamoTrapRenderer<T extends BlockEntity & CamoBlockEntity> implement
     
     @Override
     public void render( T trap, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int textureOverlay ) {
-        BlockState camoState = trap.getCamoState();
+        final BlockState camoState = trap.getCamoState();
         
         if( camoState != null && Minecraft.getInstance().level != null ) {
             Minecraft.getInstance().getBlockRenderer().renderBatched(
