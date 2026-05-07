@@ -82,8 +82,7 @@ public class ClientRegister {
                 
                 event.register( ( itemStack, index ) -> {
                     if( index > 0 ) {
-                        CompoundTag stackTag = itemStack.getTag();
-                        
+                        final CompoundTag stackTag = itemStack.getTag();
                         if( stackTag == null ) return -1;
                         
                         if( NBTHelper.containsCompound( stackTag, ArtifactUtils.TAG_MOD_DATA )
