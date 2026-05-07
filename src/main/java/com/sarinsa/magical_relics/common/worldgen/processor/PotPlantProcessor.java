@@ -27,14 +27,14 @@ public class PotPlantProcessor extends StructureProcessor {
     
     public static final Codec<PotPlantProcessor> CODEC = Codec.unit( PotPlantProcessor::new );
     
-    private static final List<Block> pottedPlants = new ArrayList<>();
+    private static final List<Block> ALL_PLANTS = new ArrayList<>();
     
     
     public PotPlantProcessor() {
         // Grab all potted plants from the block registry and store them in a list for later.
         for( Block block : ForgeRegistries.BLOCKS.getValues() ) {
             if( block instanceof FlowerPotBlock )
-                pottedPlants.add( block );
+                ALL_PLANTS.add( block );
         }
     }
     
@@ -48,7 +48,7 @@ public class PotPlantProcessor extends StructureProcessor {
             Block flowerPot = null;
             
             try {
-                flowerPot = pottedPlants.get( random.nextInt( pottedPlants.size() ) );
+                flowerPot = ALL_PLANTS.get( random.nextInt( ALL_PLANTS.size() ) );
             }
             catch( Exception e ) {
                 MagicalRelics.LOG.error( "PotPlantProcessor failed to pick random flower pot block!" );

@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.worldgen.processor;
 
 import com.mojang.serialization.Codec;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
+import com.sarinsa.magical_relics.common.core.config.Config;
 import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -56,9 +57,9 @@ public class SpawnerTypeProcessor extends StructureProcessor {
     @Nullable
     @SuppressWarnings( "ConstantConditions" )
     public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos pos, BlockPos p_74142_, StructureTemplate.StructureBlockInfo info, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
-        RandomSource random = structureSettings.getRandom( blockInfo.pos() );
-        BlockState state = blockInfo.state();
-        BlockPos blockpos = blockInfo.pos();
+        final RandomSource random = structureSettings.getRandom( blockInfo.pos() );
+        final BlockState state = blockInfo.state();
+        final BlockPos blockpos = blockInfo.pos();
         
         boolean isSpawner = state.is( Blocks.SPAWNER );
         CompoundTag tag = blockInfo.nbt();
@@ -72,8 +73,8 @@ public class SpawnerTypeProcessor extends StructureProcessor {
             
             Optional<SpawnData.CustomSpawnRules> spawnRules = Optional.empty();
             
-            // TODO - Make config list of entity types that should ignore light value
-            if( entityType == EntityType.SLIME ) {
+            // noinspection UnstableApiUsage
+            if( Config.WORLDGEN.STRUCTURE_PROCESSORS.lightIgnoringEntities.contains( entityType ) ) {
                 spawnRules = Optional.of( new SpawnData.CustomSpawnRules( new InclusiveRange<>( 0, 15 ), new InclusiveRange<>( 0, 15 ) ) );
             }
             tag.put( "SpawnData", SpawnData.CODEC.encodeStart( NbtOps.INSTANCE, new SpawnData( spawnTag, spawnRules ) ).result().orElseThrow( ()

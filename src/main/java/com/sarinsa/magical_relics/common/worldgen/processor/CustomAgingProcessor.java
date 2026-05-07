@@ -36,7 +36,7 @@ public class CustomAgingProcessor extends StructureProcessor {
     private static final Map<Block, Block> REPLACEMENTS = new HashMap<>();
     
     
-    // Its chewsday innit?
+    // Its chewsday init?
     public static void init() {
         REPLACEMENTS.put( Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE );
         REPLACEMENTS.put( Blocks.COBBLESTONE_SLAB, Blocks.MOSSY_COBBLESTONE_SLAB );
@@ -62,9 +62,9 @@ public class CustomAgingProcessor extends StructureProcessor {
     @SuppressWarnings( { "unchecked", "rawtypes" } )
     @Nullable
     public StructureTemplate.StructureBlockInfo process( LevelReader level, BlockPos pos, BlockPos pos2, StructureTemplate.StructureBlockInfo p_74019_, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings structureSettings, @Nullable StructureTemplate template ) {
-        RandomSource random = structureSettings.getRandom( blockInfo.pos() );
-        BlockState state = blockInfo.state();
-        BlockPos blockpos = blockInfo.pos();
+        final RandomSource random = structureSettings.getRandom( blockInfo.pos() );
+        final BlockState state = blockInfo.state();
+        final BlockPos blockpos = blockInfo.pos();
         BlockState newState = null;
         
         if( state.getBlock() instanceof CamoBlock ) {

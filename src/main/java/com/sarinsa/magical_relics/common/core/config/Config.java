@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 public class Config {
     
     public static MainConfig MAIN;
+    public static WorldgenConfig WORLDGEN;
     
     
     public static void initialize() {
@@ -28,6 +29,8 @@ public class Config {
         
         MAIN = new MainConfig( cfgManager, "_main" );
         MAIN.SPEC.initialize();
+        WORLDGEN = new WorldgenConfig( cfgManager, "worldgen" );
+        WORLDGEN.SPEC.initialize();
         
         initAbilityConfigs( cfgManager );
     }
