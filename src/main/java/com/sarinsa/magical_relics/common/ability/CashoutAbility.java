@@ -6,7 +6,10 @@ import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.StringField;
+import fathertoast.crust.api.util.ResourceLocationUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -14,7 +17,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -26,9 +28,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 
-public class CashoutAbility extends BaseArtifactAbility<AbilityConfig> {
+public class CashoutAbility extends BaseArtifactAbility<CashoutAbility.CashoutAbilityConfig> {
     
-    private static final ResourceLocation LOOT_TABLE = MagicalRelics.rl( "misc/cashout_ability" );
+    private static final String LOOT_TABLE = MagicalRelics.rl( "misc/cashout_ability" ).toString();
     
     private static final String[] PREFIXES = {
             createPrefix( "cashout", "valuable" ),
@@ -58,31 +60,55 @@ public class CashoutAbility extends BaseArtifactAbility<AbilityConfig> {
     public CashoutAbility() { }
     
     
+    public static class CashoutAbilityConfig extends AbilityConfig {
+        
+        public Cashout CASHOUT;
+        
+        public CashoutAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
+                                     String lootTableId ) {
+            super( cfgManager, abilityId );
+            
+            CASHOUT = new Cashout( this, lootTableId );
+        }
+        
+        public static class Cashout extends AbstractConfigCategory<CashoutAbilityConfig> {
+            
+            public StringField lootTableId;
+            
+            public Cashout( CashoutAbilityConfig parent, String lootTable ) {
+                super( parent, "cashout", "Options for the loot dropped by this ability." );
+                
+                lootTableId = SPEC.define( new StringField( "loot_table_id", lootTable, ResourceLocationUtils::strictIsValid,
+                        "The ID of the loot table to drop when this ability converts its artifact into treasure." ) );
+            }
+        }
+    }
+    
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
-        return new AbilityConfig( cfgManager, abilityId, Rarity.UNCOMMON );
+        return new CashoutAbilityConfig( cfgManager, abilityId, LOOT_TABLE );
     }
     
     @Override
     public boolean onDropped( Level level, ItemEntity itemEntity, Player player ) {
         if( level instanceof ServerLevel serverLevel ) {
-            LootTable lootTable = serverLevel.getServer().getLootData().getLootTable( LOOT_TABLE );
+            final ResourceLocation id = ResourceLocation.parse( getConfig().CASHOUT.lootTableId.get() );
+            final LootTable lootTable = serverLevel.getServer().getLootData().getLootTable( id );
             
             if( lootTable == LootTable.EMPTY )
                 return false;
             
-            LootParams.Builder paramsBuilder = (new LootParams.Builder( serverLevel ))
+            final LootParams.Builder paramsBuilder = (new LootParams.Builder( serverLevel ))
                     .withParameter( LootContextParams.ORIGIN, itemEntity.position() )
                     .withOptionalParameter( LootContextParams.THIS_ENTITY, player );
             
-            ObjectArrayList<ItemStack> loot = lootTable.getRandomItems( paramsBuilder.create( LootContextParamSets.GIFT ) );
+            final ObjectArrayList<ItemStack> loot = lootTable.getRandomItems( paramsBuilder.create( LootContextParamSets.GIFT ) );
             
             for( ItemStack itemStack : loot ) {
                 Block.popResource( serverLevel, itemEntity.blockPosition(), itemStack );
             }
             return true;
         }
-        // Returning false for client since it gets left out
         return true;
     }
     
