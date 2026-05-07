@@ -356,7 +356,7 @@ public class ArtifactUtils {
         BaseArtifactAbility<?>[] appliedAbilities = {};
         // We might get unlucky RNG here and there,
         // so try 5 times before giving up
-        for( int i = 0; i < 5; i++ ) {
+        for( int tries = 0; tries < 5; tries++ ) {
             Collections.shuffle( abilities );
             
             final int maxAbilities = legendary
@@ -371,6 +371,11 @@ public class ArtifactUtils {
             
             if( appliedAbilities.length > 0 )
                 break;
+        }
+        if( appliedAbilities.length == 0 ) {
+            // Last attempt at adding at least one single ability
+            appliedAbilities = tryApplyAbilities( artifactItem, random, abilities.get( 0 ) );
+            return appliedAbilities;
         }
         return appliedAbilities;
     }

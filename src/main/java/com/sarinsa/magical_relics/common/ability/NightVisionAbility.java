@@ -7,7 +7,6 @@ import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
-import com.sarinsa.magical_relics.common.util.MarkedMobEffectInstance;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
@@ -88,7 +87,9 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
                 useDuration = SPEC.define( new IntField( "use_duration", useDur, IntField.Range.POSITIVE,
                         "The duration (in ticks) of the potion effect when this ability has a use trigger." ) );
                 passiveDuration = SPEC.define( new IntField( "passive_duration", passiveDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the potion effect when this ability has a passive trigger." ) );
+                        "The duration (in ticks) of the potion effect when this ability has a passive trigger.",
+                        "If you are affected by flashing lights, note that values below or equal to 200 (10 seconds) will likely make the Night Vision " +
+                                "effect flicker, as the effect is reapplied once every tick." ) );
             }
         }
     }
@@ -96,7 +97,7 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
         return new NightVisionAbilityConfig( cfgManager, abilityId, Rarity.RARE,
-                2400, 2400, MarkedMobEffectInstance.TICK_THRESHOLD );
+                2400, 2400, 218 );
     }
     
     @Override
