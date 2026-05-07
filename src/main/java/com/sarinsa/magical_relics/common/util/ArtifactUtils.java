@@ -187,7 +187,7 @@ public class ArtifactUtils {
      */
     @Nullable
     public static Component getItemDisplayName( ItemStack itemStack ) {
-        CompoundTag stackTag = itemStack.getOrCreateTag();
+        final CompoundTag stackTag = itemStack.getOrCreateTag();
         
         if( NBTHelper.containsCompound( stackTag, TAG_MOD_DATA ) ) {
             final CompoundTag modDataTag = stackTag.getCompound( TAG_MOD_DATA );
@@ -220,10 +220,10 @@ public class ArtifactUtils {
             final Registry<TrimPattern> patterns = level.registryAccess().registryOrThrow( Registries.TRIM_PATTERN );
             final Registry<TrimMaterial> materials = level.registryAccess().registryOrThrow( Registries.TRIM_MATERIAL );
             
-            Holder.Reference<TrimPattern> randomPattern = patterns.getRandom( random ).orElseThrow();
-            Holder.Reference<TrimMaterial> randomMaterial = materials.getRandom( random ).orElseThrow();
+            final Holder.Reference<TrimPattern> randomPattern = patterns.getRandom( random ).orElseThrow();
+            final Holder.Reference<TrimMaterial> randomMaterial = materials.getRandom( random ).orElseThrow();
             
-            ArmorTrim trim = new ArmorTrim( materials.wrapAsHolder( randomMaterial.get() ), patterns.wrapAsHolder( randomPattern.get() ) );
+            final ArmorTrim trim = new ArmorTrim( materials.wrapAsHolder( randomMaterial.get() ), patterns.wrapAsHolder( randomPattern.get() ) );
             
             ArmorTrim.setTrim( level.registryAccess(), itemStack, trim );
         }
@@ -239,14 +239,14 @@ public class ArtifactUtils {
      */
     @SuppressWarnings( "ConstantConditions" )
     public static void applyMandatoryAttributeMods( ItemStack itemStack, ArtifactCategory category, RandomSource random ) {
-        CompoundTag modDataTag = itemStack.getOrCreateTag().getCompound( TAG_MOD_DATA );
+        final CompoundTag modDataTag = itemStack.getOrCreateTag().getCompound( TAG_MOD_DATA );
         
         if( category == ArtifactCategory.SWORD || category == ArtifactCategory.DAGGER ) {
-            String attackDmgId = ForgeRegistries.ATTRIBUTES.getKey( Attributes.ATTACK_DAMAGE ).toString();
-            String attackSpeedId = ForgeRegistries.ATTRIBUTES.getKey( Attributes.ATTACK_SPEED ).toString();
+            final String attackDmgId = ForgeRegistries.ATTRIBUTES.getKey( Attributes.ATTACK_DAMAGE ).toString();
+            final String attackSpeedId = ForgeRegistries.ATTRIBUTES.getKey( Attributes.ATTACK_SPEED ).toString();
             
             // Attack damage
-            CompoundTag attackDmgMod = new CompoundTag();
+            final CompoundTag attackDmgMod = new CompoundTag();
             attackDmgMod.putString( "AttributeId", attackDmgId );
             attackDmgMod.put( "AttributeMod", new AttributeModifier(
                     Item.BASE_ATTACK_DAMAGE_UUID,
@@ -257,7 +257,7 @@ public class ArtifactUtils {
             attackDmgMod.putString( "ActiveType", AttributeBoost.ActiveType.HELD.getName() );
             
             // Attack speed
-            CompoundTag attackSpeed = new CompoundTag();
+            final CompoundTag attackSpeed = new CompoundTag();
             attackSpeed.putString( "AttributeId", attackSpeedId );
             attackSpeed.put( "AttributeMod", new AttributeModifier(
                     Item.BASE_ATTACK_SPEED_UUID,
@@ -328,8 +328,8 @@ public class ArtifactUtils {
      */
     public static void setPrefixAndSuffix( ItemStack artifact, RandomSource random, BaseArtifactAbility<?>... abilities ) {
         if( abilities.length > 0 ) {
-            CompoundTag tag = artifact.getOrCreateTag();
-            CompoundTag modDataTag = tag.getCompound( TAG_MOD_DATA );
+            final CompoundTag tag = artifact.getOrCreateTag();
+            final CompoundTag modDataTag = tag.getCompound( TAG_MOD_DATA );
             
             modDataTag.putString( TAG_PREFIX, abilities[0].getPrefixes()[random.nextInt( abilities[0].getPrefixes().length )] );
             
@@ -421,7 +421,8 @@ public class ArtifactUtils {
                 continue;
             }
             // Success, probably
-            CompoundTag abilityData = new CompoundTag();
+            final CompoundTag abilityData = new CompoundTag();
+            
             abilityData.putString( "AbilityId", abilityId.toString() );
             abilityData.putString( "TriggerType", randomTrigger.getName() );
             modData.getList( TAG_ABILITY, Tag.TAG_COMPOUND ).add( abilityData );
@@ -430,7 +431,7 @@ public class ArtifactUtils {
             occupiedTriggers.add( randomTrigger );
             
             // Save any ability attribute modifiers to NBT
-            AttributeBoost boost = nextToApply.getAttributeWithBoost();
+            final AttributeBoost boost = nextToApply.getAttributeWithBoost();
             
             if( boost != null ) {
                 // noinspection ConstantConditions
@@ -489,7 +490,7 @@ public class ArtifactUtils {
      */
     @Nullable
     public static TriggerType getTriggerFromStack( ItemStack artifact, BaseArtifactAbility<?> ability ) {
-        Map<BaseArtifactAbility<?>, TriggerType> allAbilities = getAllAbilities( artifact );
+        final Map<BaseArtifactAbility<?>, TriggerType> allAbilities = getAllAbilities( artifact );
         
         for( BaseArtifactAbility<?> abilityToCheck : allAbilities.keySet() ) {
             if( abilityToCheck == ability )
@@ -648,11 +649,11 @@ public class ArtifactUtils {
      * @return True if the given ability is on cooldown for the specified artifact item.
      */
     public static boolean isAbilityOnCooldown( ItemStack itemStack, BaseArtifactAbility<?> ability ) {
-        CompoundTag modData = NBTHelper.getOrCreateCompound( itemStack.getOrCreateTag(), TAG_MOD_DATA );
-        CompoundTag cooldownData = NBTHelper.getOrCreateCompound( modData, TAG_ABILITY_COOLDOWNS );
+        final CompoundTag modData = NBTHelper.getOrCreateCompound( itemStack.getOrCreateTag(), TAG_MOD_DATA );
+        final CompoundTag cooldownData = NBTHelper.getOrCreateCompound( modData, TAG_ABILITY_COOLDOWNS );
         
         // noinspection ConstantConditions
-        String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( ability ).toString();
+        final String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( ability ).toString();
         
         return cooldownData.contains( abilityId );
     }
@@ -685,7 +686,7 @@ public class ArtifactUtils {
             }
         }
         // Tick curio artifacts on the player
-        ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory( player ).orElse( null );
+        final ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory( player ).orElse( null );
         
         if( curiosInventory != null ) {
             for( SlotResult slotResult : curiosInventory.findCurios( CURIO_SLOTS ) ) {
