@@ -8,6 +8,7 @@ import net.minecraft.world.effect.MobEffectInstance;
  */
 public class MarkedMobEffectInstance extends MobEffectInstance {
     
+    /** @see com.sarinsa.magical_relics.client.ClientConfig.Misc#noEffectIconFlicker */
     public static final int TICK_THRESHOLD = 10;
     
     /**
