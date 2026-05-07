@@ -11,6 +11,7 @@
         - Block world interactions like before (building, placing etc.)
         - Plague intruders with negative potion effects.
         - Do nothing. Incredible!
+    - The Spike Trap block is now waterloggable.
     - The Core of Warding's effective area box is now rotated along with the structure it generates in.
     - Wizard tower structures are now all part of the same structure set.
     - Fixed large wizard tower structure using "top_layer_modification" generation step instead of "surface_structures".
@@ -29,6 +30,6 @@
     - BaseArtifactAbility#onUse now gets called with the used InteractionHand, when available from context.
     - Command "/magicalrelics ability apply {ability} {trigger}" now only suggests compatible trigger types.
     - Made the command "/magicalrelic artifact create" much more user-friendly.
-    - The Spike Trap block is now waterloggable.
+    - Added client-side config option for disabling the "flicker" visual effect on potion effect icons in the GUI for potion effects with only 1 tick of duration.
     - Added new buried dungeon variant.
     - Added some Deadly World compat.
