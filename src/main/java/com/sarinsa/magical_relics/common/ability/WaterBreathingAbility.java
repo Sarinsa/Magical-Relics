@@ -7,6 +7,7 @@ import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.MarkedMobEffectInstance;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
@@ -98,7 +99,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
         return new WaterBreathingAbilityConfig( cfgManager, abilityId, Rarity.RARE,
-                1200, 1200, 1, 120, 50 );
+                1200, 1200, MarkedMobEffectInstance.TICK_THRESHOLD, 120, 50 );
     }
     
     @Override

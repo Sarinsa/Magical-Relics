@@ -7,6 +7,7 @@ import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.MarkedMobEffectInstance;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
@@ -112,7 +113,7 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
         return new JumpBoostAbilityConfig( cfgManager, abilityId, Rarity.RARE,
                 900,
-                900, 1, 125,
+                900, MarkedMobEffectInstance.TICK_THRESHOLD, 125,
                 0, 2 );
     }
     

@@ -7,6 +7,7 @@ import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import com.sarinsa.magical_relics.common.util.MarkedMobEffectInstance;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.IntField;
@@ -95,7 +96,7 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
         return new NightVisionAbilityConfig( cfgManager, abilityId, Rarity.RARE,
-                2400, 2400, 1 );
+                2400, 2400, MarkedMobEffectInstance.TICK_THRESHOLD );
     }
     
     @Override

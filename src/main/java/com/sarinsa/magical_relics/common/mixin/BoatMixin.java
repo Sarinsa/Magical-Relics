@@ -27,6 +27,6 @@ public abstract class BoatMixin extends Entity implements IForgeBoat {
             )
     )
     public void inject_controlBoat( CallbackInfo ci ) {
-        ClientMixinHooks.inject_controlBoat( (Boat) (Object) this, ci );
+        ClientMixinHooks.inject_controlBoat( (Boat) (Object) this );
     }
 }

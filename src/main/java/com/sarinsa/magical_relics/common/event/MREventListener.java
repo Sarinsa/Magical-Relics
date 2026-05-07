@@ -16,7 +16,6 @@ import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
@@ -127,11 +126,6 @@ public class MREventListener {
                 }
             }
         }
-    }
-    
-    @SubscribeEvent
-    public void onPlayerEquipmentChange( LivingEquipmentChangeEvent event ) {
-    
     }
     
     @SubscribeEvent
