@@ -9,6 +9,7 @@ import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.*;
 import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -33,10 +34,21 @@ import java.util.List;
 @Mod.EventBusSubscriber( value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD, modid = MagicalRelics.MODID )
 public class ClientRegister {
     
+    // Client config
+    public static ClientConfig CLIENT_CONFIG;
+    
     
     @SubscribeEvent
     public static void onClientSetup( FMLClientSetupEvent event ) {
         MinecraftForge.EVENT_BUS.register( new ClientEventListener() );
+        
+        // Init client config
+        event.enqueueWork( () -> {
+            CLIENT_CONFIG = new ClientConfig(
+                    ConfigManager.getRequired( MagicalRelics.MODID ), "client_settings" );
+            CLIENT_CONFIG.SPEC.initialize();
+        } );
+        
         
         // TODO - put this in a model file instead
         ItemBlockRenderTypes.setRenderLayer( MRBlocks.THICK_TRIPWIRE.get(), RenderType.tripwire() );
