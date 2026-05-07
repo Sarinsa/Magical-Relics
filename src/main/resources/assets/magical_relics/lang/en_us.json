@@ -115,6 +115,7 @@
   "magical_relics.command.ability.apply.error.trigger_occupied": "Specified trigger type is already occupied on this item and can't stack",
   "magical_relics.command.ability.apply.error.invalid_item": "Held item must be an artifact item",
   "magical_relics.command.ability.apply.error.unsupported_trigger": "Trigger is not supported by this ability",
+  "magical_relics.command.ability.apply.error.generic": "An error occurred trying to apply the ability, see log for details",
   "magical_relics.command.ability.remove.message": "Successfully removed ability %1$s from held artifact",
   "magical_relics.command.ability.remove.error": "Unsuccessfully or only partially removed ability %1$s from artifact",
   "magical_relics.command.failure.player_only": "This command must be executed by a player",

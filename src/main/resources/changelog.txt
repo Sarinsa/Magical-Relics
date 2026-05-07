@@ -34,5 +34,6 @@
     - Made the command "/magicalrelic artifact create" much more user-friendly.
     - Added client-side config option for disabling the "flicker" visual effect on potion effect icons in the GUI
       for potion effects with only 1 tick of duration.
+    - Tweaked some artifact item variant textures.
     - Added new buried dungeon variant.
     - Added some Deadly World compat.

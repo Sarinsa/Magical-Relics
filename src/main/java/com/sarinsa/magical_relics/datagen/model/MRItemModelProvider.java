@@ -29,7 +29,7 @@ public class MRItemModelProvider extends ItemModelProvider {
     
     private void artifactSet( ArtifactCategory category, List<RegistryObject<? extends IArtifactItem>> artifactSet ) {
         for( RegistryObject<? extends IArtifactItem> regObj : artifactSet ) {
-            // TODO - skip armor for now. We don't have variants, just trims
+            /// Skip armor for now. We don't have variants, just trims
             if( regObj.get().artifactAsItem() instanceof ArmorItem ) continue;
             
             ResourceLocation itemId = regObj.getId();
