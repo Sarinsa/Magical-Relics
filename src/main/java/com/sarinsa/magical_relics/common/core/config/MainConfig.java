@@ -90,15 +90,15 @@ public class MainConfig extends AbstractConfigFile {
                     ( value ) -> TomlHelper.parseHexInt( value ) != null && value.length() <= 6,
                     "A list of colors to pick from when picking a random color for a randomly generated artifact item.",
                     "Note that armor artifact items are handled a bit differently and instead picks a random armor trim.",
-                    "If this list is empty, a completely randomly generated color is picked (which can be ugly at times).",
-                    "Adding multiple entries with the same color to this list is allowed, and effectively increases the odds of said color being picked.",
-                    "The alpha value is ignored." ),
+                    "If this list is empty, a completely randomly generated color is picked.",
+                    "Adding multiple entries with the same color to this list is allowed, and effectively increases the odds of said color being picked." ),
                     ArtifactUtils::refreshColorList )
             );
         }
         
         private RegistrySet<BaseArtifactAbility<?>> createDefaultUnobtainableAbilities() {
             return new RegistrySet.Builder<>( MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get() )
+                    .add( MRArtifactAbilities.RESURRECT )
                     .build();
         }
         
