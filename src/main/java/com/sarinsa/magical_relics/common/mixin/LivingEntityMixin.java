@@ -27,7 +27,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
                     target = "Lnet/minecraft/world/entity/LivingEntity;blockPosition()Lnet/minecraft/core/BlockPos;" ),
             cancellable = true
     )
-    public void injectOnClimbable( CallbackInfoReturnable<Boolean> cir ) {
-        CommonMixinHooks.injectOnClimbable( cir, (LivingEntity) (Object) this );
+    public void inject_onClimbable( CallbackInfoReturnable<Boolean> cir ) {
+        CommonMixinHooks.inject_onClimbable( cir, (LivingEntity) (Object) this );
     }
 }

@@ -1,6 +1,6 @@
 package com.sarinsa.magical_relics.common.mixin;
 
-import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
+import com.sarinsa.magical_relics.common.util.mixin_hooks.CommonMixinHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -23,13 +23,9 @@ public class StructureTemplateMixin {
             method = "placeInWorld(Lnet/minecraft/world/level/ServerLevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;Lnet/minecraft/util/RandomSource;I)Z",
             at = @At( value = "HEAD" )
     )
-    private void preventAutoWaterlogging( ServerLevelAccessor serverLevelAccessor, BlockPos blockPos1,
-                                          BlockPos blockPos2, StructurePlaceSettings structurePlaceSettings,
-                                          RandomSource random, int flag, CallbackInfoReturnable<Boolean> cir ) {
-        
-        if( structurePlaceSettings.getProcessors().stream().anyMatch( processor ->
-                ((StructureProcessorAccessor) processor).callGetType() == MRStructureProcessors.NO_WATERLOGGING.get() ) ) {
-            structurePlaceSettings.setKeepLiquids( false );
-        }
+    private void inject_placeInWorld( ServerLevelAccessor serverLevelAccessor, BlockPos blockPos1,
+                                      BlockPos blockPos2, StructurePlaceSettings structurePlaceSettings,
+                                      RandomSource random, int flag, CallbackInfoReturnable<Boolean> cir ) {
+        CommonMixinHooks.inject_placeInWorld( structurePlaceSettings );
     }
 }
