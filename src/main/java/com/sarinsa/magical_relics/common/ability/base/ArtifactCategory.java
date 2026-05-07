@@ -7,7 +7,7 @@ import java.util.List;
 
 public enum ArtifactCategory {
     TRINKET( "trinket", 21 ),
-    SWORD( "sword", 15 ),
+    SWORD( "sword", 14 ),
     DAGGER( "dagger", 15 ),
     STAFF( "staff", 15 ),
     WAND( "wand", 15 ),
