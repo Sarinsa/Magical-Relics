@@ -18,8 +18,15 @@ public abstract class BoatMixin extends Entity implements IForgeBoat {
         super( type, level );
     }
     
-    @Inject( method = "controlBoat", at = @At( value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/Boat;setPaddleState(ZZ)V", ordinal = 0 ) )
-    public void onControlBoat( CallbackInfo ci ) {
-        ClientMixinHooks.onControlBoat( (Boat) (Object) this, ci );
+    @Inject(
+            method = "controlBoat",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/vehicle/Boat;setPaddleState(ZZ)V",
+                    ordinal = 0
+            )
+    )
+    public void inject_controlBoat( CallbackInfo ci ) {
+        ClientMixinHooks.inject_controlBoat( (Boat) (Object) this, ci );
     }
 }
