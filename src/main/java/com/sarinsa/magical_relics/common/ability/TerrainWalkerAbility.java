@@ -71,7 +71,7 @@ public class TerrainWalkerAbility extends BaseArtifactAbility<TerrainWalkerAbili
             public TerrainWalker( TerrainWalkerAbilityConfig parent, double minBoost, double maxBoost ) {
                 super( parent, "terrain_walker", "Options for the step-boost this ability provides" );
                 
-                boost = new DoubleField.RandomRange( SPEC, "boost", minBoost, maxBoost, DoubleField.Range.PERCENT,
+                boost = new DoubleField.RandomRange( SPEC, "boost", minBoost, maxBoost, DoubleField.Range.NON_NEGATIVE,
                         "The minimum and maximum (inclusive) percentage multiplier of boosted step-height this ability can apply to an artifact item, .",
                         "When this ability is applied to an artifact, a random modifier between minimum and maximum is picked." );
             }
@@ -80,7 +80,7 @@ public class TerrainWalkerAbility extends BaseArtifactAbility<TerrainWalkerAbili
     
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
-        return new TerrainWalkerAbilityConfig( cfgManager, abilityId, 1, 1 );
+        return new TerrainWalkerAbilityConfig( cfgManager, abilityId, 0.2, 1.6 );
     }
     
     @Override
