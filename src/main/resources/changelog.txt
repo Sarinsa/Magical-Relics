@@ -29,6 +29,7 @@
     - Spider ability now actually drains durability from its artifact while the player is climbing.
     - Fixed Adrenaline ability using the wrong trigger type.
     - Added Resurrect ability to the default list of unobtainable abilities.
+    - Mass Excavate ability now has a configurable set of blocks it can mine
     - Loot table dropped by Cashout ability is now configurable.
     - Fixed artifact items in the off-hand not triggering their abilities with the "held" trigger type.
     - Removed ability trigger type "RIGHT_CLICK_BLOCK" as trigger type "USE" now includes all right-click interactions (use, click block, click entity).

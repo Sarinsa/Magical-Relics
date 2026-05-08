@@ -85,7 +85,7 @@ public class ReachBoostAbility extends BaseArtifactAbility<ReachBoostAbility.Rea
     
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
-        return new ReachBoostAbilityConfig( cfgManager, abilityId, 0.1, 0.4 );
+        return new ReachBoostAbilityConfig( cfgManager, abilityId, 0.1, 0.7 );
     }
     
     @Override
