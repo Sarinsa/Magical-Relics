@@ -4,10 +4,7 @@ import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.tag.MRItemTags;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -36,6 +33,12 @@ public class MRRecipeProvider extends RecipeProvider {
         manaessenceRecipe( MRItems.DIAMOND_MANAESSENCE, Items.DIAMOND, consumer );
         
         simpleShapeless( RecipeCategory.MISC, Items.STRING, 2, MRBlocks.THICK_TRIPWIRE.get(), consumer );
+        
+        ShapedRecipeBuilder.shaped( RecipeCategory.MISC, MRBlocks.THICK_TRIPWIRE.get(), 1 )
+                .pattern( "SSS" )
+                .define( 'S', Tags.Items.STRING )
+                .unlockedBy( "has_string", has( Tags.Items.STRING ) )
+                .save( consumer );
         
         ShapelessRecipeBuilder.shapeless( RecipeCategory.MISC, MRItems.RAW_MANAESSENCE.get(), 4 )
                 .requires( MRItemTags.ARTIFACTS )
@@ -66,6 +69,19 @@ public class MRRecipeProvider extends RecipeProvider {
         ShapelessRecipeBuilder.shapeless( category, result, amount )
                 .requires( ingredient )
                 .unlockedBy( "has_" + Objects.requireNonNull( ForgeRegistries.ITEMS.getKey( ingredient.asItem() ) ).getPath(), has( ingredient ) )
+                .save( consumer );
+    }
+    
+    private void simpleShapeless( RecipeCategory category, Item result, int amount, ItemLike ingredient, int ingredientCount, Consumer<FinishedRecipe> consumer ) {
+        if( ingredientCount < 1 || ingredientCount > 9 )
+            throw new IllegalArgumentException( "Ingredient count must be between 1 and 9 inclusive." );
+        
+        ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapeless( category, result, amount );
+        
+        for( int i = 0; i < ingredientCount; i++ ) {
+            builder.requires( ingredient.asItem() );
+        }
+        builder.unlockedBy( "has_" + Objects.requireNonNull( ForgeRegistries.ITEMS.getKey( ingredient.asItem() ) ).getPath(), has( ingredient ) )
                 .save( consumer );
     }
 }
