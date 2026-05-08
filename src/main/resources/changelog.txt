@@ -12,6 +12,7 @@
         - Plague intruders with negative potion effects.
         - Do nothing. Incredible!
     - The Spike Trap block is now waterloggable.
+    - Thick tripwire block now has its own unique model.
     - The Core of Warding's effective area box is now rotated along with the structure it generates in.
     - Wizard tower structures are now all part of the same structure set.
     - Fixed large wizard tower structure using "top_layer_modification" generation step instead of "surface_structures".
