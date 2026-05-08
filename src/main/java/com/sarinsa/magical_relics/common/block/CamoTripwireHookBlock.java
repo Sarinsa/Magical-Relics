@@ -32,6 +32,7 @@ public class CamoTripwireHookBlock extends TripWireHookBlock implements EntityBl
     public CamoTripwireHookBlock() {
         super( BlockBehaviour.Properties.of()
                 .sound( SoundType.STONE )
+                .requiresCorrectToolForDrops()
                 .strength( 1.5F, 1.0F ) );
         registerDefaultState( stateDefinition.any().setValue( FACING, Direction.NORTH ).setValue( POWERED, false ).setValue( ATTACHED, false ) );
     }
