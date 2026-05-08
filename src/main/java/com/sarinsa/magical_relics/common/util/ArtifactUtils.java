@@ -153,7 +153,7 @@ public class ArtifactUtils {
         // Gather all obtainable abilities and filter out ones that are not applicable to the artifact category.
         final List<BaseArtifactAbility<?>> applicableAbilities = getAbilitiesForCategory( artifactItem.getCategory() );
         // Try and apply the abilities to the item stack.
-        final BaseArtifactAbility<?>[] appliedAbilities = applyAbilities( artifactStack, random, legendary, applicableAbilities );
+        final List<BaseArtifactAbility<?>> appliedAbilities = applyAbilities( artifactStack, random, legendary, applicableAbilities );
         
         // Try to apply enchantments if this is a legendary artifact
         if( legendary ) {
@@ -326,17 +326,20 @@ public class ArtifactUtils {
      * Picks a random ability prefix and suffix from the two first provided abilities.
      * If only one ability is provided, both the prefix and suffix will be picked from that ability.
      */
-    public static void setPrefixAndSuffix( ItemStack artifact, RandomSource random, BaseArtifactAbility<?>... abilities ) {
-        if( abilities.length > 0 ) {
+    public static void setPrefixAndSuffix( ItemStack artifact, RandomSource random, List<BaseArtifactAbility<?>> abilities ) {
+        if( !abilities.isEmpty() ) {
             final CompoundTag tag = artifact.getOrCreateTag();
             final CompoundTag modDataTag = tag.getCompound( TAG_MOD_DATA );
+            final BaseArtifactAbility<?> firstAbility = abilities.get( 0 );
             
-            modDataTag.putString( TAG_PREFIX, abilities[0].getPrefixes()[random.nextInt( abilities[0].getPrefixes().length )] );
+            modDataTag.putString( TAG_PREFIX, firstAbility.getPrefixes()[random.nextInt( firstAbility.getPrefixes().length )] );
             
-            if( abilities.length > 1 )
-                modDataTag.putString( TAG_SUFFIX, abilities[1].getSuffixes()[random.nextInt( abilities[1].getSuffixes().length )] );
+            if( abilities.size() > 1 ) {
+                final BaseArtifactAbility<?> secondAbility = abilities.get( 1 );
+                modDataTag.putString( TAG_SUFFIX, secondAbility.getSuffixes()[random.nextInt( secondAbility.getSuffixes().length )] );
+            }
             else
-                modDataTag.putString( TAG_SUFFIX, abilities[0].getSuffixes()[random.nextInt( abilities[0].getSuffixes().length )] );
+                modDataTag.putString( TAG_SUFFIX, firstAbility.getSuffixes()[random.nextInt( firstAbility.getSuffixes().length )] );
         }
     }
     
@@ -349,9 +352,9 @@ public class ArtifactUtils {
      *                     be at most 4, or the size of the provided ability list.
      *                     When this is false, the number of abilities to apply will range from 1-3, with some RNG involved.
      * @param abilities    The abilities to try and apply to the given item stack.
-     * @return An array of abilities that were successfully applied. Can be empty!
+     * @return A list of abilities that were successfully applied. Can be empty!
      */
-    public static BaseArtifactAbility<?>[] applyAbilities( ItemStack artifactItem, RandomSource random, boolean legendary, List<BaseArtifactAbility<?>> abilities ) {
+    public static List<BaseArtifactAbility<?>> applyAbilities( ItemStack artifactItem, RandomSource random, boolean legendary, List<BaseArtifactAbility<?>> abilities ) {
         BaseArtifactAbility<?>[] abilitiesToApply;
         BaseArtifactAbility<?>[] appliedAbilities = {};
         // We might get unlucky RNG here and there,
@@ -375,9 +378,8 @@ public class ArtifactUtils {
         if( appliedAbilities.length == 0 ) {
             // Last attempt at adding at least one single ability
             appliedAbilities = tryApplyAbilities( artifactItem, random, abilities.get( 0 ) );
-            return appliedAbilities;
         }
-        return appliedAbilities;
+        return Arrays.asList( appliedAbilities );
     }
     
     /**

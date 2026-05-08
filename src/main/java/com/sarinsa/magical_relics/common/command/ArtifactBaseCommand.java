@@ -66,7 +66,7 @@ public class ArtifactBaseCommand {
         
         if( randomAbilities ) {
             final boolean legendary = Config.MAIN.ABILITIES.legendaryChance.rollChance( random );
-            BaseArtifactAbility<?>[] appliedAbilities = ArtifactUtils.applyAbilities( artifact, random, legendary, ArtifactUtils.getAbilitiesForCategory( category ) );
+            List<BaseArtifactAbility<?>> appliedAbilities = ArtifactUtils.applyAbilities( artifact, random, legendary, ArtifactUtils.getAbilitiesForCategory( category ) );
             ArtifactUtils.setPrefixAndSuffix( artifact, random, appliedAbilities );
             
             if( legendary ) {
