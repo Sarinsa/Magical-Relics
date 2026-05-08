@@ -1,0 +1,8 @@
+{
+  "parent": "magical_relics:block/template/base_default_tripwire",
+  "render_type": "minecraft:tripwire",
+  "textures": {
+    "particle": "magical_relics:block/thick_tripwire",
+    "texture": "magical_relics:block/thick_tripwire"
+  }
+}

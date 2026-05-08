@@ -1,20 +1,20 @@
 {
   "values": [
+    "magical_relics:diamond_helmet_artifact",
     "magical_relics:diamond_leggings_artifact",
     "magical_relics:diamond_boots_artifact",
     "magical_relics:diamond_chestplate_artifact",
-    "magical_relics:diamond_helmet_artifact",
+    "magical_relics:iron_helmet_artifact",
     "magical_relics:iron_leggings_artifact",
     "magical_relics:iron_boots_artifact",
     "magical_relics:iron_chestplate_artifact",
-    "magical_relics:iron_helmet_artifact",
+    "magical_relics:gold_helmet_artifact",
     "magical_relics:gold_leggings_artifact",
     "magical_relics:gold_boots_artifact",
     "magical_relics:gold_chestplate_artifact",
-    "magical_relics:gold_helmet_artifact",
+    "magical_relics:leather_helmet_artifact",
     "magical_relics:leather_leggings_artifact",
     "magical_relics:leather_boots_artifact",
-    "magical_relics:leather_chestplate_artifact",
-    "magical_relics:leather_helmet_artifact"
+    "magical_relics:leather_chestplate_artifact"
   ]
 }

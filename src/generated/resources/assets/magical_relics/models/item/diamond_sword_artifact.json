@@ -84,12 +84,6 @@
       "predicate": {
         "magical_relics:sword_variant": 14.0
       }
-    },
-    {
-      "model": "magical_relics:item/sword15",
-      "predicate": {
-        "magical_relics:sword_variant": 15.0
-      }
     }
   ],
   "textures": {

@@ -8,10 +8,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.ModelProvider;
+import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.block.TripWireBlock;
+import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -28,6 +27,8 @@ public class MRBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         MRBlocks.WALL_PRESSURE_PLATES.forEach( this::wallPressurePlate );
         MRBlocks.CRUMBLING_BLOCKS.forEach( this::crumblingBlock );
+        
+        tripwire( MRBlocks.THICK_TRIPWIRE );
     }
     
     /**
@@ -74,6 +75,45 @@ public class MRBlockStateProvider extends BlockStateProvider {
             }
         } );
         simpleBlockItem( regObj.get(), baseModel );
+    }
+    
+    private void tripwire( RegistryObject<TripWireBlock> regObj ) {
+        final TripWireBlock block = regObj.get();
+        final ResourceLocation texture = blockTexture( block );
+        final String blockName = name( regObj.get() );
+        
+        final ModelFile defaultModel = models()
+                .withExistingParent( blockName + "_default", resLoc( "block/template/base_default_tripwire" ) )
+                .texture( "texture", texture )
+                .texture( "particle", texture )
+                .renderType( "tripwire" );
+        
+        final ModelFile normalModel = models()
+                .withExistingParent( blockName, resLoc( "block/template/base_tripwire" ) )
+                .texture( "texture", texture )
+                .texture( "particle", texture )
+                .renderType( "tripwire" );
+        
+        final ModelFile attachedModel = models()
+                .withExistingParent( blockName + "_attached", resLoc( "block/template/base_tripwire_attached" ) )
+                .texture( "texture", texture )
+                .texture( "particle", texture )
+                .renderType( "tripwire" );
+        
+        final MultiPartBlockStateBuilder builder = getMultipartBuilder( block );
+        final MultiPartBlockStateBuilder.PartBuilder defaultPart = builder.part().modelFile( defaultModel ).addModel();
+        
+        CrossCollisionBlock.PROPERTY_BY_DIRECTION.forEach( ( dir, property ) -> {
+            if( dir.getAxis().isHorizontal() ) {
+                builder.part().modelFile( normalModel ).rotationY( (((int) dir.toYRot()) + 180) % 360 ).uvLock( false ).addModel()
+                        .condition( property, true ).condition( TripWireBlock.ATTACHED, false );
+                
+                builder.part().modelFile( attachedModel ).rotationY( (((int) dir.toYRot()) + 180) % 360 ).uvLock( false ).addModel()
+                        .condition( property, true ).condition( TripWireBlock.ATTACHED, true );
+                
+                defaultPart.condition( property, false );
+            }
+        } );
     }
     
     protected String name( Block block ) {

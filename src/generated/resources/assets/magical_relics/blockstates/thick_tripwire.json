@@ -1,0 +1,93 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "magical_relics:block/thick_tripwire_default"
+      },
+      "when": {
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "magical_relics:block/thick_tripwire",
+        "y": 90
+      },
+      "when": {
+        "attached": "false",
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "magical_relics:block/thick_tripwire_attached",
+        "y": 90
+      },
+      "when": {
+        "attached": "true",
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "magical_relics:block/thick_tripwire"
+      },
+      "when": {
+        "attached": "false",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "magical_relics:block/thick_tripwire_attached"
+      },
+      "when": {
+        "attached": "true",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "magical_relics:block/thick_tripwire",
+        "y": 180
+      },
+      "when": {
+        "attached": "false",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "magical_relics:block/thick_tripwire_attached",
+        "y": 180
+      },
+      "when": {
+        "attached": "true",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "magical_relics:block/thick_tripwire",
+        "y": 270
+      },
+      "when": {
+        "attached": "false",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "magical_relics:block/thick_tripwire_attached",
+        "y": 270
+      },
+      "when": {
+        "attached": "true",
+        "west": "true"
+      }
+    }
+  ]
+}

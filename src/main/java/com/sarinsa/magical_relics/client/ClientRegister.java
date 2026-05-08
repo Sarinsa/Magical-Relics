@@ -6,13 +6,14 @@ import com.sarinsa.magical_relics.client.renderer.block.CamoTrapRenderer;
 import com.sarinsa.magical_relics.client.renderer.block.DisplayPedestalRenderer;
 import com.sarinsa.magical_relics.client.renderer.entity.SwungSwordRenderer;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
-import com.sarinsa.magical_relics.common.core.registry.*;
+import com.sarinsa.magical_relics.common.core.registry.MRBlockEntities;
+import com.sarinsa.magical_relics.common.core.registry.MREntities;
+import com.sarinsa.magical_relics.common.core.registry.MRItems;
+import com.sarinsa.magical_relics.common.core.registry.MRParticles;
 import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.lib.NBTHelper;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ArmorItem;
@@ -35,23 +36,19 @@ import java.util.List;
 public class ClientRegister {
     
     // Client config
-    public static ClientConfig CLIENT_CONFIG;
+    public static ClientConfig CLIENT_CONFIG = null;
     
     
     @SubscribeEvent
     public static void onClientSetup( FMLClientSetupEvent event ) {
         MinecraftForge.EVENT_BUS.register( new ClientEventListener() );
         
-        // Init client config
+        // Enqueue client config init
         event.enqueueWork( () -> {
             CLIENT_CONFIG = new ClientConfig(
                     ConfigManager.getRequired( MagicalRelics.MODID ), "client_settings" );
             CLIENT_CONFIG.SPEC.initialize();
         } );
-        
-        
-        // TODO - put this in a model file instead
-        ItemBlockRenderTypes.setRenderLayer( MRBlocks.THICK_TRIPWIRE.get(), RenderType.tripwire() );
         
         ItemModelProps.register();
     }
