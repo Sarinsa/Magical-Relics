@@ -114,7 +114,10 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
             
             if( lightningBolt != null ) {
                 lightningBolt.moveTo( Vec3.atBottomCenterOf( attackedMob.blockPosition() ) );
-                lightningBolt.setCause( player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                
+                if( !level.isClientSide )
+                    lightningBolt.setCause( (ServerPlayer) player );
+                
                 level.addFreshEntity( lightningBolt );
                 assignSummoner( lightningBolt, player );
             }
