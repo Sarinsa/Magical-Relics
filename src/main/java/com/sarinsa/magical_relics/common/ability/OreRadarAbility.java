@@ -44,7 +44,7 @@ public class OreRadarAbility extends BaseArtifactAbility<OreRadarAbility.OreRada
     
     public static class OreRadarAbilityConfig extends AbilityConfig {
         
-        public OreRadar ORE_RADAR;
+        public final OreRadar ORE_RADAR;
         
         public OreRadarAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
                                       int radius ) {
@@ -55,7 +55,7 @@ public class OreRadarAbility extends BaseArtifactAbility<OreRadarAbility.OreRada
         
         public static class OreRadar extends AbstractConfigCategory<OreRadarAbilityConfig> {
             
-            public InjectionWrapperField<IntField> radius;
+            public final InjectionWrapperField<IntField> radius;
             
             public OreRadar( OreRadarAbilityConfig parent, int rad ) {
                 super( parent, "ore_radar", "Options for the in-world visual this ability grants." );

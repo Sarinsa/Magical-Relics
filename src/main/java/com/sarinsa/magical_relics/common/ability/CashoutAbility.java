@@ -62,7 +62,7 @@ public class CashoutAbility extends BaseArtifactAbility<CashoutAbility.CashoutAb
     
     public static class CashoutAbilityConfig extends AbilityConfig {
         
-        public Cashout CASHOUT;
+        public final Cashout CASHOUT;
         
         public CashoutAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                      String lootTableId ) {
@@ -73,7 +73,7 @@ public class CashoutAbility extends BaseArtifactAbility<CashoutAbility.CashoutAb
         
         public static class Cashout extends AbstractConfigCategory<CashoutAbilityConfig> {
             
-            public StringField lootTableId;
+            public final StringField lootTableId;
             
             public Cashout( CashoutAbilityConfig parent, String lootTable ) {
                 super( parent, "cashout", "Options for the loot dropped by this ability." );

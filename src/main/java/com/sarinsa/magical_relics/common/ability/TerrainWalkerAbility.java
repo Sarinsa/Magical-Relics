@@ -55,7 +55,7 @@ public class TerrainWalkerAbility extends BaseArtifactAbility<TerrainWalkerAbili
     
     public static class TerrainWalkerAbilityConfig extends AbilityConfig {
         
-        public TerrainWalker TERRAIN_WALKER;
+        public final TerrainWalker TERRAIN_WALKER;
         
         public TerrainWalkerAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                            double minBoost, double maxBoost ) {
@@ -66,7 +66,7 @@ public class TerrainWalkerAbility extends BaseArtifactAbility<TerrainWalkerAbili
         
         public static class TerrainWalker extends AbstractConfigCategory<TerrainWalkerAbilityConfig> {
             
-            public DoubleField.RandomRange boost;
+            public final DoubleField.RandomRange boost;
             
             public TerrainWalker( TerrainWalkerAbilityConfig parent, double minBoost, double maxBoost ) {
                 super( parent, "terrain_walker", "Options for the step-boost this ability provides" );

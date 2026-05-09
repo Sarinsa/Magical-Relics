@@ -65,7 +65,7 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
     
     public static class RepairOthersAbilityConfig extends CooldownAbilityConfig {
         
-        public RepairOthers REPAIR_OTHERS;
+        public final RepairOthers REPAIR_OTHERS;
         
         public RepairOthersAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                           int cooldown ) {
@@ -76,8 +76,8 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
         
         public static class RepairOthers extends AbstractConfigCategory<RepairOthersAbilityConfig> {
             
-            public IntField durRestoredOnUse;
-            public IntField durRestoredPassively;
+            public final IntField durRestoredOnUse;
+            public final IntField durRestoredPassively;
             
             public RepairOthers( RepairOthersAbilityConfig parent ) {
                 super( parent, "repair_others", "Options for this ability repairing other items in the inventory." );

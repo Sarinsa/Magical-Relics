@@ -69,7 +69,7 @@ public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.S
     
     public static class SlowFallingAbilityConfig extends CooldownAbilityConfig {
         
-        public SlowFalling SLOW_FALLING;
+        public final SlowFalling SLOW_FALLING;
         
         public SlowFallingAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
                                          int cooldown, int useDuration, int passiveDuration,
@@ -81,10 +81,10 @@ public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.S
         
         public static class SlowFalling extends AbstractConfigCategory<SlowFallingAbilityConfig> {
             
-            public IntField useDuration;
-            public IntField passiveDuration;
+            public final IntField useDuration;
+            public final IntField passiveDuration;
             
-            public IntField.RandomRange amplifier;
+            public final IntField.RandomRange amplifier;
             
             public SlowFalling( SlowFallingAbilityConfig parent, int useDur, int passiveDur,
                                 int minAmplifier, int maxAmplifier ) {

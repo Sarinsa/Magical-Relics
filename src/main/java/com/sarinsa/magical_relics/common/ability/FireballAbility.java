@@ -56,7 +56,7 @@ public class FireballAbility extends BaseArtifactAbility<FireballAbility.Firebal
     
     public static class FireballAbilityConfig extends CooldownAbilityConfig {
         
-        public Fireball FIREBALL;
+        public final Fireball FIREBALL;
         
         public FireballAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                       int cooldown, int explosionPower ) {
@@ -67,7 +67,7 @@ public class FireballAbility extends BaseArtifactAbility<FireballAbility.Firebal
         
         public static class Fireball extends AbstractConfigCategory<FireballAbilityConfig> {
             
-            public IntField explosionPower;
+            public final IntField explosionPower;
             
             public Fireball( FireballAbilityConfig parent, int explosionPwer ) {
                 super( parent, "fireball", "Options for the fireball summoned by this ability." );

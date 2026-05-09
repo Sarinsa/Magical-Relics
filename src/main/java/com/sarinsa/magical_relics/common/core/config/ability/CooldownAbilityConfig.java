@@ -9,7 +9,7 @@ import net.minecraft.world.item.Rarity;
 
 public class CooldownAbilityConfig extends AbilityConfig {
     
-    public Cooldown COOLDOWN;
+    public final Cooldown COOLDOWN;
     
     public CooldownAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                   Rarity rarity, int cooldown ) {
@@ -25,7 +25,7 @@ public class CooldownAbilityConfig extends AbilityConfig {
     
     public static class Cooldown extends AbstractConfigCategory<AbilityConfig> {
         
-        public LongField cooldown;
+        public final LongField cooldown;
         
         public Cooldown( AbilityConfig parent, int cooldwn ) {
             super( parent, "cooldown", "Settings for this ability's cooldown." );

@@ -67,7 +67,7 @@ public class SpeedBoostAbility extends BaseArtifactAbility<SpeedBoostAbility.Spe
     
     public static class SpeedBoostAbilityConfig extends AbilityConfig {
         
-        public SpeedBoost SPEED_BOOST;
+        public final SpeedBoost SPEED_BOOST;
         
         public SpeedBoostAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                         double minBoost, double maxBoost ) {
@@ -78,7 +78,7 @@ public class SpeedBoostAbility extends BaseArtifactAbility<SpeedBoostAbility.Spe
         
         public static class SpeedBoost extends AbstractConfigCategory<SpeedBoostAbilityConfig> {
             
-            public DoubleField.RandomRange boost;
+            public final DoubleField.RandomRange boost;
             
             public SpeedBoost( SpeedBoostAbilityConfig parent, double minBoost, double maxBoost ) {
                 super( parent, "speed", "Options for the speed boost this ability provides" );

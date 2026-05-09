@@ -60,7 +60,7 @@ public class HealthBoostAbility extends BaseArtifactAbility<HealthBoostAbility.H
     
     public static class HealthBoostAbilityConfig extends AbilityConfig {
         
-        public HealthBoost HEALTH_BOOST;
+        public final HealthBoost HEALTH_BOOST;
         
         public HealthBoostAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                          int minBoost, int maxBoost ) {
@@ -71,7 +71,7 @@ public class HealthBoostAbility extends BaseArtifactAbility<HealthBoostAbility.H
         
         public static class HealthBoost extends AbstractConfigCategory<HealthBoostAbilityConfig> {
             
-            public IntField.RandomRange boost;
+            public final IntField.RandomRange boost;
             
             public HealthBoost( HealthBoostAbilityConfig parent, int minBoost, int maxBoost ) {
                 super( parent, "health_boost", "Options for the health boost this ability provides" );

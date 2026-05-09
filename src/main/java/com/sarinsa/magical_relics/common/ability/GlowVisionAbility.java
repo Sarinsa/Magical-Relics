@@ -58,7 +58,7 @@ public class GlowVisionAbility extends BaseArtifactAbility<GlowVisionAbility.Glo
     
     public static class GlowVisionAbilityConfig extends CooldownAbilityConfig {
         
-        public GlowVision GLOW_VISION;
+        public final GlowVision GLOW_VISION;
         
         public GlowVisionAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                         int cooldown, double radius, int effectDuration ) {
@@ -69,9 +69,9 @@ public class GlowVisionAbility extends BaseArtifactAbility<GlowVisionAbility.Glo
         
         public static class GlowVision extends AbstractConfigCategory<GlowVisionAbilityConfig> {
             
-            public DoubleField radius;
+            public final DoubleField radius;
             
-            public IntField effectDuration;
+            public final IntField effectDuration;
             
             public GlowVision( GlowVisionAbilityConfig parent, double rad, int effctDuration ) {
                 super( parent, "glow_vision", "Options for the glow effect this ability applies to mobs." );

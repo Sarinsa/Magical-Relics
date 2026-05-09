@@ -56,7 +56,7 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
     
     public static class ObscurityAbilityConfig extends CooldownAbilityConfig {
         
-        public Obscurity OBSCURITY;
+        public final Obscurity OBSCURITY;
         
         public ObscurityAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
                                        int cooldown,
@@ -72,15 +72,15 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
         
         public static class Obscurity extends AbstractConfigCategory<ObscurityAbilityConfig> {
             
-            public IntField invisUseDuration;
-            public IntField invisDamagedDuration;
-            public IntField invisAttackDuration;
+            public final IntField invisUseDuration;
+            public final IntField invisDamagedDuration;
+            public final IntField invisAttackDuration;
             
-            public IntField cloudyUseDuration;
-            public IntField cloudyDamagedDuration;
-            public IntField cloudyAttackDuration;
+            public final IntField cloudyUseDuration;
+            public final IntField cloudyDamagedDuration;
+            public final IntField cloudyAttackDuration;
             
-            public DoubleField resetAggroRange;
+            public final DoubleField resetAggroRange;
             
             public Obscurity( ObscurityAbilityConfig parent, int invisUseDur, int invisDamagedDur, int invisAttackDur,
                               int cloudyUseDur, int cloudyDamagedDur, int cloudyAttackDur,

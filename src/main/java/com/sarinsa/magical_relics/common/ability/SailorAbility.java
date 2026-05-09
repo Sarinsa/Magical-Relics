@@ -43,7 +43,7 @@ public class SailorAbility extends BaseArtifactAbility<SailorAbility.SailorAbili
     
     public static class SailorAbilityConfig extends AbilityConfig {
         
-        public Sailor SAILOR;
+        public final Sailor SAILOR;
         
         public SailorAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                     double speedMult ) {
@@ -54,7 +54,7 @@ public class SailorAbility extends BaseArtifactAbility<SailorAbility.SailorAbili
         
         public static class Sailor extends AbstractConfigCategory<SailorAbilityConfig> {
             
-            public InjectionWrapperField<DoubleField> speedMultiplier;
+            public final InjectionWrapperField<DoubleField> speedMultiplier;
             
             public Sailor( SailorAbilityConfig parent, double speedMult ) {
                 super( parent, "sailor", "Options for how this ability affects boat travel." );

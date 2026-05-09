@@ -29,15 +29,15 @@
     - Spider ability now actually drains durability from its artifact while the player is climbing.
     - Fixed Adrenaline ability using the wrong trigger type.
     - Added Resurrect ability to the default list of unobtainable abilities.
-    - Mass Excavate ability now has a configurable set of blocks it can mine
+    - Mass Excavate ability now has a configurable set of blocks it can mine.
+    - Added new config options for Foodie ability.
     - Loot table dropped by Cashout ability is now configurable.
     - Fixed artifact items in the off-hand not triggering their abilities with the "held" trigger type.
     - Removed ability trigger type "RIGHT_CLICK_BLOCK" as trigger type "USE" now includes all right-click interactions (use, click block, click entity).
     - BaseArtifactAbility#onUse now gets called with the used InteractionHand, when available from context.
     - Command "/magicalrelics ability apply {ability} {trigger}" now only suggests compatible trigger types.
     - Made the command "/magicalrelic artifact create" much more user-friendly.
-    - Added client-side config option for disabling the "flicker" visual effect on potion effect icons in the GUI
-      for potion effects with only 1 tick of duration.
+    - Added client-side config option for disabling the "flicker" visual effect on potion effect icons in the GUI for potion effects with only 1 tick of duration.
     - Tweaked some artifact item variant textures.
     - Added new buried dungeon variant.
     - Added some Deadly World compat.

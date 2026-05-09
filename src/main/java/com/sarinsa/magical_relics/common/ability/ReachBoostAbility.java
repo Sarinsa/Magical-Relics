@@ -60,7 +60,7 @@ public class ReachBoostAbility extends BaseArtifactAbility<ReachBoostAbility.Rea
     
     public static class ReachBoostAbilityConfig extends AbilityConfig {
         
-        public ReachBoost REACH_BOOST;
+        public final ReachBoost REACH_BOOST;
         
         public ReachBoostAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                         double minBoost, double maxBoost ) {
@@ -71,7 +71,7 @@ public class ReachBoostAbility extends BaseArtifactAbility<ReachBoostAbility.Rea
         
         public static class ReachBoost extends AbstractConfigCategory<ReachBoostAbilityConfig> {
             
-            public DoubleField.RandomRange boost;
+            public final DoubleField.RandomRange boost;
             
             public ReachBoost( ReachBoostAbilityConfig parent, double minBoost, double maxBoost ) {
                 super( parent, "reach_boost", "Options for the reach boost this ability provides" );

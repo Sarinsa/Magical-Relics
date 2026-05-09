@@ -67,7 +67,7 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
     
     public static class LightningAbilityConfig extends CooldownAbilityConfig {
         
-        public Lightning LIGHTNING;
+        public final Lightning LIGHTNING;
         
         public LightningAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                        int cooldown, boolean immuneSummoner ) {
@@ -78,7 +78,7 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
         
         public static class Lightning extends AbstractConfigCategory<LightningAbilityConfig> {
             
-            public BooleanField immuneSummoner;
+            public final BooleanField immuneSummoner;
             
             public Lightning( LightningAbilityConfig parent, boolean immuneSummnr ) {
                 super( parent, "lightning", "Options for the lightning summoned by this ability." );

@@ -57,7 +57,7 @@ public class StunAbility extends BaseArtifactAbility<StunAbility.StunAbilityConf
     
     public static class StunAbilityConfig extends CooldownAbilityConfig {
         
-        public Stun STUN;
+        public final Stun STUN;
         
         public StunAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, int cooldown,
                                   int useDuration, int dropDuration, double radius ) {
@@ -68,10 +68,10 @@ public class StunAbility extends BaseArtifactAbility<StunAbility.StunAbilityConf
         
         public static class Stun extends AbstractConfigCategory<StunAbilityConfig> {
             
-            public IntField attackDuration;
-            public IntField dropDuration;
+            public final IntField attackDuration;
+            public final IntField dropDuration;
             
-            public DoubleField radius;
+            public final DoubleField radius;
             
             public Stun( StunAbilityConfig parent, int useDur, int dropDur, double rad ) {
                 super( parent, "stun", "Options for the slowness effect this ability inflicts on nearby mobs." );

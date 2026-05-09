@@ -67,7 +67,7 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
     
     public static class NightVisionAbilityConfig extends CooldownAbilityConfig {
         
-        public NightVision NIGHT_VISION;
+        public final NightVision NIGHT_VISION;
         
         public NightVisionAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
                                          int cooldown, int useDuration, int passiveDuration ) {
@@ -78,8 +78,8 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
         
         public static class NightVision extends AbstractConfigCategory<NightVisionAbilityConfig> {
             
-            public IntField useDuration;
-            public IntField passiveDuration;
+            public final IntField useDuration;
+            public final IntField passiveDuration;
             
             public NightVision( NightVisionAbilityConfig parent, int useDur, int passiveDur ) {
                 super( parent, "night_vision", "Options for the night vision effect applied by this ability." );

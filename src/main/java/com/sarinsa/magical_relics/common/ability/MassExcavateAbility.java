@@ -66,7 +66,7 @@ public class MassExcavateAbility extends BaseArtifactAbility<MassExcavateAbility
     
     public static class MassExcavateAbilityConfig extends CooldownAbilityConfig {
         
-        public MassExcavate MASS_EXCAVATE;
+        public final MassExcavate MASS_EXCAVATE;
         
         public MassExcavateAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                           Rarity rarity, int cooldown ) {
@@ -77,7 +77,7 @@ public class MassExcavateAbility extends BaseArtifactAbility<MassExcavateAbility
         
         public static class MassExcavate extends AbstractConfigCategory<MassExcavateAbilityConfig> {
             
-            public RegistrySetField<Block> effectiveOn;
+            public final RegistrySetField<Block> effectiveOn;
             
             public MassExcavate( MassExcavateAbilityConfig parent ) {
                 super( parent, "mass_excavate", "Options for which blocks can be efficiently mined by this ability." );

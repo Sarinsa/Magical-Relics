@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class AbilityConfig extends AbstractConfigFile {
     
-    public General GENERAL;
+    public final General GENERAL;
     
     public AbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity ) {
         super( cfgManager, getCfgName( Objects.requireNonNull( abilityId ) ),
@@ -31,7 +31,7 @@ public class AbilityConfig extends AbstractConfigFile {
     
     public static class General extends AbstractConfigCategory<AbilityConfig> {
         
-        public EnumField<Rarity> rarity;
+        public final EnumField<Rarity> rarity;
         
         public General( AbilityConfig parent, Rarity rarty ) {
             super( parent, "general", "General settings for this ability." );

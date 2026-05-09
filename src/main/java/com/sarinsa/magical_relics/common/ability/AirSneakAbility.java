@@ -64,7 +64,7 @@ public class AirSneakAbility extends BaseArtifactAbility<AirSneakAbility.AirSnea
     
     public static class AirSneakAbilityConfig extends AbilityConfig {
         
-        public AirSneakAbilityConfig.AirSneak AIR_SNEAK;
+        public final AirSneakAbilityConfig.AirSneak AIR_SNEAK;
         
         public AirSneakAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                       boolean allowReplacing ) {
@@ -75,7 +75,7 @@ public class AirSneakAbility extends BaseArtifactAbility<AirSneakAbility.AirSnea
         
         public static class AirSneak extends AbstractConfigCategory<AirSneakAbilityConfig> {
             
-            public BooleanField allowReplacing;
+            public final BooleanField allowReplacing;
             
             public AirSneak( AirSneakAbilityConfig parent, boolean allowReplcng ) {
                 super( parent, "air_sneak", "Options for the general behavior of this ability." );

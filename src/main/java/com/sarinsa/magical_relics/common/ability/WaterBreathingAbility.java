@@ -64,7 +64,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     
     public static class WaterBreathingAbilityConfig extends CooldownAbilityConfig {
         
-        public WaterBreathing WATER_BREATHING;
+        public final WaterBreathing WATER_BREATHING;
         
         public WaterBreathingAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
                                             int cooldown,
@@ -76,10 +76,10 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
         
         public static class WaterBreathing extends AbstractConfigCategory<WaterBreathingAbilityConfig> {
             
-            public IntField useDuration;
-            public IntField passiveDuration;
-            public IntField attackDuration;
-            public IntField drownDuration;
+            public final IntField useDuration;
+            public final IntField passiveDuration;
+            public final IntField attackDuration;
+            public final IntField drownDuration;
             
             public WaterBreathing( WaterBreathingAbilityConfig parent, int useDur, int passiveDur, int attackDur, int drownDur ) {
                 super( parent, "water_breathing", "Options for the water breathing effect applied by this ability." );

@@ -57,7 +57,7 @@ public class SelfRepairAbility extends BaseArtifactAbility<SelfRepairAbility.Rep
     
     public static class RepairSelfAbilityConfig extends CooldownAbilityConfig {
         
-        public RepairSelf REPAIR_SELF;
+        public final RepairSelf REPAIR_SELF;
         
         public RepairSelfAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                         int cooldown, int durabilityRestored ) {
@@ -68,7 +68,7 @@ public class SelfRepairAbility extends BaseArtifactAbility<SelfRepairAbility.Rep
         
         public static class RepairSelf extends AbstractConfigCategory<RepairSelfAbilityConfig> {
             
-            public IntField durabilityRestored;
+            public final IntField durabilityRestored;
             
             public RepairSelf( RepairSelfAbilityConfig parent, int durRestored ) {
                 super( parent, "repair_self", "Options for this ability repairing its host artifact." );

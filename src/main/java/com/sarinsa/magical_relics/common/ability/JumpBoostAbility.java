@@ -71,7 +71,7 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
     
     public static class JumpBoostAbilityConfig extends CooldownAbilityConfig {
         
-        public JumpBoost JUMP_BOOST;
+        public final JumpBoost JUMP_BOOST;
         
         public JumpBoostAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
                                        int cooldown,
@@ -84,11 +84,11 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
         
         public static class JumpBoost extends AbstractConfigCategory<JumpBoostAbilityConfig> {
             
-            public IntField useDuration;
-            public IntField passiveDuration;
-            public IntField attackDuration;
+            public final IntField useDuration;
+            public final IntField passiveDuration;
+            public final IntField attackDuration;
             
-            public IntField.RandomRange amplifier;
+            public final IntField.RandomRange amplifier;
             
             public JumpBoost( JumpBoostAbilityConfig parent, int useDur, int passiveDur, int attackDur,
                               int minAmplifier, int maxAmplifier ) {

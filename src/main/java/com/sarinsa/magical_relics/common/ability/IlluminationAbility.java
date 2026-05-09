@@ -71,7 +71,7 @@ public class IlluminationAbility extends BaseArtifactAbility<IlluminationAbility
     
     public static class IlluminationAbilityConfig extends AbilityConfig {
         
-        public Illumination ILLUMINATION;
+        public final Illumination ILLUMINATION;
         
         public IlluminationAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId,
                                           int lightThreshold, LightMode lightMode ) {
@@ -82,8 +82,8 @@ public class IlluminationAbility extends BaseArtifactAbility<IlluminationAbility
         
         public static class Illumination extends AbstractConfigCategory<IlluminationAbilityConfig> {
             
-            public IntField lightThreshold;
-            public EnumField<LightMode> lightCheckMode;
+            public final IntField lightThreshold;
+            public final EnumField<LightMode> lightCheckMode;
             
             public Illumination( IlluminationAbilityConfig parent, int lightThreshld, LightMode lightMode ) {
                 super( parent, "illumination", "Options for the light sources this ability places in the world." );

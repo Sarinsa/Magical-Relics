@@ -59,7 +59,7 @@ public class AdrenalineAbility extends BaseArtifactAbility<AdrenalineAbility.Adr
     
     public static class AdrenalineAbilityConfig extends CooldownAbilityConfig {
         
-        public Adrenaline ADRENALINE;
+        public final Adrenaline ADRENALINE;
         
         public AdrenalineAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, Rarity rarity,
                                         int cooldown,
@@ -75,14 +75,14 @@ public class AdrenalineAbility extends BaseArtifactAbility<AdrenalineAbility.Adr
         
         public static class Adrenaline extends AbstractConfigCategory<AdrenalineAbilityConfig> {
             
-            public IntField.RandomRange moveSpeedDuration;
-            public IntField.RandomRange moveSpeedAmplifier;
+            public final IntField.RandomRange moveSpeedDuration;
+            public final IntField.RandomRange moveSpeedAmplifier;
             
-            public IntField.RandomRange damageBoostDuration;
-            public IntField.RandomRange damageBoostAmplifier;
+            public final IntField.RandomRange damageBoostDuration;
+            public final IntField.RandomRange damageBoostAmplifier;
             
-            public IntField.RandomRange damageResDuration;
-            public IntField.RandomRange damageResAmplifier;
+            public final IntField.RandomRange damageResDuration;
+            public final IntField.RandomRange damageResAmplifier;
             
             public Adrenaline( AdrenalineAbilityConfig parent, int minMoveSpeedDur, int maxMoveSpeedDur, int minMoveSpeedAmp, int maxMoveSpeedAmp,
                                int minDamageBoostDur, int maxDamageBoostDur, int minDamageBoostAmp, int maxDamageBoostAmp,

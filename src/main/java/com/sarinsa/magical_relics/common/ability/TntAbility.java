@@ -60,7 +60,7 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
     
     public static class TntAbilityConfig extends CooldownAbilityConfig {
         
-        public Tnt TNT;
+        public final Tnt TNT;
         
         public TntAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, int cooldown, int fuse ) {
             super( cfgManager, abilityId, cooldown );
@@ -70,7 +70,7 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
         
         public static class Tnt extends AbstractConfigCategory<TntAbilityConfig> {
             
-            public IntField fuse;
+            public final IntField fuse;
             
             public Tnt( TntAbilityConfig parent, int fuze ) {
                 super( parent, "tnt", "Options for the step-boost this ability provides" );
