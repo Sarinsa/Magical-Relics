@@ -32,6 +32,7 @@ public class MRBlockEntities {
     
     
     private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register( String name, Supplier<BlockEntityType.Builder<T>> builder ) {
+        // noinspection ConstantConditions
         return BLOCK_ENTITIES.register( name, () -> builder.get().build( null ) );
     }
 }

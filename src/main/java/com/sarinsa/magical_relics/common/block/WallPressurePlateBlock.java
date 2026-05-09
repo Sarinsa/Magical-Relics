@@ -18,6 +18,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class WallPressurePlateBlock extends PressurePlateBlock {
@@ -106,6 +107,7 @@ public class WallPressurePlateBlock extends PressurePlateBlock {
     }
     
     @Override
+    @Nullable
     public BlockState getStateForPlacement( BlockPlaceContext context ) {
         return context.getClickedFace() != Direction.UP && context.getClickedFace() != Direction.DOWN
                 ? defaultBlockState().setValue( FACING, context.getClickedFace() )

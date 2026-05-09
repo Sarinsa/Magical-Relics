@@ -262,6 +262,7 @@ public class QuicksandBlock extends Block implements BucketPickup {
      * Checks if the given entity's eyes are in quicksand.
      */
     public static boolean areEyesInQuicksand( LivingEntity livingEntity ) {
+        // noinspection resource
         Level level = livingEntity.level();
         double eyeY = livingEntity.getEyeY();
         double partialEyeY = eyeY - Mth.floor( eyeY );

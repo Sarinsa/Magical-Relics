@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.worldgen.processor;
 
 import com.mojang.serialization.Codec;
 import com.sarinsa.magical_relics.common.block.CamoBlock;
+import com.sarinsa.magical_relics.common.blockentity.CamoBlockEntity;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
@@ -68,18 +69,18 @@ public class CustomAgingProcessor extends StructureProcessor {
         BlockState newState = null;
         
         if( state.getBlock() instanceof CamoBlock ) {
-            CompoundTag blockEntityTag = blockInfo.nbt();
+            final CompoundTag blockEntityTag = blockInfo.nbt();
             
             // Don't bother checking for camo blocks
             // that don't have an existing camo.
             if( blockEntityTag != null && random.nextFloat() < oldness ) {
-                CompoundTag camoTag = blockEntityTag.getCompound( "CamoState" );
-                BlockState nbtBlockState = NBTHelper.readBlockState( camoTag );
+                final CompoundTag camoTag = blockEntityTag.getCompound( CamoBlockEntity.TAG_CAMO_STATE );
+                final BlockState stateFromNbt = NBTHelper.readBlockState( camoTag );
                 
-                if( nbtBlockState.is( Blocks.COBBLESTONE ) ) {
+                if( stateFromNbt.is( Blocks.COBBLESTONE ) ) {
                     writeToCamo( blockEntityTag, Blocks.MOSSY_COBBLESTONE.defaultBlockState() );
                 }
-                else if( nbtBlockState.is( Blocks.STONE_BRICKS ) ) {
+                else if( stateFromNbt.is( Blocks.STONE_BRICKS ) ) {
                     writeToCamo( blockEntityTag, Blocks.MOSSY_STONE_BRICKS.defaultBlockState() );
                 }
             }
@@ -95,7 +96,7 @@ public class CustomAgingProcessor extends StructureProcessor {
                         }
                     }
                     catch( Exception e ) {
-                        MagicalRelics.LOG.error( "Aging processor failed to copy block state properties from state '" + state + "' to state '" + newState + "'" );
+                        MagicalRelics.LOG.error( "Aging processor failed to copy block state properties from state '{}' to state '{}'", state, newState );
                     }
                 }
             }
@@ -104,7 +105,7 @@ public class CustomAgingProcessor extends StructureProcessor {
     }
     
     private static void writeToCamo( CompoundTag tag, BlockState state ) {
-        tag.put( "CamoState", NBTHelper.writeBlockState( state ) );
+        tag.put( CamoBlockEntity.TAG_CAMO_STATE, NBTHelper.writeBlockState( state ) );
     }
     
     @Override

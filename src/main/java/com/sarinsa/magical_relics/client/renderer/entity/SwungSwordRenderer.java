@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -22,7 +23,7 @@ public class SwungSwordRenderer extends EntityRenderer<SwungSword> {
     
     @Override
     public ResourceLocation getTextureLocation( SwungSword sword ) {
-        return null;
+        return MissingTextureAtlasSprite.getLocation();
     }
     
     
