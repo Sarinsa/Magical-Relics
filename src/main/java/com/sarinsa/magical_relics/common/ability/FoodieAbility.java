@@ -7,7 +7,10 @@ import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
 import com.sarinsa.magical_relics.common.core.config.ability.CooldownAbilityConfig;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
+import fathertoast.crust.api.config.common.field.DoubleField;
+import fathertoast.crust.api.config.common.field.IntField;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -29,8 +32,9 @@ import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
+public class FoodieAbility extends BaseArtifactAbility<FoodieAbility.FoodieAbilityConfig> {
     
     private static final String[] PREFIXES = {
             createPrefix( "foodie", "well_fed" ),
@@ -66,9 +70,55 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     public FoodieAbility() { }
     
     
+    public static class FoodieAbilityConfig extends CooldownAbilityConfig {
+        
+        public final Foodie FOODIE;
+        
+        public FoodieAbilityConfig( ConfigManager cfgManager, ResourceLocation abilityId, int cooldown,
+                                    int passiveHungerThresh, int hungerOnUse, int hungerOnAttack, double restoreHungerChance ) {
+            super( cfgManager, abilityId, cooldown );
+            
+            FOODIE = new Foodie( this, passiveHungerThresh, hungerOnUse, hungerOnAttack, restoreHungerChance );
+        }
+        
+        public static class Foodie extends AbstractConfigCategory<FoodieAbilityConfig> {
+            
+            public final IntField passiveHungerThreshold;
+            
+            public final IntField hungerOnUse;
+            
+            public final IntField hungerOnAttack;
+            public final DoubleField restoreHungerChance;
+            
+            
+            public Foodie( FoodieAbilityConfig parent, int passiveHungrThresh, int hungrOnUse, int hungrOnAttck, double restoreHungrChn ) {
+                super( parent, "foodie", "Options for the amount of hunger restored by this ability." );
+                
+                passiveHungerThreshold = SPEC.define( new IntField( "passive_hunger_threshold", passiveHungrThresh, IntField.Range.POSITIVE,
+                        "When this ability has a passive trigger, the wielder's hunger level will not drop below this value." ) );
+                
+                SPEC.newLine();
+                
+                hungerOnUse = SPEC.define( new IntField( "hunger_on_use", hungrOnUse, IntField.Range.TOKEN_NEGATIVE,
+                        "The amount of hunger this ability restores for its wielder when used.",
+                        "This only applies when the ability has a use trigger type." ) );
+                
+                SPEC.newLine();
+                
+                hungerOnAttack = SPEC.define( new IntField( "hunger_on_attack", hungrOnAttck, IntField.Range.TOKEN_NEGATIVE,
+                        "The amount of hunger this ability restores for its wielder when dealing damage to a creature.",
+                        "This only applies when the ability has an attack trigger type." ) );
+                
+                restoreHungerChance = SPEC.define( new DoubleField( "restore_hunger_chance", restoreHungrChn, DoubleField.Range.PERCENT,
+                        "The chance for hunger to be restored when attacking a creature." ) );
+            }
+        }
+    }
+    
     @Override
     public AbilityConfig createConfig( ConfigManager cfgManager, ResourceLocation abilityId ) {
-        return new CooldownAbilityConfig( cfgManager, abilityId, 20 );
+        return new FoodieAbilityConfig( cfgManager, abilityId, 20,
+                10, 2, 1, 0.25 );
     }
     
     @Override
@@ -77,10 +127,10 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             ArtifactUtils.setAbilityOnCooldown( artifact, this );
-            RandomSource random = player.getRandom();
+            final RandomSource random = player.getRandom();
             
             if( !level.isClientSide ) {
-                player.getFoodData().eat( 2, 0.0F );
+                player.getFoodData().eat( getConfig().FOODIE.hungerOnUse.get(), 0.0F );
                 playEatSound( (ServerLevel) player.level(), player.blockPosition(), random );
             }
             artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
@@ -95,10 +145,10 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
         
         // noinspection resource
         if( !player.level().isClientSide ) {
-            RandomSource random = player.getRandom();
+            final RandomSource random = player.getRandom();
             
-            if( random.nextInt( 4 ) == 0 ) {
-                player.getFoodData().eat( 1, 0.0F );
+            if( getConfig().FOODIE.restoreHungerChance.rollChance( random ) ) {
+                player.getFoodData().eat( getConfig().FOODIE.hungerOnAttack.get(), 0.0F );
                 playEatSound( (ServerLevel) player.level(), player.blockPosition(), random );
                 artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( EquipmentSlot.MAINHAND ) );
             }
@@ -107,29 +157,25 @@ public class FoodieAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     
     @Override
     public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
-        if( level.isClientSide ) return;
-        
-        FoodData foodData = player.getFoodData();
-        
-        if( foodData.getFoodLevel() < 10 ) {
-            final int restoredHunger = 10 - foodData.getFoodLevel();
-            foodData.eat( restoredHunger, 0.0F );
-            playEatSound( (ServerLevel) level, player.blockPosition(), player.getRandom() );
-            artifact.hurtAndBreak( restoredHunger, player, ( p ) -> p.broadcastBreakEvent( slot ) );
-        }
+        handlePassiveHunger( artifact, level, player, ( p ) -> p.broadcastBreakEvent( slot ) );
     }
     
     @Override
     public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
+        handlePassiveHunger( artifact, level, player, ( p ) -> CuriosApi.broadcastCurioBreakEvent( slotContext ) );
+    }
+    
+    private void handlePassiveHunger( ItemStack artifact, Level level, Player player, Consumer<Player> breakAnim ) {
         if( level.isClientSide ) return;
         
-        FoodData foodData = player.getFoodData();
+        final FoodData foodData = player.getFoodData();
+        final int threshold = getConfig().FOODIE.passiveHungerThreshold.get();
         
-        if( foodData.getFoodLevel() < 10 ) {
-            final int restoredHunger = 10 - foodData.getFoodLevel();
+        if( foodData.getFoodLevel() < threshold ) {
+            final int restoredHunger = threshold - foodData.getFoodLevel();
             foodData.eat( restoredHunger, 0.0F );
             playEatSound( (ServerLevel) level, player.blockPosition(), player.getRandom() );
-            artifact.hurtAndBreak( restoredHunger, player, ( p ) -> CuriosApi.broadcastCurioBreakEvent( slotContext ) );
+            artifact.hurtAndBreak( restoredHunger, player, breakAnim );
         }
     }
     
