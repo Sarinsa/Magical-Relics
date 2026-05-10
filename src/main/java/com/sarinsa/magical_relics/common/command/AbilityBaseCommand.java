@@ -17,7 +17,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,7 +61,6 @@ public class AbilityBaseCommand {
             source.sendFailure( Component.translatable( TranslationUtils.ABILITY_APPLY_ERROR_2 ) );
             return 0;
         }
-        
         final Map<BaseArtifactAbility<?>, TriggerType> currentAbilities = ArtifactUtils.getAllAbilities( itemStack );
         
         if( currentAbilities.containsKey( ability ) ) {
@@ -73,8 +71,13 @@ public class AbilityBaseCommand {
             source.sendFailure( Component.translatable( TranslationUtils.ABILITY_APPLY_ERROR_1 ) );
             return 0;
         }
-        return ArtifactUtils.applyAbilities( itemStack, random, false, List.of( ability ) ).isEmpty()
-                ? 0 : 1;
+        boolean applied = ArtifactUtils.applyAbility( itemStack, random, ability, triggerType );
+        
+        if( applied ) {
+            ArtifactUtils.setPrefixAndSuffix( itemStack, random, ArtifactUtils.getAllAbilities( itemStack ).keySet().stream().toList() );
+            return 1;
+        }
+        return 0;
     }
     
     private static int removeAbility( CommandSourceStack source, BaseArtifactAbility<?> ability ) {
