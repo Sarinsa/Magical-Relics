@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.ability.base;
 
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -33,7 +34,9 @@ public record AttributeBoost(Supplier<Attribute> attribute, String name, Attribu
                 operation()
         ).save() );
         attributeMod.putString( "ActiveType", activeType().getName() );
-        tag.getList( TAG_ATTRIBUTE_MODS, Tag.TAG_COMPOUND ).add( attributeMod );
+        ListTag attributeModsTag = tag.getList( TAG_ATTRIBUTE_MODS, Tag.TAG_COMPOUND );
+        attributeModsTag.add( attributeMod );
+        tag.put( TAG_ATTRIBUTE_MODS, attributeModsTag );
     }
     
     public interface RangedValueProvider {
