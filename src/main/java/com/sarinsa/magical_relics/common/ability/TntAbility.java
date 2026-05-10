@@ -91,12 +91,12 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
         if( !(hitResult instanceof BlockHitResult blockHitResult) ) return false;
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            Direction face = blockHitResult.getDirection();
-            BlockPos relativePos = blockHitResult.getBlockPos().relative( face );
-            BlockState relativeState = level.getBlockState( relativePos );
+            final Direction face = blockHitResult.getDirection();
+            final BlockPos relativePos = blockHitResult.getBlockPos().relative( face );
+            final BlockState relativeState = level.getBlockState( relativePos );
             
             if( relativeState.getCollisionShape( level, relativePos ).isEmpty() ) {
-                PrimedTnt tnt = new PrimedTnt( level, relativePos.getX() + 0.5D, relativePos.getY(), relativePos.getZ() + 0.5D, player );
+                final PrimedTnt tnt = new PrimedTnt( level, relativePos.getX() + 0.5D, relativePos.getY(), relativePos.getZ() + 0.5D, player );
                 tnt.setFuse( getConfig().TNT.fuse.get() );
                 level.addFreshEntity( tnt );
                 
