@@ -134,7 +134,7 @@ public class SelfRepairAbility extends BaseArtifactAbility<SelfRepairAbility.Rep
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

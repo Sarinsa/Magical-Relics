@@ -185,7 +185,7 @@ public class AdrenalineAbility extends BaseArtifactAbility<AdrenalineAbility.Adr
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
 }

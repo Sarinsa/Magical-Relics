@@ -169,7 +169,7 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     
@@ -179,7 +179,7 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
         if( type == null ) return null;
         
         return switch( type ) {
-            case ARMOR_TICK, CURIO_TICK, HELD -> descComponent( type );
+            case ARMOR_TICK, INVENTORY_TICK, CURIO_TICK, HELD -> descComponent( type );
             case USE -> durationDescComponent( type, getConfig().NIGHT_VISION.useDuration.get() );
             default -> null;
         };

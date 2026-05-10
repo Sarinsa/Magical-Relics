@@ -144,7 +144,7 @@ public class StunAbility extends BaseArtifactAbility<StunAbility.StunAbilityConf
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

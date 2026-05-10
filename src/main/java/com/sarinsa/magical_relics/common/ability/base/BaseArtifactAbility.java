@@ -27,7 +27,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import top.theillusivec4.curios.api.SlotContext;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
@@ -54,7 +53,7 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
     /** Helper method for creating ability description tooltip components. */
     public MutableComponent descComponent( @Nullable TriggerType triggerType, Object... args ) {
         final ResourceLocation id = Objects.requireNonNull( MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( this ) );
-        final String triggerKey = triggerType == null ? "" : "." + triggerType.getName();
+        final String triggerKey = triggerType == null ? "" : "." + triggerType.getSerializedName();
         final String s = MagicalRelics.MODID + ".artifact_ability." + id.getNamespace() + "." + id.getPath() + ".description" + triggerKey;
         
         return Component.translatable( s, args );
@@ -135,13 +134,12 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
      * @return A List of trigger types supported by this ability. This is not super
      * important; primarily utilized in the "apply ability" command.
      */
-    @Nonnull
     public abstract List<TriggerType> supportedTriggers();
     
     /**
      * @return A List of artifact categories this ability is compatible with.
      */
-    public abstract List<ArtifactCategory> getCompatibleTypes();
+    public abstract List<ArtifactCategory> getCompatibleCategories();
     
     /**
      * @return True if a "snowflake" symbol should be prepended to this ability's description
@@ -236,12 +234,12 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
      * rendering it in item tooltip.
      *
      * @return The rarity from the config associated with this ability.
-     * returns {@link Rarity#COMMON} if the config does not exist yet.
+     * returns {@link Rarity#COMMON} if the config has not been initialized yet.
      */
     public Rarity getRarity() {
-        return getConfig() == null
-                ? Rarity.COMMON
-                : getConfig().GENERAL.rarity.get();
+        return getConfig().SPEC.isInitialized()
+                ? getConfig().GENERAL.rarity.get()
+                : Rarity.COMMON;
     }
     
     /**

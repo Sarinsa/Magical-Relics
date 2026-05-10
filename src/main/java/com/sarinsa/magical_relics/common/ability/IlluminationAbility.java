@@ -168,7 +168,7 @@ public class IlluminationAbility extends BaseArtifactAbility<IlluminationAbility
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

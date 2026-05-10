@@ -199,7 +199,7 @@ public class MassExcavateAbility extends BaseArtifactAbility<MassExcavateAbility
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

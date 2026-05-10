@@ -197,7 +197,7 @@ public class SlowFallingAbility extends BaseArtifactAbility<SlowFallingAbility.S
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

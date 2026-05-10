@@ -131,7 +131,7 @@ public class FireballAbility extends BaseArtifactAbility<FireballAbility.Firebal
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
 }

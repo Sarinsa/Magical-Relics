@@ -205,7 +205,7 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

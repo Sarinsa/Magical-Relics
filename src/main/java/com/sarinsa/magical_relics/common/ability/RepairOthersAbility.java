@@ -193,7 +193,7 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

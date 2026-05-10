@@ -134,7 +134,7 @@ public class CashoutAbility extends BaseArtifactAbility<CashoutAbility.CashoutAb
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
 }

@@ -31,7 +31,7 @@ public class DebugBaseCommand {
             usagesPerCategory.put( category, 0 );
         }
         for( BaseArtifactAbility<?> ability : MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get() ) {
-            for( ArtifactCategory category : ability.getCompatibleTypes() ) {
+            for( ArtifactCategory category : ability.getCompatibleCategories() ) {
                 usagesPerCategory.put( category, usagesPerCategory.get( category ) + 1 );
             }
         }

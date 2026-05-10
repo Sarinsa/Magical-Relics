@@ -115,7 +115,7 @@ public class ReachBoostAbility extends BaseArtifactAbility<ReachBoostAbility.Rea
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

@@ -133,7 +133,7 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
 }

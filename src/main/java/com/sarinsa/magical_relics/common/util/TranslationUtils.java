@@ -24,7 +24,6 @@ public class TranslationUtils {
     public static final String ABILITY_APPLY_ERROR_1 = "magical_relics.command.ability.apply.error.trigger_occupied";
     public static final String ABILITY_APPLY_ERROR_2 = "magical_relics.command.ability.apply.error.invalid_item";
     public static final String ABILITY_APPLY_ERROR_3 = "magical_relics.command.ability.apply.error.unsupported_trigger";
-    public static final String ABILITY_APPLY_ERROR_4 = "magical_relics.command.ability.apply.error.generic";
     public static final String ABILITY_REMOVE_CMD = "magical_relics.command.ability.remove.message";
     public static final String ABILITY_REMOVE_ERROR_0 = "magical_relics.command.ability.remove.error";
     public static final String PLAYER_ONLY_CMD = "magical_relics.command.failure.player_only";

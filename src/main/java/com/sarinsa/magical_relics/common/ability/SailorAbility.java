@@ -96,7 +96,7 @@ public class SailorAbility extends BaseArtifactAbility<SailorAbility.SailorAbili
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
 }

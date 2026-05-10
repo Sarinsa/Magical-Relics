@@ -57,15 +57,15 @@ public class TriggerTypeArgument implements ArgumentType<TriggerType> {
         // Full list without hint
         if( builder.getRemaining().isEmpty() ) {
             for( TriggerType triggerType : triggerTypes ) {
-                builder.suggest( triggerType.getName() );
+                builder.suggest( triggerType.getSerializedName() );
             }
             return builder.buildFuture();
         }
         
         // Partial list from hint
         for( TriggerType triggerType : triggerTypes ) {
-            if( triggerType.getName().contains( builder.getRemaining() ) ) {
-                builder.suggest( triggerType.getName() );
+            if( triggerType.getSerializedName().contains( builder.getRemaining() ) ) {
+                builder.suggest( triggerType.getSerializedName() );
             }
         }
         return builder.buildFuture();

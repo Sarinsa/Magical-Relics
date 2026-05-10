@@ -182,7 +182,7 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return ArtifactCategory.ALL;
     }
     

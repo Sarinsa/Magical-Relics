@@ -27,8 +27,6 @@ public class MagicalRelics {
     // TODO LIST
     //
     // - Make it so slimes can spawn from spawner blocks regardless of vanilla spawn rules
-    //
-    // - Make separate models for Thick Tripwire (consider a slightly different THICCER texture as well?
     
     
     public static final String MODID = "magical_relics";

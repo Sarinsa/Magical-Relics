@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import javax.annotation.Nullable;
 import java.util.List;
 
+/** Represents a "family" of artifact items. */
 public enum ArtifactCategory {
     TRINKET( "trinket", 21 ),
     SWORD( "sword", 14 ),
@@ -40,6 +41,10 @@ public enum ArtifactCategory {
         return variations;
     }
     
+    /**
+     * @return The {@link ArtifactCategory} whose name matches
+     * the specified name string. Returns null if no match is found.
+     */
     @Nullable
     public static ArtifactCategory getFromName( String name ) {
         for( ArtifactCategory artifactCategory : values() ) {

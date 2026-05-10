@@ -215,7 +215,7 @@ public class FoodieAbility extends BaseArtifactAbility<FoodieAbility.FoodieAbili
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

@@ -122,7 +122,7 @@ public class SpeedBoostAbility extends BaseArtifactAbility<SpeedBoostAbility.Spe
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

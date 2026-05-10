@@ -44,7 +44,12 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     };
     
     private static final List<TriggerType> TRIGGERS = ImmutableList.of(
-            TriggerType.ARMOR_TICK, TriggerType.USER_DAMAGED, TriggerType.USE, TriggerType.HELD, TriggerType.USER_ATTACKING, TriggerType.CURIO_TICK
+            TriggerType.ARMOR_TICK,
+            TriggerType.USER_DAMAGED,
+            TriggerType.USE,
+            TriggerType.HELD,
+            TriggerType.USER_ATTACKING,
+            TriggerType.CURIO_TICK
     );
     
     private static final List<ArtifactCategory> TYPES = ImmutableList.of(
@@ -170,7 +175,7 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

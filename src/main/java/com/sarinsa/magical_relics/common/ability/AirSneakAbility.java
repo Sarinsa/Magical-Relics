@@ -163,7 +163,7 @@ public class AirSneakAbility extends BaseArtifactAbility<AirSneakAbility.AirSnea
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
     

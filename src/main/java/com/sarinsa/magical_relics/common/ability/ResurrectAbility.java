@@ -102,7 +102,7 @@ public class ResurrectAbility extends BaseArtifactAbility<CooldownAbilityConfig>
     }
     
     @Override
-    public List<ArtifactCategory> getCompatibleTypes() {
+    public List<ArtifactCategory> getCompatibleCategories() {
         return TYPES;
     }
 }
