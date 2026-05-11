@@ -60,7 +60,7 @@ public class PacketHandler {
         /// Config field sync messages
         registerMessage( S2CSimpleCfgIntSync.class, S2CSimpleCfgIntSync::encode, S2CSimpleCfgIntSync::decode, S2CSimpleCfgIntSync::handle );
         registerMessage( S2CSimpleCfgDoubleSync.class, S2CSimpleCfgDoubleSync::encode, S2CSimpleCfgDoubleSync::decode, S2CSimpleCfgDoubleSync::handle );
-        
+        registerMessage( S2CCamoBlockUpdate.class, S2CCamoBlockUpdate::encode, S2CCamoBlockUpdate::decode, S2CCamoBlockUpdate::handle );
         
         // Client -> Server
         registerMessage( C2SSaveAntiBuilderData.class, C2SSaveAntiBuilderData::encode, C2SSaveAntiBuilderData::decode, C2SSaveAntiBuilderData::handle );

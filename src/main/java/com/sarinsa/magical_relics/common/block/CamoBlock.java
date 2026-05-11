@@ -1,6 +1,7 @@
 package com.sarinsa.magical_relics.common.block;
 
 import com.sarinsa.magical_relics.common.blockentity.CamoBlockEntity;
+import com.sarinsa.magical_relics.common.network.NetworkHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -42,37 +43,38 @@ public interface CamoBlock {
     @SuppressWarnings( "ConstantConditions" )
     default InteractionResult use( Level level, BlockPos pos, Player player, InteractionHand hand, @Nullable BiConsumer<Level, BlockPos> postStateLogic, @Nullable BiConsumer<Player, MenuProvider> containerOpener ) {
         if( level.getExistingBlockEntity( pos ) instanceof CamoBlockEntity camoBlockEntity ) {
-            ItemStack handStack = player.getItemInHand( hand );
+            final ItemStack handStack = player.getItemInHand( hand );
             
             if( handStack.getItem() instanceof BlockItem blockItem ) {
-                Block block = blockItem.getBlock();
+                final Block block = blockItem.getBlock();
                 
                 if( block == null ) return InteractionResult.PASS;
                 
-                BlockHitResult result = Item.getPlayerPOVHitResult( level, player, ClipContext.Fluid.NONE );
-                BlockState camoState = block.getStateForPlacement( new BlockPlaceContext( player, hand, handStack, result ) );
+                final BlockHitResult result = Item.getPlayerPOVHitResult( level, player, ClipContext.Fluid.NONE );
+                final BlockState camoState = block.getStateForPlacement( new BlockPlaceContext( player, hand, handStack, result ) );
                 
                 if( camoState == null ) return InteractionResult.PASS;
                 
                 if( camoState.isSolidRender( level, pos ) && !(camoState.getBlock() instanceof CamoBlock) ) {
-                    BlockState oldCamoState = camoBlockEntity.getCamoState();
+                    final BlockState oldCamoState = camoBlockEntity.getCamoState();
                     
                     // Makes placing blocks around the camo block easier
                     if( camoBlockEntity.getCamoState() != null && camoBlockEntity.getCamoState() == camoState )
                         return InteractionResult.PASS;
                     
-                    camoBlockEntity.setCamoState( camoState );
-                    
-                    // Force light update in case the camo state is a light source
-                    if( oldCamoState == null || camoState.getLightEmission( level, pos ) != oldCamoState.getLightEmission( level, pos ) )
-                        level.getLightEngine().checkBlock( pos );
-                    
+                    if( !level.isClientSide ) {
+                        final ServerLevel serverLevel = (ServerLevel) level;
+                        camoBlockEntity.setCamoState( camoState );
+                        
+                        // Force light update in case the camo state is a light source
+                        if( oldCamoState == null || camoState.getLightEmission( level, pos ) != oldCamoState.getLightEmission( level, pos ) ) {
+                            serverLevel.getLightEngine().checkBlock( pos );
+                        }
+                        NetworkHelper.broadcastCamoBlockUpdate( serverLevel, pos, camoState );
+                        level.playSound( null, pos, block.defaultBlockState().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.5F, 1.0F );
+                    }
                     if( postStateLogic != null )
                         postStateLogic.accept( level, pos );
-                    
-                    if( level instanceof ServerLevel serverLevel ) {
-                        serverLevel.playSound( null, pos, block.defaultBlockState().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.5F, 1.0F );
-                    }
                     return InteractionResult.SUCCESS;
                 }
             }
