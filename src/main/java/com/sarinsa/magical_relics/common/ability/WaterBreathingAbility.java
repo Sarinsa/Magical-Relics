@@ -15,6 +15,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -26,6 +27,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
+import top.theillusivec4.curios.api.SlotContext;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -90,11 +92,11 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
                 super( parent, "water_breathing", "Options for the water breathing effect applied by this ability." );
                 
                 useDuration = SPEC.define( new IntField( "use_duration", useDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the potion effect when this ability has a use trigger." ) );
+                        "The duration (in ticks) of the potion effect when this ability has the use trigger." ) );
                 passiveDuration = SPEC.define( new IntField( "passive_duration", passiveDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the potion effect when this ability has a passive trigger." ) );
+                        "The duration (in ticks) of the potion effect when this ability has the passive trigger." ) );
                 attackDuration = SPEC.define( new IntField( "attack_duration", attackDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the potion effect when this ability has an attack trigger." ) );
+                        "The duration (in ticks) of the potion effect when this ability has the attack trigger." ) );
                 drownDuration = SPEC.define( new IntField( "drowning_duration", drownDur, IntField.Range.POSITIVE,
                         "The duration (in ticks) of the potion effect when this ability is triggered by drowning." ) );
             }
@@ -108,14 +110,14 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     }
     
     @Override
-    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
         // noinspection resource
         if( !player.level().isClientSide )
             player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, getConfig().WATER_BREATHING.attackDuration.get() ) );
     }
     
     @Override
-    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact ) {
+    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact, @org.jetbrains.annotations.Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
         if( !level.isClientSide && damageSource == level.damageSources().drown() ) {
             player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, getConfig().WATER_BREATHING.drownDuration.get() ) );
         }
@@ -127,17 +129,17 @@ public class WaterBreathingAbility extends BaseArtifactAbility<WaterBreathingAbi
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( hand ) );
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( abilityUser != null && !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            artifact.hurtAndBreak( 1, abilityUser, ( entity ) -> entity.broadcastBreakEvent( hand ) );
             
             if( !level.isClientSide )
-                player.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, getConfig().WATER_BREATHING.useDuration.get() ) );
+                abilityUser.addEffect( new MobEffectInstance( MobEffects.WATER_BREATHING, getConfig().WATER_BREATHING.useDuration.get() ) );
             
             ArtifactUtils.setAbilityOnCooldown( artifact, this );
-            return true;
+            return InteractionResult.sidedSuccess( level.isClientSide );
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
     @Override

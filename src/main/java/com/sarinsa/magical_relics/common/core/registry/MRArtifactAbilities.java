@@ -48,6 +48,7 @@ public class MRArtifactAbilities {
     public static final RegistryObject<SpiderAbility> SPIDER = register( "spider", SpiderAbility::new );
     public static final RegistryObject<LightningAbility> LIGHTNING = register( "lightning", LightningAbility::new );
     public static final RegistryObject<FoodieAbility> FOODIE = register( "foodie", FoodieAbility::new );
+    public static final RegistryObject<YeetAbility> YEET = register( "yeet", YeetAbility::new );
     
     
     private static <CFG extends AbilityConfig, T extends BaseArtifactAbility<CFG>> RegistryObject<T> register( String name, Supplier<T> supplier ) {

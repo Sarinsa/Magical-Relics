@@ -17,7 +17,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -25,8 +26,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 
@@ -66,15 +67,15 @@ public class BakerAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) return false;
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( abilityUser == null || ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) return InteractionResult.PASS;
         
         if( hitResult instanceof BlockHitResult blockHitResult ) {
             BlockPos clickedPos = blockHitResult.getBlockPos();
             Direction face = blockHitResult.getDirection();
             
             if( face != Direction.UP )
-                return false;
+                return InteractionResult.PASS;
             
             BlockPos toPlacePos = clickedPos.relative( face );
             BlockState currentStateAt = level.getBlockState( toPlacePos );
@@ -83,7 +84,7 @@ public class BakerAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
                 level.setBlock( toPlacePos, Blocks.CAKE.defaultBlockState(), Block.UPDATE_ALL );
                 ArtifactUtils.setAbilityOnCooldown( artifact, this );
                 
-                artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
+                artifact.hurtAndBreak( 1, abilityUser, ( p ) -> p.broadcastBreakEvent( hand ) );
                 
                 if( !level.isClientSide ) {
                     level.playSound( null, toPlacePos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.7F, 1.0F );
@@ -95,10 +96,10 @@ public class BakerAbility extends BaseArtifactAbility<CooldownAbilityConfig> {
                     double zSpeed = level.random.nextGaussian() * 0.02D;
                     ((ServerLevel) level).sendParticles( ParticleTypes.CLOUD, x, y, z, 5, xSpeed, ySpeed, zSpeed, 0.05D );
                 }
-                return true;
+                return InteractionResult.SUCCESS;
             }
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
     @Override

@@ -17,11 +17,13 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
@@ -135,7 +137,7 @@ public class AdrenalineAbility extends BaseArtifactAbility<AdrenalineAbility.Adr
     }
     
     @Override
-    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact ) {
+    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact, @Nullable EquipmentSlot slot, @javax.annotation.Nullable SlotContext slotContext ) {
         if( damageSource.getEntity() != null && !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             applyEffectsTo( player, artifact );
             ArtifactUtils.setAbilityOnCooldown( artifact, this );

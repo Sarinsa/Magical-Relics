@@ -16,13 +16,14 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class FireballAbility extends BaseArtifactAbility<FireballAbility.FireballAbilityConfig> {
@@ -85,28 +86,28 @@ public class FireballAbility extends BaseArtifactAbility<FireballAbility.Firebal
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack itemStack, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( !ArtifactUtils.isAbilityOnCooldown( itemStack, this ) ) {
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( abilityUser != null && !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             if( !level.isClientSide ) {
-                shootFireball( level, player );
-                itemStack.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
+                shootFireball( level, abilityUser );
+                artifact.hurtAndBreak( 1, abilityUser, ( p ) -> p.broadcastBreakEvent( hand ) );
                 
-                ArtifactUtils.setAbilityOnCooldown( itemStack, this );
+                ArtifactUtils.setAbilityOnCooldown( artifact, this );
             }
-            return true;
+            return InteractionResult.sidedSuccess( level.isClientSide );
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
-    private void shootFireball( Level level, Player player ) {
-        Vec3 viewVec = player.getViewVector( 1.0F );
-        VolatileFireball fireball = new VolatileFireball( level, player, 0.0D, 0.0D, 0.0D, getConfig().FIREBALL.explosionPower.get() );
-        fireball.setPos( player.getX() + viewVec.x, player.getY( 0.5D ) + 0.25D, fireball.getZ() + viewVec.z );
-        fireball.shootFromRotation( player, player.getXRot(), player.getYRot(), 1.5F, 1.5F, 1.5F );
+    private void shootFireball( Level level, LivingEntity abilityUser ) {
+        final Vec3 viewVec = abilityUser.getViewVector( 1.0F );
+        final VolatileFireball fireball = new VolatileFireball( level, abilityUser, 0.0D, 0.0D, 0.0D, getConfig().FIREBALL.explosionPower.get() );
+        
+        fireball.setPos( abilityUser.getX() + viewVec.x, abilityUser.getY( 0.5D ) + 0.25D, fireball.getZ() + viewVec.z );
+        fireball.shootFromRotation( abilityUser, abilityUser.getXRot(), abilityUser.getYRot(), 1.5F, 1.5F, 1.5F );
         level.addFreshEntity( fireball );
         
-        RandomSource random = level.random;
-        level.playSound( null, player.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F );
+        level.playSound( null, abilityUser.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0F, (level.random.nextFloat() - level.random.nextFloat()) * 0.2F + 1.0F );
     }
     
     @Override

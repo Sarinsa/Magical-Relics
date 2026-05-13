@@ -17,6 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -95,11 +96,11 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
                 super( parent, "jump_boost", "Options for the jump boost effect applied by this ability." );
                 
                 useDuration = SPEC.define( new IntField( "use_duration", useDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the potion effect when this ability has a use trigger." ) );
+                        "The duration (in ticks) of the potion effect when this ability has the use trigger." ) );
                 passiveDuration = SPEC.define( new IntField( "passive_duration", passiveDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the potion effect when this ability has a passive trigger." ) );
+                        "The duration (in ticks) of the potion effect when this ability has the passive trigger." ) );
                 attackDuration = SPEC.define( new IntField( "attack_duration", attackDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the potion effect when this ability has an attack trigger." ) );
+                        "The duration (in ticks) of the potion effect when this ability has the attack trigger." ) );
                 
                 SPEC.newLine();
                 
@@ -137,21 +138,21 @@ public class JumpBoostAbility extends BaseArtifactAbility<JumpBoostAbility.JumpB
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( abilityUser != null && !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            artifact.hurtAndBreak( 1, abilityUser, ( p ) -> p.broadcastBreakEvent( hand ) );
             // noinspection resource
-            if( !player.level().isClientSide )
-                player.addEffect( new MobEffectInstance( MobEffects.JUMP, getConfig().JUMP_BOOST.useDuration.get(), getEffectMultiplier( artifact ) ) );
+            if( !abilityUser.level().isClientSide )
+                abilityUser.addEffect( new MobEffectInstance( MobEffects.JUMP, getConfig().JUMP_BOOST.useDuration.get(), getEffectMultiplier( artifact ) ) );
             
             ArtifactUtils.setAbilityOnCooldown( artifact, this );
-            return true;
+            return InteractionResult.sidedSuccess( level.isClientSide );
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
     @Override
-    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
         // noinspection resource
         if( !player.level().isClientSide )
             player.addEffect( new MobEffectInstance( MobEffects.JUMP, getConfig().JUMP_BOOST.attackDuration.get(), getEffectMultiplier( artifact ) ) );

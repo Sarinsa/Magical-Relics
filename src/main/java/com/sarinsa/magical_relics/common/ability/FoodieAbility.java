@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -27,10 +28,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -122,25 +123,27 @@ public class FoodieAbility extends BaseArtifactAbility<FoodieAbility.FoodieAbili
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( !player.getFoodData().needsFood() ) return false;
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( !(abilityUser instanceof Player player) ) return InteractionResult.PASS;
+        
+        if( !player.getFoodData().needsFood() ) return InteractionResult.PASS;
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             ArtifactUtils.setAbilityOnCooldown( artifact, this );
-            final RandomSource random = player.getRandom();
+            final RandomSource random = abilityUser.getRandom();
             
             if( !level.isClientSide ) {
                 player.getFoodData().eat( getConfig().FOODIE.hungerOnUse.get(), 0.0F );
-                playEatSound( (ServerLevel) player.level(), player.blockPosition(), random );
+                playEatSound( (ServerLevel) abilityUser.level(), abilityUser.blockPosition(), random );
             }
-            artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
-            return true;
+            artifact.hurtAndBreak( 1, abilityUser, ( p ) -> p.broadcastBreakEvent( hand ) );
+            return InteractionResult.sidedSuccess( level.isClientSide );
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
     @Override
-    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob, @javax.annotation.Nullable EquipmentSlot slot, @javax.annotation.Nullable SlotContext slotContext ) {
         if( !player.getFoodData().needsFood() ) return;
         
         // noinspection resource

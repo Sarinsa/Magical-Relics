@@ -58,7 +58,7 @@ public class MREventListener {
         ArtifactUtils.getAbilitiesWithTrigger( TriggerType.HELD, offhandItem )
                 .forEach( ( ability ) -> ability.onHeld( level, player, offhandItem, EquipmentSlot.OFFHAND ) );
         
-        ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory( player ).orElse( null );
+        final ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory( player ).orElse( null );
         
         if( curiosInventory != null ) {
             for( SlotResult slotResult : curiosInventory.findCurios( ArtifactUtils.CURIO_SLOTS ) ) {
@@ -70,28 +70,39 @@ public class MREventListener {
     }
     
     @SubscribeEvent
+    @SuppressWarnings( "ConstantConditions" )
     public void onLivingDamaged( LivingDamageEvent event ) {
         if( event.getSource().getDirectEntity() instanceof Player player ) {
             for( EquipmentSlot slot : EquipmentSlot.values() ) {
-                ItemStack artifact = player.getItemBySlot( slot );
-                Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USER_ATTACKING, artifact );
+                final ItemStack artifact = player.getItemBySlot( slot );
                 
-                if( !abilities.isEmpty() ) {
-                    for( BaseArtifactAbility<?> ability : abilities ) {
-                        ability.onDamageMob( artifact, player, event.getEntity() );
-                    }
+                ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USER_ATTACKING, artifact )
+                        .forEach( ability -> ability.onDamageMob( artifact, player, event.getEntity(), slot, null ) );
+            }
+            final ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory( player ).orElse( null );
+            
+            if( curiosInventory != null ) {
+                for( SlotResult slotResult : curiosInventory.findCurios( ArtifactUtils.CURIO_SLOTS ) ) {
+                    final ItemStack curioStack = slotResult.stack();
+                    ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USER_ATTACKING, curioStack )
+                            .forEach( ability -> ability.onDamageMob( curioStack, player, event.getEntity(), null, slotResult.slotContext() ) );
                 }
             }
         }
-        else if( event.getEntity() instanceof Player player ) {
+        if( event.getEntity() instanceof Player player ) {
             for( EquipmentSlot slot : EquipmentSlot.values() ) {
-                ItemStack artifact = player.getItemBySlot( slot );
-                Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USER_DAMAGED, artifact );
+                final ItemStack artifact = player.getItemBySlot( slot );
                 
-                if( !abilities.isEmpty() ) {
-                    for( BaseArtifactAbility<?> ability : abilities ) {
-                        ability.onUserDamaged( player.level(), player, event.getSource(), artifact );
-                    }
+                ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USER_DAMAGED, artifact )
+                        .forEach( ability -> ability.onUserDamaged( player.level(), player, event.getSource(), artifact, slot, null ) );
+            }
+            final ICuriosItemHandler curiosInventory = CuriosApi.getCuriosInventory( player ).orElse( null );
+            
+            if( curiosInventory != null ) {
+                for( SlotResult slotResult : curiosInventory.findCurios( ArtifactUtils.CURIO_SLOTS ) ) {
+                    final ItemStack curioStack = slotResult.stack();
+                    ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USER_DAMAGED, curioStack )
+                            .forEach( ability -> ability.onUserDamaged( player.level(), player, event.getSource(), curioStack, null, slotResult.slotContext() ) );
                 }
             }
         }

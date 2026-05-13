@@ -17,8 +17,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -87,8 +88,9 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( !(hitResult instanceof BlockHitResult blockHitResult) ) return false;
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( abilityUser == null || !(hitResult instanceof BlockHitResult blockHitResult) )
+            return InteractionResult.PASS;
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             final Direction face = blockHitResult.getDirection();
@@ -96,19 +98,19 @@ public class TntAbility extends BaseArtifactAbility<TntAbility.TntAbilityConfig>
             final BlockState relativeState = level.getBlockState( relativePos );
             
             if( relativeState.getCollisionShape( level, relativePos ).isEmpty() ) {
-                final PrimedTnt tnt = new PrimedTnt( level, relativePos.getX() + 0.5D, relativePos.getY(), relativePos.getZ() + 0.5D, player );
+                final PrimedTnt tnt = new PrimedTnt( level, relativePos.getX() + 0.5D, relativePos.getY(), relativePos.getZ() + 0.5D, abilityUser );
                 tnt.setFuse( getConfig().TNT.fuse.get() );
                 level.addFreshEntity( tnt );
                 
                 if( !level.isClientSide ) {
                     level.playSound( null, relativePos, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F );
                 }
-                artifact.hurtAndBreak( 2, player, ( p ) -> p.broadcastBreakEvent( hand ) );
+                artifact.hurtAndBreak( 2, abilityUser, ( p ) -> p.broadcastBreakEvent( hand ) );
                 ArtifactUtils.setAbilityOnCooldown( artifact, this );
-                return true;
+                return InteractionResult.sidedSuccess( level.isClientSide );
             }
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
     @Override

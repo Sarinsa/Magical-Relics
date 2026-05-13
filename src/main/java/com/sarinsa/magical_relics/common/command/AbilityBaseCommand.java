@@ -57,8 +57,12 @@ public class AbilityBaseCommand {
         final RandomSource random = source.getLevel().getRandom();
         final ItemStack itemStack = player.getItemBySlot( EquipmentSlot.MAINHAND );
         
-        if( !(itemStack.getItem() instanceof IArtifactItem) ) {
+        if( !(itemStack.getItem() instanceof IArtifactItem artifactItem) ) {
             source.sendFailure( Component.translatable( TranslationUtils.ABILITY_APPLY_ERROR_2 ) );
+            return 0;
+        }
+        if( !ability.getCompatibleCategories().contains( artifactItem.getCategory() ) ) {
+            source.sendFailure( Component.translatable( TranslationUtils.ABILITY_APPLY_ERROR_4, artifactItem.getCategory().getName() ) );
             return 0;
         }
         final Map<BaseArtifactAbility<?>, TriggerType> currentAbilities = ArtifactUtils.getAllAbilities( itemStack );
@@ -75,6 +79,9 @@ public class AbilityBaseCommand {
         
         if( applied ) {
             ArtifactUtils.setPrefixAndSuffix( itemStack, random, ArtifactUtils.getAllAbilities( itemStack ).keySet().stream().toList() );
+            // noinspection ConstantConditions
+            final String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( ability ).toString();
+            source.sendSuccess( () -> Component.translatable( TranslationUtils.ABILITY_APPLY_SUCCESS, abilityId ), false );
             return 1;
         }
         return 0;

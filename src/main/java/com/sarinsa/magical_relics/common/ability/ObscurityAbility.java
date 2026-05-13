@@ -18,9 +18,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +30,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
+import top.theillusivec4.curios.api.SlotContext;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -88,20 +91,20 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
                 super( parent, "obscurity", "Options for the potion effects applied by this ability." );
                 
                 invisUseDuration = SPEC.define( new IntField( "invisibility_use_duration", invisUseDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the invisibility potion effect when this ability has a use trigger." ) );
+                        "The duration (in ticks) of the invisibility potion effect when this ability has the use trigger." ) );
                 invisDamagedDuration = SPEC.define( new IntField( "invisibility_damaged_duration", invisDamagedDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the invisibility potion effect when this ability has a hurt trigger." ) );
+                        "The duration (in ticks) of the invisibility potion effect when this ability has the hurt trigger." ) );
                 invisAttackDuration = SPEC.define( new IntField( "invisibility_attack_duration", invisAttackDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the invisibility potion effect when this ability has an attack trigger." ) );
+                        "The duration (in ticks) of the invisibility potion effect when this ability has the attack trigger." ) );
                 
                 SPEC.newLine();
                 
                 cloudyUseDuration = SPEC.define( new IntField( "cloudy_vision_use_duration", cloudyUseDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the cloudy vision potion effect when this ability has a use trigger." ) );
+                        "The duration (in ticks) of the cloudy vision potion effect when this ability has the use trigger." ) );
                 cloudyDamagedDuration = SPEC.define( new IntField( "cloudy_vision_damaged_duration", cloudyDamagedDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the cloudy vision potion effect when this ability has a hurt trigger." ) );
+                        "The duration (in ticks) of the cloudy vision potion effect when this ability has the hurt trigger." ) );
                 cloudyAttackDuration = SPEC.define( new IntField( "cloudy_vision_attack_duration", cloudyAttackDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the cloudy vision potion effect when this ability has an attack trigger." ) );
+                        "The duration (in ticks) of the cloudy vision potion effect when this ability has the attack trigger." ) );
                 
                 SPEC.newLine();
                 
@@ -120,23 +123,23 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( abilityUser != null && !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            artifact.hurtAndBreak( 1, abilityUser, ( p ) -> p.broadcastBreakEvent( hand ) );
             // noinspection resource
-            if( !player.level().isClientSide ) {
-                player.addEffect( new MobEffectInstance( MobEffects.INVISIBILITY, getConfig().OBSCURITY.invisUseDuration.get() ) );
-                player.addEffect( new MobEffectInstance( MRMobEffects.CLOUDY_VISION.get(), getConfig().OBSCURITY.cloudyUseDuration.get() ) );
-                ServerEventListener.queuePlayerForDeaggro( (ServerPlayer) player );
+            if( !abilityUser.level().isClientSide ) {
+                abilityUser.addEffect( new MobEffectInstance( MobEffects.INVISIBILITY, getConfig().OBSCURITY.invisUseDuration.get() ) );
+                abilityUser.addEffect( new MobEffectInstance( MRMobEffects.CLOUDY_VISION.get(), getConfig().OBSCURITY.cloudyUseDuration.get() ) );
+                ServerEventListener.queuePlayerForDeaggro( (ServerPlayer) abilityUser );
             }
             ArtifactUtils.setAbilityOnCooldown( artifact, this );
-            return true;
+            return InteractionResult.sidedSuccess( level.isClientSide );
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
     @Override
-    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact ) {
+    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact, @org.jetbrains.annotations.Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
         artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( player.getUsedItemHand() ) );
         // noinspection resource
         if( !player.level().isClientSide ) {
@@ -146,7 +149,7 @@ public class ObscurityAbility extends BaseArtifactAbility<ObscurityAbility.Obscu
     }
     
     @Override
-    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
         artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( player.getUsedItemHand() ) );
         // noinspection resource
         if( !player.level().isClientSide ) {

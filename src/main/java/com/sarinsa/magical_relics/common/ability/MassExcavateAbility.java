@@ -19,6 +19,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -27,6 +29,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -111,8 +114,9 @@ public class MassExcavateAbility extends BaseArtifactAbility<MassExcavateAbility
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( level.isClientSide || !(hitResult instanceof BlockHitResult blockHitResult) ) return false;
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( abilityUser == null || level.isClientSide || !(hitResult instanceof BlockHitResult blockHitResult) )
+            return InteractionResult.PASS;
         
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             final BlockState state = level.getBlockState( blockHitResult.getBlockPos() );
@@ -153,30 +157,37 @@ public class MassExcavateAbility extends BaseArtifactAbility<MassExcavateAbility
                 boolean destroyedAnyBlocks = false;
                 
                 for( BlockPos nextPos : BlockPos.betweenClosed( pos1, pos2 ) ) {
-                    if( checkAndMineBlock( (ServerLevel) level, nextPos, player ) ) {
+                    if( checkAndMineBlock( (ServerLevel) level, nextPos, abilityUser ) ) {
                         destroyedAnyBlocks = true;
                     }
                 }
                 if( destroyedAnyBlocks ) {
-                    artifact.hurtAndBreak( 1, player, ( entity ) -> entity.broadcastBreakEvent( hand ) );
+                    artifact.hurtAndBreak( 1, abilityUser, ( entity ) -> entity.broadcastBreakEvent( hand ) );
                     ArtifactUtils.setAbilityOnCooldown( artifact, this );
-                    return true;
+                    return InteractionResult.CONSUME;
                 }
             }
-            return false;
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
-    private boolean checkAndMineBlock( ServerLevel level, BlockPos pos, Player player ) {
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent( level, pos, level.getBlockState( pos ), player );
-        MinecraftForge.EVENT_BUS.post( event );
+    private boolean checkAndMineBlock( ServerLevel level, BlockPos pos, LivingEntity abilityUser ) {
+        final boolean canDestroyBlock;
         
-        if( !event.isCanceled() ) {
-            BlockState state = level.getBlockState( pos );
+        if( abilityUser instanceof Player player ) {
+            final BlockEvent.BreakEvent event = new BlockEvent.BreakEvent( level, pos, level.getBlockState( pos ), player );
+            MinecraftForge.EVENT_BUS.post( event );
+            canDestroyBlock = !event.isCanceled();
+        }
+        else {
+            canDestroyBlock = ForgeHooks.canEntityDestroy( level, pos, abilityUser );
+        }
+        
+        if( canDestroyBlock ) {
+            final BlockState state = level.getBlockState( pos );
             
             if( getConfig().MASS_EXCAVATE.effectiveOn.contains( state.getBlock() ) ) {
-                if( !player.isCreative() ) {
+                if( !(abilityUser instanceof Player player) || !player.isCreative() ) {
                     Block.dropResources( state, level, pos );
                 }
                 level.playSound( null, pos, state.getSoundType().getBreakSound(), SoundSource.BLOCKS, 0.5F, 1.0F );

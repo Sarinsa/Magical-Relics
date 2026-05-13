@@ -59,46 +59,46 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
     @Override
     public InteractionResultHolder<ItemStack> use( Level level, Player player, InteractionHand hand ) {
         final ItemStack heldItem = player.getItemInHand( hand );
-        final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
+        final List<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
         
         if( !abilities.isEmpty() ) {
-            for( BaseArtifactAbility<?> ability : abilities ) {
-                if( ability.onUse( level, player, heldItem, hand, null ) ) {
-                    return InteractionResultHolder.success( heldItem );
-                }
-            }
+            final InteractionResult result = abilities.get( 0 ).onUse( level, player, heldItem, hand, null );
+            return new InteractionResultHolder<>( result, heldItem );
         }
         return InteractionResultHolder.pass( heldItem );
     }
     
     @Override
     public InteractionResult useOn( UseOnContext context ) {
+        final Player player = context.getPlayer();
+        
+        if( player == null ) return InteractionResult.PASS;
+        
         final ItemStack heldItem = context.getItemInHand();
         final Level level = context.getLevel();
-        final Player player = context.getPlayer();
-        final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
+        final List<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, heldItem );
         
         if( !abilities.isEmpty() ) {
-            for( BaseArtifactAbility<?> ability : abilities ) {
-                if( ability.onUse( level, player, heldItem, context.getHand(), context.getHitResult() ) )
-                    return InteractionResult.SUCCESS;
-            }
+            return abilities.get( 0 ).onUse( level, player, heldItem, context.getHand(), context.getHitResult() );
         }
         return InteractionResult.FAIL;
     }
     
     @Override
     public InteractionResult interactLivingEntity( ItemStack artifact, Player player, LivingEntity livingEntity, InteractionHand hand ) {
-        final Collection<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, artifact );
+        final List<BaseArtifactAbility<?>> abilities = ArtifactUtils.getAbilitiesWithTrigger( TriggerType.USE, artifact );
         final Level level = player.level();
         
         if( !abilities.isEmpty() ) {
-            for( BaseArtifactAbility<?> ability : abilities ) {
-                if( ability.onUse( level, player, artifact, hand, new EntityHitResult( livingEntity ) ) )
-                    return InteractionResult.SUCCESS;
+            InteractionResult result = abilities.get( 0 ).onUse( level, player, artifact, hand, new EntityHitResult( livingEntity ) );
+            
+            // Force-update the item for creative players
+            if( !level.isClientSide && player.isCreative() ) {
+                player.setItemInHand( hand, artifact.copy() );
             }
+            return result;
         }
-        return InteractionResult.FAIL;
+        return InteractionResult.PASS;
     }
     
     @Override

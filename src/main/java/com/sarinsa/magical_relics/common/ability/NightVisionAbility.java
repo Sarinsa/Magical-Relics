@@ -14,10 +14,12 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -85,9 +87,9 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
                 super( parent, "night_vision", "Options for the night vision effect applied by this ability." );
                 
                 useDuration = SPEC.define( new IntField( "use_duration", useDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the potion effect when this ability has a use trigger." ) );
+                        "The duration (in ticks) of the potion effect when this ability has the use trigger." ) );
                 passiveDuration = SPEC.define( new IntField( "passive_duration", passiveDur, IntField.Range.POSITIVE,
-                        "The duration (in ticks) of the potion effect when this ability has a passive trigger.",
+                        "The duration (in ticks) of the potion effect when this ability has the passive trigger.",
                         "If you are affected by flashing lights, note that values below or equal to 200 (10 seconds) will likely make the Night Vision " +
                                 "effect flicker, as the effect is reapplied once every tick." ) );
             }
@@ -101,16 +103,16 @@ public class NightVisionAbility extends BaseArtifactAbility<NightVisionAbility.N
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            player.addEffect( new MobEffectInstance( MobEffects.NIGHT_VISION, getConfig().NIGHT_VISION.useDuration.get() ) );
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( abilityUser != null && !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            abilityUser.addEffect( new MobEffectInstance( MobEffects.NIGHT_VISION, getConfig().NIGHT_VISION.useDuration.get() ) );
             
-            artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
+            artifact.hurtAndBreak( 1, abilityUser, ( p ) -> p.broadcastBreakEvent( hand ) );
             
             ArtifactUtils.setAbilityOnCooldown( artifact, this );
-            return true;
+            return InteractionResult.sidedSuccess( level.isClientSide );
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
     @Override

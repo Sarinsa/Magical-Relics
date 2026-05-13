@@ -18,7 +18,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import top.theillusivec4.curios.api.SlotContext;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -105,7 +108,7 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
     }
     
     @Override
-    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             ArtifactUtils.setAbilityOnCooldown( artifact, this );
             
@@ -126,8 +129,8 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( hitResult instanceof BlockHitResult blockHitResult ) {
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( abilityUser != null && hitResult instanceof BlockHitResult blockHitResult ) {
             if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
                 ArtifactUtils.setAbilityOnCooldown( artifact, this );
                 
@@ -136,23 +139,23 @@ public class LightningAbility extends BaseArtifactAbility<LightningAbility.Light
                 
                 if( lightningBolt != null ) {
                     lightningBolt.moveTo( Vec3.atBottomCenterOf( pos ) );
-                    lightningBolt.setCause( player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                    lightningBolt.setCause( abilityUser instanceof ServerPlayer serverPlayer ? serverPlayer : null );
                     level.addFreshEntity( lightningBolt );
-                    assignSummoner( lightningBolt, player );
+                    assignSummoner( lightningBolt, abilityUser );
                 }
-                artifact.hurtAndBreak( 3, player, ( p ) -> p.broadcastBreakEvent( hand ) );
-                return true;
+                artifact.hurtAndBreak( 3, abilityUser, ( p ) -> p.broadcastBreakEvent( hand ) );
+                return InteractionResult.sidedSuccess( level.isClientSide );
             }
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
-    public static void assignSummoner( LightningBolt lightningBolt, Player player ) {
+    public static void assignSummoner( LightningBolt lightningBolt, LivingEntity summoner ) {
         Objects.requireNonNull( lightningBolt );
-        Objects.requireNonNull( player );
+        Objects.requireNonNull( summoner );
         
         CompoundTag modData = NBTHelper.getOrCreateCompound( lightningBolt.getPersistentData(), ArtifactUtils.TAG_MOD_DATA );
-        modData.putUUID( TAG_SUMMONER_UUID, player.getUUID() );
+        modData.putUUID( TAG_SUMMONER_UUID, summoner.getUUID() );
     }
     
     @Nullable

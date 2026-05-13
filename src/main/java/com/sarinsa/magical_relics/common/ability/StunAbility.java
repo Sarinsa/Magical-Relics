@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
@@ -107,13 +109,14 @@ public class StunAbility extends BaseArtifactAbility<StunAbility.StunAbilityConf
                 
                 entity.addEffect( new MobEffectInstance( MobEffects.MOVEMENT_SLOWDOWN, getConfig().STUN.dropDuration.get(), 1 ) );
             }
-            ArtifactUtils.setAbilityOnCooldown( itemEntity.getItem(), this );
+            if( !nearbyEntities.isEmpty() )
+                ArtifactUtils.setAbilityOnCooldown( itemEntity.getItem(), this );
         }
         return false;
     }
     
     @Override
-    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) {
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
         if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             attackedMob.addEffect( new MobEffectInstance( MobEffects.MOVEMENT_SLOWDOWN, getConfig().STUN.attackDuration.get(), 1 ) );
             ArtifactUtils.setAbilityOnCooldown( artifact, this );

@@ -28,20 +28,6 @@ public class ServerEventListener {
     private static final Deque<ServerPlayer> aggroClearingList = new ConcurrentLinkedDeque<>();
     
     
-    /*
-    @SubscribeEvent
-    public void onServerStarted( ServerStartedEvent event ) {
-        serverInstance = event.getServer();
-    }
-     */
-    
-    /*
-    @SubscribeEvent
-    public void onServerStopped( ServerStoppedEvent event ) {
-        serverInstance = null;
-    }
-     */
-    
     @SubscribeEvent
     public void onServerTick( TickEvent.ServerTickEvent event ) {
         if( event.phase == TickEvent.Phase.END ) {

@@ -12,6 +12,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -174,12 +175,13 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
     /**
      * Called when the player right-clicks while holding the artifact.
      *
-     * @param hitResult An optional HitResult object. If the player interacted with a block or an entity this will be present.
-     *                  If not, this is usually null.
+     * @param abilityUser The entity invoking the effects of this ability. Can be null!
+     * @param hitResult   An optional HitResult object. If the player interacted with a block or an entity this will be present.
+     *                    If not, this is usually null.
      * @return True if the ability successfully did what it was supposed to.
      */
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        return false;
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        return InteractionResult.PASS;
     }
     
     /**
@@ -198,19 +200,25 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
     
     /**
      * Called when the player attacks an entity with a held artifact.
+     *
+     * @param slot        The equipment slot of the artifact item. This will be null if the artifact item is equipped in a curio slot.
+     * @param slotContext The Curios slot context of the artifact item. This will be null if the artifact item is not a curio.
      */
-    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob ) { }
+    public void onDamageMob( ItemStack artifact, Player player, LivingEntity attackedMob, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) { }
     
     /**
      * Called when the player is hurt, regardless of damage source.
+     *
+     * @param slot        The equipment slot of the artifact item. This will be null if the artifact item is equipped in a curio slot.
+     * @param slotContext The Curios slot context of the artifact item. This will be null if the artifact item is not a curio.
      */
-    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact ) { }
+    public void onUserDamaged( Level level, Player player, DamageSource damageSource, ItemStack artifact, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) { }
     
     /**
      * Called when the player dies (only for held artifact items, armor and curio artifact items)<br><br>
      *
      * @param slot        The equipment slot of the artifact item. This will be null if the artifact item is equipped in a curio slot.
-     * @param slotContext The Curios slot context of the artifact item. This will be null if the artifact item is equipped in any vanilla slots.
+     * @param slotContext The Curios slot context of the artifact item. This will be null if the artifact item is not a curio.
      */
     public void onDeath( Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext, ItemStack artifact, LivingDeathEvent event ) { }
     

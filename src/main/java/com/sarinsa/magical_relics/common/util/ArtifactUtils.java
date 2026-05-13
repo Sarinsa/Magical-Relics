@@ -99,6 +99,36 @@ public class ArtifactUtils {
     
     
     /**
+     * Checks if the item stack has all the needed NBT components for being an artifact.
+     * If a tag is missing, a blank one will be created and applied.
+     */
+    public static void ensureTagsExist( ItemStack itemStack ) {
+        final CompoundTag modData = NBTHelper.getOrCreateCompound( itemStack.getOrCreateTag(), TAG_MOD_DATA );
+        
+        if( !modData.contains( TAG_VARIANT, Tag.TAG_ANY_NUMERIC ) ) {
+            modData.putInt( TAG_VARIANT, 0 );
+        }
+        if( !modData.contains( TAG_ITEM_COLOR, Tag.TAG_ANY_NUMERIC ) ) {
+            modData.putInt( TAG_ITEM_COLOR, 0xFFFFFF );
+        }
+        if( !modData.contains( TAG_ABILITY_COOLDOWNS, Tag.TAG_COMPOUND ) ) {
+            modData.put( TAG_ABILITY_COOLDOWNS, new CompoundTag() );
+        }
+        if( !modData.contains( TAG_PREFIX, Tag.TAG_STRING ) ) {
+            modData.putString( TAG_PREFIX, TranslationUtils.MUNDANE_ABILITY_PREFIX );
+        }
+        if( !modData.contains( TAG_SUFFIX, Tag.TAG_STRING ) ) {
+            modData.putString( TAG_SUFFIX, "" );
+        }
+        if( !modData.contains( TAG_ABILITIES, Tag.TAG_LIST ) ) {
+            modData.put( TAG_ABILITIES, new ListTag() );
+        }
+        if( !modData.contains( TAG_ATTRIBUTE_MODS, Tag.TAG_LIST ) ) {
+            modData.put( TAG_ATTRIBUTE_MODS, new ListTag() );
+        }
+    }
+    
+    /**
      * @param artifactItem The artifact item to use for this item stack.<br><br>
      *                     Should normally be an instance of the following:
      *                     <br>
@@ -112,7 +142,11 @@ public class ArtifactUtils {
     public static ItemStack createBlankArtifact( IArtifactItem artifactItem, int variant, RandomSource random ) {
         ItemStack artifactStack = new ItemStack( artifactItem.artifactAsItem() );
         
-        final CompoundTag modData = NBTHelper.getOrCreateCompound( artifactStack.getOrCreateTag(), TAG_MOD_DATA );
+        ensureTagsExist( artifactStack );
+        
+        // noinspection ConstantConditions
+        final CompoundTag modData = NBTHelper.getOrCreateCompound( artifactStack.getTag(), TAG_MOD_DATA );
+        
         // Pick random color and force it solid
         final int color = ARTIFACT_COLORS.isEmpty()
                 ? generateRandomColor( random )
@@ -120,9 +154,6 @@ public class ArtifactUtils {
         
         modData.putInt( TAG_VARIANT, variant );
         modData.putInt( TAG_ITEM_COLOR, color );
-        modData.put( TAG_ABILITY_COOLDOWNS, new CompoundTag() );
-        modData.putString( TAG_PREFIX, TranslationUtils.MUNDANE_ABILITY_PREFIX );
-        modData.putString( TAG_SUFFIX, "" );
         
         return artifactStack;
     }
@@ -365,6 +396,7 @@ public class ArtifactUtils {
         if( !(artifact.getItem() instanceof IArtifactItem) )
             return false;
         
+        ensureTagsExist( artifact );
         final Map<BaseArtifactAbility<?>, TriggerType> currentAbilities = getAllAbilities( artifact );
         
         // Skip if the item already has the ability
@@ -390,7 +422,6 @@ public class ArtifactUtils {
         final ListTag abilitiesTag = modData.getList( TAG_ABILITIES, Tag.TAG_COMPOUND );
         abilitiesTag.add( abilityData );
         modData.put( TAG_ABILITIES, abilitiesTag );
-        
         ability.onAbilityAttached( artifact, random );
         
         // Save any ability attribute modifiers to NBT
@@ -461,8 +492,6 @@ public class ArtifactUtils {
         
         // Make sure necessary NBT keys exist on the ItemStack
         final CompoundTag modData = NBTHelper.getOrCreateCompound( itemStack.getOrCreateTag(), TAG_MOD_DATA );
-        NBTHelper.putCompoundList( modData, TAG_ABILITIES, List.of() );
-        NBTHelper.putCompoundList( modData, TAG_ATTRIBUTE_MODS, List.of() );
         
         final List<BaseArtifactAbility<?>> successfullyApplied = new ArrayList<>();
         final List<TriggerType> occupiedTriggers = new ArrayList<>();
@@ -554,10 +583,9 @@ public class ArtifactUtils {
     }
     
     /**
-     * @return A List of all abilities on the artifact item stack with the given {@link TriggerType}.
-     * Will not be null, but may be empty.
+     * @return A new List of all abilities on the artifact item stack with the given {@link TriggerType}.
      */
-    public static Collection<BaseArtifactAbility<?>> getAbilitiesWithTrigger( TriggerType type, ItemStack itemStack ) {
+    public static List<BaseArtifactAbility<?>> getAbilitiesWithTrigger( TriggerType type, ItemStack itemStack ) {
         final List<BaseArtifactAbility<?>> list = new ArrayList<>();
         
         if( itemStack.isEmpty() ) return list;
@@ -686,14 +714,12 @@ public class ArtifactUtils {
     @SuppressWarnings( "ConstantConditions" )
     public static void setAbilityCooldown( ItemStack itemStack, BaseArtifactAbility<?> ability, long cooldown ) {
         final CompoundTag modData = itemStack.getOrCreateTag().getCompound( TAG_MOD_DATA );
+        final CompoundTag abilityCooldowns = NBTHelper.getOrCreateCompound( modData, TAG_ABILITY_COOLDOWNS );
         
-        if( NBTHelper.containsCompound( modData, TAG_ABILITY_COOLDOWNS ) ) {
-            final CompoundTag cooldownsTag = modData.getCompound( TAG_ABILITY_COOLDOWNS );
-            final String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( ability ).toString();
-            
-            if( !cooldownsTag.contains( abilityId ) ) {
-                cooldownsTag.putLong( abilityId, cooldown );
-            }
+        final String abilityId = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( ability ).toString();
+        
+        if( !abilityCooldowns.contains( abilityId ) ) {
+            abilityCooldowns.putLong( abilityId, cooldown );
         }
     }
     
