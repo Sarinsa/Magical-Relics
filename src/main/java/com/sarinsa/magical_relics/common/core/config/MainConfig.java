@@ -99,6 +99,7 @@ public class MainConfig extends AbstractConfigFile {
         private RegistrySet<BaseArtifactAbility<?>> createDefaultUnobtainableAbilities() {
             return new RegistrySet.Builder<>( MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get() )
                     .add( MRArtifactAbilities.RESURRECT )
+                    .add( MRArtifactAbilities.DEFLECT_PROJECTILE )
                     .build();
         }
         

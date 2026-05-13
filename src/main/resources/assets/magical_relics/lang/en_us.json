@@ -234,6 +234,10 @@
   "magical_relics.artifact_ability.magical_relics.yeet.description.dropped": "Yeets nearby creatures when dropped",
   "magical_relics.artifact_ability.magical_relics.yeet.description.user_damaged": "Yeets attackers when you get hurt",
 
+  "magical_relics.artifact_ability.magical_relics.deflect_projectile.description.held": "Has a chance to deflect incoming projectiles while held",
+  "magical_relics.artifact_ability.magical_relics.deflect_projectile.description.armor_tick": "Has a chance to deflect incoming projectiles while equipped",
+  "magical_relics.artifact_ability.magical_relics.deflect_projectile.description.curio": "Has a chance to deflect incoming projectiles while equipped",
+
   "magical_relics.ability.mundane_prefix": "Mundane",
 
   "magical_relics.artifact_ability.magical_relics.baker.prefix.bakers": "Baker's",
@@ -399,6 +403,14 @@
   "magical_relics.artifact_ability.magical_relics.yeet.prefix.hurling": "Hurling",
   "magical_relics.artifact_ability.magical_relics.yeet.suffix.yeets": "of Yeets",
   "magical_relics.artifact_ability.magical_relics.yeet.suffix.pitching": "of Pitching",
+
+  "magical_relics.artifact_ability.magical_relics.deflect_projectile.prefix.shielding": "Shielding",
+  "magical_relics.artifact_ability.magical_relics.deflect_projectile.prefix.blocking": "Blocking",
+  "magical_relics.artifact_ability.magical_relics.deflect_projectile.prefix.deflective": "Deflective",
+  "magical_relics.artifact_ability.magical_relics.deflect_projectile.suffix.redirecting": "of Redirecting",
+  "magical_relics.artifact_ability.magical_relics.deflect_projectile.suffix.diversion": "of Diversion",
+  "magical_relics.artifact_ability.magical_relics.deflect_projectile.suffix.ricocheting": "of Ricocheting",
+  "magical_relics.artifact_ability.magical_relics.deflect_projectile.suffix.parrying": "of Parrying",
 
   "magical_relics.format.singular_second": "1 second",
   "magical_relics.format.seconds": "%1$s seconds",
