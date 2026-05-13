@@ -115,7 +115,9 @@
   "magical_relics.command.ability.apply.error.trigger_occupied": "Specified trigger type is already occupied on this item and can't stack",
   "magical_relics.command.ability.apply.error.invalid_item": "Held item must be an artifact item",
   "magical_relics.command.ability.apply.error.unsupported_trigger": "Trigger is not supported by this ability",
-  "magical_relics.command.ability.remove.message": "Successfully removed ability %1$s from held artifact",
+  "magical_relics.command.ability.apply.error.unsupported_category": "Ability does not support the '%1$s' category.",
+  "magical_relics.command.ability.apply.success": "Successfully applied '%1$s' ability to held item!",
+  "magical_relics.command.ability.remove.message": "Successfully removed '%1$s' ability from held artifact",
   "magical_relics.command.ability.remove.error": "Unsuccessfully or only partially removed ability %1$s from artifact",
   "magical_relics.command.failure.player_only": "This command must be executed by a player",
   "magical_relics.command.argument.artifact_category.error.invalid_category": "%1$s is not a valid artifact category",
@@ -227,6 +229,10 @@
   "magical_relics.artifact_ability.magical_relics.foodie.description.user_attacking": "Occasionally restores a pinch of hunger when attacking",
   "magical_relics.artifact_ability.magical_relics.foodie.description.curio": "Prevents hunger from dropping below half while equipped",
   "magical_relics.artifact_ability.magical_relics.foodie.description.armor_tick": "Prevents hunger from dropping below half while equipped",
+
+  "magical_relics.artifact_ability.magical_relics.yeet.description.use": "Yeets the target when right-clicking",
+  "magical_relics.artifact_ability.magical_relics.yeet.description.dropped": "Yeets nearby creatures when dropped",
+  "magical_relics.artifact_ability.magical_relics.yeet.description.user_damaged": "Yeets attackers when you get hurt",
 
   "magical_relics.ability.mundane_prefix": "Mundane",
 
@@ -387,6 +393,12 @@
   "magical_relics.artifact_ability.magical_relics.foodie.suffix.saturation": "of Saturation",
   "magical_relics.artifact_ability.magical_relics.foodie.suffix.noms": "of Noms",
   "magical_relics.artifact_ability.magical_relics.foodie.suffix.munching": "of Munching",
+
+  "magical_relics.artifact_ability.magical_relics.yeet.prefix.launching": "Launching",
+  "magical_relics.artifact_ability.magical_relics.yeet.prefix.flinging": "Flinging",
+  "magical_relics.artifact_ability.magical_relics.yeet.prefix.hurling": "Hurling",
+  "magical_relics.artifact_ability.magical_relics.yeet.suffix.yeets": "of Yeets",
+  "magical_relics.artifact_ability.magical_relics.yeet.suffix.pitching": "of Pitching",
 
   "magical_relics.format.singular_second": "1 second",
   "magical_relics.format.seconds": "%1$s seconds",

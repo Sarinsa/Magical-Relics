@@ -32,8 +32,10 @@
     - Mass Excavate ability now has a configurable set of blocks it can mine.
     - Added new config options for Foodie ability.
     - Loot table dropped by Cashout ability is now configurable.
+    - Repair Others ability now also scans Curios inventory for repair candidates.
     - Fixed artifact items in the off-hand not triggering their abilities with the "held" trigger type.
     - Removed ability trigger type "RIGHT_CLICK_BLOCK" as trigger type "USE" now includes all right-click interactions (use, click block, click entity).
+    - Fixed camo block entities not properly sync-ing state and light changes to clients.
     - BaseArtifactAbility#onUse now gets called with the used InteractionHand, when available from context.
     - Command "/magicalrelics ability apply {ability} {trigger}" now only suggests compatible trigger types.
     - Made the command "/magicalrelic artifact create" much more user-friendly.
@@ -41,3 +43,4 @@
     - Tweaked some artifact item variant textures.
     - Added new buried dungeon variant.
     - Added some Deadly World compat.
+    - Added Yeet ability.

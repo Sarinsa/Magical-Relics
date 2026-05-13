@@ -49,6 +49,7 @@ minecraft {
         client {
             property 'forge.enabledGameTestNamespaces', 'examplemod'
 
+            args '--username', 'Binkus'
             arg "-mixin.config=magical_relics.mixins.json"
         }
 
