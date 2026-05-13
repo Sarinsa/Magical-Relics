@@ -2,6 +2,7 @@ package com.sarinsa.magical_relics.common.util.mixin_hooks;
 
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.sarinsa.magical_relics.client.ClientRegister;
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.config.sync.SyncedProperties;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
@@ -15,7 +16,7 @@ public class ClientMixinHooks {
     
     public static void inject_controlBoat( Boat boat ) {
         if( boat.getControllingPassenger() instanceof Player player ) {
-            if( ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.CHEST ), MRArtifactAbilities.SAILOR.get() ) ) {
+            if( ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.CHEST ), MRArtifactAbilities.SAILOR.get(), TriggerType.ARMOR_TICK ) ) {
                 final double multiplier = 1.0D + SyncedProperties.SAILOR_ABILITY_SPEED_MULT.getValue();
                 boat.setDeltaMovement( boat.getDeltaMovement().multiply( multiplier, 1.0D, multiplier ) );
             }

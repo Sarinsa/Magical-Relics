@@ -55,7 +55,7 @@ public class ClientEventListener {
                 Player player = event.player;
                 
                 // Make sure the player has the ore radar ability
-                if( ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.HEAD ), MRArtifactAbilities.ORE_RADAR.get() ) ) {
+                if( ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.HEAD ), MRArtifactAbilities.ORE_RADAR.get(), null ) ) {
                     Level level = player.level();
                     BlockPos playerPos = player.blockPosition();
                     final int scanRange = SyncedProperties.ORE_RADAR_RADIUS.getValue();

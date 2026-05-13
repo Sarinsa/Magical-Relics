@@ -39,6 +39,7 @@
     - BaseArtifactAbility#onUse now gets called with the used InteractionHand, when available from context.
     - Command "/magicalrelics ability apply {ability} {trigger}" now only suggests compatible trigger types.
     - Made the command "/magicalrelic artifact create" much more user-friendly.
+    - Added optional TriggerType context for ArtifactUtils.hasAbility() which fixes some strange behavior with certain abilities.
     - Added client-side config option for disabling the "flicker" visual effect on potion effect icons in the GUI for potion effects with only 1 tick of duration.
     - Tweaked some artifact item variant textures.
     - Added new buried dungeon variant.

@@ -603,11 +603,18 @@ public class ArtifactUtils {
     
     /**
      * @return True if the given item stack has the specified ability attached to it.
+     * <br><br>
+     * If the trigger type parameter is specified, this method will only return true
+     * if the ability is found AND has the specified trigger type.
      */
-    public static boolean hasAbility( ItemStack itemStack, BaseArtifactAbility<?> ability ) {
+    public static boolean hasAbility( ItemStack itemStack, BaseArtifactAbility<?> ability, @Nullable TriggerType triggerType ) {
         final Map<BaseArtifactAbility<?>, TriggerType> abilities = getAllAbilities( itemStack );
         if( abilities.isEmpty() ) return false;
-        return abilities.containsKey( ability );
+        
+        if( triggerType != null ) {
+            return abilities.containsKey( ability ) && abilities.get( ability ) == triggerType;
+        }
+        else return abilities.containsKey( ability );
     }
     
     /**
@@ -615,16 +622,19 @@ public class ArtifactUtils {
      * the specified ability is present on any item stacks. Note that only
      * the curio slots with the identifiers in {@link ArtifactUtils#CURIO_SLOTS}
      * are checked.
+     * <br><br>
+     * If the trigger type parameter is specified, this method will only return true
+     * if the ability is found AND has the specified trigger type.
      */
     @SuppressWarnings( "ConstantConditions" )
-    public static boolean hasAbilityOnCurio( Player player, BaseArtifactAbility<?> ability ) {
+    public static boolean hasAbilityOnCurio( Player player, BaseArtifactAbility<?> ability, @Nullable TriggerType triggerType ) {
         final ICuriosItemHandler curioInventory = CuriosApi.getCuriosInventory( player ).orElse( null );
         
         if( curioInventory != null ) {
             final List<SlotResult> slotResults = curioInventory.findCurios( CURIO_SLOTS );
             
             for( SlotResult slotResult : slotResults ) {
-                if( hasAbility( slotResult.stack(), ability ) )
+                if( hasAbility( slotResult.stack(), ability, triggerType ) )
                     return true;
             }
         }

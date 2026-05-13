@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.block;
 
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
@@ -69,16 +70,16 @@ public class SolidAirBlock extends AirBlock {
     public void tick( BlockState state, ServerLevel level, BlockPos pos, RandomSource random ) {
         if( level.isClientSide ) return;
         
-        List<Player> abovePlayers = level.getEntitiesOfClass( Player.class, new AABB( pos.above() ).deflate( 0.3D, 0.0D, 0.3D ) );
+        final List<Player> abovePlayers = level.getEntitiesOfClass( Player.class, new AABB( pos.above() ).deflate( 0.3D, 0.0D, 0.3D ) );
         
         // Check for players above that have the air sneak ability active
         if( !abovePlayers.isEmpty() ) {
             boolean airSneakerAbove = false;
             
             for( Player player : abovePlayers ) {
-                if( ArtifactUtils.hasAbility( player.getItemInHand( InteractionHand.MAIN_HAND ), MRArtifactAbilities.AIR_SNEAK.get() )
-                        || ArtifactUtils.hasAbility( player.getItemInHand( InteractionHand.OFF_HAND ), MRArtifactAbilities.AIR_SNEAK.get() )
-                        || ArtifactUtils.hasAbilityOnCurio( player, MRArtifactAbilities.AIR_SNEAK.get() ) ) {
+                if( ArtifactUtils.hasAbility( player.getItemInHand( InteractionHand.MAIN_HAND ), MRArtifactAbilities.AIR_SNEAK.get(), TriggerType.HELD )
+                        || ArtifactUtils.hasAbility( player.getItemInHand( InteractionHand.OFF_HAND ), MRArtifactAbilities.AIR_SNEAK.get(), TriggerType.HELD )
+                        || ArtifactUtils.hasAbilityOnCurio( player, MRArtifactAbilities.AIR_SNEAK.get(), TriggerType.CURIO_TICK ) ) {
                     airSneakerAbove = true;
                     break;
                 }

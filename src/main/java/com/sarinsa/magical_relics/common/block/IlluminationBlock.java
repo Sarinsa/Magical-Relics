@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.block;
 
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
 import net.minecraft.core.BlockPos;
@@ -53,7 +54,7 @@ public class IlluminationBlock extends Block {
     @SuppressWarnings( "deprecation" )
     @Override
     public void randomTick( BlockState state, ServerLevel level, BlockPos pos, RandomSource random ) {
-        List<Player> nearbyPlayers = level.getEntitiesOfClass( Player.class, new AABB( pos ).inflate( 6.0F ) );
+        final List<Player> nearbyPlayers = level.getEntitiesOfClass( Player.class, new AABB( pos ).inflate( 6.0F ) );
         
         if( nearbyPlayers.isEmpty() ) {
             showExtinguishEffect( level, pos, random );
@@ -62,9 +63,8 @@ public class IlluminationBlock extends Block {
         }
         
         for( Player player : nearbyPlayers ) {
-            if( ArtifactUtils.hasAbility( player.getItemInHand( InteractionHand.MAIN_HAND ), MRArtifactAbilities.ILLUMINATION.get() )
-                    || ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.HEAD ), MRArtifactAbilities.ILLUMINATION.get() ) ) {
-                
+            if( ArtifactUtils.hasAbility( player.getItemInHand( InteractionHand.MAIN_HAND ), MRArtifactAbilities.ILLUMINATION.get(), TriggerType.HELD )
+                    || ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.HEAD ), MRArtifactAbilities.ILLUMINATION.get(), TriggerType.ARMOR_TICK ) ) {
                 return;
             }
         }

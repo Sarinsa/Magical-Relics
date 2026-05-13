@@ -1,5 +1,6 @@
 package com.sarinsa.magical_relics.common.util.mixin_hooks;
 
+import com.sarinsa.magical_relics.common.ability.base.TriggerType;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.core.registry.MRStructureProcessors;
 import com.sarinsa.magical_relics.common.mixin.StructureProcessorAccessor;
@@ -15,7 +16,7 @@ public class CommonMixinHooks {
     public static void inject_onClimbable( CallbackInfoReturnable<Boolean> cir, LivingEntity livingEntity ) {
         if( livingEntity instanceof Player player ) {
             for( EquipmentSlot slot : ArtifactUtils.ARMOR_SLOTS ) {
-                if( ArtifactUtils.hasAbility( player.getItemBySlot( slot ), MRArtifactAbilities.SPIDER.get() ) ) {
+                if( ArtifactUtils.hasAbility( player.getItemBySlot( slot ), MRArtifactAbilities.SPIDER.get(), TriggerType.ARMOR_TICK ) ) {
                     if( player.horizontalCollision ) {
                         cir.setReturnValue( true );
                         return;
