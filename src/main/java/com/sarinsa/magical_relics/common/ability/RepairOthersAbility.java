@@ -17,7 +17,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
+import top.theillusivec4.curios.api.SlotResult;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -97,32 +100,22 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
     }
     
     @Override
-    public boolean onUse( Level level, Player player, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
-            final List<ItemStack> fixCandidates = new ArrayList<>();
+    public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
+        if( abilityUser != null && ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+            final List<ItemStack> fixCandidates = getAbilityUserInventory( abilityUser );
             
-            // Collect all item stacks in the inventory that can have durability restored
-            for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
-                ItemStack checkedStack = player.getInventory().getItem( i );
-                
-                if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
-                    if( !checkedStack.isEmpty() ) {
-                        fixCandidates.add( checkedStack );
-                    }
-                }
-            }
             // Pick a random "fixable" item to restore durability for
             if( !fixCandidates.isEmpty() ) {
                 ItemStack stackToFix = fixCandidates.get( level.random.nextInt( fixCandidates.size() ) );
                 
                 // 1/3 chance to hurt the artifact. A 1-to-1 conversion ratio would not be much to brag about.
                 if( level.random.nextInt( 3 ) == 0 )
-                    artifact.hurtAndBreak( 1, player, ( p ) -> p.broadcastBreakEvent( hand ) );
-                stackToFix.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-                return true;
+                    artifact.hurtAndBreak( 1, abilityUser, ( p ) -> p.broadcastBreakEvent( hand ) );
+                stackToFix.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, abilityUser instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                return InteractionResult.sidedSuccess( level.isClientSide );
             }
         }
-        return false;
+        return InteractionResult.PASS;
     }
     
     @Override
@@ -138,6 +131,40 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
     @Override
     public void onArmorTick( ItemStack artifact, Level level, Player player, EquipmentSlot slot ) {
         onHeld( level, player, artifact, slot );
+    }
+    
+    private List<ItemStack> getAbilityUserInventory( LivingEntity abilityUser ) {
+        final List<ItemStack> fixCandidates = new ArrayList<>();
+        
+        if( abilityUser instanceof Player player ) {
+            for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
+                final ItemStack stack = player.getInventory().getItem( i );
+                
+                if( !stack.isEmpty() )
+                    fixCandidates.add( stack );
+            }
+        }
+        else {
+            for( EquipmentSlot slot : EquipmentSlot.values() ) {
+                final ItemStack stack = abilityUser.getItemBySlot( slot );
+                
+                if( !stack.isEmpty() )
+                    fixCandidates.add( stack );
+            }
+        }
+        // Collect all curio stacks
+        CuriosApi.getCuriosInventory( abilityUser ).ifPresent( ( itemHandler ) -> {
+            final List<SlotResult> slotResults = itemHandler.findCurios();
+            
+            for( SlotResult slotResult : slotResults ) {
+                if( !slotResult.stack().isEmpty() )
+                    fixCandidates.add( slotResult.stack() );
+            }
+        } );
+        
+        fixCandidates.removeIf( ( stack ) ->
+                stack.isEmpty() || !(stack.getItem() instanceof IArtifactItem) || stack.getDamageValue() <= 0 );
+        return fixCandidates;
     }
     
     private void repairRandomItem( Level level, Player player, ItemStack artifact, Consumer<Player> onBreakCallback ) {
