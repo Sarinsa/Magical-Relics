@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -164,7 +163,7 @@ public class MassExcavateAbility extends BaseArtifactAbility<MassExcavateAbility
                 if( destroyedAnyBlocks ) {
                     artifact.hurtAndBreak( 1, abilityUser, ( entity ) -> entity.broadcastBreakEvent( hand ) );
                     ArtifactUtils.setAbilityOnCooldown( artifact, this );
-                    return InteractionResult.CONSUME;
+                    return InteractionResult.SUCCESS;
                 }
             }
         }
@@ -190,8 +189,7 @@ public class MassExcavateAbility extends BaseArtifactAbility<MassExcavateAbility
                 if( !(abilityUser instanceof Player player) || !player.isCreative() ) {
                     Block.dropResources( state, level, pos );
                 }
-                level.playSound( null, pos, state.getSoundType().getBreakSound(), SoundSource.BLOCKS, 0.5F, 1.0F );
-                level.removeBlock( pos, false );
+                level.destroyBlock( pos, false );
                 return true;
             }
         }
