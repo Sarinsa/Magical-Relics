@@ -32,6 +32,7 @@
     - Mass Excavate ability now has a configurable set of blocks it can mine.
     - Added new config options for Foodie ability.
     - Baker ability now has a configurable weighted list of cake blocks it can conjure.
+    - Fixed Mass Excavate ability not spawning block break particles or sending BLOCK_DESTROY game event.
     - Loot table dropped by Cashout ability is now configurable.
     - Repair Others ability now also scans Curios inventory for repair candidates.
     - Fixed artifact items in the off-hand not triggering their abilities with the "held" trigger type.
