@@ -31,6 +31,7 @@
     - Added Resurrect ability to the default list of unobtainable abilities.
     - Mass Excavate ability now has a configurable set of blocks it can mine.
     - Added new config options for Foodie ability.
+    - Baker ability now has a configurable weighted list of cake blocks it can conjure.
     - Loot table dropped by Cashout ability is now configurable.
     - Repair Others ability now also scans Curios inventory for repair candidates.
     - Fixed artifact items in the off-hand not triggering their abilities with the "held" trigger type.
