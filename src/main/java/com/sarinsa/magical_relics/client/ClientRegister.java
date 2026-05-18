@@ -12,6 +12,7 @@ import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.core.registry.MRParticles;
 import com.sarinsa.magical_relics.common.item.IArtifactItem;
 import com.sarinsa.magical_relics.common.util.ArtifactUtils;
+import fathertoast.crust.api.config.client.ClientConfigUtil;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -26,6 +27,7 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.RegistryObject;
@@ -49,6 +51,8 @@ public class ClientRegister {
                     ConfigManager.getRequired( MagicalRelics.MODID ), "client_settings" );
             CLIENT_CONFIG.SPEC.initialize();
         } );
+        
+        ClientConfigUtil.registerConfigButtonAsEditScreen( ModList.get().getModContainerById( MagicalRelics.MODID ).orElseThrow() );
         
         ItemModelProps.register();
     }
