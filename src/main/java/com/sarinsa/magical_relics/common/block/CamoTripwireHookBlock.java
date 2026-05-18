@@ -62,7 +62,7 @@ public class CamoTripwireHookBlock extends TripWireHookBlock implements EntityBl
     }
     
     /**
-     * Slightly modified code from {@link TripWireHookBlock#calculateState(Level, BlockPos, BlockState, boolean, boolean, int, BlockState)}
+     * Slightly modified code from {@link TripWireHookBlock#calculateState(Level, BlockPos, BlockState, boolean, boolean, int, BlockState)}.
      */
     @Override
     public void calculateState( Level level, BlockPos pos, BlockState state, boolean p_57689_, boolean p_57690_, int maxDist, @Nullable BlockState p_57692_ ) {
@@ -75,27 +75,27 @@ public class CamoTripwireHookBlock extends TripWireHookBlock implements EntityBl
         BlockState[] ablockstate = new BlockState[42];
         
         for( int checkDist = 1; checkDist < 42; ++checkDist ) {
-            BlockPos blockpos = pos.relative( direction, checkDist );
-            BlockState blockstate = level.getBlockState( blockpos );
+            BlockPos offsetPos = pos.relative( direction, checkDist );
+            BlockState offsetState = level.getBlockState( offsetPos );
             
-            if( blockstate.is( MRBlocks.CAMO_TRIPWIRE_HOOK.get() ) ) {
-                if( blockstate.getValue( FACING ) == direction.getOpposite() ) {
+            if( offsetState.is( MRBlocks.CAMO_TRIPWIRE_HOOK.get() ) ) {
+                if( offsetState.getValue( FACING ) == direction.getOpposite() ) {
                     i = checkDist;
                 }
                 break;
             }
             
-            if( !blockstate.is( MRBlocks.THICK_TRIPWIRE.get() ) && checkDist != maxDist ) {
+            if( !offsetState.is( MRBlocks.THICK_TRIPWIRE.get() ) && checkDist != maxDist ) {
                 ablockstate[checkDist] = null;
                 flag2 = false;
             }
             else {
-                if( checkDist == maxDist ) blockstate = MoreObjects.firstNonNull( p_57692_, blockstate );
+                if( checkDist == maxDist ) offsetState = MoreObjects.firstNonNull( p_57692_, offsetState );
                 
-                boolean flag4 = !blockstate.getValue( TripWireBlock.DISARMED );
-                boolean flag5 = blockstate.getValue( TripWireBlock.POWERED );
+                boolean flag4 = !offsetState.getValue( TripWireBlock.DISARMED );
+                boolean flag5 = offsetState.getValue( TripWireBlock.POWERED );
                 flag3 |= flag4 && flag5;
-                ablockstate[checkDist] = blockstate;
+                ablockstate[checkDist] = offsetState;
                 if( checkDist == maxDist ) {
                     level.scheduleTick( pos, this, 10 );
                     flag2 &= flag4;
@@ -138,8 +138,8 @@ public class CamoTripwireHookBlock extends TripWireHookBlock implements EntityBl
     }
     
     @Override
-    public void onRemove( BlockState state, Level level, BlockPos pos, BlockState newState, boolean b ) {
-        super.onRemove( state, level, pos, newState, b );
+    public void onRemove( BlockState state, Level level, BlockPos pos, BlockState newState, boolean dropItems ) {
+        super.onRemove( state, level, pos, newState, dropItems );
         
         if( state.hasBlockEntity() && (!state.is( newState.getBlock() ) || !newState.hasBlockEntity()) ) {
             level.removeBlockEntity( pos );
