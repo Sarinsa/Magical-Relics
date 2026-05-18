@@ -17,6 +17,7 @@ import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 
@@ -32,7 +33,7 @@ public class ClientEventListener {
             event.setCanceled( true );
     }
     
-    @SubscribeEvent
+    @SubscribeEvent( priority = EventPriority.LOW )
     public void onRenderFog( ViewportEvent.RenderFog event ) {
         if( Minecraft.getInstance().player != null ) {
             Player player = Minecraft.getInstance().player;
@@ -52,20 +53,28 @@ public class ClientEventListener {
         if( event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.START ) {
             // Ore ping particle spawning
             if( --timeNextOrePing <= 0 ) {
-                Player player = event.player;
+                final Player player = event.player;
                 
                 // Make sure the player has the ore radar ability
                 if( ArtifactUtils.hasAbility( player.getItemBySlot( EquipmentSlot.HEAD ), MRArtifactAbilities.ORE_RADAR.get(), null ) ) {
-                    Level level = player.level();
-                    BlockPos playerPos = player.blockPosition();
+                    final Level level = player.level();
                     final int scanRange = SyncedProperties.ORE_RADAR_RADIUS.getValue();
+                    BlockPos playerPos = player.blockPosition();
                     
                     for( BlockPos pos : BlockPos.betweenClosed(
                             playerPos.offset( scanRange, scanRange, scanRange ),
                             playerPos.offset( -scanRange, -scanRange, -scanRange ) ) ) {
                         // noinspection deprecation
                         if( level.hasChunkAt( pos ) && level.getBlockState( pos ).is( Tags.Blocks.ORES ) ) {
-                            level.addParticle( MRParticles.ORE_PING.get(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 0.0F, 0.0F, 0.0F );
+                            level.addParticle(
+                                    MRParticles.ORE_PING.get(),
+                                    pos.getX() + 0.5D,
+                                    pos.getY() + 0.5D,
+                                    pos.getZ() + 0.5D,
+                                    0.0F,
+                                    0.0F,
+                                    0.0F
+                            );
                         }
                     }
                 }
