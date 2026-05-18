@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 public class ClientUtils {
     
     public static boolean isQuicksandViewBlocking() {
-        Player player = Minecraft.getInstance().player;
+        final Player player = Minecraft.getInstance().player;
         if( player == null ) return false;
         return QuicksandBlock.areEyesInQuicksand( player );
     }
