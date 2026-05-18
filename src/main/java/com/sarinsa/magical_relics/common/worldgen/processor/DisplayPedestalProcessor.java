@@ -67,18 +67,18 @@ public class DisplayPedestalProcessor extends StructureProcessor {
         if( isDisplayPedestal ) {
             if( tag == null ) tag = new CompoundTag();
             
-            if( tag.contains( DisplayPedestalBlockEntity.WIZARDS_FAVORITE_KEY, Tag.TAG_BYTE ) && tag.getBoolean( DisplayPedestalBlockEntity.WIZARDS_FAVORITE_KEY ) ) {
+            if( tag.contains( DisplayPedestalBlockEntity.KEY_WIZARDS_FAVORITE, Tag.TAG_BYTE ) && tag.getBoolean( DisplayPedestalBlockEntity.KEY_WIZARDS_FAVORITE ) ) {
                 CompoundTag itemStackTag = new CompoundTag();
                 ItemStack itemStack = getRandomItem( random );
                 itemStack.save( itemStackTag );
-                tag.put( DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag );
+                tag.put( DisplayPedestalBlockEntity.KEY_ITEM, itemStackTag );
             }
             else {
                 CompoundTag itemStackTag = new CompoundTag();
                 ItemStack itemStack = ArtifactUtils.generateRandomArtifact( level, random, Config.MAIN.ABILITIES.legendaryChance.rollChance( random ) );
                 itemStack.save( itemStackTag );
                 
-                tag.put( DisplayPedestalBlockEntity.ITEM_KEY, itemStackTag );
+                tag.put( DisplayPedestalBlockEntity.KEY_ITEM, itemStackTag );
             }
         }
         return isDisplayPedestal ? new StructureTemplate.StructureBlockInfo( blockpos, state, tag ) : blockInfo;

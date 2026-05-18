@@ -32,7 +32,7 @@ public class DisplayPedestalRenderer implements BlockEntityRenderer<DisplayPedes
         poseStack.mulPose( Axis.XP.rotationDegrees( 90.0F ) );
         poseStack.scale( 0.5F, 0.5F, 0.5F );
         
-        final ItemStack artifact = displayPedestal.getArtifact();
+        final ItemStack artifact = displayPedestal.getItemStack();
         Minecraft.getInstance().getItemRenderer().renderStatic( artifact, ItemDisplayContext.FIXED, packedLight, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, displayPedestal.getLevel(), (int) displayPedestal.getBlockPos().asLong() );
     }
 }

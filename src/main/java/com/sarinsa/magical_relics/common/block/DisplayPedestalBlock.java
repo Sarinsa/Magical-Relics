@@ -4,11 +4,11 @@ import com.sarinsa.magical_relics.common.blockentity.DisplayPedestalBlockEntity;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
 import com.sarinsa.magical_relics.common.core.registry.MRItems;
 import com.sarinsa.magical_relics.common.util.TranslationUtils;
+import fathertoast.crust.api.lib.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -50,8 +50,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty LOCKED = BooleanProperty.create( "locked" );
     
-    
-    private static final VoxelShape shape = Shapes.or( Shapes.or(
+    private static final VoxelShape SHAPE = Shapes.or( Shapes.or(
             Block.box( 3.0F, 0.0F, 3.0F, 13.0F, 2.0F, 13.0F ),
             Block.box( 5.0F, 2.0F, 5.0F, 11.0F, 10.0F, 11.0F ),
             Block.box( 3.0F, 10.0F, 3.0F, 13.0F, 16.0F, 13.0F ) ) );
@@ -71,56 +70,66 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
         );
     }
     
+    /** @return True if the player has a pedestal key in the specified hand. */
+    public static boolean hasPedestalKey( Player player, InteractionHand hand ) {
+        return player.getItemInHand( hand ).is( MRItems.PEDESTAL_KEY.get() );
+    }
+    
     @Override
     @SuppressWarnings( "deprecation" )
     public InteractionResult use( BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult ) {
-        BlockEntity blockEntity = level.getExistingBlockEntity( pos );
+        final BlockEntity blockEntity = level.getExistingBlockEntity( pos );
         
-        if( blockEntity instanceof DisplayPedestalBlockEntity displayPedestal ) {
-            // Check if the pedestal is locked
-            if( state.getValue( LOCKED ) ) {
-                if( player.getItemInHand( hand ).getItem() == MRItems.PEDESTAL_KEY.get() ) {
+        if( !(blockEntity instanceof DisplayPedestalBlockEntity displayPedestal) )
+            return InteractionResult.PASS;
+        
+        // Check if the pedestal is locked
+        if( state.getValue( LOCKED ) ) {
+            if( hasPedestalKey( player, hand ) ) {
+                if( !level.isClientSide ) {
                     level.setBlock( pos, state.setValue( LOCKED, false ), Block.UPDATE_CLIENTS );
-                    level.playSound( null, pos, SoundEvents.CHAIN_BREAK, SoundSource.MASTER, 1.0F, 0.8F );
                     
                     if( !player.isCreative() ) {
                         player.getItemInHand( hand ).shrink( 1 );
                     }
                 }
-                else {
-                    player.playSound( SoundEvents.ARMOR_EQUIP_CHAIN );
-                    player.displayClientMessage( TranslationUtils.PEDESTAL_LOCKED, true );
+                player.playSound( SoundEvents.CHAIN_BREAK );
+            }
+            else {
+                player.playSound( SoundEvents.ARMOR_EQUIP_CHAIN );
+                player.displayClientMessage( TranslationUtils.PEDESTAL_LOCKED, true );
+            }
+            return InteractionResult.sidedSuccess( level.isClientSide );
+        }
+        // Any other interactions only happen if the player is sneaking
+        else if( !player.isShiftKeyDown() ) {
+            // Pop the contained item, if not empty
+            if( !displayPedestal.getItemStack().isEmpty() ) {
+                if( !level.isClientSide ) {
+                    Block.popResourceFromFace( level, pos, Direction.UP, displayPedestal.getItemStack() );
+                    displayPedestal.setItemStack( ItemStack.EMPTY );
+                    
+                    level.setBlock( pos, state.setValue( POWERED, true ), Block.UPDATE_CLIENTS );
+                    level.scheduleTick( pos, this, 10 );
+                    level.playSound( null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.7F, 1.0F );
+                    
+                    level.sendBlockUpdated( pos, state, state, Block.UPDATE_CLIENTS );
                 }
                 return InteractionResult.sidedSuccess( level.isClientSide );
             }
-            // Any other interactions only happen if the player is sneaking
-            else if( !player.isShiftKeyDown() ) {
-                // Pop the contained item, if not empty
-                if( !displayPedestal.getArtifact().isEmpty() ) {
-                    Block.popResourceFromFace( level, pos, Direction.UP, displayPedestal.getArtifact() );
-                    displayPedestal.setArtifact( ItemStack.EMPTY );
-                    
-                    level.setBlock( pos, state.setValue( POWERED, true ), Block.UPDATE_ALL );
-                    level.scheduleTick( pos, this, 10 );
-                    
+            // If empty, try and place the held item into the pedestal
+            else {
+                if( !player.getItemInHand( hand ).isEmpty() ) {
                     if( !level.isClientSide ) {
-                        level.playSound( null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.7F, 1.0F );
+                        displayPedestal.setItemStack( player.getItemInHand( hand ) );
+                        level.sendBlockUpdated( pos, state, state, Block.UPDATE_CLIENTS );
+                        
+                        player.setItemInHand( hand, ItemStack.EMPTY );
+                        level.playSound( null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 0.7F, 1.0F );
                     }
                     return InteractionResult.sidedSuccess( level.isClientSide );
                 }
-                // If empty, try and place the held item into the pedestal
-                else {
-                    if( !player.getItemInHand( hand ).isEmpty() ) {
-                        displayPedestal.setArtifact( player.getItemInHand( hand ) );
-                        player.setItemInHand( hand, ItemStack.EMPTY );
-                        
-                        if( !level.isClientSide ) {
-                            level.playSound( null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 0.7F, 1.0F );
-                        }
-                        return InteractionResult.sidedSuccess( level.isClientSide );
-                    }
-                    return InteractionResult.PASS;
-                }
+                return InteractionResult.PASS;
             }
         }
         return super.use( state, level, pos, player, hand, hitResult );
@@ -128,7 +137,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
     
     @Override
     public void playerWillDestroy( Level level, BlockPos pos, BlockState state, Player player ) {
-        BlockEntity blockEntity = level.getBlockEntity( pos );
+        final BlockEntity blockEntity = level.getBlockEntity( pos );
         
         if( blockEntity instanceof DisplayPedestalBlockEntity displayPedestal && state.getValue( LOCKED ) ) {
             if( !level.isClientSide && !player.isCreative() ) {
@@ -172,24 +181,24 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
     
     @Override
     @SuppressWarnings( "deprecation" )
-    public void onRemove( BlockState state, Level level, BlockPos pos, BlockState newState, boolean uh ) {
+    public void onRemove( BlockState state, Level level, BlockPos pos, BlockState newState, boolean dropItems ) {
         if( !state.is( newState.getBlock() ) ) {
-            BlockEntity blockEntity = level.getBlockEntity( pos );
+            final BlockEntity blockEntity = level.getBlockEntity( pos );
             
             if( blockEntity instanceof DisplayPedestalBlockEntity displayPedestal && !state.getValue( LOCKED ) ) {
-                if( level instanceof ServerLevel && !displayPedestal.getArtifact().isEmpty() ) {
-                    Block.popResource( level, pos, displayPedestal.getArtifact() );
+                if( level instanceof ServerLevel && !displayPedestal.getItemStack().isEmpty() ) {
+                    Block.popResource( level, pos, displayPedestal.getItemStack() );
                 }
                 level.updateNeighbourForOutputSignal( pos, this );
             }
-            super.onRemove( state, level, pos, newState, uh );
+            super.onRemove( state, level, pos, newState, dropItems );
         }
     }
     
     @Override
     @SuppressWarnings( "deprecation" )
     public VoxelShape getShape( BlockState state, BlockGetter level, BlockPos pos, CollisionContext context ) {
-        return shape;
+        return SHAPE;
     }
     
     @Nullable
@@ -205,7 +214,7 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
     
     @Override
     public List<ItemStack> getDrops( BlockState state, LootParams.Builder builder ) {
-        BlockEntity blockEntity = builder.getOptionalParameter( LootContextParams.BLOCK_ENTITY );
+        final BlockEntity blockEntity = builder.getOptionalParameter( LootContextParams.BLOCK_ENTITY );
         
         if( blockEntity instanceof DisplayPedestalBlockEntity && state.getValue( LOCKED ) ) {
             return List.of();
@@ -216,13 +225,13 @@ public class DisplayPedestalBlock extends Block implements EntityBlock {
     @Override
     public void appendHoverText( ItemStack itemStack, @Nullable BlockGetter level, List<Component> components, TooltipFlag tooltipFlag ) {
         super.appendHoverText( itemStack, level, components, tooltipFlag );
-        CompoundTag blockEntityData = BlockItem.getBlockEntityData( itemStack );
+        final CompoundTag blockEntityData = BlockItem.getBlockEntityData( itemStack );
         
-        if( blockEntityData != null ) {
-            if( blockEntityData.contains( DisplayPedestalBlockEntity.LOCKED_KEY, Tag.TAG_BYTE ) ) {
-                if( blockEntityData.getBoolean( DisplayPedestalBlockEntity.LOCKED_KEY ) ) {
-                    components.add( Component.translatable( TranslationUtils.PEDESTAL_LOCKED_TOOLTIP ).withStyle( ChatFormatting.GRAY ) );
-                }
+        if( blockEntityData == null ) return;
+        
+        if( NBTHelper.containsNumber( blockEntityData, DisplayPedestalBlockEntity.KEY_LOCKED ) ) {
+            if( blockEntityData.getBoolean( DisplayPedestalBlockEntity.KEY_LOCKED ) ) {
+                components.add( Component.translatable( TranslationUtils.PEDESTAL_LOCKED_TOOLTIP ).withStyle( ChatFormatting.GRAY ) );
             }
         }
     }
