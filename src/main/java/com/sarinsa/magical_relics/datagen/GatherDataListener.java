@@ -35,18 +35,18 @@ public class GatherDataListener {
     
     @SubscribeEvent
     public static void onGatherData( GatherDataEvent event ) {
-        DataGenerator generator = event.getGenerator();
-        ExistingFileHelper fileHelper = event.getExistingFileHelper();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        final DataGenerator generator = event.getGenerator();
+        final ExistingFileHelper fileHelper = event.getExistingFileHelper();
+        final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         
         generator.addProvider( event.includeClient(), new MRBlockStateProvider( generator, fileHelper ) );
         generator.addProvider( event.includeClient(), new MRItemModelProvider( generator, fileHelper ) );
         
-        MRBlockTagProvider blockTagProvider = new MRBlockTagProvider( generator, lookupProvider, fileHelper );
+        MRBlockTagProvider blockTags = new MRBlockTagProvider( generator, lookupProvider, fileHelper );
         
         generator.addProvider( event.includeServer(), new DatapackBuiltinEntriesProvider( generator.getPackOutput(), lookupProvider, BUILDER, Set.of( MagicalRelics.MODID ) ) );
-        generator.addProvider( event.includeServer(), blockTagProvider );
-        generator.addProvider( event.includeServer(), new MRItemTagProvider( generator, lookupProvider, blockTagProvider.contentsGetter(), fileHelper ) );
+        generator.addProvider( event.includeServer(), blockTags );
+        generator.addProvider( event.includeServer(), new MRItemTagProvider( generator, lookupProvider, blockTags.contentsGetter(), fileHelper ) );
         generator.addProvider( event.includeServer(), new MRBiomeTagProvider( generator, lookupProvider, fileHelper ) );
         generator.addProvider( event.includeServer(), new MRLootProvider( generator ) );
         generator.addProvider( event.includeServer(), new MRLootModProvider( generator ) );

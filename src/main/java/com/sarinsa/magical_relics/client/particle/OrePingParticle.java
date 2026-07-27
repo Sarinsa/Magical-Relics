@@ -33,7 +33,7 @@ public class OrePingParticle extends TextureSheetParticle {
     
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderTypes.NO_DEPTH;
+        return ParticleRenderTypes.ORE_PING;
     }
     
     @Override

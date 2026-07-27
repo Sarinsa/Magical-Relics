@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 
 public class ParticleRenderTypes {
     
-    public static final ParticleRenderType NO_DEPTH = new ParticleRenderType() {
+    public static final ParticleRenderType ORE_PING = new ParticleRenderType() {
         @Override
         public void begin( BufferBuilder builder, TextureManager textureManager ) {
             RenderSystem.depthMask( true );
