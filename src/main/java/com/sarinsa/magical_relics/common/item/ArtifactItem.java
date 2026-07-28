@@ -186,16 +186,16 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
     }
     
     @Override
-    public boolean shouldCauseBlockBreakReset( ItemStack oldStack, ItemStack newStack ) {
-        return !newStack.is( oldStack.getItem() );
-    }
-    
-    @Override
     public boolean isBookEnchantable( ItemStack stack, ItemStack book ) {
         if( book.getEnchantmentLevel( Enchantments.MENDING ) > 0 )
             return false;
         
         return super.isBookEnchantable( stack, book );
+    }
+    
+    @Override
+    public boolean shouldCauseBlockBreakReset( ItemStack oldStack, ItemStack newStack ) {
+        return !newStack.is( oldStack.getItem() );
     }
     
     /**
@@ -204,16 +204,13 @@ public class ArtifactItem extends TieredItem implements IArtifactItem, ICurioIte
      */
     @Override
     public boolean shouldCauseReequipAnimation( ItemStack oldStack, ItemStack newStack, boolean slotChanged ) {
-        return oldStack.getItem() != newStack.getItem();
+        return ArtifactUtils.shouldCauseReequipAnimation( oldStack, newStack );
     }
     
     @Override
     public Component getName( ItemStack itemStack ) {
-        Component alteredName = ArtifactUtils.getItemDisplayName( itemStack );
-        
-        if( alteredName == null )
-            return super.getName( itemStack );
-        
-        return alteredName;
+        final Component name = ArtifactUtils.getItemDisplayName( itemStack );
+        if( name == null ) return super.getName( itemStack );
+        return name;
     }
 }

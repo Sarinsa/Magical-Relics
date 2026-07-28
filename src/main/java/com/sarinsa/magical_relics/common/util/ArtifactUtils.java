@@ -213,9 +213,7 @@ public class ArtifactUtils {
                 .collect( Collectors.toUnmodifiableList() );
     }
     
-    /**
-     * @return The altered display name for the given artifact item.
-     */
+    /** @return The altered display name for the given artifact item. */
     @Nullable
     public static Component getItemDisplayName( ItemStack itemStack ) {
         final CompoundTag stackTag = itemStack.getOrCreateTag();
@@ -303,9 +301,7 @@ public class ArtifactUtils {
         }
     }
     
-    /**
-     * @return a Multimap containing any additional attribute modifiers applied by artifact abilities.
-     */
+    /** @return a Multimap containing any additional attribute modifiers applied by artifact abilities. */
     @Nullable
     public static Multimap<Attribute, AttributeModifier> getAttributeMods( ItemStack itemStack, @Nullable AttributeBoost.ActiveType activeType ) {
         final CompoundTag stackTag = itemStack.getOrCreateTag();
@@ -340,9 +336,7 @@ public class ArtifactUtils {
         return null;
     }
     
-    /**
-     * @return An integer representing the texture variant of the given artifact item stack.
-     */
+    /** @return An integer representing the texture variant of the given artifact item stack. */
     public static int getVariant( ItemStack itemStack ) {
         final CompoundTag stackTag = itemStack.getOrCreateTag();
         
@@ -355,9 +349,8 @@ public class ArtifactUtils {
     
     /**
      * Picks a random ability prefix and suffix from the two first provided abilities.
-     * <br>
+     * <br><br>
      * If only one ability is provided, both the prefix and suffix will be picked from that ability.
-     * <br>
      * If the ability list is completely empty, the "mundane" prefix will be prepended, and no suffix will be appended.
      */
     public static void setPrefixAndSuffix( ItemStack artifact, RandomSource random, List<BaseArtifactAbility<?>> abilities ) {
@@ -582,9 +575,7 @@ public class ArtifactUtils {
         return null;
     }
     
-    /**
-     * @return A new List of all abilities on the artifact item stack with the given {@link TriggerType}.
-     */
+    /** @return A new List of all abilities on the artifact item stack with the given {@link TriggerType}. */
     public static List<BaseArtifactAbility<?>> getAbilitiesWithTrigger( TriggerType type, ItemStack itemStack ) {
         final List<BaseArtifactAbility<?>> list = new ArrayList<>();
         
@@ -670,7 +661,6 @@ public class ArtifactUtils {
     
     /**
      * Adds the description of every ability on an artifact item stack to its tooltip.
-     * <p>
      *
      * @see com.sarinsa.magical_relics.common.item.ArtifactItem#appendHoverText(ItemStack, Level, List, TooltipFlag)
      * @see com.sarinsa.magical_relics.common.item.ArtifactArmorItem#appendHoverText(ItemStack, Level, List, TooltipFlag)
@@ -733,9 +723,7 @@ public class ArtifactUtils {
         }
     }
     
-    /**
-     * @return True if the given ability is on cooldown for the specified artifact item.
-     */
+    /** @return True if the given ability is on cooldown for the specified artifact item. */
     public static boolean isAbilityOnCooldown( ItemStack itemStack, BaseArtifactAbility<?> ability ) {
         final CompoundTag modData = NBTHelper.getOrCreateCompound( itemStack.getOrCreateTag(), TAG_MOD_DATA );
         final CompoundTag cooldownData = NBTHelper.getOrCreateCompound( modData, TAG_ABILITY_COOLDOWNS );
@@ -760,8 +748,7 @@ public class ArtifactUtils {
             for( ItemStack itemStack : itemList ) {
                 final CompoundTag tag = itemStack.getTag();
                 
-                if( tag == null )
-                    continue;
+                if( tag == null ) continue;
                 
                 if( tag.contains( TAG_MOD_DATA, Tag.TAG_COMPOUND )
                         && tag.getCompound( TAG_MOD_DATA ).contains( TAG_ABILITY_COOLDOWNS, Tag.TAG_COMPOUND ) ) {
@@ -781,8 +768,7 @@ public class ArtifactUtils {
             for( SlotResult slotResult : curiosInventory.findCurios( CURIO_SLOTS ) ) {
                 final CompoundTag tag = slotResult.stack().getTag();
                 
-                if( tag == null )
-                    continue;
+                if( tag == null ) continue;
                 
                 if( tag.contains( TAG_MOD_DATA, Tag.TAG_COMPOUND )
                         && tag.getCompound( TAG_MOD_DATA ).contains( TAG_ABILITY_COOLDOWNS, Tag.TAG_COMPOUND ) ) {
@@ -798,6 +784,63 @@ public class ArtifactUtils {
     }
     
     /**
+     * Used by artifact item implementations to stop the reequip animation from
+     * playing when frequently manipulated NBT such as ability cooldowns are changed on the item stack.
+     *
+     * @see net.minecraftforge.common.extensions.IForgeItem#shouldCauseReequipAnimation(ItemStack, ItemStack, boolean)
+     */
+    public static boolean shouldCauseReequipAnimation( ItemStack oldStack, ItemStack newStack ) {
+        // If items are not the same, play anim
+        if( !newStack.is( oldStack.getItem() ) ) return true;
+        
+        final CompoundTag newTag = newStack.getTag();
+        final CompoundTag oldTag = oldStack.getTag();
+        
+        // Play anim if one stack has a tag but the other doesn't
+        if( newTag == null || oldTag == null )
+            return !(newTag == null && oldTag == null);
+        
+        final Set<String> newKeys = new HashSet<>( newTag.getAllKeys() );
+        final Set<String> oldKeys = new HashSet<>( oldTag.getAllKeys() );
+        
+        // Don't compare damage
+        // MR mod data is compared below
+        newKeys.remove( ItemStack.TAG_DAMAGE );
+        newKeys.remove( TAG_MOD_DATA );
+        oldKeys.remove( ItemStack.TAG_DAMAGE );
+        oldKeys.remove( TAG_MOD_DATA );
+        
+        boolean isModDataSame = true;
+        
+        // Compare mod data tags
+        if( NBTHelper.containsCompound( oldTag, TAG_MOD_DATA ) && NBTHelper.containsCompound( newTag, TAG_MOD_DATA ) ) {
+            final CompoundTag newModData = newTag.getCompound( TAG_MOD_DATA );
+            final CompoundTag oldModData = oldTag.getCompound( TAG_MOD_DATA );
+            final Set<String> newModDataKeys = new HashSet<>( newModData.getAllKeys() );
+            final Set<String> oldModDataKeys = new HashSet<>( oldModData.getAllKeys() );
+            
+            // Cooldowns are updated frequently, so they should be skipped
+            newModDataKeys.remove( TAG_ABILITY_COOLDOWNS );
+            oldModDataKeys.remove( TAG_ABILITY_COOLDOWNS );
+            
+            if( !newModDataKeys.equals( oldModDataKeys ) ) {
+                isModDataSame = false;
+            }
+            else {
+                // Compare each stack tag's sub-tags
+                isModDataSame = newModDataKeys.stream().allMatch( ( key ) -> Objects.equals( newModData.get( key ), oldModData.get( key ) ) );
+            }
+        }
+        if( !isModDataSame ) return true;
+        
+        // Play anim if the stacks do not have the same base tag keys
+        if( !newKeys.equals( oldKeys ) ) return true;
+        
+        // Compare each stack tag's sub-tags
+        return !newKeys.stream().allMatch( ( key ) -> Objects.equals( newTag.get( key ), oldTag.get( key ) ) );
+    }
+    
+    /**
      * Clears and repopulates the map of obtainable abilities.
      * <br><br>
      * This gets called when {@link MainConfig.Abilities#unobtainableAbilities} changes.
@@ -808,8 +851,7 @@ public class ArtifactUtils {
         OBTAINABLE_ABILITIES.clear();
         
         for( BaseArtifactAbility<?> ability : MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getValues() ) {
-            if( unobtainable.contains( ability ) )
-                continue;
+            if( unobtainable.contains( ability ) ) continue;
             OBTAINABLE_ABILITIES.add( ability );
         }
     }

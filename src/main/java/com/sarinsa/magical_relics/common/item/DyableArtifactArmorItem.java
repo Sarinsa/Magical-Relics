@@ -82,11 +82,6 @@ public class DyableArtifactArmorItem extends ArmorItem implements IArtifactItem,
     }
     
     @Override
-    public boolean shouldCauseBlockBreakReset( ItemStack oldStack, ItemStack newStack ) {
-        return !newStack.is( oldStack.getItem() );
-    }
-    
-    @Override
     public boolean isBookEnchantable( ItemStack stack, ItemStack book ) {
         if( book.getEnchantmentLevel( Enchantments.MENDING ) > 0 )
             return false;
@@ -95,12 +90,23 @@ public class DyableArtifactArmorItem extends ArmorItem implements IArtifactItem,
     }
     
     @Override
+    public boolean shouldCauseBlockBreakReset( ItemStack oldStack, ItemStack newStack ) {
+        return !newStack.is( oldStack.getItem() );
+    }
+    
+    /**
+     * Overriding this so the equip/use animation does not constantly play
+     * when dealing with artifact ability cooldown ticks changing NBT.
+     */
+    @Override
+    public boolean shouldCauseReequipAnimation( ItemStack oldStack, ItemStack newStack, boolean slotChanged ) {
+        return ArtifactUtils.shouldCauseReequipAnimation( oldStack, newStack );
+    }
+    
+    @Override
     public Component getName( ItemStack itemStack ) {
-        Component alteredName = ArtifactUtils.getItemDisplayName( itemStack );
-        
-        if( alteredName == null )
-            return super.getName( itemStack );
-        
-        return alteredName;
+        final Component name = ArtifactUtils.getItemDisplayName( itemStack );
+        if( name == null ) return super.getName( itemStack );
+        return name;
     }
 }

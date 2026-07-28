@@ -118,16 +118,16 @@ public class ArtifactAxeItem extends AxeItem implements IArtifactItem {
     }
     
     @Override
-    public boolean shouldCauseBlockBreakReset( ItemStack oldStack, ItemStack newStack ) {
-        return !newStack.is( oldStack.getItem() );
-    }
-    
-    @Override
     public boolean canApplyAtEnchantingTable( ItemStack stack, Enchantment enchantment ) {
         if( enchantment == Enchantments.MENDING )
             return false;
         
         return super.canApplyAtEnchantingTable( stack, enchantment );
+    }
+    
+    @Override
+    public boolean shouldCauseBlockBreakReset( ItemStack oldStack, ItemStack newStack ) {
+        return !newStack.is( oldStack.getItem() );
     }
     
     /**
@@ -136,16 +136,13 @@ public class ArtifactAxeItem extends AxeItem implements IArtifactItem {
      */
     @Override
     public boolean shouldCauseReequipAnimation( ItemStack oldStack, ItemStack newStack, boolean slotChanged ) {
-        return oldStack.getItem() != newStack.getItem();
+        return ArtifactUtils.shouldCauseReequipAnimation( oldStack, newStack );
     }
     
     @Override
     public Component getName( ItemStack itemStack ) {
-        Component alteredName = ArtifactUtils.getItemDisplayName( itemStack );
-        
-        if( alteredName == null )
-            return super.getName( itemStack );
-        
-        return alteredName;
+        final Component name = ArtifactUtils.getItemDisplayName( itemStack );
+        if( name == null ) return super.getName( itemStack );
+        return name;
     }
 }
