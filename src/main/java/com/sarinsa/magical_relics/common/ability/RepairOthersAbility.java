@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility.RepairOthersAbilityConfig> {
     
@@ -62,6 +63,11 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
             ArtifactCategory.HELMET
     );
     
+    private static final Predicate<ItemStack> REPAIR_CONDITIONS =
+            ( stack ) -> !stack.isEmpty()
+                    && !(stack.getItem() instanceof IArtifactItem)
+                    && stack.getDamageValue() > 0;
+    
     
     public RepairOthersAbility() { }
     
@@ -79,17 +85,19 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
         
         public static class RepairOthers extends AbstractConfigCategory<RepairOthersAbilityConfig> {
             
-            public final IntField durRestoredOnUse;
-            public final IntField durRestoredPassively;
+            public final IntField.RandomRange durRestoredOnUse;
+            public final IntField.RandomRange durRestoredPassively;
             
             public RepairOthers( RepairOthersAbilityConfig parent ) {
                 super( parent, "repair_others", "Options for this ability repairing other items in the inventory." );
                 
-                durRestoredOnUse = SPEC.define( new IntField( "durability_restoration.active", 1, IntField.Range.POSITIVE,
-                        "The amount of durability that is restored for the target item in the inventory when this ability has a use trigger." ) );
+                durRestoredOnUse = new IntField.RandomRange( SPEC, "durability_restoration.use", 1, 5, IntField.Range.POSITIVE,
+                        "The minimum and maximum (inclusive) amount of durability that can be restored for the target item in the user's inventory when this ability has a use trigger." );
                 
-                durRestoredPassively = SPEC.define( new IntField( "durability_restoration.passive", 1, IntField.Range.POSITIVE,
-                        "The amount of durability that is restored for the target item in the inventory when this ability has a passive trigger." ) );
+                SPEC.newLine();
+                
+                durRestoredPassively = new IntField.RandomRange( SPEC, "durability_restoration.passive", 1, 2, IntField.Range.POSITIVE,
+                        "The minimum and maximum (inclusive) amount of durability that can be restored for the target item in the user's inventory when this ability has a passive trigger." );
             }
         }
     }
@@ -101,18 +109,20 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
     
     @Override
     public InteractionResult onUse( Level level, @Nullable LivingEntity abilityUser, ItemStack artifact, InteractionHand hand, @Nullable HitResult hitResult ) {
-        if( abilityUser != null && ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
+        if( abilityUser != null && !level.isClientSide && !ArtifactUtils.isAbilityOnCooldown( artifact, this ) ) {
             final List<ItemStack> fixCandidates = getAbilityUserInventory( abilityUser );
             
             // Pick a random "fixable" item to restore durability for
             if( !fixCandidates.isEmpty() ) {
-                ItemStack stackToFix = fixCandidates.get( level.random.nextInt( fixCandidates.size() ) );
+                final RandomSource random = level.random;
+                final ItemStack stackToFix = fixCandidates.get( random.nextInt( fixCandidates.size() ) );
                 
-                // 1/3 chance to hurt the artifact. A 1-to-1 conversion ratio would not be much to brag about.
-                if( level.random.nextInt( 3 ) == 0 )
+                // 1/3 chance to hurt the artifact
+                if( random.nextInt( 3 ) == 0 ) {
                     artifact.hurtAndBreak( 1, abilityUser, ( p ) -> p.broadcastBreakEvent( hand ) );
-                stackToFix.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, abilityUser instanceof ServerPlayer serverPlayer ? serverPlayer : null );
-                return InteractionResult.sidedSuccess( level.isClientSide );
+                }
+                stackToFix.hurt( -getConfig().REPAIR_OTHERS.durRestoredOnUse.next( random ), random, abilityUser instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                return InteractionResult.SUCCESS;
             }
         }
         return InteractionResult.PASS;
@@ -139,17 +149,13 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
         if( abilityUser instanceof Player player ) {
             for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
                 final ItemStack stack = player.getInventory().getItem( i );
-                
-                if( !stack.isEmpty() )
-                    fixCandidates.add( stack );
+                if( REPAIR_CONDITIONS.test( stack ) ) fixCandidates.add( stack );
             }
         }
         else {
             for( EquipmentSlot slot : EquipmentSlot.values() ) {
                 final ItemStack stack = abilityUser.getItemBySlot( slot );
-                
-                if( !stack.isEmpty() )
-                    fixCandidates.add( stack );
+                if( REPAIR_CONDITIONS.test( stack ) ) fixCandidates.add( stack );
             }
         }
         // Collect all curio stacks
@@ -157,13 +163,10 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
             final List<SlotResult> slotResults = itemHandler.findCurios();
             
             for( SlotResult slotResult : slotResults ) {
-                if( !slotResult.stack().isEmpty() )
-                    fixCandidates.add( slotResult.stack() );
+                ItemStack stack = slotResult.stack();
+                if( REPAIR_CONDITIONS.test( stack ) ) fixCandidates.add( stack );
             }
         } );
-        
-        fixCandidates.removeIf( ( stack ) ->
-                stack.isEmpty() || !(stack.getItem() instanceof IArtifactItem) || stack.getDamageValue() <= 0 );
         return fixCandidates;
     }
     
@@ -171,26 +174,17 @@ public class RepairOthersAbility extends BaseArtifactAbility<RepairOthersAbility
         if( level.isClientSide ) return;
         
         if( ServerEventListener.getRepairTick() % 200 == 0 ) {
-            final List<ItemStack> fixCandidates = new ArrayList<>();
+            final List<ItemStack> fixCandidates = getAbilityUserInventory( player );
             
-            // Collect all item stacks in the inventory that can have durability restored
-            for( int i = 0; i < player.getInventory().getContainerSize(); i++ ) {
-                ItemStack checkedStack = player.getInventory().getItem( i );
-                
-                if( !(checkedStack.getItem() instanceof IArtifactItem) && checkedStack.getDamageValue() > 0 ) {
-                    if( !checkedStack.isEmpty() ) {
-                        fixCandidates.add( checkedStack );
-                    }
-                }
-            }
             // Pick a random "fixable" item to restore durability for
             if( !fixCandidates.isEmpty() ) {
-                ItemStack stackToFix = fixCandidates.get( level.random.nextInt( fixCandidates.size() ) );
+                final RandomSource random = level.random;
+                final ItemStack stackToFix = fixCandidates.get( random.nextInt( fixCandidates.size() ) );
                 
                 // 1/3 chance to hurt the artifact. A 1-to-1 conversion ratio would not be much to brag about.
-                if( level.random.nextInt( 3 ) == 0 )
+                if( random.nextInt( 3 ) == 0 )
                     artifact.hurtAndBreak( 1, player, onBreakCallback );
-                stackToFix.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.get(), level.random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
+                stackToFix.hurt( -getConfig().REPAIR_OTHERS.durRestoredPassively.next( random ), random, player instanceof ServerPlayer serverPlayer ? serverPlayer : null );
             }
         }
     }
