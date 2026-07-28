@@ -29,6 +29,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import top.theillusivec4.curios.api.SlotContext;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -266,6 +267,9 @@ public abstract class BaseArtifactAbility<T extends AbilityConfig> {
         String regName = MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().containsValue( this )
                 ? MRArtifactAbilities.ARTIFACT_ABILITY_REGISTRY.get().getKey( this ).toString()
                 : "null";
-        return "Registry name: " + regName + ", Instance: " + super.toString();
+        return "Registry name: " + regName
+                + ", Rarity: " + getRarity()
+                + ", Prefixes: " + Arrays.toString( getPrefixes() )
+                + ", Suffixes: " + Arrays.toString( getSuffixes() );
     }
 }

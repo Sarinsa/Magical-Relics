@@ -47,7 +47,10 @@ public class Config {
         
         for( BaseArtifactAbility<?> ability : registry ) {
             ResourceLocation id = registry.getKey( ability );
-            
+            if( id == null ) {
+                MagicalRelics.LOG.warn( "Attempted to load ability config for an unregistered ability! Ability: {}", ability );
+                continue;
+            }
             try {
                 AbilityConfig cfg = ability.createConfig( cfgManager, id );
                 cfg.SPEC.initialize();
