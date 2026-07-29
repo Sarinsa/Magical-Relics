@@ -8,21 +8,10 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class C2SSaveAntiBuilderData {
-    
-    public final UUID playerUUID;
-    public final int[] boxDimensions;
-    public final BlockPos blockEntityPos;
-    
-    
-    public C2SSaveAntiBuilderData( UUID playerUUID, BlockPos blockPos, int[] bbCoordinates ) {
-        this.playerUUID = playerUUID;
-        this.blockEntityPos = blockPos;
-        this.boxDimensions = bbCoordinates;
-    }
+public record C2SSaveAntiBuilderData(UUID playerUUID, int[] boxDimensions, BlockPos blockEntityPos) {
     
     private C2SSaveAntiBuilderData( UUID playerUUID, BlockPos blockPos, int minX, int minY, int minZ, int maxX, int maxY, int maxZ ) {
-        this( playerUUID, blockPos, new int[] { minX, minY, minZ, maxX, maxY, maxZ } );
+        this( playerUUID, new int[] { minX, minY, minZ, maxX, maxY, maxZ }, blockPos );
     }
     
     public static void handle( C2SSaveAntiBuilderData message, Supplier<NetworkEvent.Context> contextSupplier ) {

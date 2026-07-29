@@ -6,16 +6,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class S2CSimpleCfgDoubleSync {
-    
-    public final double value;
-    public byte valueId;
-    
-    
-    public S2CSimpleCfgDoubleSync( double value, byte valueId ) {
-        this.value = value;
-        this.valueId = valueId;
-    }
+public record S2CSimpleCfgDoubleSync(double value, byte valueId) {
     
     public static void handle( S2CSimpleCfgDoubleSync message, Supplier<NetworkEvent.Context> contextSupplier ) {
         NetworkEvent.Context context = contextSupplier.get();

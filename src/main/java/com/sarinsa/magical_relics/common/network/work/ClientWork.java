@@ -35,13 +35,13 @@ public class ClientWork {
         if( player == null ) return;
         
         final LevelRenderer levelRenderer = Minecraft.getInstance().levelRenderer;
-        final BlockPos pos = new BlockPos( message.x, message.y, message.z );
+        final BlockPos pos = new BlockPos( message.x(), message.y(), message.z() );
         
         final CompoundTag modData = NBTHelper.getOrCreateCompound( player.getMainHandItem().getOrCreateTag(), ArtifactUtils.TAG_MOD_DATA );
         final CompoundTag abilityData = NBTHelper.getOrCreateCompound( modData, JukeboxAbility.TAG_ABILITY_DATA );
         final Item item = NBTHelper.getRegistryEntry( abilityData, ForgeRegistries.ITEMS, JukeboxAbility.TAG_DISC_ITEM );
         
-        if( !message.play ) {
+        if( !message.play() ) {
             levelRenderer.playStreamingMusic( null, pos, null );
         }
         else {
@@ -62,13 +62,13 @@ public class ClientWork {
     }
     
     public static void handleOpenBEScreen( S2COpenAntiBuilderScreen message ) {
-        int screenType = message.screenType;
+        int screenType = message.screenType();
         LocalPlayer player = Minecraft.getInstance().player;
         
         if( player == null ) return;
         
         if( screenType == 0 ) {
-            BlockPos blockPos = new BlockPos( message.x, message.y, message.z );
+            BlockPos blockPos = new BlockPos( message.x(), message.y(), message.z() );
             BlockEntity blockEntity = player.level().getExistingBlockEntity( blockPos );
             
             if( blockEntity instanceof AntiBuilderBlockEntity antiBuilder ) {
@@ -78,8 +78,8 @@ public class ClientWork {
     }
     
     @SuppressWarnings( { "unchecked", "ConstantConditions" } )
-    public static void handleCfgValueSync( Object value, byte propertyId ) {
-        final SyncedProperty<?, ?> property = SyncedProperties.getFromId( propertyId );
+    public static void handleCfgValueSync( Object value, byte valueId ) {
+        final SyncedProperty<?, ?> property = SyncedProperties.getFromId( valueId );
         
         try {
             if( value instanceof Integer i ) {
@@ -87,6 +87,9 @@ public class ClientWork {
             }
             else if( value instanceof Double d ) {
                 ((SyncedProperty<Double, ?>) property).setValue( d );
+            }
+            else if( value instanceof Boolean b ) {
+                ((SyncedProperty<Boolean, ?>) property).setValue( b );
             }
             else {
                 MagicalRelics.LOG.warn( "Received config field sync packet from server with unsupported value type! Property ID: '{}'", value );
@@ -101,17 +104,17 @@ public class ClientWork {
     public static void handleCamoStateUpdate( S2CCamoBlockUpdate message ) {
         final ClientLevel level = Minecraft.getInstance().level;
         
-        if( message.camoState == null ) return;
+        if( message.camoState() == null ) return;
         if( level == null ) return;
-        if( !level.isLoaded( message.pos ) ) return;
+        if( !level.isLoaded( message.pos() ) ) return;
         
-        if( level.getExistingBlockEntity( message.pos ) instanceof CamoBlockEntity camoBlockEntity ) {
+        if( level.getExistingBlockEntity( message.pos() ) instanceof CamoBlockEntity camoBlockEntity ) {
             final BlockState oldCamoState = camoBlockEntity.getCamoState();
             
-            camoBlockEntity.setCamoState( message.camoState );
+            camoBlockEntity.setCamoState( message.camoState() );
             
-            if( oldCamoState == null || message.camoState.getLightEmission( level, message.pos ) != oldCamoState.getLightEmission( level, message.pos ) ) {
-                level.getLightEngine().checkBlock( message.pos );
+            if( oldCamoState == null || message.camoState().getLightEmission( level, message.pos() ) != oldCamoState.getLightEmission( level, message.pos() ) ) {
+                level.getLightEngine().checkBlock( message.pos() );
             }
         }
     }

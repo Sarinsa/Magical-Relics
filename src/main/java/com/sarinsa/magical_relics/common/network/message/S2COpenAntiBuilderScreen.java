@@ -6,21 +6,10 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class S2COpenAntiBuilderScreen {
+public record S2COpenAntiBuilderScreen(int x, int y, int z, int screenType) {
     
     public static final int ANTI_BUILDER_ID = 0;
     
-    
-    public final int x, y, z;
-    public final int screenType;
-    
-    
-    public S2COpenAntiBuilderScreen( int x, int y, int z, int screenType ) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.screenType = screenType;
-    }
     
     public static void handle( S2COpenAntiBuilderScreen message, Supplier<NetworkEvent.Context> contextSupplier ) {
         NetworkEvent.Context context = contextSupplier.get();

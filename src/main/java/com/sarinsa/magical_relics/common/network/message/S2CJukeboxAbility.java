@@ -6,18 +6,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class S2CJukeboxAbility {
-    
-    public final int x, y, z;
-    public final boolean play;
-    
-    
-    public S2CJukeboxAbility( int x, int y, int z, boolean play ) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.play = play;
-    }
+public record S2CJukeboxAbility(int x, int y, int z, boolean play) {
     
     public static void handle( S2CJukeboxAbility message, Supplier<NetworkEvent.Context> contextSupplier ) {
         NetworkEvent.Context context = contextSupplier.get();

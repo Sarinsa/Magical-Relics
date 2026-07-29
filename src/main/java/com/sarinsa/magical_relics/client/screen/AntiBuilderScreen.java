@@ -148,7 +148,7 @@ public class AntiBuilderScreen extends Screen {
     private void sendNBTToServer( int[] bbCoordinates ) {
         // noinspection ConstantConditions
         if( minecraft.player != null )
-            NetworkHelper.sendRecalcAntiBuilderBounds( minecraft.player, pos, bbCoordinates );
+            NetworkHelper.requestRecalcAntiBuilderBounds( minecraft.player, pos, bbCoordinates );
     }
     
     @Override

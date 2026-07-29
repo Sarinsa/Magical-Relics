@@ -6,22 +6,13 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class S2CSimpleCfgIntSync {
-    
-    public final int value;
-    public byte propertyId;
-    
-    
-    public S2CSimpleCfgIntSync( int value, byte propertyId ) {
-        this.value = value;
-        this.propertyId = propertyId;
-    }
+public record S2CSimpleCfgIntSync(int value, byte valueId) {
     
     public static void handle( S2CSimpleCfgIntSync message, Supplier<NetworkEvent.Context> contextSupplier ) {
         NetworkEvent.Context context = contextSupplier.get();
         
         if( context.getDirection().getReceptionSide().isClient() ) {
-            context.enqueueWork( () -> ClientWork.handleCfgValueSync( message.value, message.propertyId ) );
+            context.enqueueWork( () -> ClientWork.handleCfgValueSync( message.value, message.valueId ) );
         }
         context.setPacketHandled( true );
     }
@@ -32,6 +23,6 @@ public class S2CSimpleCfgIntSync {
     
     public static void encode( S2CSimpleCfgIntSync message, FriendlyByteBuf buffer ) {
         buffer.writeInt( message.value );
-        buffer.writeByte( message.propertyId );
+        buffer.writeByte( message.valueId );
     }
 }

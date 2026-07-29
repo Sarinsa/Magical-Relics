@@ -57,13 +57,16 @@ public class PacketHandler {
         // Server -> Client
         registerMessage( S2CJukeboxAbility.class, S2CJukeboxAbility::encode, S2CJukeboxAbility::decode, S2CJukeboxAbility::handle );
         registerMessage( S2COpenAntiBuilderScreen.class, S2COpenAntiBuilderScreen::encode, S2COpenAntiBuilderScreen::decode, S2COpenAntiBuilderScreen::handle );
+        registerMessage( S2CCamoBlockUpdate.class, S2CCamoBlockUpdate::encode, S2CCamoBlockUpdate::decode, S2CCamoBlockUpdate::handle );
         /// Config field sync messages
         registerMessage( S2CSimpleCfgIntSync.class, S2CSimpleCfgIntSync::encode, S2CSimpleCfgIntSync::decode, S2CSimpleCfgIntSync::handle );
         registerMessage( S2CSimpleCfgDoubleSync.class, S2CSimpleCfgDoubleSync::encode, S2CSimpleCfgDoubleSync::decode, S2CSimpleCfgDoubleSync::handle );
-        registerMessage( S2CCamoBlockUpdate.class, S2CCamoBlockUpdate::encode, S2CCamoBlockUpdate::decode, S2CCamoBlockUpdate::handle );
+        registerMessage( S2CSimpleCfgBoolSync.class, S2CSimpleCfgBoolSync::encode, S2CSimpleCfgBoolSync::decode, S2CSimpleCfgBoolSync::handle );
         
         // Client -> Server
         registerMessage( C2SSaveAntiBuilderData.class, C2SSaveAntiBuilderData::encode, C2SSaveAntiBuilderData::decode, C2SSaveAntiBuilderData::handle );
+        registerMessage( C2SPlaceSolidAir.class, C2SPlaceSolidAir::encode, C2SPlaceSolidAir::decode, C2SPlaceSolidAir::handle );
+        registerMessage( C2SRemoveSolidAir.class, C2SRemoveSolidAir::encode, C2SRemoveSolidAir::decode, C2SRemoveSolidAir::handle );
         
         registered = true;
     }

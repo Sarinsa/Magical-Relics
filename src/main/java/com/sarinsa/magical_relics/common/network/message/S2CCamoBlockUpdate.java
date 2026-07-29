@@ -11,12 +11,7 @@ import net.minecraftforge.network.NetworkEvent;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-public class S2CCamoBlockUpdate {
-    
-    public final BlockPos pos;
-    @Nullable
-    public final BlockState camoState;
-    
+public record S2CCamoBlockUpdate(BlockPos pos, @Nullable BlockState camoState) {
     
     public S2CCamoBlockUpdate( BlockPos pos, BlockState camoState ) {
         this.pos = pos;
@@ -24,8 +19,7 @@ public class S2CCamoBlockUpdate {
     }
     
     private S2CCamoBlockUpdate( BlockPos pos, @Nullable CompoundTag stateTag ) {
-        this.pos = pos;
-        this.camoState = stateTag == null ? null : NBTHelper.readBlockState( stateTag );
+        this( pos, stateTag == null ? null : NBTHelper.readBlockState( stateTag ) );
     }
     
     public static void handle( S2CCamoBlockUpdate message, Supplier<NetworkEvent.Context> contextSupplier ) {
