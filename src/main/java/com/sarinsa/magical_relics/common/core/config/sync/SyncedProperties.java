@@ -3,9 +3,11 @@ package com.sarinsa.magical_relics.common.core.config.sync;
 import com.sarinsa.magical_relics.common.core.MagicalRelics;
 import com.sarinsa.magical_relics.common.core.registry.MRArtifactAbilities;
 import com.sarinsa.magical_relics.common.network.PacketHandler;
+import com.sarinsa.magical_relics.common.network.message.S2CSimpleCfgBoolSync;
 import com.sarinsa.magical_relics.common.network.message.S2CSimpleCfgDoubleSync;
 import com.sarinsa.magical_relics.common.network.message.S2CSimpleCfgIntSync;
 import fathertoast.crust.api.config.common.field.AbstractConfigField;
+import fathertoast.crust.api.config.common.field.BooleanField;
 import fathertoast.crust.api.config.common.field.DoubleField;
 import fathertoast.crust.api.config.common.field.IntField;
 import net.minecraft.server.MinecraftServer;
@@ -53,6 +55,10 @@ public final class SyncedProperties {
     /** @see com.sarinsa.magical_relics.common.ability.OreRadarAbility.OreRadarAbilityConfig.OreRadar#radius */
     public static SyncedProperty<Integer, IntField> ORE_RADAR_RADIUS = registerProperty(
             () -> MRArtifactAbilities.ORE_RADAR.get().getConfig().ORE_RADAR.radius.field() );
+    
+    /** @see com.sarinsa.magical_relics.common.ability.AirSneakAbility.AirSneakAbilityConfig.AirSneak#allowReplacing */
+    public static SyncedProperty<Boolean, BooleanField> AIR_SNEAK_ALLOW_REPLACE = registerProperty(
+            () -> MRArtifactAbilities.AIR_SNEAK.get().getConfig().AIR_SNEAK.allowReplacing.field() );
     
     
     //-----------------------------------------------------------------------------
@@ -150,6 +156,9 @@ public final class SyncedProperties {
             }
             else if( value instanceof Integer i ) {
                 PacketHandler.sendToClient( new S2CSimpleCfgIntSync( i, propertyId ), player );
+            }
+            else if( value instanceof Boolean b ) {
+                PacketHandler.sendToClient( new S2CSimpleCfgBoolSync( b, propertyId ), player );
             }
             else {
                 final Class<?> clazz = value == null ? null : value.getClass();

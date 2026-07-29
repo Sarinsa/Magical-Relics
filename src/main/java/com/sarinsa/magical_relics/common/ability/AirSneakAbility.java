@@ -4,12 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.sarinsa.magical_relics.common.ability.base.ArtifactCategory;
 import com.sarinsa.magical_relics.common.ability.base.BaseArtifactAbility;
 import com.sarinsa.magical_relics.common.ability.base.TriggerType;
-import com.sarinsa.magical_relics.common.compat.crust.MRCrustPlugin;
 import com.sarinsa.magical_relics.common.core.config.ability.AbilityConfig;
+import com.sarinsa.magical_relics.common.core.config.sync.SyncedProperties;
 import com.sarinsa.magical_relics.common.core.registry.MRBlocks;
+import com.sarinsa.magical_relics.common.network.NetworkHelper;
 import fathertoast.crust.api.config.common.AbstractConfigCategory;
 import fathertoast.crust.api.config.common.ConfigManager;
 import fathertoast.crust.api.config.common.field.BooleanField;
+import fathertoast.crust.api.config.common.field.InjectionWrapperField;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
@@ -23,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
@@ -75,14 +76,16 @@ public class AirSneakAbility extends BaseArtifactAbility<AirSneakAbility.AirSnea
         
         public static class AirSneak extends AbstractConfigCategory<AirSneakAbilityConfig> {
             
-            public final BooleanField allowReplacing;
+            public final InjectionWrapperField<BooleanField> allowReplacing;
             
             public AirSneak( AirSneakAbilityConfig parent, boolean allowReplcng ) {
                 super( parent, "air_sneak", "Options for the general behavior of this ability." );
                 
-                allowReplacing = SPEC.define( new BooleanField( "allow_replacing", allowReplcng,
+                allowReplacing = SPEC.define( new InjectionWrapperField<>( new BooleanField( "allow_replacing", allowReplcng,
                         "If enabled, solid air can replace blocks that are considered replaceable, " +
-                                "such as tall grass, snow, dead bushes etc." ) );
+                                "such as tall grass, snow, dead bushes etc." ), ( field ) -> {
+                    SyncedProperties.broadcastSyncProperty( SyncedProperties.AIR_SNEAK_ALLOW_REPLACE );
+                } ) );
             }
         }
     }
@@ -94,48 +97,45 @@ public class AirSneakAbility extends BaseArtifactAbility<AirSneakAbility.AirSnea
     
     @Override
     public void onHeld( Level level, Player player, ItemStack heldArtifact, EquipmentSlot slot ) {
-        airSneak( heldArtifact, level, player, slot, null );
+        placeSolidAir( level, player, slot, null );
     }
     
     @Override
     public void onCurioTick( ItemStack artifact, Level level, Player player, SlotContext slotContext ) {
-        airSneak( artifact, level, player, null, slotContext );
+        placeSolidAir( level, player, null, slotContext );
     }
     
-    private void airSneak( ItemStack artifact, Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
-        if( !level.isClientSide ) {
+    @Override
+    public void onArmorTick( ItemStack stack, Level level, Player player, EquipmentSlot slot ) {
+        placeSolidAir( level, player, slot, null );
+    }
+    
+    /** Checks if the specified player is sneaking, and attempts to place a solid air block below their feet if possible. */
+    private void placeSolidAir( Level level, Player player, @Nullable EquipmentSlot slot, @Nullable SlotContext slotContext ) {
+        // Set block on client quickly and ask the server later if the placement was ok
+        if( level.isClientSide ) {
             final BlockPos belowPos = player.blockPosition().below();
             final BlockState belowState = level.getBlockState( belowPos );
             
             if( player.isShiftKeyDown() ) {
-                final boolean notAscending = player.onGround() || MRCrustPlugin.getPlayerVelocityWatcher().getVelocity( player ).y <= -0.0001;
-                final boolean canReplaceBelow = getConfig().AIR_SNEAK.allowReplacing.get()
+                final boolean notAscending = player.onGround() || player.getDeltaMovement().y <= -0.001;
+                // Sync config value from server to client!
+                final boolean canReplaceBelow = SyncedProperties.AIR_SNEAK_ALLOW_REPLACE.getValue()
                         ? (belowState.canBeReplaced() && !belowState.isFaceSturdy( level, belowPos, Direction.UP ))
                         : belowState.isAir();
                 
                 if( notAscending && canReplaceBelow && !belowState.is( MRBlocks.SOLID_AIR.get() ) ) {
-                    level.setBlock( belowPos, MRBlocks.SOLID_AIR.get().defaultBlockState(), Block.UPDATE_ALL );
-                    level.scheduleTick( belowPos, MRBlocks.SOLID_AIR.get(), 20 );
-                    
-                    if( slotContext != null ) {
-                        artifact.hurtAndBreak( 1, player, ( p ) -> CuriosApi.broadcastCurioBreakEvent( slotContext ) );
-                    }
-                    else if( slot != null ) {
-                        artifact.hurtAndBreak( 1, player, ( p ) -> player.broadcastBreakEvent( slot ) );
-                    }
+                    level.setBlock( belowPos, MRBlocks.SOLID_AIR.get().defaultBlockState(), Block.UPDATE_INVISIBLE );
+                    NetworkHelper.requestSolidAirPlacement( player, belowPos, slot, slotContext );
                 }
             }
             else {
-                if( belowState.is( MRBlocks.SOLID_AIR.get() ) )
+                if( belowState.is( MRBlocks.SOLID_AIR.get() ) ) {
                     level.removeBlock( belowPos, false );
+                    NetworkHelper.requestSolidAirRemoval( player, belowPos );
+                }
             }
         }
-    }
-    
-    
-    @Override
-    public void onArmorTick( ItemStack stack, Level level, Player player, EquipmentSlot slot ) {
-        onHeld( level, player, stack, slot );
     }
     
     @Override
