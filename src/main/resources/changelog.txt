@@ -2,6 +2,7 @@
     - Fixed Repair Others ability not working.
     - Fixed reequip animation playing for artifact items in cases it shouldn't.
     - Fixed Air Sneak ability feeling clunky and slow on dedicated servers.
+    - One or multiple configs have undergone breaking changes; it is advised to delete said configs and letting them regenerate.
 1.20.1-4.0.4
     - Fixed Display Pedestal not properly sync-ing item change to clients.
     - Mod-list screen button now opens Crust config editor.
